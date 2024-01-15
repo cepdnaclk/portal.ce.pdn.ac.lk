@@ -21,7 +21,7 @@ class AnnouncementTest extends TestCase
 
         $this->loginAsAdmin();
 
-        $response = $this->get('dashboard');
+        $response = $this->get('admin/dashboard');
 
         $response->assertDontSee($announcement->message);
     }
