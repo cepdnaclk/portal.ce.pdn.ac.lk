@@ -229,7 +229,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a href="{{ route('admin.home') }}" class="nav-link">
+                    <a href="{{ route('dashboard.home') }}" class="nav-link">
                         <i class="fa fa-star"></i> {{ appName() }}
                     </a>
                 </li>

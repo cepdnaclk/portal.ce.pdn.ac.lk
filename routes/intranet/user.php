@@ -12,19 +12,20 @@ use Tabuna\Breadcrumbs\Trail;
  */
 
 Route::group(['as' => 'user.', 'middleware' => ['auth', 'password.expires', config('boilerplate.access.middleware.verified')]], function () {
-    Route::get('intranet', [DashboardController::class, 'index'])
-        ->name('intranet')
+    Route::get('', [DashboardController::class, 'index'])
+        ->name('index')
         ->breadcrumbs(function (Trail $trail) {
             $trail->parent('frontend.index')
-                ->push(__('Intranet'), route('frontend.user.intranet'));
+                ->push(__('Intranet'), route('intranet.user.index'));
         });
 
     Route::get('account', [AccountController::class, 'index'])
         ->name('account')
         ->breadcrumbs(function (Trail $trail) {
             $trail->parent('frontend.index')
-                ->push(__('My Account'), route('frontend.user.account'));
+                ->push(__('Intranet'), route('intranet.user.index'))
+                ->push(__('My Account'), route('intranet.user.account'));
         });
 
-    Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });

@@ -13,11 +13,11 @@ class UserAccountTest extends TestCase
     /** @test */
     public function only_authenticated_users_can_access_their_account()
     {
-        $this->get('/account')->assertRedirect('/login');
+        $this->get('/intranet/account')->assertRedirect('/login');
 
         $this->actingAs(User::factory()->create());
 
-        $this->get('/account')->assertOk();
+        $this->get('/intranet/account')->assertOk();
     }
 
     /** @test */
@@ -27,13 +27,13 @@ class UserAccountTest extends TestCase
 
         config(['boilerplate.access.user.change_email' => true]);
 
-        $response = $this->patch('/profile/update');
+        $response = $this->patch('/intranet/profile/update');
 
         $response->assertSessionHasErrors(['name', 'email']);
 
         config(['boilerplate.access.user.change_email' => false]);
 
-        $response = $this->patch('/profile/update');
+        $response = $this->patch('/intranet/profile/update');
 
         $response->assertSessionHasErrors('name');
     }
@@ -53,9 +53,9 @@ class UserAccountTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->patch('/profile/update', [
+            ->patch('/intranet/profile/update', [
                 'name' => 'John Doe',
-            ])->assertRedirect('/account?#information');
+            ])->assertRedirect('/intranet/account?#information');
 
         $response->assertSessionHas('flash_success', __('Profile successfully updated.'));
 
@@ -80,7 +80,7 @@ class UserAccountTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->patch('/profile/update', [
+            ->patch('/intranet/profile/update', [
                 'name' => 'John Doe',
                 'email' => 'john@doe.com',
             ])->assertRedirect('/email/verify');
@@ -96,6 +96,6 @@ class UserAccountTest extends TestCase
         ]);
 
         // Double check
-        $this->get('/account')->assertRedirect('/email/verify');
+        $this->get('/intranet/account')->assertRedirect('/email/verify');
     }
 }

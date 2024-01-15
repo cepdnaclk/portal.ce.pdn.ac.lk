@@ -10,7 +10,7 @@
 
     <ul class="c-sidebar-nav">
         <li class="c-sidebar-nav-item">
-            <x-utils.link class="c-sidebar-nav-link" :href="route('admin.home')" :active="activeClass(Route::is('admin.home'), 'c-active')"
+            <x-utils.link class="c-sidebar-nav-link" :href="route('dashboard.home')" :active="activeClass(Route::is('dashboard.home'), 'c-active')"
                 icon="c-sidebar-nav-icon cil-speedometer" :text="__('Dashboard')" />
         </li>
 
@@ -39,14 +39,14 @@
                                 $logged_in_user->can('admin.access.user.impersonate') ||
                                 $logged_in_user->can('admin.access.user.change-password')))
                         <li class="c-sidebar-nav-item">
-                            <x-utils.link :href="route('admin.auth.user.index')" class="c-sidebar-nav-link" :text="__('User Management')"
+                            <x-utils.link :href="route('dashboard.auth.user.index')" class="c-sidebar-nav-link" :text="__('User Management')"
                                 :active="activeClass(Route::is('admin.auth.user.*'), 'c-active')" />
                         </li>
                     @endif
 
                     @if ($logged_in_user->hasAllAccess())
                         <li class="c-sidebar-nav-item">
-                            <x-utils.link :href="route('admin.auth.role.index')" class="c-sidebar-nav-link" :text="__('Role Management')"
+                            <x-utils.link :href="route('dashboard.auth.role.index')" class="c-sidebar-nav-link" :text="__('Role Management')"
                                 :active="activeClass(Route::is('admin.auth.role.*'), 'c-active')" />
                         </li>
                     @endif

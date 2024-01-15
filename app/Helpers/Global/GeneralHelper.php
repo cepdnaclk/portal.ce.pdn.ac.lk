@@ -39,11 +39,11 @@ if (!function_exists('homeRoute')) {
     {
         if (auth()->check()) {
             if (auth()->user()->isAdmin()) {
-                return 'admin.home';
+                return 'dashboard.home';
             }
 
             if (auth()->user()->isUser()) {
-                return 'frontend.user.intranet';
+                return 'intranet.user.index';
             }
         }
 

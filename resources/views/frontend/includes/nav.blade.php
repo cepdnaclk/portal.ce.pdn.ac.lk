@@ -41,15 +41,15 @@
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             @if ($logged_in_user->isAdmin())
-                                <x-utils.link :href="route('admin.home')" :text="__('Administration')" class="dropdown-item" />
+                                <x-utils.link :href="route('dashboard.home')" :text="__('Dashboard')" class="dropdown-item" />
                             @endif
 
                             @if ($logged_in_user->isUser())
-                                <x-utils.link :href="route('frontend.user.intranet')" :active="activeClass(Route::is('frontend.user.intranet'))" :text="__('Intranet')"
+                                <x-utils.link :href="route('intranet.user.index')" :active="activeClass(Route::is('intranet.user.index'))" :text="__('Intranet')"
                                     class="dropdown-item" />
                             @endif
 
-                            <x-utils.link :href="route('frontend.user.account')" :active="activeClass(Route::is('frontend.user.account'))" :text="__('Profile')" class="dropdown-item" />
+                            <x-utils.link :href="route('intranet.user.account')" :active="activeClass(Route::is('intranet.user.account'))" :text="__('Profile')" class="dropdown-item" />
 
                             <x-utils.link :text="__('Logout')" class="dropdown-item"
                                 onclick="event.preventDefault();document.getElementById('logout-form').submit();">
