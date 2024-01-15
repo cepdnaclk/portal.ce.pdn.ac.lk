@@ -22,6 +22,7 @@
         "laravel/socialite": "^5.0",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.0",
+        "laravelcollective/html": "^6.4",
         "livewire/livewire": "^2.0",
         "rappasoft/laravel-livewire-tables": "^1.0",
         "rappasoft/lockout": "^3.0",
@@ -39,7 +40,7 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3",
+        "phpunit/phpunit": "^9.6",
         "roave/security-advisories": "dev-master"
     },
     "autoload": {
