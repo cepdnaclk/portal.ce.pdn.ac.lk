@@ -33,7 +33,7 @@ class ChangePasswordTest extends TestCase
                 'password_confirmation' => 'OC4Nzu270N!QBVi%U%qX',
             ]);
 
-        $response->assertRedirect('/account?#password');
+        $response->assertRedirect('/intranet/account?#password');
         $response->assertSessionHas('flash_success', __('Password successfully updated.'));
         $this->assertTrue(Hash::check('OC4Nzu270N!QBVi%U%qX', $user->fresh()->password));
     }

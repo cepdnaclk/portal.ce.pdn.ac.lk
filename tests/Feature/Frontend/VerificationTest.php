@@ -19,7 +19,7 @@ class VerificationTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get('/dashboard')->assertRedirect('/email/verify');
+        $this->get('/intranet')->assertRedirect('/email/verify');
     }
 
     /** @test */
@@ -29,7 +29,7 @@ class VerificationTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get('/account')->assertRedirect('/email/verify');
+        $this->get('/intranet/account')->assertRedirect('/email/verify');
     }
 
     /** @test */
@@ -41,7 +41,7 @@ class VerificationTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get('/account')->assertRedirect('/email/verify');
+        $this->get('/intranet/account')->assertRedirect('/email/verify');
 
         $this->post('/email/resend');
 

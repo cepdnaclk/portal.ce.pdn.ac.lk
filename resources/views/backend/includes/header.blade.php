@@ -49,9 +49,15 @@
                     </strong>
                 </div>
 
-                <x-utils.link class="dropdown-item" href="{{ route('frontend.user.account' )}}" icon="c-icon mr-2 cil-gear">
+                <x-utils.link class="dropdown-item" href="{{ route('intranet.user.account' )}}" icon="c-icon mr-2 cil-gear">
                     <x-slot name="text">
                         Profile
+                    </x-slot>
+                </x-utils.link>
+
+                <x-utils.link class="dropdown-item" href="{{ route('intranet.user.index' )}}" icon="c-icon mr-2 cil-gear">
+                    <x-slot name="text">
+                        Intranet
                     </x-slot>
                 </x-utils.link>
 

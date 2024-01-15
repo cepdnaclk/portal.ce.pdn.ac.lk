@@ -15,7 +15,11 @@ Route::get('lang/{lang}', [LocaleController::class, 'change'])->name('locale.cha
  * Frontend Routes
  */
 Route::group(['as' => 'frontend.'], function () {
-    includeRouteFiles(__DIR__.'/frontend/');
+    includeRouteFiles(__DIR__ . '/frontend/');
+});
+
+Route::group(['prefix' => 'intranet', 'as' => 'intranet.'], function () {
+    includeRouteFiles(__DIR__ . '/intranet/');
 });
 
 /*
@@ -23,6 +27,6 @@ Route::group(['as' => 'frontend.'], function () {
  *
  * These routes can only be accessed by users with type `admin`
  */
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
-    includeRouteFiles(__DIR__.'/backend/');
+Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'admin'], function () {
+    includeRouteFiles(__DIR__ . '/backend/');
 });

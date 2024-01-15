@@ -75,7 +75,7 @@ class UserController
     {
         $user = $this->userService->store($request->validated());
 
-        return redirect()->route('admin.auth.user.show', $user)->withFlashSuccess(__('The user was successfully created.'));
+        return redirect()->route('dashboard.auth.user.show', $user)->withFlashSuccess(__('The user was successfully created.'));
     }
 
     /**
@@ -114,7 +114,7 @@ class UserController
     {
         $this->userService->update($user, $request->validated());
 
-        return redirect()->route('admin.auth.user.show', $user)->withFlashSuccess(__('The user was successfully updated.'));
+        return redirect()->route('dashboard.auth.user.show', $user)->withFlashSuccess(__('The user was successfully updated.'));
     }
 
     /**
@@ -128,6 +128,6 @@ class UserController
     {
         $this->userService->delete($user);
 
-        return redirect()->route('admin.auth.user.deleted')->withFlashSuccess(__('The user was successfully deleted.'));
+        return redirect()->route('dashboard.auth.user.deleted')->withFlashSuccess(__('The user was successfully deleted.'));
     }
 }
