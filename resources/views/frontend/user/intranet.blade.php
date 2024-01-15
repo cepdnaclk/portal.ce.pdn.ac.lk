@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', __('Dashboard'))
+@section('title', __('Intranet'))
 
 @section('content')
     <div class="container py-4">
@@ -8,7 +8,7 @@
             <div class="col-md-12">
                 <x-frontend.card>
                     <x-slot name="header">
-                        @lang('Dashboard')
+                        @lang('Intranet')
                     </x-slot>
 
                     <x-slot name="body">

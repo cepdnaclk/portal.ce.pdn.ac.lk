@@ -44,7 +44,7 @@ class AnnouncementController extends Controller
             $announcement->enabled = ($request->enabled != null);
             $announcement->save();
 
-            return redirect()->route('admin.announcements.index', $announcement)->with('Success', 'Announcement was created !');
+            return redirect()->route('dashboard.announcements.index', $announcement)->with('Success', 'Announcement was created !');
         } catch (\Exception $ex) {
             return abort(500);
         }
@@ -84,7 +84,7 @@ class AnnouncementController extends Controller
         try {
             $announcement->enabled = ($request->enabled != null);
             $announcement->update($data);
-            return redirect()->route('admin.announcements.index')->with('Success', 'Announcement was updated !');
+            return redirect()->route('dashboard.announcements.index')->with('Success', 'Announcement was updated !');
         } catch (\Exception $ex) {
             return abort(500);
         }
@@ -112,7 +112,7 @@ class AnnouncementController extends Controller
     {
         try {
             $announcement->delete();
-            return redirect()->route('admin.announcements.index')->with('Success', 'Announcement was deleted !');
+            return redirect()->route('dashboard.announcements.index')->with('Success', 'Announcement was deleted !');
         } catch (\Exception $ex) {
             return abort(500);
         }

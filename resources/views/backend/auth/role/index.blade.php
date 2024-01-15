@@ -9,12 +9,7 @@
         </x-slot>
 
         <x-slot name="headerActions">
-            <x-utils.link
-                icon="c-icon cil-plus"
-                class="card-header-action"
-                :href="route('admin.auth.role.create')"
-                :text="__('Create Role')"
-            />
+            <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.auth.role.create')" :text="__('Create Role')" />
         </x-slot>
 
         <x-slot name="body">

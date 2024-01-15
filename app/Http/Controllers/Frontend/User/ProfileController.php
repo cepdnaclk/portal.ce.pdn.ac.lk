@@ -23,6 +23,6 @@ class ProfileController
             return redirect()->route('frontend.auth.verification.notice')->withFlashInfo(__('You must confirm your new e-mail address before you can go any further.'));
         }
 
-        return redirect()->route('frontend.user.account', ['#information'])->withFlashSuccess(__('Profile successfully updated.'));
+        return redirect()->route('intranet.user.account', ['#information'])->withFlashSuccess(__('Profile successfully updated.'));
     }
 }

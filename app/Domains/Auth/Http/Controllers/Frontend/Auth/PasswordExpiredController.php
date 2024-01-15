@@ -33,7 +33,7 @@ class PasswordExpiredController
 
         $userService->updatePassword($request->user(), $request->only('old_password', 'password'), true);
 
-        return redirect()->route('frontend.user.account')
+        return redirect()->route('intranet.user.account')
             ->withFlashSuccess(__('Password successfully updated.'));
     }
 }

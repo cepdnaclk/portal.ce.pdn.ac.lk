@@ -46,7 +46,8 @@
                             @endforeach
                         </div><!--row-->
 
-                        <a href="{{ route('frontend.user.account', ['#two-factor-authentication']) }}" class="btn btn-sm btn-block btn-success">@lang('I have stored these codes in a safe place')</a>
+                        <a href="{{ route('intranet.user.account', ['#two-factor-authentication']) }}"
+                            class="btn btn-sm btn-block btn-success">@lang('I have stored these codes in a safe place')</a>
                     </x-slot>
                 </x-frontend.card>
             </div><!--col-md-8-->

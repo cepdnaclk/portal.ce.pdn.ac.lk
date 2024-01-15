@@ -43,7 +43,7 @@ class DeletedUserController
     {
         $this->userService->restore($deletedUser);
 
-        return redirect()->route('admin.auth.user.index')->withFlashSuccess(__('The user was successfully restored.'));
+        return redirect()->route('dashboard.auth.user.index')->withFlashSuccess(__('The user was successfully restored.'));
     }
 
     /**
@@ -58,6 +58,6 @@ class DeletedUserController
 
         $this->userService->destroy($deletedUser);
 
-        return redirect()->route('admin.auth.user.deleted')->withFlashSuccess(__('The user was permanently deleted.'));
+        return redirect()->route('dashboard.auth.user.deleted')->withFlashSuccess(__('The user was permanently deleted.'));
     }
 }

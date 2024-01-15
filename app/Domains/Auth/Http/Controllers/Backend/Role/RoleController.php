@@ -66,7 +66,7 @@ class RoleController
     {
         $this->roleService->store($request->validated());
 
-        return redirect()->route('admin.auth.role.index')->withFlashSuccess(__('The role was successfully created.'));
+        return redirect()->route('dashboard.auth.role.index')->withFlashSuccess(__('The role was successfully created.'));
     }
 
     /**
@@ -95,7 +95,7 @@ class RoleController
     {
         $this->roleService->update($role, $request->validated());
 
-        return redirect()->route('admin.auth.role.index')->withFlashSuccess(__('The role was successfully updated.'));
+        return redirect()->route('dashboard.auth.role.index')->withFlashSuccess(__('The role was successfully updated.'));
     }
 
     /**
@@ -109,6 +109,6 @@ class RoleController
     {
         $this->roleService->destroy($role);
 
-        return redirect()->route('admin.auth.role.index')->withFlashSuccess(__('The role was successfully deleted.'));
+        return redirect()->route('dashboard.auth.role.index')->withFlashSuccess(__('The role was successfully deleted.'));
     }
 }
