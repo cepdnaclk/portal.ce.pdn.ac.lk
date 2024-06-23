@@ -84,6 +84,21 @@
             </li>
         @endif
 
+        @if ($logged_in_user->hasRole('News Editor'))
+            {{-- News --}}
+            <li class="c-sidebar-nav-dropdown">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
+                    :text="__('News')"></x-utils.link>
+
+                <ul class="c-sidebar-nav-dropdown-items">
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.news.index')" class="c-sidebar-nav-link" :text="__('Manage')"
+                            :active="activeClass(Route::is('dashboard.news.*'), 'c-active')"></x-utils.link>
+                    </li>
+                </ul>
+            </li>
+        @endif
+
     </ul>
 
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent"
