@@ -19,7 +19,7 @@ class CreateNewsTable extends Migration
             $table->string('title');
             $table->enum('type', ['info', 'danger', 'warning', 'success'])->default('info');
             $table->string('description');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->boolean('enabled')->default(true);
             $table->string('link_url');
             $table->string('link_caption');

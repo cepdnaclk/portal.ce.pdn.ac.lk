@@ -34,10 +34,12 @@ class NewsItemController extends Controller
             'type' => ['required', Rule::in(array_keys(NewsItem::types()))],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'link_url' => 'string',
             'link_caption' => 'string',
         ]);
+        if($request->hasFile('image')){
+            $data['image'] = $request->file('image')->store('NewsImages','public');
+        }
 
         try {
             $newsItem = new NewsItem($data);
@@ -76,10 +78,14 @@ class NewsItemController extends Controller
             'type' => ['required', Rule::in(array_keys(NewsItem::types()))],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'link_url' => 'string',
             'link_caption' => 'string',
         ]);
+        if($request->hasFile('image')){
+            $data['image'] = $request->file('image')->store('NewsImages','public');
+        }else{
+            $data['image'] = $newsItem->image;
+        }
 
         try {
             $newsItem->enabled = ($request->enabled != null);

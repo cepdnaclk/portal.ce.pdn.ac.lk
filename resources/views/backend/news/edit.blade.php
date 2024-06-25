@@ -54,7 +54,7 @@
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::textarea('message', $newsItem->description, [
+                        {!! Form::textarea('description', $newsItem->description, [
                             'class' => 'form-control',
                             'rows' => 3,
                             'required' => true,
@@ -62,6 +62,21 @@
                         @error('description')
                             <strong>{{ $message }}</strong>
                         @enderror
+                    </div>
+                </div>
+
+                <!-- Image -->
+                <div class="form-group row">
+                    {!! Form::label('image', 'Image*', ['class' => 'col-md-2 col-form-label']) !!}
+
+                    <div class="col-md-10">
+                        {!! Form::file('image', ['class' => 'form-control']) !!}
+                        @error('image')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+
+                        <!-- Image preview -->
+                         <img class="mt-3" src="{{ $newsItem->image ? asset('storage/' . $newsItem->image) : asset('NewsItems/no-image.png') }}" alt="Image preview" style="max-width: 150px; max-height: 150px;" />
                     </div>
                 </div>
 
