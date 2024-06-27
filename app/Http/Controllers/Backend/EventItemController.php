@@ -30,7 +30,6 @@ class EventItemController extends Controller
     {
         $data = request()->validate([
             'title' => ['required'],
-            'type' => ['required', Rule::in(array_keys(EventItem::types()))],
             'description' => 'string|required',
             'enabled' => 'nullable',
             'link_url' => 'string',
@@ -74,7 +73,6 @@ class EventItemController extends Controller
     {
         $data = request()->validate([
             'title' => ['required'],
-            'type' => ['required', Rule::in(array_keys(EventItem::types()))],
             'description' => 'string|required',
             'enabled' => 'nullable',
             'link_url' => 'string',

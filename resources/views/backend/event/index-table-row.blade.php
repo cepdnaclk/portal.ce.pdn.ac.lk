@@ -3,16 +3,27 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ App\Domains\EventItem\Models\EventItem::types()[$row->type] }}
+    <div class="custom-width-1" style="width: 75px;">
+        {{ $row->created_at }}
+    </div>
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    @php
+    <div class="custom-width-1" style="width: 75px;">
+        {{ $row->updated_at }}
+    </div>
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    <div class="custom-width-2" style="width: 175px;">
+        @php
         $words = explode(' ', $row->description);
         $limitedDescription = implode(' ', array_slice($words, 0, 50));
         $remainingWords = count($words) - 50;
     @endphp
     {!! $remainingWords > 0 ? $limitedDescription . '&nbsp;<a href="#" class="show-more" data-id="' . $row->id . '">Show more >>></a><span id="full-description-' . $row->id . '" style="display: none;">' . implode(' ', array_slice($words, 10)) . '</span><a href="#" class="show-less" data-id="' . $row->id . '" style="display: none;"> Show less <<<</a>' : $row->description !!}
+
+    </div>
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

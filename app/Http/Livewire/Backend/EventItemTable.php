@@ -19,7 +19,9 @@ class EventItemTable extends DataTableComponent
         return [
             Column::make("Title", "title")
                 ->sortable(),
-            Column::make("Type", "type")
+            Column::make("Created At", "created_at")
+                ->sortable(),
+            Column::make("Updated At", "updated_at")
                 ->sortable(),
             Column::make("Description", "description")
                 ->searchable(),
