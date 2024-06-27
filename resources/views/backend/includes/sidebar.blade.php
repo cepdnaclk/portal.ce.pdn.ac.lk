@@ -99,6 +99,21 @@
             </li>
         @endif
 
+        @if ($logged_in_user->hasRole('Event Editor'))
+            {{-- News --}}
+            <li class="c-sidebar-nav-dropdown">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
+                    :text="__('Event')"></x-utils.link>
+
+                <ul class="c-sidebar-nav-dropdown-items">
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.event.index')" class="c-sidebar-nav-link" :text="__('Manage')"
+                            :active="activeClass(Route::is('dashboard.event.*'), 'c-active')"></x-utils.link>
+                    </li>
+                </ul>
+            </li>
+        @endif
+
     </ul>
 
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent"
