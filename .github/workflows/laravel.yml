@@ -3,6 +3,7 @@ name: Laravel CI/CD
 on:
     pull_request:
         branches:
+            - main
             - dev
             - production
 
