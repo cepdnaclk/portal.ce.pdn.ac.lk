@@ -80,6 +80,25 @@ class PermissionRoleSeeder extends Seeder
 
         // Assign Permissions to other Roles
         //
+        $users = Permission::create([
+            'type' => User::TYPE_ADMIN,
+            'name' => 'admin.access.news',
+            'description' => 'All Edit Permissions',
+        ]);
+
+        $users->children()->saveMany([
+            new Permission([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'admin.access.news.edit',
+                'description' => 'Edit News',
+            ]),
+            new Permission([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'admin.access.events.edit',
+                'description' => 'Edit Events',
+                'sort' => 2,
+            ]),
+        ]);
 
         $this->enableForeignKeys();
     }
