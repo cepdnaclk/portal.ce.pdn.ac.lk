@@ -17,12 +17,12 @@ class CreateNewsTable extends Migration
         Schema::create('news_items', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->enum('type', ['info', 'danger', 'warning', 'success'])->default('info');
             $table->string('description');
             $table->string('image')->nullable();
-            $table->boolean('enabled')->default(true);
+            $table->string('author');
             $table->string('link_url');
             $table->string('link_caption');
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
         });
     }

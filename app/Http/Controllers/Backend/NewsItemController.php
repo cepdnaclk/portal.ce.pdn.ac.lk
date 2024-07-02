@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Domains\NewsItem\Models\NewsItem;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class NewsItemController extends Controller
 {
@@ -31,7 +32,6 @@ class NewsItemController extends Controller
     {
         $data = request()->validate([
             'title' => ['required'],
-            'type' => ['required', Rule::in(array_keys(NewsItem::types()))],
             'description' => 'string|required',
             'enabled' => 'nullable',
             'link_url' => 'string',
@@ -44,6 +44,7 @@ class NewsItemController extends Controller
         try {
             $newsItem = new NewsItem($data);
             $newsItem->enabled = ($request->enabled != null);
+            $newsItem->author = Auth::user()->name;
             $newsItem->save();
 
             return redirect()->route('dashboard.news.index', $newsItem)->with('Success', 'News Item was created !');
@@ -75,7 +76,6 @@ class NewsItemController extends Controller
     {
         $data = request()->validate([
             'title' => ['required'],
-            'type' => ['required', Rule::in(array_keys(NewsItem::types()))],
             'description' => 'string|required',
             'enabled' => 'nullable',
             'link_url' => 'string',
@@ -89,6 +89,7 @@ class NewsItemController extends Controller
 
         try {
             $newsItem->enabled = ($request->enabled != null);
+            $newsItem->author = Auth::user()->name;
             $newsItem->update($data);
             return redirect()->route('dashboard.news.index')->with('Success', 'News Item was updated !');
         } catch (\Exception $ex) {

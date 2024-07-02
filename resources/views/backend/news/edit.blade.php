@@ -33,22 +33,6 @@
                     </div>
                 </div>
 
-                <!-- Type -->
-                <div class="form-group row">
-                    {!! Form::label('type', 'Type*', ['class' => 'col-md-2 col-form-label']) !!}
-
-                    <div class="col-md-10">
-                        {!! Form::select('type', $types, $newsItem->type, [
-                            'class' => 'form-control',
-                            'required' => true,
-                            'placeholder' => '',
-                        ]) !!}
-                        @error('type')
-                            <strong>{{ $message }}</strong>
-                        @enderror
-                    </div>
-                </div>
-
                 <!-- Description -->
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}

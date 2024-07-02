@@ -27,18 +27,10 @@ class NewsItem extends Model
     protected $fillable = [
         'title',
         'description',
-        'type',
         'image',
-        'enabled',
+        'author',
         'link_url',
         'link_caption',
-    ];
-
-    /**
-     * @var string[]
-     */
-    protected $casts = [
-        'enabled' => 'boolean',
     ];
 
     public static function types()
@@ -50,6 +42,8 @@ class NewsItem extends Model
             'success' => 'Success'
         ];
     }
+
+
 
     /**
      * Create a new factory instance for the model.
