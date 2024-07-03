@@ -48,6 +48,17 @@ abstract class TestCase extends BaseTestCase
         return $admin;
     }
 
+   
+    protected function loginAsNewsEditor()
+    {
+        $newsEditorRole = Role::find(2);
+        $user = User::factory()->admin()->create(['name' => 'news_editor']);
+        $user->assignRole($newsEditorRole->name); 
+        $this->actingAs($user); 
+
+        return $user;
+    }
+
     protected function logout()
     {
         return auth()->logout();

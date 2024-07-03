@@ -29,6 +29,12 @@ class PermissionRoleSeeder extends Seeder
             'name' => 'Administrator',
         ]);
 
+        Role::create([
+            'id' => 2, 
+            'type' => User::TYPE_ADMIN,
+            'name' => 'Editor', 
+        ]);
+
         // Non Grouped Permissions
         //
 
@@ -80,13 +86,13 @@ class PermissionRoleSeeder extends Seeder
 
         // Assign Permissions to other Roles
         //
-        $users = Permission::create([
+        $newsEditor = Permission::create([
             'type' => User::TYPE_ADMIN,
             'name' => 'admin.access.news',
             'description' => 'All Edit Permissions',
         ]);
 
-        $users->children()->saveMany([
+        $newsEditor->children()->saveMany([
             new Permission([
                 'type' => User::TYPE_ADMIN,
                 'name' => 'admin.access.news.edit',
@@ -98,6 +104,12 @@ class PermissionRoleSeeder extends Seeder
                 'description' => 'Edit Events',
                 'sort' => 2,
             ]),
+        ]);
+
+        // Assign permissions to the new role (Editor)
+        Role::find(2)->givePermissionTo([
+            'admin.access.news.edit',
+            'admin.access.events.edit',
         ]);
 
         $this->enableForeignKeys();

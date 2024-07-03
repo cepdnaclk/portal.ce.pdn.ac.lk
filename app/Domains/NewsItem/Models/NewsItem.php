@@ -52,6 +52,6 @@ class NewsItem extends Model
      */
     protected static function newFactory()
     {
-        return NewsFactory::new();
+        return NewsItemFactory::new();
     }
 }

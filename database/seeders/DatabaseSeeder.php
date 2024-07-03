@@ -6,6 +6,7 @@ use Database\Seeders\Traits\TruncateTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
+
 /**
  * Class DatabaseSeeder.
  */
@@ -27,6 +28,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(AuthSeeder::class);
         $this->call(AnnouncementSeeder::class);
+        $this->call(NewsSeeder::class);
 
         Model::reguard();
     }
