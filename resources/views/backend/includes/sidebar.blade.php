@@ -84,7 +84,7 @@
             </li>
         @endif
 
-        @if ($logged_in_user->hasRole('News Editor'))
+        @if ($logged_in_user->can('admin.access.news.edit'))
             {{-- News --}}
             <li class="c-sidebar-nav-dropdown">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
@@ -99,8 +99,8 @@
             </li>
         @endif
 
-        @if ($logged_in_user->hasRole('Event Editor'))
-            {{-- News --}}
+        @if ($logged_in_user->can('admin.access.events.edit'))
+            {{-- Events --}}
             <li class="c-sidebar-nav-dropdown">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Event')"></x-utils.link>

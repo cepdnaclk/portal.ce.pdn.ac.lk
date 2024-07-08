@@ -3,7 +3,7 @@
 use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\EventItemController;
 
-Route::group([], function () {
+Route::group(['middleware' => ['permission:admin.access.events.edit']], function () {
 
     Route::get('/event', function () {
         return view('backend.event.index');
