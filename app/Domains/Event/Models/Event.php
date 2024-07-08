@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Domains\EventItem\Models;
+namespace App\Domains\Event\Models;
 
-use App\Domains\EventItem\Models\Traits\Scope\EventItemScope;
-use Database\Factories\NewsItemFactory;
+use App\Domains\Event\Models\Traits\Scope\EventScope;
+use Database\Factories\NewsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
- * Class NewsItem.
+ * Class News.
  */
-class EventItem extends Model
+class Event extends Model
 {
-    use EventItemScope,
+    use EventScope,
         HasFactory,
         LogsActivity;
 

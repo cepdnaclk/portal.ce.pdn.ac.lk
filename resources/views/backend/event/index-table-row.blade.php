@@ -27,7 +27,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    <img class="mt-1" src="{{ $row->image ? asset('storage/' . $row->image) : asset('EventItems/no-image.png') }}" alt="Image preview" style="max-width: 200px; max-height: 200px;" />
+    <img class="mt-1" src="{{ $row->image ? asset('storage/' . $row->image) : asset('Events/no-image.png') }}" alt="Image preview" style="max-width: 200px; max-height: 200px;" />
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

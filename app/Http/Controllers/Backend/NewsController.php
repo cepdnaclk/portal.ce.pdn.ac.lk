@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Domains\NewsItem\Models\NewsItem;
+use App\Domains\News\Models\News;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
-class NewsItemController extends Controller
+class NewsController extends Controller
 {
 
     /**
@@ -18,7 +18,7 @@ class NewsItemController extends Controller
      */
     public function create()
     {
-        $types = NewsItem::types();
+        $types = News::types();
         return view('backend.news.create', compact('types'));
     }
 
@@ -37,17 +37,17 @@ class NewsItemController extends Controller
             'link_url' => 'string',
             'link_caption' => 'string',
         ]);
-        if($request->hasFile('image')){
-            $data['image'] = $request->file('image')->store('NewsImages','public');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('NewsImages', 'public');
         }
 
         try {
-            $newsItem = new NewsItem($data);
-            $newsItem->enabled = ($request->enabled != null);
-            $newsItem->author = Auth::user()->name;
-            $newsItem->save();
+            $news = new News($data);
+            $news->enabled = ($request->enabled != null);
+            $news->author = Auth::user()->name;
+            $news->save();
 
-            return redirect()->route('dashboard.news.index', $newsItem)->with('Success', 'News Item was created !');
+            return redirect()->route('dashboard.news.index', $news)->with('Success', 'News Item was created !');
         } catch (\Exception $ex) {
             return abort(500);
         }
@@ -56,23 +56,23 @@ class NewsItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\NewsItem $announcement
+     * @param \App\Models\News $announcement
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit(NewsItem $newsItem)
+    public function edit(News $news)
     {
-        $types = NewsItem::types();
-        return view('backend.news.edit', compact('newsItem', 'types'));
+        $types = News::types();
+        return view('backend.news.edit', compact('news', 'types'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\NewsItem $announcement
+     * @param \App\Models\News $announcement
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, NewsItem $newsItem)
+    public function update(Request $request, News $news)
     {
         $data = request()->validate([
             'title' => ['required'],
@@ -81,16 +81,16 @@ class NewsItemController extends Controller
             'link_url' => 'string',
             'link_caption' => 'string',
         ]);
-        if($request->hasFile('image')){
-            $data['image'] = $request->file('image')->store('NewsImages','public');
-        }else{
-            $data['image'] = $newsItem->image;
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('NewsImages', 'public');
+        } else {
+            $data['image'] = $news->image;
         }
 
         try {
-            $newsItem->enabled = ($request->enabled != null);
-            $newsItem->author = Auth::user()->name;
-            $newsItem->update($data);
+            $news->enabled = ($request->enabled != null);
+            $news->author = Auth::user()->name;
+            $news->update($data);
             return redirect()->route('dashboard.news.index')->with('Success', 'News Item was updated !');
         } catch (\Exception $ex) {
             return abort(500);
@@ -103,22 +103,22 @@ class NewsItemController extends Controller
      * @param \App\Models\Announcement $announcement
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function delete(NewsItem $newsItem)
+    public function delete(News $news)
     {
-        return view('backend.news.delete', compact('newsItem'));
+        return view('backend.news.delete', compact('news'));
     }
 
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\NewsItem $announcement
+     * @param \App\Models\News $announcement
      * @return \Illuminate\Http\RedirectResponse|null
      */
-    public function destroy(NewsItem $newsItem)
+    public function destroy(News $news)
     {
         try {
-            $newsItem->delete();
+            $news->delete();
             return redirect()->route('dashboard.news.index')->with('Success', 'News Item was deleted !');
         } catch (\Exception $ex) {
             return abort(500);

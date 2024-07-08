@@ -2,21 +2,21 @@
 
 namespace Database\Factories;
 
-use App\Domains\NewsItem\Models\NewsItem;
+use App\Domains\News\Models\News;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
 /**
  * Class NewsFactory.
  */
-class NewsItemFactory extends Factory
+class NewsFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = NewsItem::class;
+    protected $model = News::class;
 
     /**
      * Define the model's default state.
@@ -37,7 +37,7 @@ class NewsItemFactory extends Factory
     }
 
     /**
-     * @return NewsItemFactory
+     * @return NewsFactory
      */
     public function enabled()
     {
@@ -49,7 +49,7 @@ class NewsItemFactory extends Factory
     }
 
     /**
-     * @return NewsItemFactory
+     * @return NewsFactory
      */
     public function disabled()
     {
@@ -60,5 +60,3 @@ class NewsItemFactory extends Factory
         });
     }
 }
-
-

@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\Backend;
 
-use App\Domains\EventItem\Models\EventItem;
+use App\Domains\Event\Models\Event;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
-class EventItemTable extends DataTableComponent
+class EventsTable extends DataTableComponent
 {
     public array $perPageAccepted = [25, 50, 100];
     public bool $perPageAll = true;
@@ -36,7 +36,7 @@ class EventItemTable extends DataTableComponent
 
     public function query(): Builder
     {
-        return EventItem::query()
+        return Event::query()
             ->when($this->getFilter('area'), fn ($query, $status) => $query->where('area', $status))
             ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type));
     }
@@ -44,11 +44,11 @@ class EventItemTable extends DataTableComponent
     // public function filters(): array
     // {
     //     $type = ["" => "Any"];
-    //     foreach (EventItem::types() as $key => $value) {
+    //     foreach (Event::types() as $key => $value) {
     //         $type[$key] = $value;
     //     }
     //     $area = ["" => "Any"];
-    //     foreach (EventItem::areas() as $key => $value) {
+    //     foreach (Event::areas() as $key => $value) {
     //         $area[$key] = $value;
     //     }
 

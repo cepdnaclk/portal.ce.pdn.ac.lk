@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Domains\NewsItem\Models;
+namespace App\Domains\News\Models;
 
-use App\Domains\NewsItem\Models\Traits\Scope\NewsItemScope;
-use Database\Factories\NewsItemFactory;
+use App\Domains\News\Models\Traits\Scope\NewsScope;
+use Database\Factories\NewsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
- * Class NewsItem.
+ * Class News.
  */
-class NewsItem extends Model
+class News extends Model
 {
-    use NewsItemScope,
+    use NewsScope,
         HasFactory,
         LogsActivity;
 
@@ -52,6 +52,6 @@ class NewsItem extends Model
      */
     protected static function newFactory()
     {
-        return NewsItemFactory::new();
+        return NewsFactory::new();
     }
 }

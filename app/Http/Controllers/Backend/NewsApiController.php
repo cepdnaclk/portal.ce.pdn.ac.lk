@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Resources\NewsResource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Domains\NewsItem\Models\NewsItem;
+use App\Domains\News\Models\News;
 
 class NewsApiController extends Controller
 {
     public function index()
     {
-        $perPage = 20; 
-        $news = NewsItem::latest()->paginate($perPage);
+        $perPage = 20;
+        $news = News::latest()->paginate($perPage);
 
         if ($news->count() > 0) {
             return NewsResource::collection($news);
@@ -24,7 +24,7 @@ class NewsApiController extends Controller
 
     public function show($id)
     {
-        $news = NewsItem::find($id);
+        $news = News::find($id);
 
         if ($news) {
             return new NewsResource($news);

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Domains\EventItem\Models\EventItem;
 use Illuminate\Validation\Rule;
+use App\Domains\Event\Models\Event;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
-class EventItemController extends Controller
+class EventController extends Controller
 {
     /**
      * Show the form for creating a new resource.
@@ -16,7 +17,7 @@ class EventItemController extends Controller
      */
     public function create()
     {
-        $types = EventItem::types();
+        $types = Event::types();
         return view('backend.event.create', compact('types'));
     }
 
@@ -35,17 +36,19 @@ class EventItemController extends Controller
             'link_url' => 'string',
             'link_caption' => 'string',
         ]);
-        if($request->hasFile('image')){
-            $data['image'] = $request->file('image')->store('EventImages','public');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('EventImages', 'public');
         }
 
         try {
-            $eventItem = new EventItem($data);
-            $eventItem->enabled = ($request->enabled != null);
-            $eventItem->save();
+            $event = new Event($data);
+            $event->enabled = ($request->enabled != null);
+            $event->author = Auth::user()->name;
+            $event->save();
 
-            return redirect()->route('dashboard.event.index', $eventItem)->with('Success', 'Event Item was created !');
+            return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event Item was created !');
         } catch (\Exception $ex) {
+            \Log::error($ex->getMessage()); 
             return abort(500);
         }
     }
@@ -53,23 +56,23 @@ class EventItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\EventItem $announcement
+     * @param \App\Models\Event $announcement
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit(EventItem $eventItem)
+    public function edit(Event $event)
     {
-        $types = EventItem::types();
-        return view('backend.event.edit', compact('eventItem', 'types'));
+        $types = Event::types();
+        return view('backend.event.edit', compact('event', 'types'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\EventItem $eventItem
+     * @param \App\Models\Event $event
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, EventItem $eventItem)
+    public function update(Request $request, Event $event)
     {
         $data = request()->validate([
             'title' => ['required'],
@@ -78,15 +81,16 @@ class EventItemController extends Controller
             'link_url' => 'string',
             'link_caption' => 'string',
         ]);
-        if($request->hasFile('image')){
-            $data['image'] = $request->file('image')->store('EventImages','public');
-        }else{
-            $data['image'] = $eventItem->image;
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('EventImages', 'public');
+        } else {
+            $data['image'] = $event->image;
         }
 
         try {
-            $eventItem->enabled = ($request->enabled != null);
-            $eventItem->update($data);
+            $event->enabled = ($request->enabled != null);
+            $event->author = Auth::user()->name;
+            $event->update($data);
             return redirect()->route('dashboard.event.index')->with('Success', 'Event Item was updated !');
         } catch (\Exception $ex) {
             return abort(500);
@@ -99,22 +103,22 @@ class EventItemController extends Controller
      * @param \App\Models\Announcement $announcement
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function delete(EventItem $eventItem)
+    public function delete(Event $event)
     {
-        return view('backend.event.delete', compact('eventItem'));
+        return view('backend.event.delete', compact('event'));
     }
 
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\EventItem $announcement
+     * @param \App\Models\Event $announcement
      * @return \Illuminate\Http\RedirectResponse|null
      */
-    public function destroy(EventItem $eventItem)
+    public function destroy(Event $event)
     {
         try {
-            $eventItem->delete();
+            $event->delete();
             return redirect()->route('dashboard.event.index')->with('Success', 'Event Item was deleted !');
         } catch (\Exception $ex) {
             return abort(500);

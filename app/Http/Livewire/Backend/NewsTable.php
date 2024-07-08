@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\Backend;
 
-use App\Domains\NewsItem\Models\NewsItem;
+use App\Domains\News\Models\News;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
-class NewsItemTable extends DataTableComponent
+class NewsTable extends DataTableComponent
 {
     public array $perPageAccepted = [25, 50, 100];
     public bool $perPageAll = true;
@@ -38,7 +38,7 @@ class NewsItemTable extends DataTableComponent
 
     public function query(): Builder
     {
-        return NewsItem::query()
+        return News::query()
             ->when($this->getFilter('area'), fn ($query, $status) => $query->where('area', $status))
             ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type));
     }
@@ -46,11 +46,11 @@ class NewsItemTable extends DataTableComponent
     // public function filters(): array
     // {
     //     $type = ["" => "Any"];
-    //     foreach (NewsItem::types() as $key => $value) {
+    //     foreach (News::types() as $key => $value) {
     //         $type[$key] = $value;
     //     }
     //     $area = ["" => "Any"];
-    //     foreach (NewsItem::areas() as $key => $value) {
+    //     foreach (News::areas() as $key => $value) {
     //         $area[$key] = $value;
     //     }
 

@@ -5,7 +5,7 @@
 @section('content')
     <div>
         {!! Form::open([
-            'url' => route('dashboard.event.update', compact('eventItem')),
+            'url' => route('dashboard.event.update', compact('event')),
             'method' => 'put',
             'class' => 'container',
             'files' => true,
@@ -14,7 +14,7 @@
 
         <x-backend.card>
             <x-slot name="header">
-                Event : Edit | {{ $eventItem->id }}
+                Event : Edit | {{ $event->id }}
             </x-slot>
 
             <x-slot name="body">
@@ -23,7 +23,7 @@
                     {!! Form::label('message', 'Title*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('title', $eventItem->title, [
+                        {!! Form::text('title', $event->title, [
                             'class' => 'form-control',
                             'required' => true,
                         ]) !!}
@@ -41,7 +41,7 @@
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::textarea('description', $eventItem->description, [
+                        {!! Form::textarea('description', $event->description, [
                             'class' => 'form-control',
                             'rows' => 3,
                             'required' => true,
@@ -63,7 +63,7 @@
                         @enderror
 
                         <!-- Image preview -->
-                         <img class="mt-3" src="{{ $eventItem->image ? asset('storage/' . $eventItem->image) : asset('EventItems/no-image.png') }}" alt="Image preview" style="max-width: 150px; max-height: 150px;" />
+                         <img class="mt-3" src="{{ $event->image ? asset('storage/' . $event->image) : asset('Events/no-image.png') }}" alt="Image preview" style="max-width: 150px; max-height: 150px;" />
                     </div>
                 </div>
 
@@ -73,7 +73,7 @@
 
                     <div class="col-md-4 form-check">
                         <input type="checkbox" name="enabled" value="1" class="form-check-input0"
-                            {{ $eventItem->enabled == 1 ? 'checked' : '' }} />
+                            {{ $event->enabled == 1 ? 'checked' : '' }} />
                         @error('enabled')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -85,7 +85,7 @@
                     {!! Form::label('link_url', 'Link URL*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('link_url', $eventItem->link_url, [
+                        {!! Form::text('link_url', $event->link_url, [
                             'class' => 'form-control',
                             'required' => true,
                         ]) !!}
@@ -100,7 +100,7 @@
                     {!! Form::label('link_caption', 'Link Caption*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('link_caption', $eventItem->link_caption, [
+                        {!! Form::text('link_caption', $event->link_caption, [
                             'class' => 'form-control',
                             'required' => true,
                         ]) !!}

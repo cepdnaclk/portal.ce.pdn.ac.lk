@@ -27,7 +27,7 @@
                     </div>
                 @endif
 
-                <livewire:backend.event-item-table />
+                <livewire:backend.events-table />
             </x-slot>
         </x-backend.card>
     </div>

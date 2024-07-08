@@ -1,7 +1,7 @@
 <?php
 
 use Tabuna\Breadcrumbs\Trail;
-use App\Http\Controllers\Backend\NewsItemController;
+use App\Http\Controllers\Backend\NewsController;
 
 Route::group(['middleware' => ['permission:admin.access.news.edit']], function () {
 
@@ -14,7 +14,7 @@ Route::group(['middleware' => ['permission:admin.access.news.edit']], function (
         });
 
     // Create
-    Route::get('news/create', [NewsItemController::class, 'create'])
+    Route::get('news/create', [NewsController::class, 'create'])
         ->name('news.create')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -23,11 +23,11 @@ Route::group(['middleware' => ['permission:admin.access.news.edit']], function (
         });
 
     // Store
-    Route::post('news/', [NewsItemController::class, 'store'])
+    Route::post('news/', [NewsController::class, 'store'])
         ->name('news.store');
 
     // Edit
-    Route::get('news/edit/{newsItem}', [NewsItemController::class, 'edit'])
+    Route::get('news/edit/{news}', [NewsController::class, 'edit'])
         ->name('news.edit')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -36,11 +36,11 @@ Route::group(['middleware' => ['permission:admin.access.news.edit']], function (
         });
 
     // Update
-    Route::put('news/{newsItem}', [NewsItemController::class, 'update'])
+    Route::put('news/{news}', [NewsController::class, 'update'])
         ->name('news.update');
 
     // Delete
-    Route::get('news/delete/{newsItem}', [NewsItemController::class, 'delete'])
+    Route::get('news/delete/{news}', [NewsController::class, 'delete'])
         ->name('news.delete')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -49,6 +49,6 @@ Route::group(['middleware' => ['permission:admin.access.news.edit']], function (
         });
 
     // Destroy
-    Route::delete('news/{newsItem}', [NewsItemController::class, 'destroy'])
+    Route::delete('news/{news}', [NewsController::class, 'destroy'])
         ->name('news.destroy');
 });

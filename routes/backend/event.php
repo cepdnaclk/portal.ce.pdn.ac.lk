@@ -1,7 +1,7 @@
 <?php
 
 use Tabuna\Breadcrumbs\Trail;
-use App\Http\Controllers\Backend\EventItemController;
+use App\Http\Controllers\Backend\EventController;
 
 Route::group(['middleware' => ['permission:admin.access.events.edit']], function () {
 
@@ -14,7 +14,7 @@ Route::group(['middleware' => ['permission:admin.access.events.edit']], function
         });
 
     // Create
-    Route::get('event/create', [EventItemController::class, 'create'])
+    Route::get('event/create', [EventController::class, 'create'])
         ->name('event.create')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -23,11 +23,11 @@ Route::group(['middleware' => ['permission:admin.access.events.edit']], function
         });
 
     // Store
-    Route::post('event/', [EventItemController::class, 'store'])
+    Route::post('event/', [EventController::class, 'store'])
         ->name('event.store');
 
     // Edit
-    Route::get('event/edit/{eventItem}', [EventItemController::class, 'edit'])
+    Route::get('event/edit/{event}', [EventController::class, 'edit'])
         ->name('event.edit')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -36,11 +36,11 @@ Route::group(['middleware' => ['permission:admin.access.events.edit']], function
         });
 
     // Update
-    Route::put('event/{eventItem}', [EventItemController::class, 'update'])
+    Route::put('event/{event}', [EventController::class, 'update'])
         ->name('event.update');
 
     // Delete
-    Route::get('event/delete/{eventItem}', [EventItemController::class, 'delete'])
+    Route::get('event/delete/{event}', [EventController::class, 'delete'])
         ->name('event.delete')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -49,6 +49,6 @@ Route::group(['middleware' => ['permission:admin.access.events.edit']], function
         });
 
     // Destroy
-    Route::delete('event/{eventItem}', [EventItemController::class, 'destroy'])
+    Route::delete('event/{event}', [EventController::class, 'destroy'])
         ->name('event.destroy');
 });

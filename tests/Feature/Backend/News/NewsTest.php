@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Backend\News;
 
-use App\Domains\NewsItem\Models\NewsItem;
+use App\Domains\News\Models\News;
 use App\Domains\Auth\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -29,8 +29,8 @@ class NewsTest extends TestCase
     public function a_news_editor_can_access_the_delete_news_page()
     {
         $this->loginAsNewsEditor();
-        $newsItem = NewsItem::factory()->create();
-        $this->get('/dashboard/news/delete/' . $newsItem->id)->assertOk();
+        $news = News::factory()->create();
+        $this->get('/dashboard/news/delete/' . $news->id)->assertOk();
     }
 
     /** @test *//*
@@ -42,12 +42,12 @@ class NewsTest extends TestCase
     }
 */
     /** @test */
-  /*  public function update_news_requires_validation()
+    /*  public function update_news_requires_validation()
     {
         $this->loginAsNewsEditor();
-        $newsItem = NewsItem::factory()->create();
+        $news = News::factory()->create();
 
-        $response = $this->put("/dashboard/news/{$newsItem->id}", []);
+        $response = $this->put("/dashboard/news/{$news->id}", []);
         $response->assertSessionHasErrors(['title', 'type', 'description', 'image', 'link_url', 'link_caption']);
     }
 */
@@ -65,7 +65,7 @@ class NewsTest extends TestCase
         ]);
 
         $response->assertStatus(302);
-        $this->assertDatabaseHas('news_items', [
+        $this->assertDatabaseHas('news', [
             'title' => 'test News',
         ]);
     }
@@ -74,7 +74,7 @@ class NewsTest extends TestCase
     public function news_can_be_updated()
     {
         $this->loginAsNewsEditor();
-        $newsItem = NewsItem::factory()->create();
+        $news = News::factory()->create();
 
         $updateData = [
             'title' => 'Updated News',
@@ -85,10 +85,10 @@ class NewsTest extends TestCase
             'link_caption' => 'eaque excepturi velit',
         ];
 
-        $response = $this->put("/dashboard/news/{$newsItem->id}", $updateData);
+        $response = $this->put("/dashboard/news/{$news->id}", $updateData);
         $response->assertStatus(302);
 
-        $this->assertDatabaseHas('news_items', [
+        $this->assertDatabaseHas('news', [
             'title' => 'Updated News',
         ]);
     }
@@ -97,21 +97,21 @@ class NewsTest extends TestCase
     public function news_can_be_deleted()
     {
         $this->loginAsNewsEditor();
-        $newsItem = NewsItem::factory()->create();
-        $this->delete('/dashboard/news/' . $newsItem->id);
-        $this->assertDatabaseMissing('news_items', ['id' => $newsItem->id]);
+        $news = News::factory()->create();
+        $this->delete('/dashboard/news/' . $news->id);
+        $this->assertDatabaseMissing('news', ['id' => $news->id]);
     }
 
     /** @test */
     public function unauthorized_user_cannot_access_news_pages()
     {
-        $newsItem = NewsItem::factory()->create();
+        $news = News::factory()->create();
 
         $this->get('/dashboard/news/')->assertRedirect('/login');
         $this->get('/dashboard/news/create')->assertRedirect('/login');
-        $this->get('/dashboard/news/delete/' . $newsItem->id)->assertRedirect('/login');
+        $this->get('/dashboard/news/delete/' . $news->id)->assertRedirect('/login');
         $this->post('/dashboard/news')->assertRedirect('/login');
-        $this->put("/dashboard/news/{$newsItem->id}")->assertRedirect('/login');
-        $this->delete('/dashboard/news/' . $newsItem->id)->assertRedirect('/login');
+        $this->put("/dashboard/news/{$news->id}")->assertRedirect('/login');
+        $this->delete('/dashboard/news/' . $news->id)->assertRedirect('/login');
     }
 }

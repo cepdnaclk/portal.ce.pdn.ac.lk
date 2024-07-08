@@ -5,7 +5,7 @@
 @section('content')
     <div>
         {!! Form::open([
-            'url' => route('dashboard.news.update', compact('newsItem')),
+            'url' => route('dashboard.news.update', compact('news')),
             'method' => 'put',
             'class' => 'container',
             'files' => true,
@@ -14,7 +14,7 @@
 
         <x-backend.card>
             <x-slot name="header">
-                News : Edit | {{ $newsItem->id }}
+                News : Edit | {{ $news->id }}
             </x-slot>
 
             <x-slot name="body">
@@ -23,7 +23,7 @@
                     {!! Form::label('message', 'Title*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('title', $newsItem->title, [
+                        {!! Form::text('title', $news->title, [
                             'class' => 'form-control',
                             'required' => true,
                         ]) !!}
@@ -38,7 +38,7 @@
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::textarea('description', $newsItem->description, [
+                        {!! Form::textarea('description', $news->description, [
                             'class' => 'form-control',
                             'rows' => 3,
                             'required' => true,
@@ -60,7 +60,7 @@
                         @enderror
 
                         <!-- Image preview -->
-                         <img class="mt-3" src="{{ $newsItem->image ? asset('storage/' . $newsItem->image) : asset('NewsItems/no-image.png') }}" alt="Image preview" style="max-width: 150px; max-height: 150px;" />
+                         <img class="mt-3" src="{{ $news->image ? asset('storage/' . $news->image) : asset('Newss/no-image.png') }}" alt="Image preview" style="max-width: 150px; max-height: 150px;" />
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@
 
                     <div class="col-md-4 form-check">
                         <input type="checkbox" name="enabled" value="1" class="form-check-input0"
-                            {{ $newsItem->enabled == 1 ? 'checked' : '' }} />
+                            {{ $news->enabled == 1 ? 'checked' : '' }} />
                         @error('enabled')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -82,7 +82,7 @@
                     {!! Form::label('link_url', 'Link URL*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('link_url', $newsItem->link_url, [
+                        {!! Form::text('link_url', $news->link_url, [
                             'class' => 'form-control',
                             'required' => true,
                         ]) !!}
@@ -97,7 +97,7 @@
                     {!! Form::label('link_caption', 'Link Caption*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('link_caption', $newsItem->link_caption, [
+                        {!! Form::text('link_caption', $news->link_caption, [
                             'class' => 'form-control',
                             'required' => true,
                         ]) !!}

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Domains\EventItem\Models\Traits\Scope;
+namespace App\Domains\Event\Models\Traits\Scope;
 
 /**
  * Class AnnouncementScope.
  */
-trait EventItemScope
+trait EventScope
 {
     /**
      * @param $query

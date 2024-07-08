@@ -27,7 +27,7 @@
                     </div>
                 @endif
 
-                <livewire:backend.news-item-table />
+                <livewire:backend.news-table />
             </x-slot>
         </x-backend.card>
     </div>
