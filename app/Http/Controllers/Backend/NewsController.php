@@ -18,8 +18,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        $types = News::types();
-        return view('backend.news.create', compact('types'));
+        return view('backend.news.create');
     }
 
     /**
@@ -61,8 +60,7 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
-        $types = News::types();
-        return view('backend.news.edit', compact('news', 'types'));
+        return view('backend.news.edit', compact('news'));
     }
 
     /**

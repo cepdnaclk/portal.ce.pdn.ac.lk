@@ -33,17 +33,12 @@ class News extends Model
         'link_caption',
     ];
 
-    public static function types()
-    {
-        return [
-            'info' => 'Info',
-            'danger' => 'Danger',
-            'warning' => 'Warning',
-            'success' => 'Success'
-        ];
-    }
-
-
+    /**
+     * @var string[]
+     */
+    protected $casts = [
+        'enabled' => 'boolean',
+    ];
 
     /**
      * Create a new factory instance for the model.

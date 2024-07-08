@@ -42,16 +42,6 @@ class Event extends Model
         'enabled' => 'boolean',
     ];
 
-    public static function types()
-    {
-        return [
-            'info' => 'Info',
-            'danger' => 'Danger',
-            'warning' => 'Warning',
-            'success' => 'Success'
-        ];
-    }
-
     /**
      * Create a new factory instance for the model.
      *

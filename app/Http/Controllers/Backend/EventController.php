@@ -17,8 +17,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        $types = Event::types();
-        return view('backend.event.create', compact('types'));
+        return view('backend.event.create');
     }
 
     /**
@@ -61,8 +60,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        $types = Event::types();
-        return view('backend.event.edit', compact('event', 'types'));
+        return view('backend.event.edit', compact('event'));
     }
 
     /**
