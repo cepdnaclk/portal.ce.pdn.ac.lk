@@ -32,7 +32,13 @@ class PermissionRoleSeeder extends Seeder
         Role::create([
             'id' => 2, 
             'type' => User::TYPE_ADMIN,
-            'name' => 'Editor', 
+            'name' => 'News Editor', 
+        ]);
+
+        Role::create([
+            'id' => 3, 
+            'type' => User::TYPE_ADMIN,
+            'name' => 'Event Editor', 
         ]);
 
         // Non Grouped Permissions
@@ -89,7 +95,7 @@ class PermissionRoleSeeder extends Seeder
         $newsEditor = Permission::create([
             'type' => User::TYPE_ADMIN,
             'name' => 'admin.access.news',
-            'description' => 'All Edit Permissions',
+            'description' => 'All News Permissions',
         ]);
 
         $newsEditor->children()->saveMany([
@@ -98,17 +104,29 @@ class PermissionRoleSeeder extends Seeder
                 'name' => 'admin.access.news.edit',
                 'description' => 'Edit News',
             ]),
+        ]);
+
+        $eventEditor = Permission::create([
+            'type' => User::TYPE_ADMIN,
+            'name' => 'admin.access.events',
+            'description' => 'All Event Permissions',
+        ]);
+
+        $eventEditor->children()->saveMany([
             new Permission([
                 'type' => User::TYPE_ADMIN,
                 'name' => 'admin.access.events.edit',
                 'description' => 'Edit Events',
-                'sort' => 2,
             ]),
         ]);
 
-        // Assign permissions to the new role (Editor)
+        // Assign permissions to the new role (News Editor)
         Role::find(2)->givePermissionTo([
             'admin.access.news.edit',
+        ]);
+
+        // Assign permissions to the new role (Event Editor)
+        Role::find(3)->givePermissionTo([
             'admin.access.events.edit',
         ]);
 

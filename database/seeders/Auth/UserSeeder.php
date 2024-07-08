@@ -39,6 +39,24 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
+
+            User::create([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'NewsEditor1',
+                'email' => env('SEED_NEWS_EDITOR_EMAIL', 'news@aces.com'),
+                'password' => env('SEED_NEWS_EDITOR_PASSWORD', 'news'),
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
+
+            User::create([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'EventEditor1',
+                'email' => env('SEED_EVENT_EDITOR_EMAIL', 'events@aces.com'),
+                'password' => env('SEED_EVENT_EDITOR_PASSWORD', 'events'),
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
         }
 
         $this->enableForeignKeys();
