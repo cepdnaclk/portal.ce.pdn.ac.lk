@@ -60,7 +60,7 @@
                         @enderror
 
                         <!-- Image preview -->
-                         <img class="mt-3" src="{{ $event->image ? asset('storage/' . $event->image) : asset('Events/no-image.png') }}" alt="Image preview" style="max-width: 150px; max-height: 150px;" />
+                        <img class="mt-3" src="{{ $event->image ? asset('storage/' . $event->image) : asset('Events/no-image.png') }}" alt="Image preview" style="max-width: 150px; max-height: 150px;" />
                     </div>
                 </div>
 
@@ -106,6 +106,40 @@
                         @enderror
                     </div>
                 </div>
+
+                <!-- start time -->
+                <div class="form-group row">
+                    {!! Form::label('start_time', 'Start Time*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        {!! Form::text('start_time', '', ['class' => 'form-control', 'id' => 'start_time', 'required' => true]) !!}
+                        @error('start_time')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- end time -->
+                <div class="form-group row">
+                    {!! Form::label('end_time', 'End Time*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        {!! Form::text('end_time', '', ['class' => 'form-control', 'id' => 'end_time', 'required' => true]) !!}
+                        @error('end_time')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
+            <!-- location -->
+            <div class="form-group row">
+                {!! Form::label('location', 'Location*', ['class' => 'col-md-2 col-form-label']) !!}
+
+                <div class="col-md-10">
+                    {!! Form::text('location', '', ['class' => 'form-control', 'required' => true]) !!}
+                    @error('link_caption')
+                        <strong>{{ $message }}</strong>
+                    @enderror
+                </div>
+            </div>
 
             </x-slot>
             <x-slot name="footer">

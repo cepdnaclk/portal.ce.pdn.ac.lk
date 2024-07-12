@@ -34,6 +34,9 @@ class EventController extends Controller
             'enabled' => 'nullable',
             'link_url' => 'string',
             'link_caption' => 'string',
+            'start_time' => 'string',
+            'end_time' => 'string',
+            'location' => 'string',
         ]);
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('EventImages', 'public');
@@ -78,6 +81,9 @@ class EventController extends Controller
             'enabled' => 'nullable',
             'link_url' => 'string',
             'link_caption' => 'string',
+            'start_time' => 'string',
+            'end_time' => 'string',
+            'location' => 'string',
         ]);
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('EventImages', 'public');

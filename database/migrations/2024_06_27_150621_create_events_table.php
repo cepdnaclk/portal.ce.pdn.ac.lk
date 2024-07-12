@@ -21,6 +21,9 @@ class CreateEventsTable extends Migration
             $table->string('author');
             $table->string('link_url');
             $table->string('link_caption');
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
+            $table->string('location');
             $table->boolean('enabled')->default(true);
             $table->timestamps();
         });
