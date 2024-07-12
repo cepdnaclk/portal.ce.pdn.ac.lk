@@ -39,7 +39,8 @@
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::textarea('description', '', ['class' => 'form-control', 'rows' => 3, 'required' => true]) !!}
+                        <div id="editor-container" style="height: auto;"></div>
+                        <textarea name="description" id="description" style="display:none;"></textarea>
                         @error('description')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -51,7 +52,7 @@
                     {!! Form::label('image', 'Image*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::file('image', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::file('image', ['class' => 'form-control']) !!}
                         @error('image')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -97,7 +98,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right']) !!}
+                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>

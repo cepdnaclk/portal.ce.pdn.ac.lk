@@ -38,11 +38,8 @@
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::textarea('description', $news->description, [
-                            'class' => 'form-control',
-                            'rows' => 3,
-                            'required' => true,
-                        ]) !!}
+                        <div id="editor-container" style="height: auto;">{!! $news->description !!}</div>
+                        <textarea name="description" id="description" style="display:none;"></textarea>
                         @error('description')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -60,7 +57,7 @@
                         @enderror
 
                         <!-- Image preview -->
-                         <img class="mt-3" src="{{ $news->image ? asset('storage/' . $news->image) : asset('Newss/no-image.png') }}" alt="Image preview" style="max-width: 150px; max-height: 150px;" />
+                         <img class="mt-3" src="{{ $news->image ? asset('storage/' . $news->image) : asset('NewsImages/no-image.png') }}" alt="Image preview" style="max-width: 150px; max-height: 150px;" />
                     </div>
                 </div>
 
@@ -109,7 +106,7 @@
 
             </x-slot>
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>

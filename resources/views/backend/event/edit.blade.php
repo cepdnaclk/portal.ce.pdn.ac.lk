@@ -41,11 +41,8 @@
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::textarea('description', $event->description, [
-                            'class' => 'form-control',
-                            'rows' => 3,
-                            'required' => true,
-                        ]) !!}
+                        <div id="editor-container" style="height: auto;">{!! $event->description !!}</div>
+                        <textarea name="description" id="description" style="display:none;"></textarea>
                         @error('description')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -112,7 +109,7 @@
 
             </x-slot>
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>
