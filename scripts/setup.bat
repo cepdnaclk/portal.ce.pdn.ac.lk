@@ -24,4 +24,6 @@ php artisan migrate
 echo "Running : php artisan migrate:fresh --seed"
 php artisan migrate:fresh --seed
 
+php artisan storage:link
+
 php artisan key:generate

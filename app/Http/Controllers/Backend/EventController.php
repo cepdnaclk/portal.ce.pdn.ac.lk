@@ -32,10 +32,10 @@ class EventController extends Controller
             'title' => ['required'],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'link_url' => 'string',
+            'link_url' => 'url',
             'link_caption' => 'string',
-            'start_time' => 'string',
-            'end_time' => 'string',
+            'start_at' => 'date_format:Y-m-d H:i',
+            'end_at' => 'date_format:Y-m-d H:i',
             'location' => 'string',
         ]);
         if ($request->hasFile('image')) {
@@ -50,7 +50,7 @@ class EventController extends Controller
 
             return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event Item was created !');
         } catch (\Exception $ex) {
-            \Log::error($ex->getMessage()); 
+            \Log::error($ex->getMessage());
             return abort(500);
         }
     }
@@ -79,10 +79,10 @@ class EventController extends Controller
             'title' => ['required'],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'link_url' => 'string',
+            'link_url' => 'url',
             'link_caption' => 'string',
-            'start_time' => 'string',
-            'end_time' => 'string',
+            'start_at' => 'date_format:Y-m-d H:i',
+            'end_at' => 'date_format:Y-m-d H:i',
             'location' => 'string',
         ]);
         if ($request->hasFile('image')) {

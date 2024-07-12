@@ -97,10 +97,10 @@
 
                 <!-- start time -->
                 <div class="form-group row">
-                    {!! Form::label('start_time', 'Start Time*', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('start_at', 'Start Time*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-3">
-                        {!! Form::text('start_time', '', ['class' => 'form-control', 'id' => 'start_time', 'required' => true]) !!}
-                        @error('start_time')                                
+                        {!! Form::text('start_at', '', ['class' => 'form-control', 'id' => 'start_at', 'required' => true]) !!}
+                        @error('start_at')                                
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
@@ -108,10 +108,10 @@
 
                 <!-- end time -->
                 <div class="form-group row">
-                    {!! Form::label('end_time', 'End Time*', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('end_at', 'End Time*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-3">
-                        {!! Form::text('end_time', '', ['class' => 'form-control', 'id' => 'end_time', 'required' => true]) !!}
-                        @error('end_time')
+                        {!! Form::text('end_at', '', ['class' => 'form-control', 'id' => 'end_at', 'required' => true]) !!}
+                        @error('end_at')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
@@ -132,12 +132,12 @@
                 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
                 <script>
                     // Initialize flatpickr on the input field
-                    flatpickr("#start_time", {
+                    flatpickr("#start_at", {
                         altInput: true,
                         enableTime: true,        // Enable time selection
                         dateFormat: "Y-m-d H:i", // Set the date and time format
                     });
-                    flatpickr("#end_time", {
+                    flatpickr("#end_at", {
                         altInput: true,
                         enableTime: true,        // Enable time selection
                         dateFormat: "Y-m-d H:i", // Set the date and time format

@@ -33,7 +33,7 @@ class NewsController extends Controller
             'title' => ['required'],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'link_url' => 'string',
+            'link_url' => 'url',
             'link_caption' => 'string',
         ]);
         if ($request->hasFile('image')) {
@@ -76,7 +76,7 @@ class NewsController extends Controller
             'title' => ['required'],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'link_url' => 'string',
+            'link_url' => 'url',
             'link_caption' => 'string',
         ]);
         if ($request->hasFile('image')) {
