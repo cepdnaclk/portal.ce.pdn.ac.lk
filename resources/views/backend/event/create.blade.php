@@ -98,7 +98,7 @@
                 <!-- start time -->
                 <div class="form-group row">
                     {!! Form::label('start_time', 'Start Time*', ['class' => 'col-md-2 col-form-label']) !!}
-                    <div class="col-md-10">
+                    <div class="col-md-3">
                         {!! Form::text('start_time', '', ['class' => 'form-control', 'id' => 'start_time', 'required' => true]) !!}
                         @error('start_time')                                
                             <strong>{{ $message }}</strong>
@@ -109,7 +109,7 @@
                 <!-- end time -->
                 <div class="form-group row">
                     {!! Form::label('end_time', 'End Time*', ['class' => 'col-md-2 col-form-label']) !!}
-                    <div class="col-md-10">
+                    <div class="col-md-3">
                         {!! Form::text('end_time', '', ['class' => 'form-control', 'id' => 'end_time', 'required' => true]) !!}
                         @error('end_time')
                             <strong>{{ $message }}</strong>
@@ -123,11 +123,26 @@
 
                     <div class="col-md-10">
                         {!! Form::text('location', '', ['class' => 'form-control', 'required' => true]) !!}
-                        @error('link_caption')
+                        @error('location')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
+
+                <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                <script>
+                    // Initialize flatpickr on the input field
+                    flatpickr("#start_time", {
+                        altInput: true,
+                        enableTime: true,        // Enable time selection
+                        dateFormat: "Y-m-d H:i", // Set the date and time format
+                    });
+                    flatpickr("#end_time", {
+                        altInput: true,
+                        enableTime: true,        // Enable time selection
+                        dateFormat: "Y-m-d H:i", // Set the date and time format
+                    });
+                </script>
 
             </x-slot>
 
