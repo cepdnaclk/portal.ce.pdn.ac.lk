@@ -18,20 +18,18 @@ class NewsTable extends DataTableComponent
     {
         return [
             Column::make("Title", "title")
-                ->sortable(),
+                ->sortable()
+                ->searchable(), 
+            Column::make("Image", "image"),
+            Column::make("Author", "author")
+                ->searchable(),
+            Column::make('Link Caption'),
+            Column::make("Enabled", "enabled")
+                ->searchable(),
             Column::make("Created At", "created_at")
                 ->sortable(),
             Column::make("Updated At", "updated_at")
                 ->sortable(),
-            Column::make("Description", "description")
-                ->searchable(),
-            Column::make("Image", "image"),
-            Column::make("Author", "author")
-                ->searchable(),
-            Column::make("Link URL", "link_url"),
-            Column::make("Link Caption", "link_caption"),
-            Column::make("Enabled", "enabled")
-                ->searchable(),
             Column::make("Actions")
         ];
     }

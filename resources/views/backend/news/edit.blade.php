@@ -81,7 +81,6 @@
                     <div class="col-md-10">
                         {!! Form::text('link_url', $news->link_url, [
                             'class' => 'form-control',
-                            'required' => true,
                         ]) !!}
                         @error('link_url')
                             <strong>{{ $message }}</strong>
@@ -96,7 +95,6 @@
                     <div class="col-md-10">
                         {!! Form::text('link_caption', $news->link_caption, [
                             'class' => 'form-control',
-                            'required' => true,
                         ]) !!}
                         @error('link_caption')
                             <strong>{{ $message }}</strong>

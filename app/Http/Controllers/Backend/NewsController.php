@@ -33,8 +33,8 @@ class NewsController extends Controller
             'title' => ['required'],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'link_url' => 'url',
-            'link_caption' => 'string',
+            'link_url' => 'nullable|url',
+            'link_caption' => 'nullable|string',
         ]);
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('NewsImages', 'public');
@@ -76,8 +76,8 @@ class NewsController extends Controller
             'title' => ['required'],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'link_url' => 'url',
-            'link_caption' => 'string',
+            'link_url' => 'nullable|url',
+            'link_caption' => 'nullable|string',
         ]);
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('NewsImages', 'public');

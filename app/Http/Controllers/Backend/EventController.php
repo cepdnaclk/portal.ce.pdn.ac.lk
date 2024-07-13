@@ -32,10 +32,10 @@ class EventController extends Controller
             'title' => ['required'],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'link_url' => 'url',
-            'link_caption' => 'string',
+            'link_url' => 'nullable|url',
+            'link_caption' => 'nullable|string',
             'start_at' => 'date_format:Y-m-d H:i',
-            'end_at' => 'date_format:Y-m-d H:i',
+            'end_at' => 'nullable|date_format:Y-m-d H:i',
             'location' => 'string',
         ]);
         if ($request->hasFile('image')) {
@@ -79,10 +79,10 @@ class EventController extends Controller
             'title' => ['required'],
             'description' => 'string|required',
             'enabled' => 'nullable',
-            'link_url' => 'url',
-            'link_caption' => 'string',
+            'link_url' => 'nullable|url',
+            'link_caption' => 'nullable|string',
             'start_at' => 'date_format:Y-m-d H:i',
-            'end_at' => 'date_format:Y-m-d H:i',
+            'end_at' => 'nullable|date_format:Y-m-d H:i',
             'location' => 'string',
         ]);
         if ($request->hasFile('image')) {

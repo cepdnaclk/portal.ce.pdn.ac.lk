@@ -76,7 +76,7 @@
                     {!! Form::label('link_url', 'Link URL*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('link_url', '', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::text('link_url', '', ['class' => 'form-control']) !!}
                         @error('link_url')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -88,16 +88,16 @@
                     {!! Form::label('link_caption', 'Link Caption*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('link_caption', '', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::text('link_caption', '', ['class' => 'form-control']) !!}
                         @error('link_caption')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
 
-                <!-- start time -->
+                <!-- start at -->
                 <div class="form-group row">
-                    {!! Form::label('start_at', 'Start Time*', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('start_at', 'Start At*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-3">
                         {!! Form::text('start_at', '', ['class' => 'form-control', 'id' => 'start_at', 'required' => true]) !!}
                         @error('start_at')                                
@@ -106,11 +106,11 @@
                     </div>
                 </div>
 
-                <!-- end time -->
+                <!-- end at -->
                 <div class="form-group row">
-                    {!! Form::label('end_at', 'End Time*', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('end_at', 'End At*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-3">
-                        {!! Form::text('end_at', '', ['class' => 'form-control', 'id' => 'end_at', 'required' => true]) !!}
+                        {!! Form::text('end_at', '', ['class' => 'form-control', 'id' => 'end_at']) !!}
                         @error('end_at')
                             <strong>{{ $message }}</strong>
                         @enderror

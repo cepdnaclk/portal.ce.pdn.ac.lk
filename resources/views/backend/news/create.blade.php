@@ -68,7 +68,7 @@
                 <div class="form-group row">
                     {!! Form::label('link_url', 'Link URL*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        {!! Form::text('link_url', '', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::text('link_url', '', ['class' => 'form-control']) !!}
                         @error('link_url')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -79,7 +79,7 @@
                 <div class="form-group row">
                     {!! Form::label('link_caption', 'Link Caption*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        {!! Form::text('link_caption', '', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::text('link_caption', '', ['class' => 'form-control']) !!}
                         @error('link_caption')
                             <strong>{{ $message }}</strong>
                         @enderror

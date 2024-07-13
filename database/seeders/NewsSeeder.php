@@ -20,20 +20,20 @@ class NewsSeeder extends Seeder
             'news',
         ]);
         // Create some sample news items
-        $newss = [
-            [
-                'title' => 'Eius quia blanditiis architecto exercitationem.',
-                'description' => 'Nostrum qui qui ut deserunt dolores quaerat. Est quos sed ea quo placeat maxime. Sequi temporibus alias atque assumenda facere modi deleniti. Recusandae autem quia officia iste laudantium veritatis aut.',
-                'image' => 'sample-image.jpg',
-                'author' => 'Dr. Anna Murazik',
-                'link_url' => 'https:\/\/www.murazik.org\/aut-et-quibusdam-molestias-consectetur-consequatur',
-                'link_caption' => 'fugiat accusantium sit',
-            ],
+        $news = [
+            // [
+            //     'title' => 'Eius quia blanditiis architecto exercitationem.',
+            //     'description' => 'Nostrum qui qui ut deserunt dolores quaerat. Est quos sed ea quo placeat maxime. Sequi temporibus alias atque assumenda facere modi deleniti. Recusandae autem quia officia iste laudantium veritatis aut.',
+            //     'image' => 'sample-image.jpg',
+            //     'author' => 'Dr. Anna Murazik',
+            //     'link_url' => 'https:\/\/www.murazik.org\/aut-et-quibusdam-molestias-consectetur-consequatur',
+            //     'link_caption' => 'fugiat accusantium sit',
+            // ],
 
             // Add more news items as needed
         ];
 
-        foreach ($newss as $item) {
+        foreach ($news as $item) {
             News::create($item);
         }
 
