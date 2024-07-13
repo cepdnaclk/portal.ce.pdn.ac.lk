@@ -33,6 +33,9 @@ class EventFactory extends Factory
             'enabled' => $this->faker->boolean,
             'link_url' => $this->faker->url,
             'link_caption' => $this->faker->words(3, true),
+            'start_at' => now()->subWeek(),
+            'end_at' => now()->subDay(),
+            'location' => $this->faker->company,
         ];
     }
 

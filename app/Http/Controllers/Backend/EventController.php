@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 use App\Domains\Event\Models\Event;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -50,7 +51,7 @@ class EventController extends Controller
 
             return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event Item was created !');
         } catch (\Exception $ex) {
-            \Log::error($ex->getMessage());
+            Log::error($ex->getMessage());
             return abort(500);
         }
     }
