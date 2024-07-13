@@ -34,6 +34,24 @@
 
 <x-livewire-tables::table.cell>
     <div class="custom-width-1" style="width: 75px;">
+        {{ $row->start_at }}
+    </div>
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    <div class="custom-width-1" style="width: 75px;">
+        {{ $row->end_at }}
+    </div>
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    <div class="custom-width-1" style="width: 75px;">
+        {{ $row->location }}
+    </div>
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    <div class="custom-width-1" style="width: 75px;">
         {{ $row->created_at }}
     </div>
 </x-livewire-tables::table.cell>

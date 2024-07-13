@@ -26,6 +26,12 @@ class EventsTable extends DataTableComponent
             Column::make('Link Caption'),
             Column::make("Enabled", "enabled")
                 ->searchable(),
+            Column::make("Start Time", "start_at")
+                ->searchable(),
+            Column::make("End Time", "end_at")
+                ->searchable(),
+            Column::make("Location", "location")
+                ->searchable(),
             Column::make("Created At", "created_at")
                 ->sortable(),
             Column::make("Updated At", "updated_at")
