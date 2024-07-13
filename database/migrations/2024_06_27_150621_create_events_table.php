@@ -19,8 +19,11 @@ class CreateEventsTable extends Migration
             $table->text('description');
             $table->string('image')->nullable();
             $table->string('author');
-            $table->string('link_url');
-            $table->string('link_caption');
+            $table->string('link_url')->nullable();
+            $table->string('link_caption')->nullable();
+            $table->dateTime('start_at');
+            $table->dateTime('end_at')->nullable();
+            $table->string('location');
             $table->boolean('enabled')->default(true);
             $table->timestamps();
         });

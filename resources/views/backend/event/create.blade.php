@@ -39,7 +39,8 @@
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::textarea('description', '', ['class' => 'form-control', 'rows' => 3, 'required' => true]) !!}
+                        <div id="editor-container" style="height: auto;"></div>
+                        <textarea name="description" id="description" style="display:none;"></textarea>
                         @error('description')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -51,7 +52,7 @@
                     {!! Form::label('image', 'Image*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::file('image', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::file('image', ['class' => 'form-control']) !!}
                         @error('image')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -75,7 +76,7 @@
                     {!! Form::label('link_url', 'Link URL*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('link_url', '', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::text('link_url', '', ['class' => 'form-control']) !!}
                         @error('link_url')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -87,17 +88,66 @@
                     {!! Form::label('link_caption', 'Link Caption*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::text('link_caption', '', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::text('link_caption', '', ['class' => 'form-control']) !!}
                         @error('link_caption')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
 
+                <!-- start at -->
+                <div class="form-group row">
+                    {!! Form::label('start_at', 'Start At*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-3">
+                        {!! Form::text('start_at', '', ['class' => 'form-control', 'id' => 'start_at', 'required' => true]) !!}
+                        @error('start_at')                                
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- end at -->
+                <div class="form-group row">
+                    {!! Form::label('end_at', 'End At*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-3">
+                        {!! Form::text('end_at', '', ['class' => 'form-control', 'id' => 'end_at']) !!}
+                        @error('end_at')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- location -->
+                <div class="form-group row">
+                    {!! Form::label('location', 'Location*', ['class' => 'col-md-2 col-form-label']) !!}
+
+                    <div class="col-md-10">
+                        {!! Form::text('location', '', ['class' => 'form-control', 'required' => true]) !!}
+                        @error('location')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
+                <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                <script>
+                    // Initialize flatpickr on the input field
+                    flatpickr("#start_at", {
+                        altInput: true,
+                        enableTime: true,        // Enable time selection
+                        dateFormat: "Y-m-d H:i", // Set the date and time format
+                    });
+                    flatpickr("#end_at", {
+                        altInput: true,
+                        enableTime: true,        // Enable time selection
+                        dateFormat: "Y-m-d H:i", // Set the date and time format
+                    });
+                </script>
+
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right']) !!}
+                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>

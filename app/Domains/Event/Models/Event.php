@@ -31,6 +31,9 @@ class Event extends Model
         'enabled',
         'link_url',
         'link_caption',
+        'start_at',
+        'end_at',
+        'location',
         'created_at',
         'updated_at',
     ];

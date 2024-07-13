@@ -21,7 +21,6 @@
                 <!-- Title -->
                 <div class="form-group row">
                     {!! Form::label('title', 'Title*', ['class' => 'col-md-2 col-form-label']) !!}
-
                     <div class="col-md-10">
                         {!! Form::text('title', '', ['class' => 'form-control', 'required' => true]) !!}
                         @error('title')
@@ -33,9 +32,9 @@
                 <!-- Description -->
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
-
                     <div class="col-md-10">
-                        {!! Form::textarea('description', '', ['class' => 'form-control', 'rows' => 3, 'required' => true]) !!}
+                        <div id="editor-container" style="height: auto;"></div>
+                        <textarea name="description" id="description" style="display:none;"></textarea>
                         @error('description')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -45,9 +44,8 @@
                 <!-- Image -->
                 <div class="form-group row">
                     {!! Form::label('image', 'Image*', ['class' => 'col-md-2 col-form-label']) !!}
-
                     <div class="col-md-10">
-                        {!! Form::file('image', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::file('image', ['class' => 'form-control']) !!}
                         @error('image')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -66,24 +64,22 @@
                     </div>
                 </div>
 
-                <!-- link URL -->
+                <!-- Link URL -->
                 <div class="form-group row">
                     {!! Form::label('link_url', 'Link URL*', ['class' => 'col-md-2 col-form-label']) !!}
-
                     <div class="col-md-10">
-                        {!! Form::text('link_url', '', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::text('link_url', '', ['class' => 'form-control']) !!}
                         @error('link_url')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
 
-                <!-- link Caption -->
+                <!-- Link Caption -->
                 <div class="form-group row">
                     {!! Form::label('link_caption', 'Link Caption*', ['class' => 'col-md-2 col-form-label']) !!}
-
                     <div class="col-md-10">
-                        {!! Form::text('link_caption', '', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::text('link_caption', '', ['class' => 'form-control']) !!}
                         @error('link_caption')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -93,11 +89,12 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right']) !!}
+                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>
 
         {!! Form::close() !!}
     </div>
+
 @endsection
