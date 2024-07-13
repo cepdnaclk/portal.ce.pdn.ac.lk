@@ -3,7 +3,7 @@
 namespace App\Domains\Event\Models;
 
 use App\Domains\Event\Models\Traits\Scope\EventScope;
-use Database\Factories\NewsFactory;
+use Database\Factories\EventFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -49,6 +49,6 @@ class Event extends Model
      */
     protected static function newFactory()
     {
-        return NewsFactory::new();
+        return EventFactory::new();
     }
 }

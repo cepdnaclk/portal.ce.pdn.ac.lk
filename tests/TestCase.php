@@ -59,6 +59,16 @@ abstract class TestCase extends BaseTestCase
         return $user;
     }
 
+    protected function loginAsEventEditor()
+    {
+        $EventEditorRole = Role::find(3);
+        $user = User::factory()->admin()->create(['name' => 'event_editor']);
+        $user->assignRole($EventEditorRole->name); 
+        $this->actingAs($user); 
+
+        return $user;
+    }
+
     protected function logout()
     {
         return auth()->logout();
