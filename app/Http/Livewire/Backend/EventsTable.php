@@ -10,8 +10,9 @@ use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class EventsTable extends DataTableComponent
 {
-    public array $perPageAccepted = [4, 10, 100];
+    public array $perPageAccepted = [5, 10, 20];
     public bool $perPageAll = true;
+    public int $perPage = 5;
 
 
     public function columns(): array
