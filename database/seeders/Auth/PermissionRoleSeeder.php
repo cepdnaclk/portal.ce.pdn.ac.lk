@@ -130,6 +130,10 @@ class PermissionRoleSeeder extends Seeder
             'admin.access.events.edit',
         ]);
 
+        Role::find(1)->givePermissionTo([
+            'admin.access.user',
+        ]);
+
         $this->enableForeignKeys();
     }
 }
