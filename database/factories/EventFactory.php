@@ -29,7 +29,7 @@ class EventFactory extends Factory
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'image' => $this->faker->imageUrl(),
-            'author' => $this->faker->name,
+            'user_id' => 4,
             'enabled' => $this->faker->boolean,
             'link_url' => $this->faker->url,
             'link_caption' => $this->faker->words(3, true),
