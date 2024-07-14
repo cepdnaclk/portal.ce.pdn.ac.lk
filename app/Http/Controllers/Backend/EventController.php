@@ -46,7 +46,7 @@ class EventController extends Controller
         try {
             $event = new Event($data);
             $event->enabled = ($request->enabled != null);
-            $event->author = Auth::user()->name;
+            $event->user_id = Auth::user()->id;
             $event->save();
 
             return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event Item was created !');
@@ -94,7 +94,7 @@ class EventController extends Controller
 
         try {
             $event->enabled = ($request->enabled != null);
-            $event->author = Auth::user()->name;
+            $event->user_id = Auth::user()->id;
             $event->update($data);
             return redirect()->route('dashboard.event.index')->with('Success', 'Event Item was updated !');
         } catch (\Exception $ex) {

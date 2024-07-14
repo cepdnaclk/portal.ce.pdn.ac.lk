@@ -43,7 +43,7 @@ class NewsController extends Controller
         try {
             $news = new News($data);
             $news->enabled = ($request->enabled != null);
-            $news->author = Auth::user()->name;
+            $news->user_id = Auth::user()->id;
             $news->save();
 
             return redirect()->route('dashboard.news.index', $news)->with('Success', 'News Item was created !');
@@ -87,7 +87,7 @@ class NewsController extends Controller
 
         try {
             $news->enabled = ($request->enabled != null);
-            $news->author = Auth::user()->name;
+            $news->user_id = Auth::user()->id;
             $news->update($data);
             return redirect()->route('dashboard.news.index')->with('Success', 'News Item was updated !');
         } catch (\Exception $ex) {
