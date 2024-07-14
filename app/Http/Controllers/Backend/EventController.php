@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 use App\Domains\Event\Models\Event;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -45,12 +46,12 @@ class EventController extends Controller
         try {
             $event = new Event($data);
             $event->enabled = ($request->enabled != null);
-            $event->author = Auth::user()->name;
+            $event->user_id = Auth::user()->id;
             $event->save();
 
             return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event Item was created !');
         } catch (\Exception $ex) {
-            \Log::error($ex->getMessage());
+            Log::error($ex->getMessage());
             return abort(500);
         }
     }
@@ -93,7 +94,7 @@ class EventController extends Controller
 
         try {
             $event->enabled = ($request->enabled != null);
-            $event->author = Auth::user()->name;
+            $event->user_id = Auth::user()->id;
             $event->update($data);
             return redirect()->route('dashboard.event.index')->with('Success', 'Event Item was updated !');
         } catch (\Exception $ex) {

@@ -19,7 +19,9 @@ class CreateNewsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('image')->nullable();
-            $table->string('author');
+            // $table->unsignedBigInteger('user_id');
+            // $table->foreignId('user_id')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade');
             $table->string('link_url')->nullable();
             $table->string('link_caption')->nullable();
             $table->boolean('enabled')->default(true);

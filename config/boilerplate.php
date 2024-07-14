@@ -97,8 +97,6 @@ return [
             * It is not recommended to change
             */
             'admin' => 'Administrator',
-            'news_editor' => 'News Editor',
-            'event_editor' => 'Event Editor',
         ],
     ],
 

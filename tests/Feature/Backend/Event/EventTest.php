@@ -3,7 +3,6 @@
 namespace Tests\Feature\Backend\Event;
 
 use App\Domains\Event\Models\Event;
-use App\Domains\Auth\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -62,11 +61,16 @@ class EventTest extends TestCase
             'title' => 'test event',
             'description' => 'Nostrum qui qui ut deserunt dolores quaerat. Est quos sed ea quo placeat maxime. Sequi temporibus alias atque assumenda facere modi deleniti. Recusandae autem quia officia iste laudantium veritatis aut.',
             'image' => 'sample-image.jpg',
-            'link_url' => 'https://www.murazik.org/aut-et-quibusdam-molestias-consectetur-consequatur',
+            'author' => 'ishara kmll',
+            'link_url' => 'http://runolfsdottir.biz/quia-provident-ut-ipsa-atque-et',
             'link_caption' => 'fugiat accusantium sit',
+            'start_at' => '2024-07-06 18:04',
+            'end_at' => '2024-07-12 18:04', 
+            'location' => 'zoom',
         ]);
 
         $response->assertStatus(302);
+        
         $this->assertDatabaseHas('events', [
             'title' => 'test event',
         ]);
@@ -81,9 +85,13 @@ class EventTest extends TestCase
         $updateData = [
             'title' => 'Updated Event',
             'description' => 'This is an updated event description.',
-            'image' => 'https://via.placeholder.com/640x480.png/000055?text=quia',
+            'image' => 'sample-image.jpg',
+            'author' => 'ishara',
             'link_url' => 'http://example.com',
             'link_caption' => 'eaque excepturi velit',
+            'start_at' => '2024-07-06 18:04', 
+            'end_at' => '2024-07-12 18:04', 
+            'location' => 'zoom',
         ];
 
         $response = $this->put("/dashboard/event/{$event->id}", $updateData);

@@ -2,6 +2,7 @@
 
 use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\NewsController;
+use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['permission:admin.access.news.edit']], function () {
 

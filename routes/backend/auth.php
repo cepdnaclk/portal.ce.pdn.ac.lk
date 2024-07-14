@@ -9,7 +9,7 @@ use App\Domains\Auth\Http\Controllers\Backend\User\UserSessionController;
 use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
 use Tabuna\Breadcrumbs\Trail;
-
+use Illuminate\Support\Facades\Route;
 // All route names are prefixed with 'admin.auth'.
 Route::group([
     'prefix' => 'auth',

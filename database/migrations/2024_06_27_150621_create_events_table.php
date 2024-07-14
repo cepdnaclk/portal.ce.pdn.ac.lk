@@ -18,7 +18,7 @@ class CreateEventsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('image')->nullable();
-            $table->string('author');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade');
             $table->string('link_url')->nullable();
             $table->string('link_caption')->nullable();
             $table->dateTime('start_at');

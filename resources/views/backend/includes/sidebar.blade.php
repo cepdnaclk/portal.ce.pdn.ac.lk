@@ -84,7 +84,7 @@
             </li>
         @endif
 
-        @if ($logged_in_user->can('admin.access.news.edit'))
+        @if ($logged_in_user->hasPermissionTo('admin.access.news.edit'))
             {{-- News --}}
             <li class="c-sidebar-nav-dropdown">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-newspaper" class="c-sidebar-nav-dropdown-toggle"
@@ -99,7 +99,7 @@
             </li>
         @endif
 
-        @if ($logged_in_user->can('admin.access.events.edit'))
+        @if ($logged_in_user->hasPermissionTo('admin.access.events.edit'))
             {{-- Events --}}
             <li class="c-sidebar-nav-dropdown">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-browser" class="c-sidebar-nav-dropdown-toggle"

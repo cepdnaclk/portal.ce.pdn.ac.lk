@@ -28,7 +28,6 @@ class News extends Model
         'title',
         'description',
         'image',
-        'author',
         'link_url',
         'link_caption',
     ];
