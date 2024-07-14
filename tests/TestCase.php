@@ -52,7 +52,7 @@ abstract class TestCase extends BaseTestCase
     protected function loginAsNewsEditor()
     {
         $newsEditorRole = Role::find(2);
-        $user = User::factory()->admin()->create(['name' => 'news_editor']);
+        $user = User::factory()->admin()->create(['name' => 'News Editor']);
         $user->assignRole($newsEditorRole->name); 
         $this->actingAs($user); 
 
@@ -62,7 +62,7 @@ abstract class TestCase extends BaseTestCase
     protected function loginAsEventEditor()
     {
         $EventEditorRole = Role::find(3);
-        $user = User::factory()->admin()->create(['name' => 'event_editor']);
+        $user = User::factory()->admin()->create(['name' => 'Event Editor']);
         $user->assignRole($EventEditorRole->name); 
         $this->actingAs($user); 
 
