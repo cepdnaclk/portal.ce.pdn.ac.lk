@@ -22,8 +22,7 @@ class NewsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(), 
             Column::make("Image", "image"),
-            Column::make("Author", "author")
-                ->searchable(),
+            Column::make("Author"),
             Column::make('Link Caption'),
             Column::make("Enabled", "enabled")
                 ->sortable()
