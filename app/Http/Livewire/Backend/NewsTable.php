@@ -25,7 +25,10 @@ class NewsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Link Caption'),
             Column::make("Enabled", "enabled")
-                ->searchable(),
+                ->sortable()
+                ->format(function (News $news) {
+                    return view('backend.news.enabled-toggle', ['news' => $news]);
+                }),
             Column::make("Created At", "created_at")
                 ->sortable(),
             Column::make("Updated At", "updated_at")
@@ -39,6 +42,13 @@ class NewsTable extends DataTableComponent
         return News::query()
             ->when($this->getFilter('area'), fn ($query, $status) => $query->where('area', $status))
             ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type));
+    }
+
+    public function toggleEnable($newsId)
+    {
+        $news = News::findOrFail($newsId);
+        $news->enabled = !$news->enabled;
+        $news->save();
     }
 
     // public function filters(): array

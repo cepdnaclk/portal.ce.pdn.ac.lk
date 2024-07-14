@@ -10,7 +10,7 @@ use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class EventsTable extends DataTableComponent
 {
-    public array $perPageAccepted = [25, 50, 100];
+    public array $perPageAccepted = [4, 10, 100];
     public bool $perPageAll = true;
 
 
@@ -25,7 +25,10 @@ class EventsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Link Caption'),
             Column::make("Enabled", "enabled")
-                ->searchable(),
+                ->sortable()
+                ->format(function (Event $event) {
+                    return view('backend.event.enabled-toggle', ['event' => $event]);
+                }),
             Column::make("Start Time", "start_at")
                 ->searchable(),
             Column::make("End Time", "end_at")
@@ -45,6 +48,13 @@ class EventsTable extends DataTableComponent
         return Event::query()
             ->when($this->getFilter('area'), fn ($query, $status) => $query->where('area', $status))
             ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type));
+    }
+
+    public function toggleEnable($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        $event->enabled = !$event->enabled;
+        $event->save();
     }
 
     // public function filters(): array

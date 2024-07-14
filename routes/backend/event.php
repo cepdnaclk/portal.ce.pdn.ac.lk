@@ -36,6 +36,7 @@ Route::group(['middleware' => ['permission:admin.access.events.edit']], function
                 ->push(__('Edit'));
         });
 
+
     // Update
     Route::put('event/{event}', [EventController::class, 'update'])
         ->name('event.update');
