@@ -17,7 +17,7 @@
 </x-livewire-tables::table.cell> --}}
 
 <x-livewire-tables::table.cell>
-    <img class="mt-1" src="{{ $row->image ? asset('storage/' . $row->image) : asset('Events/no-image.png') }}" alt="Image preview" style="max-width: 200px; max-height: 200px;" />
+    <img class="mt-1" src="{{ $row->image ? asset('storage/' . $row->image) : asset('Events/no-image.png') }}" alt="Image preview" style="max-width: 135px; max-height: 135px;" />
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
@@ -29,8 +29,14 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->enabled ? 'Enabled' : 'Disabled' }}
+    @if($row->enabled)
+        <i class="fas fa-toggle-on fa-2x" style="color: #0ca678;"></i>
+    @else   
+        <i class="fas fa-toggle-on fa-2x fa-rotate-180" style="color: #3c4b64;"></i>
+    @endif
 </x-livewire-tables::table.cell>
+
+
 
 <x-livewire-tables::table.cell>
     <div class="custom-width-1" style="width: 75px;">

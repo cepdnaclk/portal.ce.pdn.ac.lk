@@ -72,7 +72,7 @@
         @if ($logged_in_user->hasAllAccess())
             {{-- Announcements --}}
             <li class="c-sidebar-nav-dropdown">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-bullhorn" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Announcements')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
@@ -87,7 +87,7 @@
         @if ($logged_in_user->can('admin.access.news.edit'))
             {{-- News --}}
             <li class="c-sidebar-nav-dropdown">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-newspaper" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('News')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
@@ -102,7 +102,7 @@
         @if ($logged_in_user->can('admin.access.events.edit'))
             {{-- Events --}}
             <li class="c-sidebar-nav-dropdown">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-browser" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Event')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
