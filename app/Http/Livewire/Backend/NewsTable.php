@@ -10,8 +10,9 @@ use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class NewsTable extends DataTableComponent
 {
-    public array $perPageAccepted = [25, 50, 100];
+    public array $perPageAccepted = [5, 10, 20];
     public bool $perPageAll = true;
+    public int $perPage = 5;
 
 
     public function columns(): array

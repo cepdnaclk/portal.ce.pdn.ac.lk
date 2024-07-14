@@ -20,7 +20,7 @@ class EventResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'author' => User::find($this->user_id)->name,
-            'image' => $this->image,
+            'image' => url('storage/' . $this->image),
             'start_at' => $this->start_at,
             'end_at' => $this->end_at,
             'location' => $this->location,
