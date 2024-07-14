@@ -7,5 +7,6 @@ use Illuminate\Http\Request;
 Route::get('/news',[NewsApiController::class,'index']);
 Route::get('/news/{id}',[NewsApiController::class,'show']);
 
-Route::get('/event',[EventApiController::class,'index']);
+Route::get('/event/upcoming',[EventApiController::class,'upcoming']);
+Route::get('/event/past',[EventApiController::class,'past']);
 Route::get('/event/{id}',[EventApiController::class,'show']);
