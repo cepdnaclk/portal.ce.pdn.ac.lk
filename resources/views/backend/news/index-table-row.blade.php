@@ -1,3 +1,5 @@
+<?php use App\Domains\Auth\Models\User; ?>
+
 <x-livewire-tables::table.cell>
     {{ $row->title }}
 </x-livewire-tables::table.cell>
@@ -21,7 +23,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->author }}
+    {{ User::find($row->user_id)->name }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
