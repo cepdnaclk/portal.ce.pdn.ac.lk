@@ -21,8 +21,7 @@ class NewsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(), 
             Column::make("Image", "image"),
-            Column::make("Author", "author")
-                ->searchable(),
+            Column::make("Author"),
             Column::make('Link Caption'),
             Column::make("Enabled", "enabled")
                 ->sortable()
@@ -40,9 +39,16 @@ class NewsTable extends DataTableComponent
     public function query(): Builder
     {
         return News::query()
-            ->when($this->getFilter('area'), fn ($query, $status) => $query->where('area', $status))
-            ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type));
+            ->when($this->getFilter('enabled') !== null, function ($query) {
+                $enabled = $this->getFilter('enabled');
+                if ($enabled === 1) {
+                    $query->where('enabled', true);
+                } elseif ($enabled === 0) {
+                    $query->where('enabled', false);
+                }
+            });
     }
+    
 
     public function toggleEnable($newsId)
     {
@@ -51,24 +57,17 @@ class NewsTable extends DataTableComponent
         $news->save();
     }
 
-    // public function filters(): array
-    // {
-    //     $type = ["" => "Any"];
-    //     foreach (News::types() as $key => $value) {
-    //         $type[$key] = $value;
-    //     }
-    //     $area = ["" => "Any"];
-    //     foreach (News::areas() as $key => $value) {
-    //         $area[$key] = $value;
-    //     }
-
-    //     return [
-    //         'area' => Filter::make('Display Area')
-    //             ->select($area),
-    //         'type' => Filter::make('Type')
-    //             ->select($type),
-    //     ];
-    // }
+    public function filters(): array
+    {
+        return [
+            'enabled' => Filter::make('Enabled')
+                ->select([
+                    '' => 'Any',
+                     1 => 'Enabled',
+                     0 => 'Not Enabled',
+                ]),
+        ];
+    }
 
     public function rowView(): string
     {
