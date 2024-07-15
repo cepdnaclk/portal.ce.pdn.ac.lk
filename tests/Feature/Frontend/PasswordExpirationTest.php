@@ -15,7 +15,7 @@ class PasswordExpirationTest extends TestCase
     {
         config(['boilerplate.access.user.password_expires_days' => 30]);
 
-        $user = User::factory()->create();
+        $user = User::factory()->user()->create();
 
         $this->actingAs($user);
 
@@ -53,7 +53,7 @@ class PasswordExpirationTest extends TestCase
     /** @test */
     public function password_expiration_update_requires_validation()
     {
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->user()->create());
 
         $response = $this->patch('/password/expired');
 

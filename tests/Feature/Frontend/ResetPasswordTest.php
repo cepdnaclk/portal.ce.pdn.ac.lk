@@ -116,7 +116,7 @@ class ResetPasswordTest extends TestCase
     {
         config(['boilerplate.access.user.password_history' => 3]);
 
-        $user = User::factory()->create(['email' => 'john@example.com', 'password' => ']EqZL4}zBT']);
+        $user = User::factory()->user()->create(['email' => 'john@example.com', 'password' => ']EqZL4}zBT']);
 
         // Change once
         $this->actingAs($user)
