@@ -46,14 +46,22 @@ class EventsTable extends DataTableComponent
     public function query(): Builder
     {
         return Event::query()
-            ->when($this->getFilter('enabled') !== null, function ($query) {
-                $enabled = $this->getFilter('enabled');
-                if ($enabled === 1) {
-                    $query->where('enabled', true);
-                } elseif ($enabled === 0) {
-                    $query->where('enabled', false);
-                }
-            });
+        ->when($this->getFilter('status') !== null, function ($query) {
+            $status = $this->getFilter('status');
+            if ($status === 1) {
+                $query->getUpcomingEvents();
+            } elseif ($status === 0) {
+                $query->getPastEvents();
+            }
+        })
+        ->when($this->getFilter('enabled') !== null, function ($query) {
+            $enabled = $this->getFilter('enabled');
+            if ($enabled === 1) {
+                $query->where('enabled', true);
+            } elseif ($enabled === 0) {
+                $query->where('enabled', false);
+            }
+        });
     }
     public function toggleEnable($eventId)
     {
@@ -71,6 +79,12 @@ class EventsTable extends DataTableComponent
                     '' => 'Any',
                      1 => 'Enabled',
                      0 => 'Not Enabled',
+                ]),
+            'status' => Filter::make('Status')
+                ->select([
+                    '' => 'Any',
+                     1 => 'Upcoming',
+                     0 => 'Past',
                 ]),
         ];
     }
