@@ -4,7 +4,7 @@ use Tabuna\Breadcrumbs\Trail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\EventController;
 
-Route::group(['middleware' => ['permission:admin.access.events.edit']], function () {
+Route::group(['middleware' => ['role:Event Editor']], function () {
 
     Route::get('/event', function () {
         return view('backend.event.index');

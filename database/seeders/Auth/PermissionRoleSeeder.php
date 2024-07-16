@@ -92,43 +92,6 @@ class PermissionRoleSeeder extends Seeder
 
         // Assign Permissions to other Roles
         //
-        $newsEditor = Permission::create([
-            'type' => User::TYPE_ADMIN,
-            'name' => 'admin.access.news',
-            'description' => 'All News Permissions',
-        ]);
-
-        $newsEditor->children()->saveMany([
-            new Permission([
-                'type' => User::TYPE_ADMIN,
-                'name' => 'admin.access.news.edit',
-                'description' => 'Edit News',
-            ]),
-        ]);
-
-        $eventEditor = Permission::create([
-            'type' => User::TYPE_ADMIN,
-            'name' => 'admin.access.events',
-            'description' => 'All Event Permissions',
-        ]);
-
-        $eventEditor->children()->saveMany([
-            new Permission([
-                'type' => User::TYPE_ADMIN,
-                'name' => 'admin.access.events.edit',
-                'description' => 'Edit Events',
-            ]),
-        ]);
-
-        // Assign permissions to the new role (News Editor)
-        Role::find(2)->givePermissionTo([
-            'admin.access.news.edit',
-        ]);
-
-        // Assign permissions to the new role (Event Editor)
-        Role::find(3)->givePermissionTo([
-            'admin.access.events.edit',
-        ]);
 
         Role::find(1)->givePermissionTo([
             'admin.access.user',
