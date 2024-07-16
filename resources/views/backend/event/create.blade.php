@@ -39,7 +39,7 @@
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        <div id="editor-container" style="height: auto;"></div>
+                        <div id="editor-container" style="height: auto;min-height: 200px;"></div>
                         <textarea name="description" id="description" style="display:none;"></textarea>
                         @error('description')
                             <strong>{{ $message }}</strong>
