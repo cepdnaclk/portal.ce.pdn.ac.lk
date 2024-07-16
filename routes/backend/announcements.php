@@ -2,6 +2,7 @@
 
 use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\AnnouncementController;
+use Illuminate\Support\Facades\Route;
 
 Route::group([], function () {
 

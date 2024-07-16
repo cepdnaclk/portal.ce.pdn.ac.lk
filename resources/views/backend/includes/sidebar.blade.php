@@ -72,13 +72,43 @@
         @if ($logged_in_user->hasAllAccess())
             {{-- Announcements --}}
             <li class="c-sidebar-nav-dropdown">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-bullhorn" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Announcements')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
                     <li class="c-sidebar-nav-item">
                         <x-utils.link :href="route('dashboard.announcements.index')" class="c-sidebar-nav-link" :text="__('Manage')"
                             :active="activeClass(Route::is('dashboard.announcements.*'), 'c-active')"></x-utils.link>
+                    </li>
+                </ul>
+            </li>
+        @endif
+
+        @if ($logged_in_user->hasRole('News Editor'))
+            {{-- News --}}
+            <li class="c-sidebar-nav-dropdown">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-newspaper" class="c-sidebar-nav-dropdown-toggle"
+                    :text="__('News')"></x-utils.link>
+
+                <ul class="c-sidebar-nav-dropdown-items">
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.news.index')" class="c-sidebar-nav-link" :text="__('Manage')"
+                            :active="activeClass(Route::is('dashboard.news.*'), 'c-active')"></x-utils.link>
+                    </li>
+                </ul>
+            </li>
+        @endif
+
+        @if ($logged_in_user->hasRole('Event Editor'))
+            {{-- Events --}}
+            <li class="c-sidebar-nav-dropdown">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-browser" class="c-sidebar-nav-dropdown-toggle"
+                    :text="__('Event')"></x-utils.link>
+
+                <ul class="c-sidebar-nav-dropdown-items">
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.event.index')" class="c-sidebar-nav-link" :text="__('Manage')"
+                            :active="activeClass(Route::is('dashboard.event.*'), 'c-active')"></x-utils.link>
                     </li>
                 </ul>
             </li>

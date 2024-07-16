@@ -102,7 +102,7 @@ class UpdateRoleTest extends TestCase
     /** @test */
     public function a_non_admin_can_not_edit_roles()
     {
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->user()->create());
 
         $role = Role::factory()->create(['name' => 'current name']);
 

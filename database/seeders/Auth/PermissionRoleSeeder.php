@@ -29,6 +29,18 @@ class PermissionRoleSeeder extends Seeder
             'name' => 'Administrator',
         ]);
 
+        Role::create([
+            'id' => 2, 
+            'type' => User::TYPE_ADMIN,
+            'name' => 'News Editor', 
+        ]);
+
+        Role::create([
+            'id' => 3, 
+            'type' => User::TYPE_ADMIN,
+            'name' => 'Event Editor', 
+        ]);
+
         // Non Grouped Permissions
         //
 
@@ -80,6 +92,10 @@ class PermissionRoleSeeder extends Seeder
 
         // Assign Permissions to other Roles
         //
+
+        Role::find(1)->givePermissionTo([
+            'admin.access.user',
+        ]);
 
         $this->enableForeignKeys();
     }

@@ -13,7 +13,7 @@ class ConfirmationTest extends TestCase
     /** @test */
     public function a_user_can_access_the_confirm_password_page()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->user()->create();
 
         $this->actingAs($user);
 
