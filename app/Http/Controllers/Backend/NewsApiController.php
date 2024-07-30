@@ -17,7 +17,7 @@ class NewsApiController extends Controller
         if ($news->count() > 0) {
             return NewsResource::collection($news);
         } else {
-            return response()->json(['message' => 'News item not found'], 404);
+            return response()->json(['message' => 'News not found'], 404);
         }
     }
 
@@ -29,7 +29,7 @@ class NewsApiController extends Controller
         if ($news) {
             return new NewsResource($news);
         } else {
-            return response()->json(['message' => 'News item not found'], 404);
+            return response()->json(['message' => 'News not found'], 404);
         }
     }
 }

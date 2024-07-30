@@ -41,7 +41,7 @@ class UserSeeder extends Seeder
             ]);
 
             User::create([
-                'type' => User::TYPE_ADMIN,
+                'type' => User::TYPE_USER,
                 'name' => 'NewsEditor1',
                 'email' => env('SEED_NEWS_EDITOR_EMAIL', 'news@aces.com'),
                 'password' => env('SEED_NEWS_EDITOR_PASSWORD', 'news'),
@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
             ]);
 
             User::create([
-                'type' => User::TYPE_ADMIN,
+                'type' => User::TYPE_USER,
                 'name' => 'EventEditor1',
                 'email' => env('SEED_EVENT_EDITOR_EMAIL', 'events@aces.com'),
                 'password' => env('SEED_EVENT_EDITOR_PASSWORD', 'events'),

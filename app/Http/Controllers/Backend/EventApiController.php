@@ -14,13 +14,13 @@ class EventApiController extends Controller
     {
         $perPage = 20;
         $event = Event::getUpcomingEvents()
-                    ->orderBy('start_at', 'asc')
-                    ->paginate($perPage);
+            ->orderBy('start_at', 'asc')
+            ->paginate($perPage);
 
         if ($event->count() > 0) {
             return EventResource::collection($event);
         } else {
-            return response()->json(['message' => 'News item not found'], 404);
+            return response()->json(['message' => 'Events not found'], 404);
         }
     }
 
@@ -28,13 +28,13 @@ class EventApiController extends Controller
     {
         $perPage = 20;
         $event = Event::getPastEvents()
-                    ->orderBy('start_at', 'desc')
-                    ->paginate($perPage);
+            ->orderBy('start_at', 'desc')
+            ->paginate($perPage);
 
         if ($event->count() > 0) {
             return EventResource::collection($event);
         } else {
-            return response()->json(['message' => 'News item not found'], 404);
+            return response()->json(['message' => 'Events not found'], 404);
         }
     }
 
@@ -46,7 +46,7 @@ class EventApiController extends Controller
         if ($event) {
             return new EventResource($event);
         } else {
-            return response()->json(['message' => 'News item not found'], 404);
+            return response()->json(['message' => 'Event not found'], 404);
         }
     }
 }

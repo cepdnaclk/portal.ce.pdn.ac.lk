@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\DashboardController;
 use Tabuna\Breadcrumbs\Trail;
 use Illuminate\Support\Facades\Route;
+
 // All route names are prefixed with 'admin.'.
 Route::redirect('/', '/dashboard/home', 301);
 
