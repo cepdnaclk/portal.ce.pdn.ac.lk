@@ -11,7 +11,7 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
     })->name('event.index')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('event'), route('dashboard.event.index'));
+                ->push(__('Event'), route('dashboard.event.index'));
         });
 
     // Create
@@ -19,7 +19,7 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
         ->name('event.create')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('event'), route('dashboard.event.index'))
+                ->push(__('Event'), route('dashboard.event.index'))
                 ->push(__('Create'));
         });
 
@@ -32,7 +32,7 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
         ->name('event.edit')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('event'), route('dashboard.event.index'))
+                ->push(__('Event'), route('dashboard.event.index'))
                 ->push(__('Edit'));
         });
 
@@ -46,7 +46,7 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
         ->name('event.delete')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('event'), route('dashboard.event.index'))
+                ->push(__('Event'), route('dashboard.event.index'))
                 ->push(__('Delete'));
         });
 
