@@ -22,6 +22,8 @@ class PermissionRoleSeeder extends Seeder
     {
         $this->disableForeignKeys();
 
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Create Roles
         Role::create([
             'id' => 1,
@@ -35,13 +37,14 @@ class PermissionRoleSeeder extends Seeder
             'name' => 'Editor',
         ]);
 
-
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Non Grouped Permissions
-        //
 
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Grouped permissions
 
-        // Users category
+        // Role: User
         $users = Permission::create([
             'type' => User::TYPE_ADMIN,
             'name' => 'admin.access.user',
@@ -85,15 +88,13 @@ class PermissionRoleSeeder extends Seeder
             ]),
         ]);
 
-        // Assign Permissions to other Roles
-
         // Role: Editor
-        $users = Permission::create([
+        $editor = Permission::create([
             'type' => User::TYPE_USER,
             'name' => 'user.access.editor',
             'description' => 'Editor Permissions',
         ]);
-        $users->children()->saveMany([
+        $editor->children()->saveMany([
             new Permission([
                 'type' => User::TYPE_USER,
                 'name' => 'user.access.editor.news',
@@ -106,13 +107,20 @@ class PermissionRoleSeeder extends Seeder
             ])
         ]);
 
-        Role::find(1)->givePermissionTo([
-            'admin.access.user',
-        ]);
 
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Assign permissions to Roles
+
+        Role::findByName('Administrator')->givePermissionTo([
+            'admin.access.user', 'user.access.editor'
+        ]);
+        Role::findByName('Editor')->givePermissionTo(['user.access.editor']);
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Assign Permissions to users 
+
+        // Only for the local testings
         if (app()->environment(['local', 'testing'])) {
-            User::find(2)->givePermissionTo('user.access.editor.news');
-            User::find(2)->givePermissionTo('user.access.editor.events');
             User::find(3)->givePermissionTo('user.access.editor.news');
             User::find(4)->givePermissionTo('user.access.editor.events');
         };
