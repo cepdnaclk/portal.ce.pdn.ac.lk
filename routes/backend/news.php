@@ -4,7 +4,7 @@ use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\NewsController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['role:News Editor']], function () {
+Route::group(['middleware' => ['permission:user.access.editor.news']], function () {
 
     Route::get('/news', function () {
         return view('backend.news.index');

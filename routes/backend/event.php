@@ -4,14 +4,14 @@ use Tabuna\Breadcrumbs\Trail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\EventController;
 
-Route::group(['middleware' => ['role:Event Editor']], function () {
+Route::group(['middleware' => ['permission:user.access.editor.events']], function () {
 
     Route::get('/event', function () {
         return view('backend.event.index');
     })->name('event.index')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('event'), route('dashboard.event.index'));
+                ->push(__('Event'), route('dashboard.event.index'));
         });
 
     // Create
@@ -19,7 +19,7 @@ Route::group(['middleware' => ['role:Event Editor']], function () {
         ->name('event.create')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('event'), route('dashboard.event.index'))
+                ->push(__('Event'), route('dashboard.event.index'))
                 ->push(__('Create'));
         });
 
@@ -32,7 +32,7 @@ Route::group(['middleware' => ['role:Event Editor']], function () {
         ->name('event.edit')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('event'), route('dashboard.event.index'))
+                ->push(__('Event'), route('dashboard.event.index'))
                 ->push(__('Edit'));
         });
 
@@ -46,7 +46,7 @@ Route::group(['middleware' => ['role:Event Editor']], function () {
         ->name('event.delete')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('event'), route('dashboard.event.index'))
+                ->push(__('Event'), route('dashboard.event.index'))
                 ->push(__('Delete'));
         });
 

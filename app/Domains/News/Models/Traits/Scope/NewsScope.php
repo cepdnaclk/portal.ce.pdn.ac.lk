@@ -18,19 +18,6 @@ trait NewsScope
 
     /**
      * @param $query
-     * @param $area
-     * @return mixed
-     */
-    public function scopeForArea($query, $area)
-    {
-        return $query->where(function ($query) use ($area) {
-            $query->whereArea($area)
-                ->orWhereNull('area');
-        });
-    }
-
-    /**
-     * @param $query
      * @return mixed
      */
     public function scopeInTimeFrame($query)

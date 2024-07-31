@@ -1,6 +1,8 @@
 <?php
 
 return [
-    'frontend' => [],
+    'frontend' => [
+        'dummy_thumb' => '/dummy/item_thumbnail.jpg',
+    ],
     'backend' => []
 ];
