@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Domains\News\Models\News;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 
 class NewsController extends Controller
 {
@@ -37,7 +38,7 @@ class NewsController extends Controller
             'link_caption' => 'nullable|string',
         ]);
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('NewsImages', 'public');
+            $data['image'] = $this->uploadThumb(null, $request->image, "news");
         }
 
         try {
@@ -46,7 +47,7 @@ class NewsController extends Controller
             $news->user_id = Auth::user()->id;
             $news->save();
 
-            return redirect()->route('dashboard.news.index', $news)->with('Success', 'News Item was created !');
+            return redirect()->route('dashboard.news.index', $news)->with('Success', 'News was created !');
         } catch (\Exception $ex) {
             return abort(500);
         }
@@ -55,7 +56,7 @@ class NewsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\News $announcement
+     * @param \App\Models\News $news
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function edit(News $news)
@@ -67,7 +68,7 @@ class NewsController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\News $announcement
+     * @param \App\Models\News $news
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, News $news)
@@ -80,7 +81,7 @@ class NewsController extends Controller
             'link_caption' => 'nullable|string',
         ]);
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('NewsImages', 'public');
+            $data['image'] = $this->uploadThumb($news->image, $request->image, "events");
         } else {
             $data['image'] = $news->image;
         }
@@ -89,7 +90,7 @@ class NewsController extends Controller
             $news->enabled = ($request->enabled != null);
             $news->user_id = Auth::user()->id;
             $news->update($data);
-            return redirect()->route('dashboard.news.index')->with('Success', 'News Item was updated !');
+            return redirect()->route('dashboard.news.index')->with('Success', 'News was updated !');
         } catch (\Exception $ex) {
             return abort(500);
         }
@@ -98,7 +99,7 @@ class NewsController extends Controller
     /**
      * Confirm to delete the specified resource from storage.
      *
-     * @param \App\Models\Announcement $announcement
+     * @param \App\Models\News $news
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function delete(News $news)
@@ -110,16 +111,40 @@ class NewsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\News $announcement
+     * @param \App\Models\News $news
      * @return \Illuminate\Http\RedirectResponse|null
      */
     public function destroy(News $news)
     {
         try {
             $news->delete();
-            return redirect()->route('dashboard.news.index')->with('Success', 'News Item was deleted !');
+            return redirect()->route('dashboard.news.index')->with('Success', 'News was deleted !');
         } catch (\Exception $ex) {
             return abort(500);
         }
+    }
+
+    // Private function to handle deleting images
+    private function deleteThumb($currentURL)
+    {
+        if ($currentURL != null) {
+            $oldImage = public_path($currentURL);
+            if (File::exists($oldImage)) unlink($oldImage);
+        }
+    }
+
+    // Private function to handle uploading  images
+    private function uploadThumb($currentURL, $newImage, $folder)
+    {
+        // Delete the existing image
+        $this->deleteThumb($currentURL);
+
+        $imageName = time() . '.' . $newImage->extension();
+        $newImage->move(public_path('img/' . $folder), $imageName);
+        $imagePath = "/img/$folder/" . $imageName;
+        $image = Image::make(public_path($imagePath))->fit(1280, 720);
+        $image->save();
+
+        return $imageName;
     }
 }

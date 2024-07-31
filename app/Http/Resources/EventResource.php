@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Domains\Auth\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\URL;
 
 class EventResource extends JsonResource
 {
@@ -20,7 +21,7 @@ class EventResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'author' => User::find($this->user_id)->name,
-            'image' => url('storage/' . $this->image),
+            'image' =>  URL::to($this->thumbURL()),
             'start_at' => $this->start_at,
             'end_at' => $this->end_at,
             'location' => $this->location,

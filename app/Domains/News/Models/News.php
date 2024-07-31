@@ -39,6 +39,12 @@ class News extends Model
         'enabled' => 'boolean',
     ];
 
+    public function thumbURL()
+    {
+        if ($this->image != null) return '/img/events/' . $this->image;
+        else return config('constants.frontend.dummy_thumb');
+    }
+
     /**
      * Create a new factory instance for the model.
      *
