@@ -13,6 +13,7 @@
 
     @stack('before-styles')
     <link href="{{ mix('css/backend.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/multi-form.css')}}" rel="stylesheet"/>
     <livewire:styles />
     @stack('after-styles')
 

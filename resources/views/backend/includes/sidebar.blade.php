@@ -72,13 +72,28 @@
         @if ($logged_in_user->hasAllAccess())
             {{-- Announcements --}}
             <li class="c-sidebar-nav-dropdown">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-bullhorn" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Announcements')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
                     <li class="c-sidebar-nav-item">
                         <x-utils.link :href="route('dashboard.announcements.index')" class="c-sidebar-nav-link" :text="__('Manage')"
                             :active="activeClass(Route::is('dashboard.announcements.*'), 'c-active')"></x-utils.link>
+                    </li>
+                </ul>
+            </li>
+        @endif
+
+        @if ($logged_in_user->hasAllAccess())
+            {{-- Courses --}}
+            <li class="c-sidebar-nav-dropdown">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-book" class="c-sidebar-nav-dropdown-toggle"
+                    :text="__('Courses')"></x-utils.link>
+
+                <ul class="c-sidebar-nav-dropdown-items">
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.courses.index')" class="c-sidebar-nav-link" :text="__('Manage')"
+                            :active="activeClass(Route::is('dashboard.coursesphp.*'), 'c-active')"></x-utils.link>
                     </li>
                 </ul>
             </li>
