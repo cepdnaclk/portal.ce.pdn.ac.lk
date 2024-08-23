@@ -5,23 +5,28 @@
                 items: JSON.parse(sessionStorage.getItem('items') || '[]'), 
                 userInput: '', 
                 selectedItem: null, 
-                editIndex: null 
+                editIndex: null,
+                isEditing: false
             }" 
             x-init="$watch('items', value => sessionStorage.setItem('items', JSON.stringify(value)))">
                 <form x-on:submit.prevent>
                     <div class="input-group mb-3">
                         <input x-model="userInput" placeholder="Enter item" type="text" class="form-control item-box">
                         <div class="input-group-append">
-                            <button class="btn btn-primary add-btn" x-on:click="if(userInput.trim().length > 0) {
-                                    if (editIndex !== null) {
+                            <button class="btn btn-primary add-btn" x-text="isEditing ? 'Update' : 'Add'" x-on:click="
+                                if(userInput.trim().length > 0) {
+                                    if (isEditing) {
                                         items[editIndex] = userInput;
                                         editIndex = null;
+                                        isEditing = false;
                                     } else {
                                         items.push(userInput);
                                     }
                                     userInput = '';
                                     selectedItem = null;
-                                }">Add</button>
+                                    sessionStorage.setItem('items', JSON.stringify(items));
+                                }">
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -30,7 +35,7 @@
                     <template x-for="(item, index) in items" :key="index">
                         <li class="list-group-item d-flex justify-content-between align-items-center"
                             :class="{'active': selectedItem === index}"
-                            @click="selectedItem = index">
+                            @click="selectedItem = selectedItem === index ? null : index">
                             <span x-text="item"></span>
                             <span class="badge badge-primary badge-pill" x-text="selectedItem === index ? 'Selected' : ''"></span>
                         </li>
@@ -38,7 +43,11 @@
                 </ul>
 
                 <div class="mt-3">
-                    <button @click="if(selectedItem !== null) { editIndex = selectedItem; userInput = items[selectedItem]; }" class="btn btn-outline-warning btn-sm" :disabled="selectedItem === null">✏️ Edit</button>
+                    <button @click="if(selectedItem !== null) { 
+                        editIndex = selectedItem; 
+                        userInput = items[selectedItem]; 
+                        isEditing = true;
+                    }" class="btn btn-outline-warning btn-sm" :disabled="selectedItem === null">✏️ Edit</button>
                     <button @click="if(selectedItem !== null) { 
                         items.splice(selectedItem, 1); 
                         selectedItem = null; 
