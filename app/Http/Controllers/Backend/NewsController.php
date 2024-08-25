@@ -8,6 +8,7 @@ use App\Domains\News\Models\News;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
 class NewsController extends Controller
 {
@@ -30,8 +31,11 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = request()->validate([
-            'title' => ['required'],
+            'title' => 'required',
+            'url' => ['required', 'unique:news'],
+            'published_at' => 'required|date_format:Y-m-d',
             'description' => 'string|required',
             'enabled' => 'nullable',
             'link_url' => 'nullable|url',
@@ -43,7 +47,7 @@ class NewsController extends Controller
 
         try {
             $news = new News($data);
-            $news->enabled = ($request->enabled != null);
+            $news->enabled = ($request->enabled == 1);
             $news->user_id = Auth::user()->id;
             $news->save();
 
@@ -75,13 +79,15 @@ class NewsController extends Controller
     {
         $data = request()->validate([
             'title' => ['required'],
+            'url' => ['required', Rule::unique('news')->ignore($news->id)],
+            'published_at' => 'required|date_format:Y-m-d',
             'description' => 'string|required',
             'enabled' => 'nullable',
             'link_url' => 'nullable|url',
             'link_caption' => 'nullable|string',
         ]);
         if ($request->hasFile('image')) {
-            $data['image'] = $this->uploadThumb($news->image, $request->image, "events");
+            $data['image'] = $this->uploadThumb($news->image, $request->image, $news);
         } else {
             $data['image'] = $news->image;
         }
@@ -117,6 +123,8 @@ class NewsController extends Controller
     public function destroy(News $news)
     {
         try {
+
+            $this->deleteThumb($news->thumb);
             $news->delete();
             return redirect()->route('dashboard.news.index')->with('Success', 'News was deleted !');
         } catch (\Exception $ex) {
@@ -127,7 +135,7 @@ class NewsController extends Controller
     // Private function to handle deleting images
     private function deleteThumb($currentURL)
     {
-        if ($currentURL != null) {
+        if ($currentURL != null && $currentURL != config('constants.frontend.dummy_thumb')) {
             $oldImage = public_path($currentURL);
             if (File::exists($oldImage)) unlink($oldImage);
         }

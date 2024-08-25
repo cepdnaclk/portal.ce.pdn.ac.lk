@@ -26,10 +26,12 @@ class News extends Model
      */
     protected $fillable = [
         'title',
+        'url',
         'description',
         'image',
         'link_url',
         'link_caption',
+        'published_at',
     ];
 
     /**
@@ -41,7 +43,7 @@ class News extends Model
 
     public function thumbURL()
     {
-        if ($this->image != null) return '/img/events/' . $this->image;
+        if ($this->image != null) return '/img/news/' . $this->image;
         else return config('constants.frontend.dummy_thumb');
     }
 

@@ -11,7 +11,7 @@ class EventApiController extends Controller
     public function index()
     {
         $perPage = 20;
-        $event = Event::orderBy('start_at', 'desc')
+        $event = Event::where('enabled', 1)->orderBy('start_at', 'desc')
             ->paginate($perPage);
 
         if ($event->count() > 0) {

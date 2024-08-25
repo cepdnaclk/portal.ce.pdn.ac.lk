@@ -89,7 +89,7 @@
                 $logged_in_user->hasPermissionTo('user.access.editor.event'))
             <li class="c-sidebar-nav-dropdown">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-newspaper"
-                    class="c-sidebar-nav-dropdown-toggle" :text="__('Editor')"></x-utils.link>
+                    class="c-sidebar-nav-dropdown-toggle" :text="__('Content Management')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
                     @if ($logged_in_user->hasPermissionTo('user.access.editor.news'))

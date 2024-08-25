@@ -11,7 +11,7 @@ class NewsApiController extends Controller
     public function index()
     {
         $perPage = 20;
-        $news = News::latest()->paginate($perPage);
+        $news = News::latest()->where('enabled', 1)->paginate($perPage);
 
         if ($news->count() > 0) {
             return NewsResource::collection($news);

@@ -14,20 +14,30 @@ class NewsTable extends DataTableComponent
     public bool $perPageAll = true;
     public int $perPage = 10;
 
+    public string $defaultSortColumn = 'published_at';
+    public string $defaultSortDirection = 'desc';
 
     public function columns(): array
     {
         return [
             Column::make("Title", "title")
-                ->sortable()
                 ->searchable(),
-            Column::make("Image", "image"),
+            Column::make("Image", "image")->format(function (News $news) {
+                return $news->thumbURL();
+            }),
+            Column::make("Description", "description"),
             Column::make("Enabled", "enabled")
                 ->sortable()
                 ->format(function (News $news) {
                     return view('backend.news.enabled-toggle', ['news' => $news]);
                 }),
-            Column::make("Author"),
+            Column::make("Author")
+                ->sortable()
+                ->searchable(),
+            Column::make("Published at", "published_at")
+                ->sortable()->format(function (News $news) {
+                    return $news->published_at->format('yyyy-mm-dd');
+                }),
             Column::make("Actions")
         ];
     }
