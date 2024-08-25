@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([], function () {
 
-    Route::get('/announcements', function () {
+    Route::get('announcements', function () {
         return view('backend.announcements.index');
     })->name('announcements.index')
         ->breadcrumbs(function (Trail $trail) {

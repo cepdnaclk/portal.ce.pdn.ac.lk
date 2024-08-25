@@ -6,7 +6,7 @@ use App\Http\Controllers\Backend\EventController;
 
 Route::group(['middleware' => ['permission:user.access.editor.events']], function () {
 
-    Route::get('/event', function () {
+    Route::get('events', function () {
         return view('backend.event.index');
     })->name('event.index')
         ->breadcrumbs(function (Trail $trail) {
@@ -15,7 +15,7 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
         });
 
     // Create
-    Route::get('event/create', [EventController::class, 'create'])
+    Route::get('events/create', [EventController::class, 'create'])
         ->name('event.create')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -24,11 +24,11 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
         });
 
     // Store
-    Route::post('event/', [EventController::class, 'store'])
+    Route::post('events', [EventController::class, 'store'])
         ->name('event.store');
 
     // Edit
-    Route::get('event/edit/{event}', [EventController::class, 'edit'])
+    Route::get('events/edit/{event}', [EventController::class, 'edit'])
         ->name('event.edit')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -38,11 +38,11 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
 
 
     // Update
-    Route::put('event/{event}', [EventController::class, 'update'])
+    Route::put('events/{event}', [EventController::class, 'update'])
         ->name('event.update');
 
     // Delete
-    Route::get('event/delete/{event}', [EventController::class, 'delete'])
+    Route::get('events/delete/{event}', [EventController::class, 'delete'])
         ->name('event.delete')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -51,6 +51,6 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
         });
 
     // Destroy
-    Route::delete('event/{event}', [EventController::class, 'destroy'])
+    Route::delete('events/{event}', [EventController::class, 'destroy'])
         ->name('event.destroy');
 });

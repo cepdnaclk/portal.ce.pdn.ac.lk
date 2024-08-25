@@ -10,9 +10,9 @@ use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class NewsTable extends DataTableComponent
 {
-    public array $perPageAccepted = [5, 10, 20];
+    public array $perPageAccepted = [5, 10, 20, 50];
     public bool $perPageAll = true;
-    public int $perPage = 5;
+    public int $perPage = 10;
 
 
     public function columns(): array
@@ -20,19 +20,14 @@ class NewsTable extends DataTableComponent
         return [
             Column::make("Title", "title")
                 ->sortable()
-                ->searchable(), 
+                ->searchable(),
             Column::make("Image", "image"),
-            Column::make("Author"),
-            Column::make('Link Caption'),
             Column::make("Enabled", "enabled")
                 ->sortable()
                 ->format(function (News $news) {
                     return view('backend.news.enabled-toggle', ['news' => $news]);
                 }),
-            Column::make("Created At", "created_at")
-                ->sortable(),
-            Column::make("Updated At", "updated_at")
-                ->sortable(),
+            Column::make("Author"),
             Column::make("Actions")
         ];
     }
@@ -49,7 +44,7 @@ class NewsTable extends DataTableComponent
                 }
             });
     }
-    
+
 
     public function toggleEnable($newsId)
     {
@@ -64,8 +59,8 @@ class NewsTable extends DataTableComponent
             'enabled' => Filter::make('Enabled')
                 ->select([
                     '' => 'Any',
-                     1 => 'Enabled',
-                     0 => 'Not Enabled',
+                    1 => 'Enabled',
+                    0 => 'Not Enabled',
                 ]),
         ];
     }

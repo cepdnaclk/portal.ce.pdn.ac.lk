@@ -14,47 +14,29 @@ class NewsTest extends TestCase
     /** @test */
     public function a_news_editor_can_access_the_list_news_page()
     {
-        $this->loginAsNewsEditor();
+        $this->loginAsEditor();
         $this->get('/dashboard/news/')->assertOk();
     }
 
     /** @test */
     public function a_news_editor_can_access_the_create_news_page()
     {
-        $this->loginAsNewsEditor();
+        $this->loginAsEditor();
         $this->get('/dashboard/news/create')->assertOk();
     }
 
     /** @test */
     public function a_news_editor_can_access_the_delete_news_page()
     {
-        $this->loginAsNewsEditor();
+        $this->loginAsEditor();
         $news = News::factory()->create();
         $this->get('/dashboard/news/delete/' . $news->id)->assertOk();
     }
 
-    /** @test *//*
-    public function create_news_requires_validation()
-    {
-        $this->loginAsNewsEditor();
-        $response = $this->post('/dashboard/news');
-        $response->assertSessionHasErrors(['title', 'type', 'description', 'image', 'link_url', 'link_caption']);
-    }
-*/
-    /** @test */
-    /*  public function update_news_requires_validation()
-    {
-        $this->loginAsNewsEditor();
-        $news = News::factory()->create();
-
-        $response = $this->put("/dashboard/news/{$news->id}", []);
-        $response->assertSessionHasErrors(['title', 'type', 'description', 'image', 'link_url', 'link_caption']);
-    }
-*/
     /** @test */
     public function news_can_be_created()
     {
-        $this->loginAsNewsEditor();
+        $this->loginAsEditor();
         $response = $this->post('/dashboard/news/', [
             'title' => 'test News',
             'description' => 'This is a sample news description.',
@@ -72,7 +54,7 @@ class NewsTest extends TestCase
     /** @test */
     public function news_can_be_updated()
     {
-        $this->loginAsNewsEditor();
+        $this->loginAsEditor();
         $news = News::factory()->create();
 
         $updateData = [
@@ -94,7 +76,7 @@ class NewsTest extends TestCase
     /** @test */
     public function news_can_be_deleted()
     {
-        $this->loginAsNewsEditor();
+        $this->loginAsEditor();
         $news = News::factory()->create();
         $this->delete('/dashboard/news/' . $news->id);
         $this->assertDatabaseMissing('news', ['id' => $news->id]);

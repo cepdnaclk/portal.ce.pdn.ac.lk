@@ -28,8 +28,8 @@ class EventSeeder extends Seeder
                 'user_id' => '4',
                 'link_url' => 'https://www.ce.pdn.ac.lk/events/2021-05-07-gsoc-preparation-mentoring-program21.html',
                 'link_caption' => 'GSOC preparation',
-                'start_at' => '2024-12-01 10:00:00',
-                'location' => 'location1',
+                'start_at' => '2021-04-01 20:00:00',
+                'location' => 'Zoom',
             ],
             [
                 'title' => 'Hackers’ Club Developer Series',
@@ -39,8 +39,8 @@ class EventSeeder extends Seeder
                 'user_id' => '4',
                 'link_url' => 'https://hackersuop.github.io/',
                 'link_caption' => 'visit',
-                'start_at' => '2024-12-01 10:00:00',
-                'location' => 'location2',
+                'start_at' => '2023-11-03 17:00:00',
+                'location' => 'Zoom',
             ],
             [
                 'title' => 'VIVACES 2020',
@@ -49,8 +49,8 @@ class EventSeeder extends Seeder
                 'user_id' => '4',
                 'link_url' => 'https://www.ce.pdn.ac.lk/events/2020-06-18-vivaces.html',
                 'link_caption' => 'VIVACES 2020',
-                'start_at' => '2024-12-01 10:00:00',
-                'location' => 'location3',
+                'start_at' => '2020-06-12 18:00:00',
+                'location' => 'Department of Computer Engineering, UoP',
             ],
             [
                 'title' => 'ESCAPE - 2020',
@@ -59,8 +59,8 @@ class EventSeeder extends Seeder
                 'user_id' => '4',
                 'link_url' => 'http://aces.ce.pdn.ac.lk/escape20/',
                 'link_caption' => 'visit',
-                'start_at' => '2024-12-01 10:00:00',
-                'location' => 'location4',
+                'start_at' => '2020-05-29 08:30:00',
+                'location' => 'Zoom (Online)',
             ],
 
             // Add more events as needed
