@@ -253,15 +253,59 @@
                 </div>
             </div>
             @elseif ($formStep == 2)
+
                 <div class="step active">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">ILOs & Objectives</h5>
-                            <p class="card-text">This is the second step of the form.</p>
-                            @livewire('backend.item-adder', ['type' => 'ilos', 'items' => $ilos], key('ilos-adder'))
+                            {{-- <h5 class="card-title">ILOs & Objectives</h5>
+                            <p class="card-text">This is the second step of the form.</p> --}}
+
+                            {{-- Objectives --}}
+                            <div class="h4 font-weight-bold mt-3">
+                                Aims/Objectives:
+                                <hr>
+                            </div>
+
+                            {{-- objectives --}}
+                            <div class="form-group mt-3">  
+                                <div class="form-floating">
+                                    {!! Form::textarea('objectives', '', ['class' => 'form-control', 'id' => 'floatingTextarea', 'placeholder' => '', 'rows' => 8, 'style' => 'height: 200px;']) !!}
+                                    <label for="floatingTextarea">Objectives</label>
+                                    @error('objectives')
+                                        <strong class="text-danger">{{ $message }}</strong>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="h4 font-weight-bold mt-5">
+                                ILOs:
+                                <hr>
+                            </div>
+
+                            {{-- Attitude --}}
+                            
+                            <div class="mt-5">
+                                @livewire('backend.item-adder', ['type' => 'knowledge', 'items' => $knowledge], key('ilos--knowledge-adder'))
+
+
+                            </div>
+
+                            <div class="mt-5">
+                                @livewire('backend.item-adder', ['type' => 'skill', 'items' => $skills], key('ilos-skill-adder'))
+
+
+                            </div>
+
+                            <div class="mt-5">
+                                @livewire('backend.item-adder', ['type' => 'attitude', 'items' => $attitudes], key('ilos-attitude-adder'))
+
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
+
             @elseif ($formStep == 3)
                 <div class="step active">
                     <div class="card">

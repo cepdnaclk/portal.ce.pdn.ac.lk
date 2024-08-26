@@ -6,8 +6,8 @@
         editIndex: null,
         isEditing: false
     }">
-        <form wire:submit.prevent>
-            <div class="input-group mb-3 {{$size}}">
+        {{-- <form wire:submit.prevent>
+            <div class="input-group mb-3 {{$size}}" style="margin-left: 0;">
                 <input x-model="userInput" placeholder="Enter item" type="text" class="form-control item-box">
                 <div class="input-group-append">
                     <button class="btn btn-primary add-btn" x-text="isEditing ? 'Update' : 'Add'" x-on:click="
@@ -26,9 +26,42 @@
                     </button>
                 </div>
             </div>
-        </form>
+        </form> --}}
+        <form wire:submit.prevent>
+            <div class="input-group mb-3 {{$size}}" style="margin-left: 0;">
+                <div class="form-floating" style="width: 80%;  display: flex; flex-direction: row;"">
+                    
+                    {{-- <input x-model="userInput" placeholder="Enter item" type="text" class="form-control item-box" > --}}
+                    @if ($type === 'references')
+                    <input x-model="userInput" placeholder="Enter item" type="text" class="form-control item-box">
+                    @else
+                        <textarea x-model="userInput" placeholder="Enter item" class="form-control item-box" style="height: auto; resize: vertical; overflow: hidden;"></textarea>
+                    @endif
 
-        <ul class="list-group custom-list">
+                    <label for="itemInput"> {{ ucfirst($type) }} </label>
+
+                </div>
+                <div class="input-group-append" style="margin-left: 10px;">
+                    <button class="btn btn-primary add-btn" x-text="isEditing ? 'Update' : 'Add'" x-on:click="
+                        if(userInput.trim().length > 0) {
+                            if (isEditing) {
+                                items[editIndex] = userInput;
+                                editIndex = null;
+                                isEditing = false;
+                            } else {
+                                items.push(userInput);
+                            }
+                            $wire.emitUp('itemsUpdated', '{{ $type }}', items);
+                            userInput = '';
+                            selectedItem = null;
+                        }" style="height: 58px;">
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+
+        <ul class="list-group custom-list  ml-3">
             <template x-for="(item, index) in items" :key="index">
                 <li class="list-group-item custom-list-item d-flex justify-content-between align-items-center"
                     :class="{'active': selectedItem === index}"
@@ -42,7 +75,7 @@
             </template>
         </ul>
 
-        <div class="mt-3">
+        <div class="mt-3 ml-3">
             <button @click="if(selectedItem !== null) { 
                 editIndex = selectedItem; 
                 userInput = items[selectedItem]; 
@@ -67,9 +100,14 @@
                 selectedItem += 1; 
                 $wire.emitUp('itemsUpdated', '{{ $type }}', items);
             }" class="btn btn-secondary btn-sm ml-1" :disabled="selectedItem === null || selectedItem === items.length - 1">⬇️ Down</button>
+
+            <button @click="items = []; selectedItem = null; $wire.emitUp('itemsUpdated', '{{ $type }}', items);" x-show="items.length" class="clear-btn btn btn-warning ml-2">Clear All</button>
+
         </div>
 
-        <button @click="items = []; selectedItem = null; $wire.emitUp('itemsUpdated', '{{ $type }}', items);" x-show="items.length" class="clear-btn btn btn-warning mt-2">Clear All</button>
+        
+        {{-- <button @click="items = []; selectedItem = null; $wire.emitUp('itemsUpdated', '{{ $type }}', items);" x-show="items.length" class="clear-btn btn btn-warning mt-2">Clear All</button> --}}
+        
     </div>
 </div>
 
@@ -86,7 +124,9 @@
         color: white;
     }
     .form-control {
-        height: auto;
+        
         padding: 5px 10px;
     }
+    
+    
 </style>

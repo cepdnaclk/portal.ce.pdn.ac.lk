@@ -9,6 +9,9 @@ class CreateCourses extends Component
     public $formStep = 1;
 
     public $ilos = [];
+    public $knowledge = [];
+    public $skills = [];
+    public $attitudes = [];
     public $references = [];
 
     protected $listeners = ['itemsUpdated' => 'updateItems'];
