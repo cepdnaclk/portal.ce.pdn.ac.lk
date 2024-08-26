@@ -258,6 +258,7 @@
                         <div class="card-body">
                             <h5 class="card-title">ILOs & Objectives</h5>
                             <p class="card-text">This is the second step of the form.</p>
+                            @livewire('backend.item-adder', ['type' => 'ilos', 'items' => $ilos], key('ilos-adder'))
                         </div>
                     </div>
                 </div>
@@ -267,7 +268,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Modules & References</h5>
                             <h6>References</h6>
-                            <x-backend.addItem/>
+                            @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
                         </div>
                     </div>
                 </div>

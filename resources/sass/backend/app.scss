@@ -5,3 +5,55 @@
 @import '~@coreui/icons/css/free.min.css';
 
 @import '~@coreui/icons/css/brand.min.css';
+
+.step {
+    display: none;
+  }
+
+  .step.active {
+    display: block;
+  }
+
+  .step-indicator {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .step-indicator .step-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+
+  .step-indicator .step-item:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #ccc;
+    z-index: 0;
+  }
+
+  .step-indicator .step-item.active .step-count {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  .step-indicator .step-count {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    background-color: #ccc;
+    color: #333;
+    position: relative;
+    z-index: 1;
+  }
+
+.card-title {
+    text-align: center;
+    text-decoration: underline;
+}
