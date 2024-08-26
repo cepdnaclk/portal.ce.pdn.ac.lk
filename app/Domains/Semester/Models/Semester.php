@@ -17,6 +17,8 @@ class Semester extends Model
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
+    public const ACADEMIC_PROGRAMS = ['Undergraduate', 'Postgraduate'];
+
     protected $guarded = ['id'];
 
     /**

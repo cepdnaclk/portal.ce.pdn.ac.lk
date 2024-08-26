@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 use App\Domains\Semester\Models\Semester;
 
 class SemesterController extends Controller
@@ -40,7 +41,7 @@ class SemesterController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'version' => 'required|integer',
-            'academic_program' => 'required|in:Undergraduate,Postgraduate',
+            'academic_program' => ['required', Rule::in(Semester::ACADEMIC_PROGRAMS)],
             'description' => 'nullable|string',
             'url' => 'nullable|string',
         ]);
