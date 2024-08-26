@@ -29,7 +29,7 @@ class NewsSeeder extends Seeder
                 "link_url" => null,
                 "link_caption" => null,
                 "enabled" => 1,
-                "user_id" => 1,
+                "created_by" => 1,
                 "published_at" => "2021-06-02"
             ],
             [
@@ -40,7 +40,7 @@ class NewsSeeder extends Seeder
                 "link_url" => null,
                 "link_caption" => null,
                 "enabled" => 1,
-                "user_id" => 1,
+                "created_by" => 1,
                 "published_at" => "2021-07-01"
             ],
             [
@@ -51,7 +51,7 @@ class NewsSeeder extends Seeder
                 "link_url" => null,
                 "link_caption" => null,
                 "enabled" => 1,
-                "user_id" => 1,
+                "created_by" => 1,
                 "published_at" => "2021-11-21"
             ],
             [
@@ -62,7 +62,7 @@ class NewsSeeder extends Seeder
                 "link_url" => null,
                 "link_caption" => null,
                 "enabled" => 1,
-                "user_id" => 1,
+                "created_by" => 1,
                 "published_at" => "2021-12-02"
             ],
             [
@@ -73,7 +73,7 @@ class NewsSeeder extends Seeder
                 "link_url" => null,
                 "link_caption" => null,
                 "enabled" => 1,
-                "user_id" => 1,
+                "created_by" => 1,
                 "published_at" => "2023-01-02"
             ],
             [
@@ -84,7 +84,7 @@ class NewsSeeder extends Seeder
                 "link_url" => null,
                 "link_caption" => null,
                 "enabled" => 1,
-                "user_id" => 1,
+                "created_by" => 1,
                 "published_at" => "2021-07-01"
             ],
             [
@@ -95,7 +95,7 @@ class NewsSeeder extends Seeder
                 "link_url" => null,
                 "link_caption" => null,
                 "enabled" => 1,
-                "user_id" => 1,
+                "created_by" => 1,
                 "published_at" => "2023-11-29"
             ]
         ];

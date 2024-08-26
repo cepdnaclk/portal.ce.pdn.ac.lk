@@ -23,7 +23,7 @@ class CreateNewsTable extends Migration
             $table->string('link_url')->nullable()->default(null);
             $table->string('link_caption')->nullable();
             $table->boolean('enabled')->default(true);
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade');
+            $table->foreignId('created_by')->constrained('users')->onUpdate('cascade');
             $table->date('published_at');
             $table->timestamps();
         });

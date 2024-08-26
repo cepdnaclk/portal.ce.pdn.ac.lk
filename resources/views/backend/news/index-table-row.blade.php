@@ -27,7 +27,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ User::find($row->user_id)->name }}
+    {{ User::find($row->created_by)->name }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
