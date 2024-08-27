@@ -48,6 +48,7 @@ class NewsController extends Controller
         try {
             $news = new News($data);
             $news->enabled = ($request->enabled == 1);
+            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections 
             $news->created_bt = Auth::user()->id;
             $news->save();
 
@@ -87,15 +88,18 @@ class NewsController extends Controller
             'link_caption' => 'nullable|string',
         ]);
         if ($request->hasFile('image')) {
-            $data['image'] = $this->uploadThumb($news->image, $request->image, $news);
+            $data['image'] = $this->uploadThumb($news->image, $request->image, "news");
         } else {
             $data['image'] = $news->image;
         }
 
         try {
-            $news->enabled = ($request->enabled != null);
-            $news->created_bt = Auth::user()->id;
             $news->update($data);
+            $news->enabled = ($request->enabled != null);
+            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections 
+            $news->created_by = Auth::user()->id;
+            $news->save();
+
             return redirect()->route('dashboard.news.index')->with('Success', 'News was updated !');
         } catch (\Exception $ex) {
             return abort(500);
@@ -150,7 +154,7 @@ class NewsController extends Controller
         $imageName = time() . '.' . $newImage->extension();
         $newImage->move(public_path('img/' . $folder), $imageName);
         $imagePath = "/img/$folder/" . $imageName;
-        $image = Image::make(public_path($imagePath))->fit(1280, 720);
+        $image = Image::make(public_path($imagePath));
         $image->save();
 
         return $imageName;

@@ -17,6 +17,8 @@ class CreateEventsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
+            $table->text('url');
+            $table->date('published_at');
             $table->string('image')->nullable();
             $table->string('link_url')->nullable();
             $table->string('link_caption')->nullable();
@@ -24,7 +26,7 @@ class CreateEventsTable extends Migration
             $table->dateTime('end_at')->nullable();
             $table->string('location');
             $table->boolean('enabled')->default(true);
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade');
+            $table->foreignId('created_by')->constrained('users')->onUpdate('cascade');
             $table->timestamps();
         });
     }

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
 class EventController extends Controller
 {
@@ -32,7 +33,9 @@ class EventController extends Controller
     {
         $data = request()->validate([
             'title' => 'string|required',
-            'description' => 'string',
+            'url' => ['required', 'unique:events'],
+            'published_at' => 'required|date_format:Y-m-d',
+            'description' => 'string|required',
             'enabled' => 'nullable',
             'link_url' => 'nullable|url',
             'link_caption' => 'nullable|string',
@@ -47,7 +50,8 @@ class EventController extends Controller
         try {
             $event = new Event($data);
             $event->enabled = ($request->enabled != null);
-            $event->user_id = Auth::user()->id;
+            $event->url =  urlencode(str_replace(" ", "-", $request->url));
+            $event->created_by = Auth::user()->id;
             $event->save();
 
             return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event was created !');
@@ -79,12 +83,15 @@ class EventController extends Controller
     {
         $data = request()->validate([
             'title' => ['required'],
+            'url' =>
+            ['required', Rule::unique('news')->ignore($event->id)],
+            'published_at' => 'required|date_format:Y-m-d',
             'description' => 'string',
             'enabled' => 'nullable',
             'link_url' => 'nullable|url',
             'link_caption' => 'nullable|string',
             'start_at' => 'required|date_format:Y-m-d\\TH:i',
-            'end_at' => 'nullable|date_format:Y-m-d H:i',
+            'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
             'location' => 'string|required',
         ]);
         if ($request->image != null) {
@@ -94,9 +101,12 @@ class EventController extends Controller
         }
 
         try {
-            $event->enabled = ($request->enabled != null);
-            $event->user_id = Auth::user()->id;
             $event->update($data);
+            $event->enabled = ($request->enabled != null);
+            $event->url =  urlencode(str_replace(" ", "-", $request->url));
+            $event->created_by = Auth::user()->id;
+            $event->save();
+
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was updated !');
         } catch (\Exception $ex) {
             return abort(500);
@@ -148,7 +158,7 @@ class EventController extends Controller
         $imageName = time() . '.' . $newImage->extension();
         $newImage->move(public_path('img/' . $folder), $imageName);
         $imagePath = "/img/$folder/" . $imageName;
-        $image = Image::make(public_path($imagePath))->fit(1280, 720);
+        $image = Image::make(public_path($imagePath));
         $image->save();
 
         return $imageName;

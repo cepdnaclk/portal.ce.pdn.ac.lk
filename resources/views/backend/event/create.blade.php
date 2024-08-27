@@ -2,6 +2,13 @@
 
 @section('title', __('Event'))
 
+@push('after-styles')
+    <!-- Include Quill library -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+@endpush
+
+
 @section('content')
     <div>
         {!! Form::open([
@@ -30,6 +37,31 @@
                     </div>
                 </div>
 
+                <!-- Published At -->
+                <div class="form-group row">
+                    {!! Form::label('published_at', 'Publish at*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-3">
+                        {!! Form::date('published_at', date('Y-m-d'), ['class' => 'form-control', 'required' => true]) !!}
+                        @error('published_at')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- URL -->
+                <div class="form-group row">
+                    {!! Form::label('url', 'URL*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        <div class="d-inline-flex align-items-center flex-nowrap w-100">
+                            <span class="me-2">https://ce.pdn.ac.lk/events/{yyyy-mm-dd}-&nbsp;</span>
+                            <span class="flex-grow-1"> {!! Form::text('url', '', ['class' => 'form-control', 'required' => true]) !!}</span>
+                        </div>
+                        @error('url')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
                 <!-- Description -->
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
@@ -48,10 +80,10 @@
 
                 <!-- Image -->
                 <div class="form-group row">
-                    {!! Form::label('image', 'Image*', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('image', 'Image', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::file('image', ['accept' => '.jpeg,.png,.jpg,.gif,.svg']) !!}
+                        {!! Form::file('image', ['accept' => 'image/*']) !!}
                         @error('image')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -103,6 +135,9 @@
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
+                    <div class="col-md-6">
+                        (If it is a whole day event, set the time as 12:00 AM)
+                    </div>
                 </div>
 
                 <!-- End at -->
@@ -113,6 +148,9 @@
                         @error('end_at')
                             <strong>{{ $message }}</strong>
                         @enderror
+                    </div>
+                    <div class="col-md-6">
+                        (If it is a whole day event, set the time as 12:00 AM)
                     </div>
                 </div>
 

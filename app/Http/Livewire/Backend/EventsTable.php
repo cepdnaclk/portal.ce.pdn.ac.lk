@@ -22,7 +22,7 @@ class EventsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make("Image", "image"),
-            Column::make('Event Link'),
+            Column::make("Description", "description"),
             Column::make("Enabled", "enabled")
                 ->sortable()
                 ->format(function (Event $event) {

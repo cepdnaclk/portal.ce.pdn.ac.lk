@@ -7,6 +7,14 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    <div>
+        @if (strlen($row->description) > 250)
+            {{ mb_substr(strip_tags($row->description), 0, 250) }}...
+        @else
+            {{ strip_tags($row->description) }}
+        @endif
+    </div>
+    <br />
     <a href="{{ $row->link_url }}" target="_blank">{{ $row->link_caption }}</a>
 </x-livewire-tables::table.cell>
 
@@ -14,11 +22,15 @@
     @include('components.backend.enabled_toggle')
 </x-livewire-tables::table.cell>
 
-
 <x-livewire-tables::table.cell>
-    {{ $row->start_at }}
+    @if ($row->start_at && $row->end_at)
+        From: {{ $row->start_at }}
+    @else
+        On: {{ $row->start_at }}
+    @endif
+
     @if ($row->end_at)
-        - {{ $row->end_at }}
+        <br> To: {{ $row->end_at }}
     @endif
 </x-livewire-tables::table.cell>
 
@@ -29,7 +41,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ App\Domains\Auth\Models\User::find($row->user_id)->name }}
+    {{ App\Domains\Auth\Models\User::find($row->created_by)->name }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

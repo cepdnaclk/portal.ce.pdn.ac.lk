@@ -2,6 +2,12 @@
 
 @section('title', __('News'))
 
+@push('after-styles')
+    <!-- Include Quill library -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+@endpush
+
 @section('content')
     <div>
         {!! Form::open([
@@ -32,7 +38,8 @@
                         @enderror
                     </div>
                 </div>
-                <!-- Date -->
+
+                <!-- Published At -->
                 <div class="form-group row">
                     {!! Form::label('published_at', 'Publish at*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-3">
