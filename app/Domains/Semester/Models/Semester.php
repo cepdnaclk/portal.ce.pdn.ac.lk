@@ -32,6 +32,8 @@ class Semester extends Model
         'url' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'created_by' => 'integer',
+        'updated_by' => 'integer',
     ];
 
     // Accessor to check if this is the latest syllabus version

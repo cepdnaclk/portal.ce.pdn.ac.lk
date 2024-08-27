@@ -17,9 +17,9 @@ class CreateSemestersTable extends Migration
             $table->id();
             $table->string('title', 255);
             $table->integer('version');
-            $table->enum('type', ['Undergraduate', 'Postgraduate']);
+            $table->enum('academic_program', array_keys(\App\Domains\Semester\Models\Semester::ACADEMIC_PROGRAMS));
             $table->text('description')->nullable();
-            $table->string('url', 255)->nullable();
+            $table->string('url', 255)->unique();
             $table->timestamps(); // This will create `created_at` and `updated_at` fields automatically
             $table->foreignId('created_by')->constrained('users'); 
             $table->foreignId('updated_by')->constrained('users');  

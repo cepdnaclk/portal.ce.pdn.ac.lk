@@ -25,111 +25,16 @@ class SemesterFactory extends Factory
     public function definition()
     {
         return [
-            'area' => $this->faker->randomElement(['frontend', 'backend']),
-            'type' => $this->faker->randomElement(['info', 'danger', 'warning', 'success']),
-            'message' => $this->faker->text,
-            'enabled' => $this->faker->boolean,
-            'starts_at' => $this->faker->dateTime(),
-            'ends_at' => $this->faker->dateTime(),
+            'title' => $this->faker->sentence(3),
+            'version' => $this->faker->numberBetween(1, 10),
+            'academic_program' => $this->faker->randomElement(array_keys(Semester::ACADEMIC_PROGRAMS)), // Picks a random element from the predefined academic programs
+            'description' => $this->faker->paragraph, 
+            'url' => $this->faker->url, 
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'), 
+            'updated_at' => now(), 
+            'created_by' => \App\Domains\Auth\Models\User::inRandomOrder()->first()->id,
+            'updated_by' => \App\Domains\Auth\Models\User::inRandomOrder()->first()->id,
         ];
     }
 
-    /**
-     * @return SemesterFactory
-     */
-    public function enabled()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'enabled' => true,
-            ];
-        });
-    }
-
-    /**
-     * @return SemesterFactory
-     */
-    public function disabled()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'enabled' => false,
-            ];
-        });
-    }
-
-    /**
-     * @return SemesterFactory
-     */
-    public function frontend()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'area' => 'frontend',
-            ];
-        });
-    }
-
-    /**
-     * @return SemesterFactory
-     */
-    public function backend()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'area' => 'backend',
-            ];
-        });
-    }
-
-    /**
-     * @return SemesterFactory
-     */
-    public function global()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'area' => null,
-            ];
-        });
-    }
-
-    /**
-     * @return SemesterFactory
-     */
-    public function noDates()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'starts_at' => null,
-                'ends_at' => null,
-            ];
-        });
-    }
-
-    /**
-     * @return SemesterFactory
-     */
-    public function insideDateRange()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'starts_at' => now()->subWeek(),
-                'ends_at' => now()->addWeek(),
-            ];
-        });
-    }
-
-    /**
-     * @return SemesterFactory
-     */
-    public function outsideDateRange()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'starts_at' => now()->subWeeks(2),
-                'ends_at' => now()->subWeek(),
-            ];
-        });
-    }
 }

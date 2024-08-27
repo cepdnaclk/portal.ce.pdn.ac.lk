@@ -43,7 +43,11 @@ class SemesterController extends Controller
             'version' => 'required|integer',
             'academic_program' => ['required', Rule::in(Semester::ACADEMIC_PROGRAMS)],
             'description' => 'nullable|string',
-            'url' => 'nullable|string',
+            'url' => [
+            'nullable',
+            'string',
+            'unique:semesters', 
+        ],
         ]);
         try {
             Semester::create($validatedData);
@@ -79,7 +83,11 @@ class SemesterController extends Controller
             'version' => 'required|integer',
             'academic_program' => 'required|in:Undergraduate,Postgraduate',
             'description' => 'nullable|string',
-            'url' => 'nullable|string',
+            'url' => [
+                'nullable',
+                'string',
+                Rule::unique('semesters', 'url')->ignore($semester->id),
+            ],
         ]);
         try {
             $semester->update($validatedData);
