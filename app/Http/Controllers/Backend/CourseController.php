@@ -123,7 +123,7 @@ class CourseController extends Controller
     {
         try{
             $course->delete();
-            return redirect()->route('courses.index')->with('success', 'Course deleted successfully.');
+            return redirect()->route('dashboard.courses.index')->with('success', 'Course deleted successfully.');
         } catch (\Exception $e) {
             return abort(500);
         }
