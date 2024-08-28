@@ -1,112 +1,132 @@
 <?php
 
 namespace App\Http\Controllers\Backend;
-use App\Domains\Announcement\Models\Announcement;
-use App\Http\Controllers\Controller;
-
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
+use App\Domains\Course\Models\Course;
 
 class CourseController extends Controller
 {
+    /**
+     * Display a listing of the courses.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $courses = Course::all();
+        return view('backend.courses.index', compact('courses'));
+    }
+
+    /**
+     * Show the form for creating a new course.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
         return view('backend.courses.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created course in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $data = request()->validate([
-            'area' => ['required', Rule::in(array_keys(Announcement::areas()))],
-            'type' => ['required', Rule::in(array_keys(Announcement::types()))],
-            'message' => 'string|required',
-            'enabled' => 'nullable',
-            'starts_at' => 'required|date_format:Y-m-d\\TH:i',
-            'ends_at' => 'required|date_format:Y-m-d\\TH:i', // TODO: Test ends>starts
+        $validatedData = $request->validate([
+            'code' => 'required|string|max:16|unique:courses,code',
+            'semester_id' => 'required|integer|exists:semesters,id',
+            'academic_program' => 'required|in:Undergraduate,Postgraduate',
+            'version' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'credits' => 'required|integer',
+            'type' => 'required|in:Core,General Elective,Technical Elective',
+            'content' => 'nullable|string',
+            'objectives' => 'nullable|json',
+            'time_allocation' => 'nullable|json',
+            'marks_allocation' => 'nullable|json',
+            'ilos' => 'nullable|json',
+            'urls' => 'nullable|json',
+            'references' => 'nullable|json',
         ]);
-
         try {
-            $announcement = new Announcement($data);
-            $announcement->enabled = ($request->enabled != null);
-            $announcement->save();
-
-            return redirect()->route('dashboard.announcements.index', $announcement)->with('Success', 'Announcement was created !');
-        } catch (\Exception $ex) {
+            Course::create($validatedData);
+            return redirect()->route('dashboard.courses.index')->with('success', 'Course created successfully.');
+        } catch (\Exception $e) {
             return abort(500);
         }
     }
 
+    
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified course.
      *
-     * @param \App\Models\Announcement $announcement
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param  \App\Models\Course  $course
+     * @return \Illuminate\Http\Response
      */
-    public function edit(Announcement $announcement)
+    public function edit(Course $course)
     {
-        $areas = Announcement::areas();
-        $types = Announcement::types();
-        return view('backend.announcements.edit', compact('announcement', 'areas', 'types'));
+        return view('backend.courses.edit', compact('course'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified course in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Announcement $announcement
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Course  $course
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Announcement $announcement)
+    public function update(Request $request, Course $course)
     {
-        $data = request()->validate([
-            'area' => ['required', Rule::in(array_keys(Announcement::areas()))],
-            'type' => ['required', Rule::in(array_keys(Announcement::types()))],
-            'message' => 'string|required',
-            'enabled' => 'nullable',
-            'starts_at' => 'required|date_format:Y-m-d\\TH:i',
-            'ends_at' => 'required|date_format:Y-m-d\\TH:i', // TODO: Test ends>starts
+        $validatedData = $request->validate([
+            'code' => 'required|string|max:16|unique:courses,code,' . $course->id,
+            'semester_id' => 'required|integer|exists:semesters,id',
+            'academic_program' => 'required|in:Undergraduate,Postgraduate',
+            'version' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'credits' => 'required|integer',
+            'type' => 'required|in:Core,General Elective,Technical Elective',
+            'content' => 'nullable|string',
+            'objectives' => 'nullable|json',
+            'time_allocation' => 'nullable|json',
+            'marks_allocation' => 'nullable|json',
+            'ilos' => 'nullable|json',
+            'urls' => 'nullable|json',
+            'references' => 'nullable|json',
         ]);
-
         try {
-            $announcement->enabled = ($request->enabled != null);
-            $announcement->update($data);
-            return redirect()->route('dashboard.announcements.index')->with('Success', 'Announcement was updated !');
-        } catch (\Exception $ex) {
+            $course->update($validatedData);
+            return redirect()->route('dashboard.courses.index')->with('success', 'Course updated successfully.');
+        } catch (\Exception $e) {   
             return abort(500);
         }
     }
 
     /**
-     * Confirm to delete the specified resource from storage.
+     * Remove the specified course from storage.
      *
-     * @param \App\Models\Announcement $announcement
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param  \App\Models\Course  $course
+     * @return \Illuminate\Http\Response
      */
-    public function delete(Announcement $announcement)
+
+     public function delete(Course $course)
     {
-        return view('backend.announcements.delete', compact('announcement'));
+        return view('backend.courses.delete', compact('course'));
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\Announcement $announcement
-     * @return \Illuminate\Http\RedirectResponse|null
-     */
-    public function destroy(Announcement $announcement)
+    public function destroy(Course $course)
     {
-        try {
-            $announcement->delete();
-            return redirect()->route('dashboard.announcements.index')->with('Success', 'Announcement was deleted !');
-        } catch (\Exception $ex) {
+        try{
+            $course->delete();
+            return redirect()->route('courses.index')->with('success', 'Course deleted successfully.');
+        } catch (\Exception $e) {
             return abort(500);
         }
     }
+    
 }
