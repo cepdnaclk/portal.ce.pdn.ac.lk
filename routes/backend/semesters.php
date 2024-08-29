@@ -10,7 +10,8 @@ Route::group([], function () {
     })->name('semesters.index')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('Semesters'), route('semesters.index'));
+                ->push(__('Academic Program'), route('dashboard.academic_program.index'))
+                ->push(__('Semesters'), route('dashboard.semesters.index'));
         });
 
     // Create
@@ -18,7 +19,8 @@ Route::group([], function () {
         ->name('semesters.create')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('Semesters'), route('semesters.index'))
+                ->push(__('Academic Program'), route('dashboard.academic_program.index'))
+                ->push(__('Semesters'), route('dashboard.semesters.index'))
                 ->push(__('Create'));
         });
 
@@ -31,7 +33,8 @@ Route::group([], function () {
         ->name('semesters.edit')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('Semesters'), route('semesters.index'))
+                ->push(__('Academic Program'), route('dashboard.academic_program.index'))
+                ->push(__('Semesters'), route('dashboard.semesters.index'))
                 ->push(__('Edit'));
         });
 
@@ -44,7 +47,8 @@ Route::group([], function () {
         ->name('semesters.delete')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('Semesters'), route('semesters.index'))
+                ->push(__('Academic Program'), route('dashboard.academic_program.index'))
+                ->push(__('Semesters'), route('dashboard.semesters.index'))
                 ->push(__('Delete'));
         });
 
