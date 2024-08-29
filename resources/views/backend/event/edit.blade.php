@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', __('Event'))
+@section('title', __('Edit Event'))
 
 @push('after-styles')
     <!-- Include Quill library -->

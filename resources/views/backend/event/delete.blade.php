@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', __('Event'))
+@section('title', __('Delete Event'))
 
 @section('content')
     <div>
