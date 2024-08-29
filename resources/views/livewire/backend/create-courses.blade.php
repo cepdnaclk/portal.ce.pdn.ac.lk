@@ -261,13 +261,14 @@
                             <p class="card-text">This is the second step of the form.</p> --}}
 
                             {{-- Objectives --}}
-                            <div class="h4 font-weight-bold mt-3">
-                                Aims/Objectives:
-                                <hr>
+                            <div class=" font-weight-bold mt-3 d-flex justify-content-center align-items-center ">
+                                <h4 class="text-decoration-underline">ILOs/Objectives:</h4>
+                               
                             </div>
+                            
 
                             {{-- objectives --}}
-                            <div class="form-group mt-3">  
+                            <div class="form-group mt-3 ">  
                                 <div class="form-floating">
                                     {!! Form::textarea('objectives', '', ['class' => 'form-control', 'id' => 'floatingTextarea', 'placeholder' => '', 'rows' => 8, 'style' => 'height: 200px;']) !!}
                                     <label for="floatingTextarea">Objectives</label>
@@ -277,11 +278,7 @@
                                 </div>
                             </div>
 
-                            <div class="h4 font-weight-bold mt-5">
-                                ILOs:
-                                <hr>
-                            </div>
-
+                            
                             {{-- Attitude --}}
                             
                             <div class="mt-5">
