@@ -6,7 +6,7 @@
     <div>
         <x-backend.card>
             <x-slot name="header">
-                News : Delete | {{ $event->id }}
+                Event : Delete | {{ $event->id }}
             </x-slot>
 
             <x-slot name="body">

@@ -26,6 +26,8 @@ class Event extends Model
      */
     protected $fillable = [
         'title',
+        'url',
+        'published_at',
         'description',
         'image',
         'enabled',
@@ -44,6 +46,12 @@ class Event extends Model
     protected $casts = [
         'enabled' => 'boolean',
     ];
+
+    public function thumbURL()
+    {
+        if ($this->image != null) return '/img/events/' . $this->image;
+        else return config('constants.frontend.dummy_thumb');
+    }
 
     /**
      * Create a new factory instance for the model.

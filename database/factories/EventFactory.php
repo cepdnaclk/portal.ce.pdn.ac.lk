@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Domains\Event\Models\Event; 
+use App\Domains\Event\Models\Event;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
@@ -28,11 +28,13 @@ class EventFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
+            'url' => urlencode($this->faker->name),
             'image' => $this->faker->imageUrl(),
-            'user_id' => 4,
+            'created_by' => 4,
             'enabled' => $this->faker->boolean,
             'link_url' => $this->faker->url,
             'link_caption' => $this->faker->words(3, true),
+            'published_at' => now()->subWeek(),
             'start_at' => now()->subWeek(),
             'end_at' => now()->subDay(),
             'location' => $this->faker->company,

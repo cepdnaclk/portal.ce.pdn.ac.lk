@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Domains\Auth\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\URL;
 
 class NewsResource extends JsonResource
 {
@@ -19,8 +20,8 @@ class NewsResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'author' => User::find($this->user_id)->name,
-            'image' => url('storage/' . $this->image),
+            'author' => User::find($this->created_by)->name,
+            'image' =>  URL::to($this->thumbURL()),
             'link_url' => $this->link_url,
             'link_caption' => $this->link_caption,
             'posted_at' => $this->created_at,

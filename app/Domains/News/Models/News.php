@@ -26,10 +26,12 @@ class News extends Model
      */
     protected $fillable = [
         'title',
+        'url',
         'description',
         'image',
         'link_url',
         'link_caption',
+        'published_at',
     ];
 
     /**
@@ -38,6 +40,12 @@ class News extends Model
     protected $casts = [
         'enabled' => 'boolean',
     ];
+
+    public function thumbURL()
+    {
+        if ($this->image != null) return '/img/news/' . $this->image;
+        else return config('constants.frontend.dummy_thumb');
+    }
 
     /**
      * Create a new factory instance for the model.

@@ -9,12 +9,10 @@
                 News
             </x-slot>
 
-            @if (1)
-                <x-slot name="headerActions">
-                    <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.news.create')" :text="__('Create News')">
-                    </x-utils.link>
-                </x-slot>
-            @endif
+            <x-slot name="headerActions">
+                <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.news.create')" :text="__('Create News')">
+                </x-utils.link>
+            </x-slot>
 
             <x-slot name="body">
 

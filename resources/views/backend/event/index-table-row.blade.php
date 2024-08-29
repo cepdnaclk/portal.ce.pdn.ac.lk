@@ -1,56 +1,37 @@
-<?php use App\Domains\Auth\Models\User; ?>
-
 <x-livewire-tables::table.cell>
     {{ $row->title }}
 </x-livewire-tables::table.cell>
 
+<x-livewire-tables::table.cell>
+    <img class="mt-1" src="{{ $row->thumbURL() }}" alt="Image preview" style="max-width: 135px; max-height: 135px;" />
+</x-livewire-tables::table.cell>
 
-
-{{-- <x-livewire-tables::table.cell>
-    <div class="custom-width-2" style="width: 175px;">
-        @php
-        $words = explode(' ', $row->description);
-        $limitedDescription = implode(' ', array_slice($words, 0, 50));
-        $remainingWords = count($words) - 50;
-    @endphp
-    {!! $remainingWords > 0 ? $limitedDescription . '&nbsp;<a href="#" class="show-more" data-id="' . $row->id . '">Show more >>></a><span id="full-description-' . $row->id . '" style="display: none;">' . implode(' ', array_slice($words, 10)) . '</span><a href="#" class="show-less" data-id="' . $row->id . '" style="display: none;"> Show less <<<</a>' : $row->description !!}
-
+<x-livewire-tables::table.cell>
+    <div>
+        @if (strlen($row->description) > 250)
+            {{ mb_substr(strip_tags($row->description), 0, 250) }}...
+        @else
+            {{ strip_tags($row->description) }}
+        @endif
     </div>
-</x-livewire-tables::table.cell> --}}
-
-<x-livewire-tables::table.cell>
-    <img class="mt-1" src="{{ $row->image ? asset('storage/' . $row->image) : asset('Events/no-image.png') }}" alt="Image preview" style="max-width: 135px; max-height: 135px;" />
-</x-livewire-tables::table.cell>
-
-<x-livewire-tables::table.cell>
-    {{ User::find($row->user_id)->name }}
-</x-livewire-tables::table.cell>
-
-<x-livewire-tables::table.cell>
+    <br />
     <a href="{{ $row->link_url }}" target="_blank">{{ $row->link_caption }}</a>
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    @if($row->enabled)
-        <i class="fas fa-toggle-on fa-2x" style="color: #0ca678; cursor: pointer;" wire:click="toggleEnable({{ $row->id }})"></i>
-    @else   
-        <i class="fas fa-toggle-on fa-2x fa-rotate-180" style="color: #3c4b64; cursor: pointer;" wire:click="toggleEnable({{ $row->id }})"></i>
+    @include('components.backend.enabled_toggle')
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    @if ($row->start_at && $row->end_at)
+        From: {{ $row->start_at }}
+    @else
+        On: {{ $row->start_at }}
     @endif
-</x-livewire-tables::table.cell>
 
-
-
-
-<x-livewire-tables::table.cell>
-    <div class="custom-width-1" style="width: 75px;">
-        {{ $row->start_at }}
-    </div>
-</x-livewire-tables::table.cell>
-
-<x-livewire-tables::table.cell>
-    <div class="custom-width-1" style="width: 75px;">
-        {{ $row->end_at }}
-    </div>
+    @if ($row->end_at)
+        <br> To: {{ $row->end_at }}
+    @endif
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
@@ -60,15 +41,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    <div class="custom-width-1" style="width: 75px;">
-        {{ $row->created_at }}
-    </div>
-</x-livewire-tables::table.cell>
-
-<x-livewire-tables::table.cell>
-    <div class="custom-width-1" style="width: 75px;">
-        {{ $row->updated_at }}
-    </div>
+    {{ App\Domains\Auth\Models\User::find($row->created_by)->name }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
@@ -77,8 +50,8 @@
             <a href="{{ route('dashboard.event.edit', $row) }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"
                     title="Edit"></i>
             </a>
-            <a href="{{ route('dashboard.event.delete', $row) }}" class="btn btn-danger btn-xs"><i
-                    class="fa fa-trash" title="Delete"></i>
+            <a href="{{ route('dashboard.event.delete', $row) }}" class="btn btn-danger btn-xs"><i class="fa fa-trash"
+                    title="Delete"></i>
             </a>
         </div>
     </div>

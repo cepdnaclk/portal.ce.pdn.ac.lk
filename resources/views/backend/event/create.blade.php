@@ -2,6 +2,13 @@
 
 @section('title', __('Event'))
 
+@push('after-styles')
+    <!-- Include Quill library -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+@endpush
+
+
 @section('content')
     <div>
         {!! Form::open([
@@ -30,9 +37,30 @@
                     </div>
                 </div>
 
-                <!-- Type -->
+                <!-- Published At -->
+                <div class="form-group row">
+                    {!! Form::label('published_at', 'Publish at*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-3">
+                        {!! Form::date('published_at', date('Y-m-d'), ['class' => 'form-control', 'required' => true]) !!}
+                        @error('published_at')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
 
-
+                <!-- URL -->
+                <div class="form-group row">
+                    {!! Form::label('url', 'URL*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        <div class="d-inline-flex align-items-center flex-nowrap w-100">
+                            <span class="me-2">https://ce.pdn.ac.lk/events/{yyyy-mm-dd}-&nbsp;</span>
+                            <span class="flex-grow-1"> {!! Form::text('url', '', ['class' => 'form-control', 'required' => true]) !!}</span>
+                        </div>
+                        @error('url')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
 
                 <!-- Description -->
                 <div class="form-group row">
@@ -40,7 +68,10 @@
 
                     <div class="col-md-10">
                         <div id="editor-container" style="height: auto;min-height: 200px;"></div>
-                        <textarea name="description" id="description" style="display:none;"></textarea>
+                        <textarea name="description" id="description" style="display:none;" required="true"></textarea>
+                    </div>
+
+                    <div class="col-md-12">
                         @error('description')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -49,10 +80,10 @@
 
                 <!-- Image -->
                 <div class="form-group row">
-                    {!! Form::label('image', 'Image*', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('image', 'Image', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::file('image', ['class' => 'form-control']) !!}
+                        {!! Form::file('image', ['accept' => 'image/*']) !!}
                         @error('image')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -61,7 +92,7 @@
 
                 <!-- Enabled -->
                 <div class="form-group row">
-                    {!! Form::label('enabled', 'Enabled*', ['class' => 'col-md-2 form-check-label']) !!}
+                    {!! Form::label('enabled', 'Enabled', ['class' => 'col-md-2 form-check-label']) !!}
 
                     <div class="col-md-4 form-check">
                         {!! Form::checkbox('enabled', '1', ['class' => 'form-check-input', 'required' => true]) !!}
@@ -71,9 +102,9 @@
                     </div>
                 </div>
 
-                <!-- link URL -->
+                <!-- Link URL -->
                 <div class="form-group row">
-                    {!! Form::label('link_url', 'Link URL*', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('link_url', 'Link URL', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
                         {!! Form::text('link_url', '', ['class' => 'form-control']) !!}
@@ -83,9 +114,9 @@
                     </div>
                 </div>
 
-                <!-- link Caption -->
+                <!-- Link Caption -->
                 <div class="form-group row">
-                    {!! Form::label('link_caption', 'Link Caption*', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('link_caption', 'Link Caption', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
                         {!! Form::text('link_caption', '', ['class' => 'form-control']) !!}
@@ -95,29 +126,35 @@
                     </div>
                 </div>
 
-                <!-- start at -->
+                <!-- Start at -->
                 <div class="form-group row">
                     {!! Form::label('start_at', 'Start At*', ['class' => 'col-md-2 col-form-label']) !!}
-                    <div class="col-md-3">
-                        {!! Form::text('start_at', '', ['class' => 'form-control', 'id' => 'start_at', 'required' => true]) !!}
-                        @error('start_at')                                
+                    <div class="col-md-4">
+                        {!! Form::datetimeLocal('start_at', '', ['class' => 'form-control', 'required' => true]) !!}
+                        @error('start_at')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
+                    <div class="col-md-6">
+                        (If it is a whole day event, set the time as 12:00 AM)
+                    </div>
                 </div>
 
-                <!-- end at -->
+                <!-- End at -->
                 <div class="form-group row">
-                    {!! Form::label('end_at', 'End At*', ['class' => 'col-md-2 col-form-label']) !!}
-                    <div class="col-md-3">
-                        {!! Form::text('end_at', '', ['class' => 'form-control', 'id' => 'end_at']) !!}
+                    {!! Form::label('end_at', 'End At', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-4">
+                        {!! Form::datetimeLocal('end_at', '', ['class' => 'form-control']) !!}
                         @error('end_at')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
+                    <div class="col-md-6">
+                        (If it is a whole day event, set the time as 12:00 AM)
+                    </div>
                 </div>
 
-                <!-- location -->
+                <!-- Location -->
                 <div class="form-group row">
                     {!! Form::label('location', 'Location*', ['class' => 'col-md-2 col-form-label']) !!}
 
@@ -128,22 +165,6 @@
                         @enderror
                     </div>
                 </div>
-
-                <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-                <script>
-                    // Initialize flatpickr on the input field
-                    flatpickr("#start_at", {
-                        altInput: true,
-                        enableTime: true,        // Enable time selection
-                        dateFormat: "Y-m-d H:i", // Set the date and time format
-                    });
-                    flatpickr("#end_at", {
-                        altInput: true,
-                        enableTime: true,        // Enable time selection
-                        dateFormat: "Y-m-d H:i", // Set the date and time format
-                    });
-                </script>
-
             </x-slot>
 
             <x-slot name="footer">
