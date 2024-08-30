@@ -1,11 +1,11 @@
 <?php
 
 use Tabuna\Breadcrumbs\Trail;
-use App\Http\Controllers\Backend\AnnouncementController;
 use App\Http\Controllers\Backend\CourseController;
 
 Route::group([], function () {
 
+    // Index
     Route::get('/courses', function () {
         return view('backend.courses.index');
     })->name('courses.index')
@@ -52,4 +52,10 @@ Route::group([], function () {
     // Destroy
     Route::delete('courses/{announcement}', [AnnouncementController::class, 'destroy'])
         ->name('courses.destroy');
+        ->breadcrumbs(function (Trail $trail) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Courses'), route('dashboard.courses.index'))
+                ->push(__('Delete'));
+        });
+    
 });

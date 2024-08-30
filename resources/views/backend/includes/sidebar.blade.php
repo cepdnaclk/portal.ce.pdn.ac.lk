@@ -94,6 +94,23 @@
                     <li class="c-sidebar-nav-item">
                         <x-utils.link :href="route('dashboard.courses.index')" class="c-sidebar-nav-link" :text="__('Manage')"
                             :active="activeClass(Route::is('dashboard.coursesphp.*'), 'c-active')"></x-utils.link>
+
+            {{-- Academic Program --}}
+            <li class="c-sidebar-nav-dropdown">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-book"
+                    class="c-sidebar-nav-dropdown-toggle" :text="__('Academic Program')"></x-utils.link>
+
+                <ul class="c-sidebar-nav-dropdown-items">
+                    {{-- Semesters --}}
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.semesters.index')" class="c-sidebar-nav-link" :text="__('Semesters')"
+                            :active="activeClass(Route::is('dashboard.semesters.*'), 'c-active')"></x-utils.link>
+                    </li>
+                    {{-- Courses --}}
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.courses.index')" class="c-sidebar-nav-link" :text="__('Courses')"
+                            :active="activeClass(Route::is('dashboard.courses.*'), 'c-active')"></x-utils.link>
+
                     </li>
                 </ul>
             </li>
