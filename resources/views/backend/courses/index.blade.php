@@ -9,12 +9,10 @@
                 Courses
             </x-slot>
 
-            @if (1)
-                <x-slot name="headerActions">
-                    <x-utils.link icon="c-icon cil-plus" class="card-header-action"  :text="__('Create Course')">
-                    </x-utils.link>
-                </x-slot>
-            @endif
+            <x-slot name="headerActions">
+                <x-utils.link icon="c-icon cil-plus" class="card-header-action" :text="__('Create Course')">
+                </x-utils.link>
+            </x-slot>
         </x-backend.card>
     </div>
 @endsection

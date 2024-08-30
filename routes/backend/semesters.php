@@ -1,4 +1,5 @@
 <?php
+
 use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\SemesterController;
 
@@ -56,4 +57,3 @@ Route::group([], function () {
     Route::delete('semesters/{course}', [SemesterController::class, 'destroy'])
         ->name('semesters.destroy');
 });
-?>

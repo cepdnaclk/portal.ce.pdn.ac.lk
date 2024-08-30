@@ -8,7 +8,7 @@ class ItemAdder extends Component
 {
     public $type;
     public $items = [];
-    public $size = "col-20";
+    public $size = "col-12";
 
     protected $listeners = ['refreshItems' => 'refreshItems'];
 

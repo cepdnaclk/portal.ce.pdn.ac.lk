@@ -24,11 +24,11 @@ Route::group([], function () {
         });
 
     // Store
-    Route::post('courses/', [AnnouncementController::class, 'store'])
+    Route::post('courses/', [CourseController::class, 'store'])
         ->name('courses.store');
 
     // Edit
-    Route::get('courses/edit/{announcement}', [AnnouncementController::class, 'edit'])
+    Route::get('courses/edit/{course}', [CourseController::class, 'edit'])
         ->name('courses.edit')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -37,11 +37,11 @@ Route::group([], function () {
         });
 
     // Update
-    Route::put('courses/{announcement}', [AnnouncementController::class, 'update'])
+    Route::put('courses/{course}', [CourseController::class, 'update'])
         ->name('courses.update');
 
     // Delete
-    Route::get('courses/delete/{announcement}', [AnnouncementController::class, 'delete'])
+    Route::get('courses/delete/{course}', [CourseController::class, 'delete'])
         ->name('courses.delete')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
@@ -50,12 +50,6 @@ Route::group([], function () {
         });
 
     // Destroy
-    Route::delete('courses/{announcement}', [AnnouncementController::class, 'destroy'])
+    Route::delete('courses/{announcement}', [CourseController::class, 'destroy'])
         ->name('courses.destroy');
-        ->breadcrumbs(function (Trail $trail) {
-            $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('Courses'), route('dashboard.courses.index'))
-                ->push(__('Delete'));
-        });
-    
 });
