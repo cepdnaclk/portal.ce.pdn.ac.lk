@@ -93,7 +93,7 @@
                 <ul class="c-sidebar-nav-dropdown-items">
                     <li class="c-sidebar-nav-item">
                         <x-utils.link :href="route('dashboard.courses.index')" class="c-sidebar-nav-link" :text="__('Manage')"
-                            :active="activeClass(Route::is('dashboard.coursesphp.*'), 'c-active')"></x-utils.link>
+                            :active="activeClass(Route::is('dashboard.courses.*'), 'c-active')"></x-utils.link>
                     </li>
                 </ul>
             </li>
