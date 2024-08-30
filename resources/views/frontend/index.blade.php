@@ -56,6 +56,39 @@
             font-size: 48px;
         }
 
+        /* Medium screens (tablets) */
+        @media (max-width: 1024px) {
+            .title {
+                font-size: 64px;
+            }
+
+            .subtitle {
+                font-size: 36px;
+            }
+        }
+
+        /* Small screens (mobile) */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 48px;
+            }
+
+            .subtitle {
+                font-size: 28px;
+            }
+        }
+
+        /* Extra small screens (smaller mobile devices) */
+        @media (max-width: 480px) {
+            .title {
+                font-size: 36px;
+            }
+
+            .subtitle {
+                font-size: 24px;
+            }
+        }
+
         .links>a {
             color: #636b6f;
             padding: 0 25px;
