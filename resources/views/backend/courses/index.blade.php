@@ -10,7 +10,7 @@
             </x-slot>
 
             <x-slot name="headerActions">
-                <x-utils.link icon="c-icon cil-plus" class="card-header-action" :text="__('Create Course')">
+                <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.courses.create')" :text="__('Create Course')">
                 </x-utils.link>
             </x-slot>
         </x-backend.card>
