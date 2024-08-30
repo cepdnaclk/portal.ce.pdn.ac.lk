@@ -29,7 +29,7 @@
         </form> --}}
         <form wire:submit.prevent>
             <div class="input-group mb-3 {{$size}}" style="margin-left: 0;">
-                <div class="form-floating" style="width: 80%;  display: flex; flex-direction: row;"">
+                <div class="form-floating" style="width: 94%;  display: flex; flex-direction: row;">
                     
                     {{-- <input x-model="userInput" placeholder="Enter item" type="text" class="form-control item-box" > --}}
                     @if ($type === 'references')

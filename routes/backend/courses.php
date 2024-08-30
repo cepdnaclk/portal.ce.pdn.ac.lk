@@ -50,6 +50,6 @@ Route::group([], function () {
         });
 
     // Destroy
-    Route::delete('courses/{course}', [CourseController::class, 'destroy'])
+    Route::delete('courses/{announcement}', [CourseController::class, 'destroy'])
         ->name('courses.destroy');
 });

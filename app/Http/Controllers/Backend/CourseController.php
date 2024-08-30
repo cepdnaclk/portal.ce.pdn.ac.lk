@@ -62,7 +62,7 @@ class CourseController extends Controller
         }
     }
 
-    
+
     /**
      * Show the form for editing the specified course.
      *
@@ -102,7 +102,7 @@ class CourseController extends Controller
         try {
             $course->update($validatedData);
             return redirect()->route('dashboard.courses.index')->with('success', 'Course updated successfully.');
-        } catch (\Exception $e) {   
+        } catch (\Exception $e) {
             return abort(500);
         }
     }
@@ -114,19 +114,18 @@ class CourseController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function delete(Course $course)
+    public function delete(Course $course)
     {
         return view('backend.courses.delete', compact('course'));
     }
 
     public function destroy(Course $course)
     {
-        try{
+        try {
             $course->delete();
             return redirect()->route('dashboard.courses.index')->with('success', 'Course deleted successfully.');
         } catch (\Exception $e) {
             return abort(500);
         }
     }
-    
 }
