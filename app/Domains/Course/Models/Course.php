@@ -60,6 +60,31 @@ class Course extends Model
         'updated_at' => 'datetime',
     ];
 
+    public static function getTypes(): array
+    {
+        return [
+            'Core' => 'Core',
+            'General Elective' => 'General Elective',
+            'Technical Elective' => 'Technical Elective'
+        ];
+    }
+
+    public static function getAcademicPrograms(): array
+    {
+        return [
+            'undergraduate' => 'Undergraduate',
+            'postgraduate' => 'Postgraduate'
+        ];
+    }
+
+    public static function getVersions(): array
+    {
+        return [
+            1 => 'Current Curriculum',
+            2 => 'Curriculum - Effective from E22'
+        ];
+    }
+
     /**
      * Create a new factory instance for the model.
      *
