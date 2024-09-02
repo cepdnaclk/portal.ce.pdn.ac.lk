@@ -78,9 +78,9 @@
         <div class="top-right links">
             @auth
                 <a href="{{ route('intranet.user.index') }}">@lang('Intranet')</a>
-                @if ($logged_in_user->isAdmin())
-                    <a href="{{ route('dashboard.home') }}">@lang('Dashboard')</a>
-                @endif
+                
+                <a href="{{ route('dashboard.home') }}">@lang('Dashboard')</a>
+                
                 <a href="{{ route('intranet.user.account') }}">@lang('Account')</a>
             @else
                 <a href="{{ route('frontend.auth.login') }}">@lang('Login')</a>

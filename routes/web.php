@@ -18,7 +18,7 @@ Route::group(['as' => 'frontend.'], function () {
     includeRouteFiles(__DIR__ . '/frontend/');
 });
 
-Route::group(['prefix' => 'intranet', 'as' => 'intranet.'], function () {
+Route::group(['prefix' => 'intranet', 'as' => 'intranet.','middleware' => 'auth'], function () {
     includeRouteFiles(__DIR__ . '/intranet/');
 });
 
@@ -27,6 +27,6 @@ Route::group(['prefix' => 'intranet', 'as' => 'intranet.'], function () {
  *
  * These routes can only be accessed by users with type `admin`
  */
-Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'admin'], function () {
+Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function () {
     includeRouteFiles(__DIR__ . '/backend/');
 });

@@ -84,7 +84,7 @@
             </li>
         @endif
 
-        @if ($logged_in_user->hasAllAccess())
+        @if ($logged_in_user->hasPermissionTo('user.access.course') || $logged_in_user->hasPermissionTo('admin.access.course') )
             {{-- Academic Program --}}
             <li class="c-sidebar-nav-dropdown">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-book"
@@ -104,6 +104,8 @@
                 </ul>
             </li>
         @endif
+
+
 
     </ul>
 

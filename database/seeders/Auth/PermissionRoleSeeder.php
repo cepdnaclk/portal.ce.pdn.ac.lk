@@ -29,6 +29,13 @@ class PermissionRoleSeeder extends Seeder
             'name' => 'Administrator',
         ]);
 
+        Role::create([
+            'id' => 2,
+            'type' => User::TYPE_USER,
+            'name' => 'CourseManager',
+        ]);
+
+        
         // Non Grouped Permissions
         //
 
@@ -76,10 +83,87 @@ class PermissionRoleSeeder extends Seeder
                 'description' => 'Change User Passwords',
                 'sort' => 6,
             ]),
+            
+            
         ]);
 
         // Assign Permissions to other Roles
         //
+        // Create permissions specific to Course Manager
+        $courseManager = Permission::create([
+            'type' => User::TYPE_ADMIN, 
+            'name' => 'admin.access.course',
+            'description' => 'All Course Manager Permissions',
+        ]);
+    
+        $courseManager->children()->saveMany([
+            new Permission([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'admin.access.course.create',
+                'description' => 'Create Courses',
+            ]),
+            new Permission([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'admin.access.course.edit',
+                'description' => 'Edit Courses',
+            ]),
+            new Permission([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'admin.access.course.delete',
+                'description' => 'Delete Courses',
+            ]),
+            new Permission([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'admin.access.course.view',
+                'description' => 'View Courses',
+            ]),
+        ]);
+
+        $courseManager2 = Permission::create([
+            'type' => User::TYPE_USER, 
+            'name' => 'user.access.course',
+            'description' => 'All Course Manager Permissions',
+        ]);
+    
+        $courseManager2->children()->saveMany([
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.course.create',
+                'description' => 'Create Courses',
+            ]),
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.course.edit',
+                'description' => 'Edit Courses',
+            ]),
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.course.delete',
+                'description' => 'Delete Courses',
+            ]),
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.course.view',
+                'description' => 'View Courses',
+            ]),
+        ]);
+
+         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Assign permissions to Roles
+
+        Role::findByName('Administrator')->givePermissionTo([
+            'admin.access.user', 'admin.access.course'
+        ]);
+        Role::findByName('CourseManager')->givePermissionTo(['user.access.course']);
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Assign Permissions to users 
+        if (app()->environment(['local', 'testing'])) {
+            User::find(3)->givePermissionTo('user.access.course');
+            
+            
+        };
+        
 
         $this->enableForeignKeys();
     }

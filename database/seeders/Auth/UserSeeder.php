@@ -31,6 +31,8 @@ class UserSeeder extends Seeder
         ]);
 
         if (app()->environment(['local', 'testing'])) {
+
+        
             User::create([
                 'type' => User::TYPE_USER,
                 'name' => 'Test User',
@@ -39,7 +41,18 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
-        }
+
+            User::create([
+                'type' => User::TYPE_USER,
+                'name' => 'CourseManager',
+                'email' => env('SEED_COURSE_MANAGER_EMAIL', 'user@courseManager.com'),
+                'password' => env('SEED_COURSE_MANAGER_PASSWORD', 'course_manager'),
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
+
+        
+    }
 
         $this->enableForeignKeys();
     }
