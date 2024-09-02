@@ -329,10 +329,11 @@
                                                 <div>
                                                     <label>Description</label>
                                                 </div>
-                                                <input 
-                                                type="text" 
-                                                class="form-control border p-2 w-full mb-2 mt-6 rounded-md">
-                                            </div>
+                                                <div class="form-floating mb-4">
+                                                    <textarea class="form-control auto-resize-textarea"
+                                                        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
+                                                </div>
+                                            </div>                                                                                       
                                         </div>
                                         
                                         <div class="row">
@@ -391,9 +392,10 @@
                                                         <div>
                                                             <label>Description</label>
                                                         </div>
-                                                        <input 
-                                                        type="text" 
-                                                        class="form-control border p-2 w-full mb-2 mt-6 rounded-md">
+                                                        <div class="form-floating mb-4">
+                                                            <textarea class="form-control auto-resize-textarea"
+                                                                oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
+                                                        </div>
                                                     </div>
                                                 </div>
 
