@@ -20,6 +20,8 @@ class Course extends Model
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
+    protected $table = 'courses';
+
     /**
      * @var string[]
      */
@@ -36,7 +38,6 @@ class Course extends Model
         'time_allocation',
         'marks_allocation',
         'ilos',
-        'urls',
         'references',
         'created_by',
         'updated_by',
@@ -54,19 +55,38 @@ class Course extends Model
         'time_allocation' => 'json',
         'marks_allocation' => 'json',
         'ilos' => 'json',
-        'urls' => 'json',
         'references' => 'json',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    protected static function newFactory()
+    public static function getTypes(): array
     {
-        return CourseFactory::new();
+        return [
+            'Core' => 'Core',
+            'GE' => 'General Elective',
+            'TE' => 'Technical Elective'
+        ];
+    }
+
+    public static function getAcademicPrograms(): array
+    {
+        return [
+            'undergraduate' => 'Undergraduate',
+            'postgraduate' => 'Postgraduate'
+        ];
+    }
+
+    public static function getVersions(): array
+    {
+        return [
+            1 => 'Current Curriculum',
+            2 => 'Curriculum - Effective from E22'
+        ];
+    }
+
+    public function modules()
+    {
+        return $this->hasMany(CourseModule::class);
     }
 }

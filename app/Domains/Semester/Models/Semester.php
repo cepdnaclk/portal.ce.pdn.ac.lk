@@ -17,7 +17,6 @@ class Semester extends Model
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
-    public const ACADEMIC_PROGRAMS = ['Undergraduate', 'Postgraduate'];
 
     protected $guarded = ['id'];
 
@@ -28,13 +27,29 @@ class Semester extends Model
         'title' => 'string',
         'version' => 'integer',
         'academic_program' => 'string',
-        'description' => 'text',
+        'description' => 'string',
         'url' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'created_by' => 'integer',
         'updated_by' => 'integer',
     ];
+
+    public static function getAcademicPrograms(): array
+    {
+        return [
+            'undergraduate' => 'Undergraduate',
+            'postgraduate' => 'Postgraduate'
+        ];
+    }
+
+    public static function getVersions(): array
+    {
+        return [
+            1 => 'Current Curriculum',
+            2 => 'Curriculum - Effective from E22'
+        ];
+    }
 
     // Accessor to check if this is the latest syllabus version
     public function getIsNewSyllabusAttribute()
