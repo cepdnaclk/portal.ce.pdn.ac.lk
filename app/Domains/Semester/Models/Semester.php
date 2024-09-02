@@ -28,7 +28,7 @@ class Semester extends Model
         'title' => 'string',
         'version' => 'integer',
         'academic_program' => 'string',
-        'description' => 'text',
+        'description' => 'string',
         'url' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -41,6 +41,11 @@ class Semester extends Model
     {
         $maxVersion = self::where('title', $this->title)->max('version');
         return $this->version === $maxVersion;
+    }
+
+    public static function types()
+    {
+        return self::ACADEMIC_PROGRAMS;
     }
 
       /**
