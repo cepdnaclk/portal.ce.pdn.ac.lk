@@ -86,8 +86,8 @@ class CourseController extends Controller
         $validatedData = $request->validate([
             'code' => 'required|string|max:16|unique:courses,code,' . $course->id,
             'semester_id' => 'required|integer|exists:semesters,id',
-            'academic_program' => ['required',Rule::in(array_values(Course::getAcademicPrograms()))],
-            'version' => ['required',Rule::in(array_keys(Course::getVersions()))],
+            'academic_program' => ['required', Rule::in(array_values(Course::getAcademicPrograms()))],
+            'version' => ['required', 'integer', Rule::in(array_keys(Course::getVersions()))],
             'name' => 'required|string|max:255',
             'credits' => 'required|integer',
             'type' => ['required',Rule::in(array_values(Course::getTypes()))],

@@ -17,7 +17,7 @@ class CreateSemestersTable extends Migration
         Schema::create('semesters', function (Blueprint $table) {
             $table->id();
             $table->string('title', 255);
-            $table->enum('version', array_keys(Semester::getVersions()));
+            $table->integer('version');
             $table->enum('academic_program', array_values(Semester::getAcademicPrograms()));
             $table->text('description')->nullable();
             $table->string('url', 255)->unique();

@@ -19,7 +19,7 @@ class CreateCourseTable extends Migration
             $table->string('code', 16)->unique();  // Course code with a unique constraint
             $table->foreignId('semester_id')->constrained('semesters');  // Foreign key to semesters.id
             $table->enum('academic_program', array_values(Course::getAcademicPrograms()));  // Enum for academic program 
-            $table->enum('version', array_keys(Course::getVersions()));  // Enum for version as numeric keys
+            $table->integer('version');  // integer for version 
             $table->string('name', 255);  // Course name
             $table->integer('credits');  // Credit hours
             $table->enum('type', array_values(Course::getTypes()));  // Enum for course type
