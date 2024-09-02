@@ -40,9 +40,11 @@ class NewsTest extends TestCase
         $response = $this->post('/dashboard/news/', [
             'title' => 'test News',
             'description' => 'This is a sample news description.',
+            'url' => "test-news",
             'image' => 'sample-image.jpg',
             'link_url' => 'http://example.com',
             'link_caption' => 'Example Link',
+            'published_at' => '2024-07-06',
         ]);
 
         $response->assertStatus(302);
@@ -60,9 +62,11 @@ class NewsTest extends TestCase
         $updateData = [
             'title' => 'Updated News',
             'description' => 'This is an updated news description.',
+            'url' => "test-news",
             'image' => 'https:\/\/via.placeholder.com\/640x480.png\/000055?text=quia',
             'link_url' => 'http://example.com',
             'link_caption' => 'eaque excepturi velit',
+            'published_at' => '2024-07-06',
         ];
 
         $response = $this->put("/dashboard/news/{$news->id}", $updateData);

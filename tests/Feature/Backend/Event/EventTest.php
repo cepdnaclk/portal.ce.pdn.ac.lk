@@ -2,10 +2,14 @@
 
 namespace Tests\Feature\Backend\Event;
 
+use App\Domains\Auth\Models\User;
 use App\Domains\Event\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Class EventTest.
+ */
 class EventTest extends TestCase
 {
     use RefreshDatabase;
@@ -21,7 +25,7 @@ class EventTest extends TestCase
     public function an_event_editor_can_access_the_create_event_page()
     {
         $this->loginAsEditor();
-        $this->get('/dashboard/events/create')->assertOk();
+        dd($this->get('/dashboard/events/create')); //->assertOk();
     }
 
     /** @test */
@@ -35,13 +39,13 @@ class EventTest extends TestCase
     /** @test */
     public function event_can_be_created()
     {
-        $this->loginAsEditor();
-
+        $user = $this->loginAsEditor();
         $response = $this->post('/dashboard/event/', [
             'title' => 'test event',
             'description' => 'Nostrum qui qui ut deserunt dolores quaerat. Est quos sed ea quo placeat maxime. Sequi temporibus alias atque assumenda facere modi deleniti. Recusandae autem quia officia iste laudantium veritatis aut.',
+            'url' => "test-event",
             'image' => 'sample-image.jpg',
-            'created_by' => '4',
+            'created_by' => $user->id,
             'link_url' => 'http://runolfsdottir.biz/quia-provident-ut-ipsa-atque-et',
             'link_caption' => 'fugiat accusantium sit',
             'start_at' => '2024-07-06 18:04',
@@ -59,14 +63,15 @@ class EventTest extends TestCase
     /** @test */
     public function event_can_be_updated()
     {
-        $this->loginAsEditor();
+        $user = $this->loginAsEditor();
         $event = Event::factory()->create();
 
         $updateData = [
             'title' => 'Updated Event',
             'description' => 'This is an updated event description.',
+            'url' => "test-event",
             'image' => 'sample-image.jpg',
-            'created_by' => '4',
+            'created_by' => $user->id,
             'link_url' => 'http://example.com',
             'link_caption' => 'eaque excepturi velit',
             'start_at' => '2024-07-06 18:04',

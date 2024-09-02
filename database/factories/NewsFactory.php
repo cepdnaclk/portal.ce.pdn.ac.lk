@@ -28,11 +28,13 @@ class NewsFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
+            'url' => urlencode($this->faker->firstName()),
             'created_by' => 3,
             'image' => $this->faker->imageUrl(),
             'enabled' => $this->faker->boolean,
             'link_url' => $this->faker->url,
             'link_caption' => $this->faker->words(3, true),
+            'published_at' => now()->subWeek(),
         ];
     }
 
