@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Domains\Course\Models\Course;
 
-class CreateCoursesAndCourseModulesTables extends Migration
+class CreateCoursesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -29,18 +29,7 @@ class CreateCoursesAndCourseModulesTables extends Migration
             $table->json('marks_allocation')->nullable();  // JSON for marks allocation, nullable
             $table->json('ilos')->nullable();  // JSON for intended learning outcomes, nullable
             $table->json('references')->nullable();  // JSON for references, nullable
-            $table->timestamps();  // Created_at and updated_at
-            $table->foreignId('created_by')->constrained('users');  // Foreign key to users.id for created_by
-            $table->foreignId('updated_by')->constrained('users');  // Foreign key to users.id for updated_by
-        });
-
-        Schema::create('course_modules', function (Blueprint $table) {
-            $table->id();  // Primary key, auto-incrementing
-            $table->foreignId('course_id')->constrained('courses');  // Foreign key to courses.id
-            $table->string('topic', 255);  // module topic
-            $table->text('description')->nullable();  // Course content, nullable
-            $table->integer('order');  // Order of the module within the course
-            $table->json('time_allocation')->nullable();  // JSON for time allocation, nullable
+            $table->string('faq_page', 191)->nullable();
             $table->timestamps();  // Created_at and updated_at
             $table->foreignId('created_by')->constrained('users');  // Foreign key to users.id for created_by
             $table->foreignId('updated_by')->constrained('users');  // Foreign key to users.id for updated_by
@@ -55,6 +44,5 @@ class CreateCoursesAndCourseModulesTables extends Migration
     public function down()
     {
         Schema::dropIfExists('courses');
-        Schema::dropIfExists('course_modules');
     }
 }

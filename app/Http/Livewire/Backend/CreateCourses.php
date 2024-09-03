@@ -13,9 +13,8 @@ class CreateCourses extends Component
     public $formStep = 1;
 
     //for slectors 
-    public $academicProgramsList = ['Undergraduate','Postgraduate'];
+    public $academicProgramsList = [];
     public $semestersList = [];
-    public $curriculumsList = ['Current Curriculum','Curriculum - Effective from E22']; //later take this array from Course Model::getVersions()
 
     //form inputs
     //1st form step
@@ -75,8 +74,12 @@ class CreateCourses extends Component
 
     protected $listeners = ['itemsUpdated' => 'updateItems'];
 
+    public function mount()
+    {
+        $this->academicProgramsList = Course::getAcademicPrograms();
+    }
+
     public function updateItems($type,$newItems){
-        //dd($newItems);
         if($type == 'references'){
             $this->$type = $newItems;
         }else{
@@ -101,55 +104,62 @@ class CreateCourses extends Component
     }
     
     public function next(){
-        //dump($this->ilos);
+
         $this->formStep++;
     }
     
     public function previous(){
-        //dump($this->references);
         $this->formStep--;
     }
 
     public function submit(){
-        // Validate the form data
-        $this->validate();
-        // Log the validated data
+        // // Validate the form data
+        $validatedData = $this->validate();
+        //dd($validatedData);
         try {
             // Create and save the course in the database
             $this->storeCourse();
-            Log::info('Course created successfully.');
             $this->resetForm();
             session()->flash('success', 'Course created successfully.');
         } catch (\Exception $e) {
             session()->flash('error', 'There was an error creating the course.');
         }
+        $this->storeCourse();
+    }
+    
+    public function updatedAcademicProgram()
+    {
+        $this->updateSemestersList();
     }
 
-    public function updatedacademicProgram($value)
+    public function updatedVersion()
     {
-        switch ($value) {
-            case 'Postgraduate':
-                $this->semestersList = Semester::where('academic_program', 'postgraduate')->pluck('title');
-                break;
-            case 'Undergraduate':
-                $this->semestersList = Semester::where('academic_program', 'undergraduate')->pluck('title');
-                break;
-            default:
-                $this->semestersList = [];
-                break;
+        $this->updateSemestersList();
+    }
+
+    public function updateSemestersList()
+    {
+        if ($this->academicProgram && $this->version) {
+            $this->semestersList = Semester::where('academic_program', $this->academicProgram)
+                                           ->where('version', $this->version)
+                                           ->pluck('title', 'id')
+                                           ->toArray();
+        } else {
+            $this->semestersList = [];
         }
     }
+
 
     protected function storeCourse()
     {
         Course::create([
             'academic_program' => $this->academicProgram,
-            'semester_id' => $this->semester,
-            'version' => $this->version,
+            'semester_id' => (int)$this->semester,
+            'version' => (int)$this->version,
             'type' => $this->type,
             'code' => $this->code,
             'name' => $this->name,
-            'credits' => $this->credits,
+            'credits' => (int)$this->credits,
             'faq_page' => $this->faq_page,
             'content' => $this->content,
             'time_allocation' => json_encode($this->time_allocation),
@@ -157,8 +167,13 @@ class CreateCourses extends Component
             'objectives' => $this->objectives,
             'ilos' => json_encode($this->ilos),
             'references' => json_encode($this->references),
+            'faq_page' => $this->faq_page,
+            'created_by' => auth()->id(),
+            'updated_by' => auth()->id(),
         ]);
     }
+    
+
 
     protected function resetForm()
     {
