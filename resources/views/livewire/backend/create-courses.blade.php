@@ -304,6 +304,158 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Modules & References</h5>
+
+                            <div class="container mx-auto mt-6 px-3 py-2">
+
+                                <div
+                                x-data="{
+                                    modules: [],
+                                    addModule() {
+                                        this.modules.push({id: Date.now()});
+                                    }
+                                }">
+                                    <div class="px-3 py-3 my-6 rounded mb-4" style="border: 1px solid rgb(209, 209, 209)">
+
+                                        <div>
+                                            <div class="mb-3">
+                                                <div >
+                                                    <label>Name</label>
+                                                </div>
+                                                <input 
+                                                type="text"  
+                                                class="form-control border p-2 mb-2  rounded-md">
+                                            </div>
+                                            <div class="mb-3">
+                                                <div>
+                                                    <label>Description</label>
+                                                </div>
+                                                <div class="form-floating mb-4">
+                                                    <textarea class="form-control auto-resize-textarea"
+                                                        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
+                                                </div>
+                                            </div>                                                                                       
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col d-flex align-items-center col-md-3 col-6">
+                                                <div class="col">
+                                                    <label>Lectures</label>
+                                                </div>
+                                                <div class="col ms-auto py-3">
+                                                    <input class="form-control" type="number">
+                                                </div>
+                                            </div>
+                        
+                                            <div class="col d-flex align-items-center col-md-3 col-6">
+                                                <div class="col">
+                                                    <label>Tutorial</label>
+                                                </div>
+                                                <div class="col ms-auto py-3">
+                                                    <input class="form-control" type="number">
+                                                </div>
+                                            </div>
+                        
+                                            <div class="col d-flex align-items-center col-md-3 col-6">
+                                                <div class="col">
+                                                    <label>Practicles</label>
+                                                </div>
+                                                <div class="col ms-auto py-3">
+                                                    <input class="form-control" type="number">
+                                                </div>
+                                            </div>
+                        
+                                            <div class="col d-flex align-items-center col-md-3 col-6">
+                                                <div class="col">
+                                                    <label>Assignments</label>
+                                                </div>
+                                                <div class="col ms-auto py-3">
+                                                    <input class="form-control" type="number">
+                                                </div>
+                                            </div>
+                        
+                                        </div>
+                                    </div>
+                        
+                                    <template x-for="(item, index) in modules" :key="item.id">
+                                        <div x-transition x-cloak>
+                                            <div class="px-3 py-3 my-6 rounded mb-4" style="border: 1px solid rgb(209, 209, 209)">
+                                                <div>
+                                                    <div class="mb-3">
+                                                        <div >
+                                                            <label>Name</label>
+                                                        </div>
+                                                        <input 
+                                                        type="text"  
+                                                        class="form-control border p-2 mb-2  rounded-md">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <div>
+                                                            <label>Description</label>
+                                                        </div>
+                                                        <div class="form-floating mb-4">
+                                                            <textarea class="form-control auto-resize-textarea"
+                                                                oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                
+                                                    <div class="col d-flex align-items-center col-md-3 col-6">
+                                                        <div class="col">
+                                                            <label>Lectures</label>
+                                                        </div>
+                                                        <div class="col ms-auto py-3">
+                                                            <input class="form-control" type="number">
+                                                        </div>
+                                                    </div>
+                                
+                                                    <div class="col d-flex align-items-center col-md-3 col-6">
+                                                        <div class="col">
+                                                            <label>Tutorial</label>
+                                                        </div>
+                                                        <div class="col ms-auto py-3">
+                                                            <input class="form-control" type="number">
+                                                        </div>
+                                                    </div>
+                                
+                                                    <div class="col d-flex align-items-center col-md-3 col-6">
+                                                        <div class="col">
+                                                            <label>Practicles</label>
+                                                        </div>
+                                                        <div class="col ms-auto py-3">
+                                                            <input class="form-control" type="number">
+                                                        </div>
+                                                    </div>
+                                
+                                                    <div class="col d-flex align-items-center col-md-3 col-6">
+                                                        <div class="col">
+                                                            <label>Assignments</label>
+                                                        </div>
+                                                        <div class="col ms-auto py-3">
+                                                            <input class="form-control" type="number">
+                                                        </div>
+                                                    </div>
+                                
+                                                </div>
+                                                <button
+                                                x-on:click="modules.splice(index, 1)"
+                                                class="btn btn-danger px-4 py-2 rounded-md">
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+                        
+                                    <button  
+                                    x-on:click="addModule()"
+                                    class="btn btn-primary px-4 py-2 mb-3 rounded-md">
+                                        Add Module
+                                    </button>
+                        
+                                </div>
+                            </div>
+
                             <h6>References</h6>
                             @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
                         </div>
