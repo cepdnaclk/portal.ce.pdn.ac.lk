@@ -37,7 +37,7 @@
                                                     <option value="{{ $academicProgramId }}">{{ $academicProgramTitle }}</option>
                                                 @endforeach
                                             </select>
-                                            @error('academicProgram') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            @error('academicProgram') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
                                         <div class="col-6 col-xl-3 py-3">
                                             <div class="col">
@@ -49,7 +49,7 @@
                                                     <option value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
                                             </select>                                                                                     
-                                            @error('version') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            @error('version') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
                                         <div class="col-6 col-xl-3 py-3">
                                             <div class="col">
@@ -61,7 +61,7 @@
                                                     <option value="{{ $semesterId }}">{{ $semesterTitle }}</option>
                                                 @endforeach
                                             </select>  
-                                            @error('semester') <div class="invalid-feedback">{{ $message }}</div> @enderror  
+                                            @error('semester') <div class="text-danger">{{ $message }}</div> @enderror  
                                         </div>
                                         <div class="col-6 col-xl-3 py-3">
                                             <div class="col">
@@ -73,7 +73,7 @@
                                                     <option value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
                                             </select> 
-                                            @error('type') <div class="invalid-feedback">{{ $message }}</div> @enderror                                           
+                                            @error('type') <div class="text-danger">{{ $message }}</div> @enderror                                           
                                         </div>
                                     </div>
 
@@ -84,7 +84,7 @@
                                             </div>
                                             <div class="input-group w-75">
                                                 <input type="text" class="form-control me-5" wire:model.lazy = "code" placeholder="CO200">
-                                                @error('code') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                @error('code') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
                                         <div class="col-6 col-xl-3 py-3">
@@ -94,7 +94,7 @@
                                             <div class="input-group">
                                                 <input type="text" class="form-control me-5" wire:model.lazy = "name"
                                                     placeholder="Database Systems">
-                                                    @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                    @error('name') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
                                         </div>
                                         <div class="col-6 col-xl-2 py-3">
@@ -103,7 +103,7 @@
                                             </div>
                                             <div class="input-group w-75">
                                                 <input type="text" class="form-control me-5" wire:model.lazy ="credits" placeholder="3">
-                                                @error('credits') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                @error('credits') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
                                         <div class="col-6 col-xl-4 py-3">
@@ -113,7 +113,7 @@
                                             <div class="input-group">
                                                 <input type="text" class="form-control me-5" wire:model.lazy = "faq_page"
                                                     placeholder="https://www.url.com">
-                                                @error('faq_page') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                @error('faq_page') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -121,7 +121,7 @@
                                     <div class="my-2" id="contentarea">
                                         <label class="pb-2" for="contentTextarea">Content</label>
                                         <textarea class="form-control" id="contentTextarea" wire:model.lazy = "content" rows="3"></textarea>
-                                        @error('content') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        @error('content') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
 
                                     <div class="div my-2">
@@ -138,7 +138,7 @@
                                                         </div>
                                                         <div class="col ms-auto py-3">
                                                             <input class="form-control" type="number" x-model.number="time_allocation.lecture" wire:model.defer="time_allocation.lecture">
-                                                            @error('time_allocation.lecture') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            @error('time_allocation.lecture') <div class="text-danger">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
                                                     <div class="row d-flex justify-content-between align-items-center col-md-6">
@@ -147,7 +147,7 @@
                                                         </div>
                                                         <div class="col ms-auto py-3">
                                                             <input class="form-control" type="number" x-model.number="time_allocation.tutorial" wire:model.defer="time_allocation.tutorial">
-                                                            @error('time_allocation.tutorial') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            @error('time_allocation.tutorial') <div class="text-danger">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -158,7 +158,7 @@
                                                         </div>
                                                         <div class="col ms-auto py-3">
                                                             <input class="form-control" type="number" x-model.number="time_allocation.practical" wire:model.defer="time_allocation.practical">
-                                                            @error('time_allocation.practical') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            @error('time_allocation.practical') <div class="text-danger">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
                                                     <div class="row d-flex justify-content-between align-items-center col-md-6">
@@ -167,7 +167,7 @@
                                                         </div>
                                                         <div class="col ms-auto py-3">
                                                             <input class="form-control" type="number" x-model.number="time_allocation.assignment" wire:model.defer="time_allocation.assignment">
-                                                            @error('time_allocation.assignment') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            @error('time_allocation.assignment') <div class="text-danger">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -181,11 +181,11 @@
                                                 <div class="row pb-2">
                                                     <div class="row d-flex justify-content-between align-items-center col-md-6">
                                                         <div class="col">
-                                                            <label>Practicles</label>
+                                                            <label>Practicals</label>
                                                         </div>
                                                         <div class="col ms-auto py-3">
                                                             <input class="form-control" type="number" x-model.number="marks_allocation.practicals" wire:model.defer="marks_allocation.practicals">
-                                                            @error('time_allocation.practicals') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            @error('time_allocation.practicals') <div class="text-danger">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
                                                     <div class="row d-flex justify-content-between align-items-center col-md-6">
@@ -194,7 +194,7 @@
                                                         </div>
                                                         <div class="col ms-auto py-3">
                                                             <input class="form-control" type="number" x-model.number="marks_allocation.project" wire:model.defer="marks_allocation.project">
-                                                            @error('time_allocation.project') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            @error('time_allocation.project') <div class="text-danger">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -205,7 +205,7 @@
                                                         </div>
                                                         <div class="col ms-auto py-3">
                                                             <input class="form-control" type="number" x-model.number="marks_allocation.mid_exam" wire:model.defer="marks_allocation.mid_exam">
-                                                            @error('time_allocation.mid_exam') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            @error('time_allocation.mid_exam') <div class="text-danger">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
                                                     <div class="row d-flex justify-content-between align-items-center col-md-6">
@@ -214,7 +214,7 @@
                                                         </div>
                                                         <div class="col ms-auto py-3">
                                                             <input class="form-control" type="number" x-model.number="marks_allocation.end_exam" wire:model.defer="marks_allocation.end_exam">
-                                                            @error('time_allocation.end_exam') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            @error('time_allocation.end_exam') <div class="text-danger">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -247,7 +247,7 @@
                                         'wire:model.lazy' => 'objectives'
                                     ]) !!}
                                     <label for="floatingTextarea">Objectives</label>
-                                    @error('objectives') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    @error('objectives') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 

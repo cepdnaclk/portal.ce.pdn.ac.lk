@@ -57,36 +57,27 @@ class CreateCourses extends Component
             'academicProgram' => 'required|string',
             'semester' => 'required|string',
             'version' => 'required|string',
-            'type' => 'required|string|in:core,elective,optional',
+            'type' => 'required|string|in:Core,GE,TE',
             'code' => 'required|string|unique:courses,code',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:30',
             'faq_page' => 'nullable|url',
             'content' => 'nullable|string',
-            'time_allocation.lecture' => 'required|integer|min:0',
-            'time_allocation.tutorial' => 'required|integer|min:0',
-            'time_allocation.practical' => 'required|integer|min:0',
-            'time_allocation.assignment' => 'required|integer|min:0',
-            'marks_allocation.practicals' => 'required|integer|min:0|max:100',
-            'marks_allocation.project' => 'required|integer|min:0|max:100',
-            'marks_allocation.mid_exam' => 'required|integer|min:0|max:100',
-            'marks_allocation.end_exam' => 'required|integer|min:0|max:100',
-            'objectives' => 'required|string|min:10',
-            'ilos.knowledge' => 'required|array|min:1',
-            'ilos.knowledge.*' => 'required|string|min:5',
-            'ilos.skills' => 'required|array|min:1',
-            'ilos.skills.*' => 'required|string|min:5',
-            'ilos.attitudes' => 'required|array|min:1',
-            'ilos.attitudes.*' => 'required|string|min:5',
-            'references' => 'nullable|array',
-            'references.*' => 'required|string|min:5',
-            'modules' => 'required|array|min:1',
+            'time_allocation.lecture' => 'nullable|integer|min:0',
+            'time_allocation.tutorial' => 'nullable|integer|min:0',
+            'time_allocation.practical' => 'nullable|integer|min:0',
+            'time_allocation.assignment' => 'nullable|integer|min:0',
+            'marks_allocation.practicals' => 'nullable|integer|min:0|max:100',
+            'marks_allocation.project' => 'nullable|integer|min:0|max:100',
+            'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
+            'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
+            'modules' => 'nullable|array|min:1',
             'modules.*.name' => 'required|string|min:3|max:255',
             'modules.*.description' => 'required|string|min:10',
-            'modules.*.time_allocation.lectures' => 'required|integer|min:0',
-            'modules.*.time_allocation.tutorials' => 'required|integer|min:0',
-            'modules.*.time_allocation.practicals' => 'required|integer|min:0',
-            'modules.*.time_allocation.assignments' => 'required|integer|min:0',
+            'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
+            'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
+            'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
+            'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
         ];
     }
 
@@ -104,17 +95,51 @@ class CreateCourses extends Component
             'credits.required' => 'Please specify the number of credits.',
             'credits.min' => 'The course must have at least 1 credit.',
             'credits.max' => 'The course cannot have more than 30 credits.',
-            'objectives.required' => 'Please provide course objectives.',
-            'objectives.min' => 'The course objectives should be at least 10 characters long.',
-            'ilos.knowledge.required' => 'Please provide at least one knowledge ILO.',
-            'ilos.skills.required' => 'Please provide at least one skills ILO.',
-            'ilos.attitudes.required' => 'Please provide at least one attitude ILO.',
-            'modules.required' => 'Please add at least one module to the course.',
             'modules.*.name.required' => 'Each module must have a name.',
             'modules.*.description.required' => 'Each module must have a description.',
             'modules.*.description.min' => 'Module descriptions should be at least 10 characters long.',
         ];
     }
+
+    protected function validateCurrentStep()
+{
+    switch ($this->formStep) {
+        case 1:
+            $this->validate([
+                'academicProgram' => 'required|string',
+                'semester' => 'required|string',
+                'version' => 'required|string',
+                'type' => 'required|string|in:Core,GE,TE',
+                'code' => 'required|string|unique:courses,code',
+                'name' => 'required|string|max:255',
+                'credits' => 'required|integer|min:1|max:30',
+                'faq_page' => 'nullable|url',
+                'content' => 'nullable|string',
+                'time_allocation.lecture' => 'nullable|integer|min:0',
+                'time_allocation.tutorial' => 'nullable|integer|min:0',
+                'time_allocation.practical' => 'nullable|integer|min:0',
+                'time_allocation.assignment' => 'nullable|integer|min:0',
+                'marks_allocation.practicals' => 'nullable|integer|min:0|max:100',
+                'marks_allocation.project' => 'nullable|integer|min:0|max:100',
+                'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
+                'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
+            ]);
+            break;
+
+        case 3:
+            $this->validate([
+                'modules' => 'nullable|array|min:1',
+                'modules.*.name' => 'required|string|min:3|max:255',
+                'modules.*.description' => 'required|string|min:10',
+                'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
+                'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
+                'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
+                'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
+            ]);
+            break;
+    }
+}
+
 
     public function updated($propertyName)
     {
@@ -152,6 +177,7 @@ class CreateCourses extends Component
     
     public function next(){
 
+        $this->validateCurrentStep();
         $this->formStep++;
     }
     
@@ -162,7 +188,7 @@ class CreateCourses extends Component
     public function submit(){
         \Log::info("Submit method called");
         try {
-            $this->validate();
+            //$this->validate();
             $this->storeCourse();
             session()->flash('success', 'Course and modules created successfully.');
         } catch (\Exception $e) {
@@ -246,6 +272,23 @@ class CreateCourses extends Component
             \Log::error("Error in storeCourse method: " . $e->getMessage());
             throw $e;
         }
+        // dump($this->academicProgram,$this->semester,$this->version,
+        // $this->type,
+        // $this->code,
+        // $this->name,
+        // $this->credits,
+        // $this->faq_page,
+        // $this->content,
+        // json_encode($this->time_allocation),
+        // json_encode($this->marks_allocation),
+        // $this->objectives,
+        // json_encode($this->ilos),
+        // json_encode($this->references),
+        // auth()->id(),
+        // $this->modules
+
+
+        //     );
     }
     
 
@@ -268,7 +311,7 @@ class CreateCourses extends Component
             'assignment' => 0,
         ];
         $this->marks_allocation = [
-            'practicles' => 0,
+            'practicals' => 0,
             'project' => 0,
             'mid_exam' => 0,
             'end_exam' => 0,
@@ -281,8 +324,6 @@ class CreateCourses extends Component
         ];
         $this->references = [];
     }
-
-
 
     public function render()
     {
