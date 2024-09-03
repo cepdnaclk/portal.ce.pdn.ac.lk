@@ -20,8 +20,6 @@ class Course extends Model
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
-    public const ACADEMIC_PROGRAMS = ['Undergraduate', 'Postgraduate'];
-
     /**
      * @var string[]
      */
@@ -62,9 +60,29 @@ class Course extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function types()
+    public static function getTypes(): array
     {
-        return self::ACADEMIC_PROGRAMS;
+        return [
+            'Core' => 'Core',
+            'General Elective' => 'General Elective',
+            'Technical Elective' => 'Technical Elective'
+        ];
+    }
+
+    public static function getAcademicPrograms(): array
+    {
+        return [
+            'undergraduate' => 'Undergraduate',
+            'postgraduate' => 'Postgraduate'
+        ];
+    }
+
+    public static function getVersions(): array
+    {
+        return [
+            1 => 'Current Curriculum',
+            2 => 'Curriculum - Effective from E22'
+        ];
     }
 
     /**

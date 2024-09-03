@@ -15,6 +15,10 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->type }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     {{ $row->version }}
 </x-livewire-tables::table.cell>
 
@@ -24,10 +28,6 @@
 
 <x-livewire-tables::table.cell>
     {{ $row->created_at }}
-</x-livewire-tables::table.cell>
-
-<x-livewire-tables::table.cell>
-    {{ $row->updated_at }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

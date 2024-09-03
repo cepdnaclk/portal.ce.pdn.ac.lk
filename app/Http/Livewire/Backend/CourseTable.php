@@ -27,13 +27,13 @@ class CourseTable extends DataTableComponent
                 ->searchable(),
             Column::make("Academic Program", "academic_program")
                 ->sortable(),
+            Column::make("Type", "type")
+                ->sortable(),
             Column::make("Version", "version")
                 ->sortable(),
             Column::make("Credits", "credits")
                 ->searchable(),
             Column::make("Created At", "created_at")
-                ->sortable(),
-            Column::make("Updated At", "updated_at")
                 ->sortable(),
             Column::make("Actions")
         ];
@@ -48,12 +48,12 @@ class CourseTable extends DataTableComponent
     public function filters(): array
     {
         $type = ["" => "Any"];
-        foreach (Course::types() as $key => $value) {
+        foreach (Course::getTypes() as $key => $value) {
             $type[$key] = $value;
         }
 
         return [
-            'academic_program' => Filter::make('Academic Program')
+            'type' => Filter::make('Type')
                 ->select($type),
         ];
 
