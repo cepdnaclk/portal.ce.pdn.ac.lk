@@ -20,6 +20,8 @@ class Course extends Model
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
+    protected $table = 'courses';
+
     /**
      * @var string[]
      */
@@ -36,7 +38,6 @@ class Course extends Model
         'time_allocation',
         'marks_allocation',
         'ilos',
-        'urls',
         'references',
         'created_by',
         'updated_by',
@@ -54,7 +55,6 @@ class Course extends Model
         'time_allocation' => 'json',
         'marks_allocation' => 'json',
         'ilos' => 'json',
-        'urls' => 'json',
         'references' => 'json',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -64,8 +64,8 @@ class Course extends Model
     {
         return [
             'Core' => 'Core',
-            'General Elective' => 'General Elective',
-            'Technical Elective' => 'Technical Elective'
+            'GE' => 'General Elective',
+            'TE' => 'Technical Elective'
         ];
     }
 
@@ -85,13 +85,8 @@ class Course extends Model
         ];
     }
 
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    protected static function newFactory()
+    public function modules()
     {
-        return CourseFactory::new();
+        return $this->hasMany(CourseModule::class);
     }
 }

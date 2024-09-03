@@ -32,11 +32,7 @@
                 <div class="form-floating" style="width: 94%;  display: flex; flex-direction: row;">
                     
                     {{-- <input x-model="userInput" placeholder="Enter item" type="text" class="form-control item-box" > --}}
-                    @if ($type === 'references')
-                    <input x-model="userInput" placeholder="Enter item" type="text" class="form-control item-box">
-                    @else
-                        <textarea x-model="userInput" placeholder="Enter item" class="form-control item-box" style="height: auto; resize: vertical; overflow: hidden;"></textarea>
-                    @endif
+                    <textarea x-model="userInput" placeholder="Enter item" class="form-control item-box" style="height: auto; resize: vertical; overflow: hidden;"></textarea>
 
                     <label for="itemInput"> {{ ucfirst($type) }} </label>
 

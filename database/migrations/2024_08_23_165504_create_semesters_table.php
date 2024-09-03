@@ -17,10 +17,10 @@ class CreateSemestersTable extends Migration
         Schema::create('semesters', function (Blueprint $table) {
             $table->id();
             $table->string('title', 255);
-            $table->integer('version');
-            $table->enum('academic_program', array_values(Semester::getAcademicPrograms()));
+            $table->enum('version', array_keys(Semester::getVersions()));
+            $table->enum('academic_program', array_keys(Semester::getAcademicPrograms()));
             $table->text('description')->nullable();
-            $table->string('url', 255)->unique();
+            $table->string('url', 200)->unique();
             $table->timestamps(); // This will create `created_at` and `updated_at` fields automatically
             $table->foreignId('created_by')->constrained('users'); 
             $table->foreignId('updated_by')->constrained('users');  
