@@ -20,6 +20,8 @@ class Course extends Model
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
+    public const ACADEMIC_PROGRAMS = ['Undergraduate', 'Postgraduate'];
+
     /**
      * @var string[]
      */
@@ -59,6 +61,11 @@ class Course extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public static function types()
+    {
+        return self::ACADEMIC_PROGRAMS;
+    }
 
     /**
      * Create a new factory instance for the model.
