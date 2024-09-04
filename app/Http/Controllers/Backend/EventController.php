@@ -43,7 +43,7 @@ class EventController extends Controller
             'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
             'location' => 'string|required',
         ]);
-        if ($request->image != null) {
+        if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb(null, $request->image, "events");
         }
 
@@ -94,7 +94,7 @@ class EventController extends Controller
             'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
             'location' => 'string|required',
         ]);
-        if ($request->image != null) {
+        if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb($event->image, $request->image, "events");
         } else {
             $data['image'] = $event->image;

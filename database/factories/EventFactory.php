@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Domains\Event\Models\Event;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 
 /**
@@ -34,9 +35,9 @@ class EventFactory extends Factory
             'enabled' => $this->faker->boolean,
             'link_url' => $this->faker->url,
             'link_caption' => $this->faker->words(3, true),
-            'published_at' => now()->subWeek(),
-            'start_at' => now()->subWeek(),
-            'end_at' => now()->subDay(),
+            'published_at' => Carbon::now()->subWeek()->format('Y-m-d'),
+            'start_at' => Carbon::now()->subWeek()->format('Y-m-d\TH:i'),
+            'end_at' => Carbon::now()->subDay()->format('Y-m-d\TH:i'),
             'location' => $this->faker->company,
         ];
     }
