@@ -1,8 +1,8 @@
 <x-backend.card>
     <x-slot name="header">
-        Course : Create
+        Course : Edit
     </x-slot>
-
+    
     <x-slot name="body">
         <div class="container mt-1" id="app">
             <div class="step-indicator">
@@ -308,7 +308,7 @@
                                 <button type="button" class="btn btn-primary prev-step"
                                     wire:click="previous">Previous</button>
                                 <button type="button" class="btn btn-primary next-step"
-                                    wire:click="submit">Submit</button>
+                                    wire:click="update">Update</button>
                             @endif
                         </div>
                     </div>
@@ -320,10 +320,10 @@
 
 <script>
     document.addEventListener('livewire:load', function () {
-        Livewire.on('courseCreated', function () {
+        Livewire.on('courseUpdated', function () {
             Swal.fire({
-                title: 'Course Created!',
-                text: 'The course has been successfully created.',
+                title: 'Course Updated!',
+                text: 'The course has been successfully updated.',
                 icon: 'success',
                 confirmButtonText: 'Great'
             });
