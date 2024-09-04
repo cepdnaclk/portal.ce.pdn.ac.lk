@@ -1,31 +1,33 @@
 <x-livewire-tables::table.cell>
-    @if ($row->area == App\Domains\Announcement\Models\Announcement::TYPE_FRONTEND)
-        Frontend
-    @elseif($row->area == App\Domains\Announcement\Models\Announcement::TYPE_BACKEND)
-        Backend
-    @else
-        Both
-    @endif
+    {{ $row->code }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ App\Domains\Announcement\Models\Announcement::types()[$row->type] }}
+    {{ $row->name }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->message }}
+    {{ $row->semester_id }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->enabled ? 'Enabled' : 'Disabled' }}
+    {{ $row->academic_program }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->starts_at }}
+    {{ $row->type }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->ends_at }}
+    {{ $row->version }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    {{ $row->credits }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    {{ $row->created_at }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
