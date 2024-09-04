@@ -85,11 +85,6 @@ class Course extends Model
         ];
     }
 
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function modules()
     {
         return $this->hasMany(CourseModule::class);
