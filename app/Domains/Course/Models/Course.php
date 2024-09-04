@@ -64,8 +64,8 @@ class Course extends Model
     {
         return [
             'Core' => 'Core',
-            'General Elective' => 'General Elective',
-            'Technical Elective' => 'Technical Elective'
+            'GE' => 'General Elective',
+            'TE' => 'Technical Elective'
         ];
     }
 
@@ -90,8 +90,8 @@ class Course extends Model
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    protected static function newFactory()
+    public function modules()
     {
-        return CourseFactory::new();
+        return $this->hasMany(CourseModule::class);
     }
 }
