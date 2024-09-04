@@ -1,21 +1,5 @@
 <x-livewire-tables::table.cell>
-    {{ $row->code }}
-</x-livewire-tables::table.cell>
-
-<x-livewire-tables::table.cell>
-    {{ $row->name }}
-</x-livewire-tables::table.cell>
-
-<x-livewire-tables::table.cell>
-    {{ $row->semester_id }}
-</x-livewire-tables::table.cell>
-
-<x-livewire-tables::table.cell>
-    {{ $row->academic_program }}
-</x-livewire-tables::table.cell>
-
-<x-livewire-tables::table.cell>
-    {{ $row->type }}
+    {{ $row->title }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
@@ -23,20 +7,36 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->credits }}
+    @if ($row->academic_program == 0)
+        Undergraduate
+    @else
+        Postgraduate
+    @endif
 </x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    {{ $row->description }}
+</x-livewire-tables::table.cell>
+
+{{-- <x-livewire-tables::table.cell>
+    {{ $row->url }}
+</x-livewire-tables::table.cell> --}}
 
 <x-livewire-tables::table.cell>
     {{ $row->created_at }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->updated_at }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
         <div class="btn-group" role="group" aria-label="">
-            <a href="{{ route('dashboard.announcements.edit', $row) }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"
+            <a href="{{ route('dashboard.semesters.edit', $row) }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"
                     title="Edit"></i>
             </a>
-            <a href="{{ route('dashboard.announcements.delete', $row) }}" class="btn btn-danger btn-xs"><i
+            <a href="{{ route('dashboard.semesters.delete', $row) }}" class="btn btn-danger btn-xs"><i
                     class="fa fa-trash" title="Delete"></i>
             </a>
         </div>
