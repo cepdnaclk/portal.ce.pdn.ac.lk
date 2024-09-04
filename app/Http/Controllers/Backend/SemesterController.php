@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Domains\Semester\Models\Semester;
+use Illuminate\Support\Facades\Log;
 
 class SemesterController extends Controller
 {
@@ -50,9 +51,11 @@ class SemesterController extends Controller
         ],
         ]);
         try {
+            $validatedData['created_by'] = auth()->user()->id;
             Semester::create($validatedData);
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester created successfully.');
         } catch (\Exception $e) {
+            Log::error('Error in storing semester: '.$e->getMessage());
             return abort(500);
         }
     }
@@ -90,9 +93,11 @@ class SemesterController extends Controller
             ],
         ]);
         try {
+            $validatedData['updated_by'] = auth()->user()->id;
             $semester->update($validatedData);
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester updated successfully.');
-        } catch (\Exception $e) {   
+        } catch (\Exception $e) { 
+            Log::error('Error in updating semester: '.$e->getMessage());  
             return abort(500);
         }
     }
@@ -113,8 +118,9 @@ class SemesterController extends Controller
     {
         try{
             $semester->delete();
-            return redirect()->route('backend.semesters.index')->with('success', 'Semester deleted successfully.');
+            return redirect()->route('dashboard.semesters.index')->with('success', 'Semester deleted successfully.');
         } catch (\Exception $e) {
+            Log::error('Error in deleting semester: '.$e->getMessage());
             return abort(500);
         }
     }

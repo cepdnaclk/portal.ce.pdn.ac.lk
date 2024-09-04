@@ -39,8 +39,8 @@ class Semester extends Model
     public static function getAcademicPrograms(): array
     {
         return [
-            'undergraduate' => 'Undergraduate',
-            'postgraduate' => 'Postgraduate'
+            'Undergraduate' => 'Undergraduate',
+            'Postgraduate' => 'Postgraduate'
         ];
     }
 
@@ -52,32 +52,12 @@ class Semester extends Model
         ];
     }
 
-    public static function getAcademicPrograms(): array
-    {
-        return [
-            'undergraduate' => 'Undergraduate',
-            'postgraduate' => 'Postgraduate'
-        ];
-    }
-
-    public static function getVersions(): array
-    {
-        return [
-            1 => 'Current Curriculum',
-            2 => 'Curriculum - Effective from E22'
-        ];
-    }
 
     // Accessor to check if this is the latest syllabus version
     public function getIsNewSyllabusAttribute()
     {
         $maxVersion = self::where('title', $this->title)->max('version');
         return $this->version === $maxVersion;
-    }
-
-    public static function types()
-    {
-        return self::ACADEMIC_PROGRAMS;
     }
 
       /**
