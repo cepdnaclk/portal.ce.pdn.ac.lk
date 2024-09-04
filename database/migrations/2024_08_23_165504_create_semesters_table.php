@@ -22,8 +22,8 @@ class CreateSemestersTable extends Migration
             $table->text('description')->nullable();
             $table->string('url', 200)->unique();
             $table->timestamps(); // This will create `created_at` and `updated_at` fields automatically
-            $table->foreignId('created_by')->constrained('users'); 
-            $table->foreignId('updated_by')->constrained('users');  
+            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users');
         });
     }
 

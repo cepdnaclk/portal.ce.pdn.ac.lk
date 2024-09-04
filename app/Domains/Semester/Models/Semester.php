@@ -36,6 +36,7 @@ class Semester extends Model
         'created_by' => 'integer',
         'updated_by' => 'integer',
     ];
+
     public static function getAcademicPrograms(): array
     {
         return [
@@ -65,7 +66,7 @@ class Semester extends Model
         return self::ACADEMIC_PROGRAMS;
     }
 
-      /**
+    /**
      * Create a new factory instance for the model.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
