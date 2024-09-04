@@ -75,6 +75,11 @@ class Semester extends Model
         return $this->version === $maxVersion;
     }
 
+    public static function types()
+    {
+        return self::ACADEMIC_PROGRAMS;
+    }
+
       /**
      * Create a new factory instance for the model.
      *

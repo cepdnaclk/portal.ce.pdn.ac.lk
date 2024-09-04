@@ -15,6 +15,21 @@
                     </x-utils.link>
                 </x-slot>
             @endif
+
+            <x-slot name="body">
+
+                @if (session('Success'))
+                    <div class="alert alert-success">
+                        {{ session('Success') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+
+                @livewire('backend.semester-table')
+
+            </x-slot>
         </x-backend.card>
     </div>
 @endsection
