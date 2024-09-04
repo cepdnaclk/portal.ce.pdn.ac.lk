@@ -7,11 +7,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    @if ($row->academic_program === 'Undergraduate')
-        Undergraduate
-    @else
-        Postgraduate
-    @endif
+    {{ $row->academic_program }}    
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
