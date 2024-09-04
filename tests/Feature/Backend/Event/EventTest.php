@@ -40,6 +40,7 @@ class EventTest extends TestCase
     public function event_can_be_created()
     {
         $user = $this->loginAsEditor();
+
         $response = $this->post('/dashboard/event/', [
             'title' => 'test event',
             'description' => 'Nostrum qui qui ut deserunt dolores quaerat. Est quos sed ea quo placeat maxime. Sequi temporibus alias atque assumenda facere modi deleniti. Recusandae autem quia officia iste laudantium veritatis aut.',
@@ -48,8 +49,10 @@ class EventTest extends TestCase
             'created_by' => $user->id,
             'link_url' => 'http://runolfsdottir.biz/quia-provident-ut-ipsa-atque-et',
             'link_caption' => 'fugiat accusantium sit',
-            'start_at' => '2024-07-06 18:04',
-            'end_at' => '2024-07-12 18:04',
+            'start_at' => '2024-10-06T18:04',
+            'end_at' => '2024-07-12T18:04',
+            'url' => 'https://ce.pdn.ac.lk/news/2004-10-10',
+            'published_at' => '2024-10-10',
             'location' => 'zoom',
         ]);
 
@@ -74,12 +77,14 @@ class EventTest extends TestCase
             'created_by' => $user->id,
             'link_url' => 'http://example.com',
             'link_caption' => 'eaque excepturi velit',
-            'start_at' => '2024-07-06 18:04',
-            'end_at' => '2024-07-12 18:04',
+            'start_at' => '2024-09-06T18:04',
+            'end_at' => '2024-07-12T18:04',
             'location' => 'zoom',
+            'url' => 'www.uniqueurl1.com',
+            'published_at' => '2024-01-10',
         ];
 
-        $response = $this->put("/dashboard/event/{$event->id}", $updateData);
+        $response = $this->put("/dashboard/events/{$event->id}", $updateData);
         $response->assertStatus(302);
 
         $this->assertDatabaseHas('events', [
@@ -92,7 +97,7 @@ class EventTest extends TestCase
     {
         $this->loginAsEditor();
         $event = Event::factory()->create();
-        $this->delete('/dashboard/event/' . $event->id);
+        $this->delete('/dashboard/events/' . $event->id);
         $this->assertDatabaseMissing('events', ['id' => $event->id]);
     }
 

@@ -51,8 +51,8 @@ abstract class TestCase extends BaseTestCase
 
     protected function loginAsEditor()
     {
-        $newsEditorRole = Role::whereName('Editor')->first();
-        $user = User::factory()->admin()->create();
+        $newsEditorRole = Role::where('name', 'Editor')->first();
+        $user = User::factory()->admin()->create(['name' => 'Test Editor']);
         $user->assignRole($newsEditorRole->name);
         $this->actingAs($user);
 

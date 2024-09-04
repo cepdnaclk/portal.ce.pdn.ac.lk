@@ -49,7 +49,7 @@ class NewsController extends Controller
             $news = new News($data);
             $news->enabled = ($request->enabled == 1);
             $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections 
-            $news->created_bt = Auth::user()->id;
+            $news->created_by = Auth::user()->id;
             $news->save();
 
             return redirect()->route('dashboard.news.index', $news)->with('Success', 'News was created !');

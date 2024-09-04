@@ -24,7 +24,7 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
         });
 
     // Store
-    Route::post('events', [EventController::class, 'store'])
+    Route::post('events/', [EventController::class, 'store'])
         ->name('event.store');
 
     // Edit

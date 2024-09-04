@@ -44,7 +44,9 @@ class NewsTest extends TestCase
             'image' => 'sample-image.jpg',
             'link_url' => 'http://example.com',
             'link_caption' => 'Example Link',
-            'published_at' => '2024-07-06',
+            'url' => 'https://ce.pdn.ac.lk/news/2004-10-10',
+            'published_at' => '2024-12-12',
+
         ]);
 
         $response->assertStatus(302);
@@ -66,7 +68,8 @@ class NewsTest extends TestCase
             'image' => 'https:\/\/via.placeholder.com\/640x480.png\/000055?text=quia',
             'link_url' => 'http://example.com',
             'link_caption' => 'eaque excepturi velit',
-            'published_at' => '2024-07-06',
+            'url' => 'https://ce.pdn.ac.lk/news/2004-11-11',
+            'published_at' => '2024-12-24',
         ];
 
         $response = $this->put("/dashboard/news/{$news->id}", $updateData);
