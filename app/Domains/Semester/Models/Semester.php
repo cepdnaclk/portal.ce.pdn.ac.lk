@@ -36,12 +36,11 @@ class Semester extends Model
         'created_by' => 'integer',
         'updated_by' => 'integer',
     ];
-
     public static function getAcademicPrograms(): array
     {
         return [
-            'undergraduate' => 'Undergraduate',
-            'postgraduate' => 'Postgraduate'
+            'Undergraduate' => 'Undergraduate',
+            'Postgraduate' => 'Postgraduate'
         ];
     }
 
@@ -54,16 +53,12 @@ class Semester extends Model
     }
 
 
+
     // Accessor to check if this is the latest syllabus version
     public function getIsNewSyllabusAttribute()
     {
         $maxVersion = self::where('title', $this->title)->max('version');
         return $this->version === $maxVersion;
-    }
-
-    public static function types()
-    {
-        return self::ACADEMIC_PROGRAMS;
     }
 
     /**
