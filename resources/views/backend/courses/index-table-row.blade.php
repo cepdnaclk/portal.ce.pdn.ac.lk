@@ -1,40 +1,42 @@
 <x-livewire-tables::table.cell>
-    @if ($row->area == App\Domains\Announcement\Models\Announcement::TYPE_FRONTEND)
-        Frontend
-    @elseif($row->area == App\Domains\Announcement\Models\Announcement::TYPE_BACKEND)
-        Backend
-    @else
-        Both
-    @endif
+    {{ $row->code }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ App\Domains\Announcement\Models\Announcement::types()[$row->type] }}
+    {{ $row->name }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->message }}
+    {{ $row->semester_id }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->enabled ? 'Enabled' : 'Disabled' }}
+    {{ $row->academic_program }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->starts_at }}
+    {{ $row->type }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->ends_at }}
+    {{ $row->version }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    {{ $row->credits }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    {{ $row->created_at }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
         <div class="btn-group" role="group" aria-label="">
-            <a href="{{ route('dashboard.announcements.edit', $row) }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"
+            <a href="{{ route('dashboard.courses.edit', $row) }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"
                     title="Edit"></i>
             </a>
-            <a href="{{ route('dashboard.announcements.delete', $row) }}" class="btn btn-danger btn-xs"><i
+            <a href="{{ route('dashboard.courses.delete', $row) }}" class="btn btn-danger btn-xs"><i
                     class="fa fa-trash" title="Delete"></i>
             </a>
         </div>

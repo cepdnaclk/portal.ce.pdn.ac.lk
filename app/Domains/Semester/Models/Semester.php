@@ -53,6 +53,7 @@ class Semester extends Model
     }
 
 
+
     // Accessor to check if this is the latest syllabus version
     public function getIsNewSyllabusAttribute()
     {
@@ -60,7 +61,7 @@ class Semester extends Model
         return $this->version === $maxVersion;
     }
 
-      /**
+    /**
      * Create a new factory instance for the model.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
