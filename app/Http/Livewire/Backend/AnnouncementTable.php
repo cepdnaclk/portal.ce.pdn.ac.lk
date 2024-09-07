@@ -26,7 +26,10 @@ class AnnouncementTable extends DataTableComponent
             Column::make("Message", "message")
                 ->searchable(),
             Column::make("Enabled", "enabled")
-                ->searchable(),
+                ->sortable()
+                ->format(function (Announcement $announcement) {
+                    return view('backend.announcement.enabled-toggle', ['announcement' => $announcement]);
+                }),
             Column::make("Start", "starts_at")
                 ->sortable(),
             Column::make("End", "ends_at")
@@ -40,6 +43,13 @@ class AnnouncementTable extends DataTableComponent
         return Announcement::query()
             ->when($this->getFilter('area'), fn ($query, $status) => $query->where('area', $status))
             ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type));
+    }
+
+    public function toggleEnable($announcementId)
+    {
+        $announcement = Announcement::findOrFail($announcementId);
+        $announcement->enabled = !$announcement->enabled;
+        $announcement->save();
     }
 
     public function filters(): array

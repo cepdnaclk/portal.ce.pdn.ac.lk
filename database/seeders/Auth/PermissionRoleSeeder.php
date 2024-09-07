@@ -22,6 +22,8 @@ class PermissionRoleSeeder extends Seeder
     {
         $this->disableForeignKeys();
 
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Create Roles
         Role::create([
             'id' => 1,
@@ -29,17 +31,25 @@ class PermissionRoleSeeder extends Seeder
             'name' => 'Administrator',
         ]);
 
-        // Non Grouped Permissions
-        //
+        Role::create([
+            'id' => 2,
+            'type' => User::TYPE_USER,
+            'name' => 'Editor',
+        ]);
 
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Non Grouped Permissions
+
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Grouped permissions
-        // Users category
+
+        // Role: User
         $users = Permission::create([
             'type' => User::TYPE_ADMIN,
             'name' => 'admin.access.user',
             'description' => 'All User Permissions',
         ]);
-
         $users->children()->saveMany([
             new Permission([
                 'type' => User::TYPE_ADMIN,
@@ -78,8 +88,42 @@ class PermissionRoleSeeder extends Seeder
             ]),
         ]);
 
-        // Assign Permissions to other Roles
-        //
+        // Role: Editor
+        $editor = Permission::create([
+            'type' => User::TYPE_USER,
+            'name' => 'user.access.editor',
+            'description' => 'Editor Permissions',
+        ]);
+        $editor->children()->saveMany([
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.editor.news',
+                'description' => 'News Articles',
+            ]),
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.editor.events',
+                'description' => 'Event Articles',
+            ])
+        ]);
+
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Assign permissions to Roles
+
+        Role::findByName('Administrator')->givePermissionTo([
+            'admin.access.user', 'user.access.editor'
+        ]);
+        Role::findByName('Editor')->givePermissionTo(['user.access.editor']);
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Assign Permissions to users 
+
+        // Only for the local testings
+        if (app()->environment(['local', 'testing'])) {
+            User::find(3)->givePermissionTo('user.access.editor.news');
+            User::find(4)->givePermissionTo('user.access.editor.events');
+        };
 
         $this->enableForeignKeys();
     }
