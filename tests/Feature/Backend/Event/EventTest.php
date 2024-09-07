@@ -25,7 +25,7 @@ class EventTest extends TestCase
     public function an_event_editor_can_access_the_create_event_page()
     {
         $this->loginAsEditor();
-        dd($this->get('/dashboard/events/create')); //->assertOk();
+        $this->get('/dashboard/events/create')->assertOk();
     }
 
     /** @test */
