@@ -4,6 +4,8 @@ Internal and Public web service provider of the Department of Computer Engineeri
 
 ## Team of Developers
 
+To be updated
+
 ## Useful Commands and Instructions
 
 You need to install WAMP or XAMP server and run it before following commands.
