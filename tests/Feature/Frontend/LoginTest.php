@@ -106,7 +106,7 @@ class LoginTest extends TestCase
     /** @test */
     public function a_user_can_log_out()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->user()->create();
 
         $this->actingAs($user)
             ->post('/logout')

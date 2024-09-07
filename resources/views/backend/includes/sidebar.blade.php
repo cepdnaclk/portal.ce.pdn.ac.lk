@@ -72,8 +72,8 @@
         @if ($logged_in_user->hasAllAccess())
             {{-- Announcements --}}
             <li class="c-sidebar-nav-dropdown">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
-                    :text="__('Announcements')"></x-utils.link>
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-bullhorn"
+                    class="c-sidebar-nav-dropdown-toggle" :text="__('Announcements')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
                     <li class="c-sidebar-nav-item">
@@ -83,6 +83,33 @@
                 </ul>
             </li>
         @endif
+
+        @if (
+            $logged_in_user->hasPermissionTo('user.access.editor.news') ||
+                $logged_in_user->hasPermissionTo('user.access.editor.event'))
+            <li class="c-sidebar-nav-dropdown">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-newspaper"
+                    class="c-sidebar-nav-dropdown-toggle" :text="__('Content Management')"></x-utils.link>
+
+                <ul class="c-sidebar-nav-dropdown-items">
+                    @if ($logged_in_user->hasPermissionTo('user.access.editor.news'))
+                        {{-- News --}}
+                        <li class="c-sidebar-nav-item">
+                            <x-utils.link :href="route('dashboard.news.index')" class="c-sidebar-nav-link" :text="__('News')"
+                                :active="activeClass(Route::is('dashboard.news.*'), 'c-active')"></x-utils.link>
+                        </li>
+                    @endif
+                    @if ($logged_in_user->hasPermissionTo('user.access.editor.events'))
+                        {{-- Events --}}
+                        <li class="c-sidebar-nav-item">
+                            <x-utils.link :href="route('dashboard.event.index')" class="c-sidebar-nav-link" :text="__('Events')"
+                                :active="activeClass(Route::is('dashboard.event.*'), 'c-active')"></x-utils.link>
+                        </li>
+                    @endif
+                </ul>
+            </li>
+        @endif
+
 
     </ul>
 

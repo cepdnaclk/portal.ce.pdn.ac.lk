@@ -15,7 +15,7 @@ class UserAccountTest extends TestCase
     {
         $this->get('/intranet/account')->assertRedirect('/login');
 
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->user()->create());
 
         $this->get('/intranet/account')->assertOk();
     }
@@ -23,7 +23,7 @@ class UserAccountTest extends TestCase
     /** @test */
     public function profile_update_requires_validation()
     {
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->user()->create());
 
         config(['boilerplate.access.user.change_email' => true]);
 
@@ -43,7 +43,7 @@ class UserAccountTest extends TestCase
     {
         config(['boilerplate.access.user.change_email' => false]);
 
-        $user = User::factory()->create([
+        $user = User::factory()->user()->create([
             'name' => 'Jane Doe',
         ]);
 
@@ -70,7 +70,7 @@ class UserAccountTest extends TestCase
     {
         config(['boilerplate.access.user.change_email' => true]);
 
-        $user = User::factory()->create([
+        $user = User::factory()->user()->create([
             'email' => 'jane@doe.com',
         ]);
 

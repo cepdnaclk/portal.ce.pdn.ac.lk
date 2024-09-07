@@ -1,18 +1,17 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\NewsApiController;
+use App\Http\Controllers\API\EventApiController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
+Route::group(['prefix' => 'news', 'as' => 'api.news.'], function () {
+    Route::get('/', [NewsApiController::class, 'index']);
+    Route::get('/{id}', [NewsApiController::class, 'show']);
+});
+
+Route::group(['prefix' => 'events', 'as' => 'api.events.'], function () {
+    Route::get('', [EventApiController::class, 'index']);
+    Route::get('/upcoming', [EventApiController::class, 'upcoming']);
+    Route::get('/past', [EventApiController::class, 'past']);
+    Route::get('/{id}', [EventApiController::class, 'show']);
+});

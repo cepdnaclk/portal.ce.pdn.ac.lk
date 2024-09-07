@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', __('Announcements'))
+@section('title', __('Edit Announcement'))
 
 @section('content')
     <div>
