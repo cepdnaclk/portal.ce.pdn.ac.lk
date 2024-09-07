@@ -26,15 +26,18 @@ class PermissionRoleSeeder extends Seeder
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Create Roles
         Role::create([
-            'id' => 1,
             'type' => User::TYPE_ADMIN,
             'name' => 'Administrator',
         ]);
 
         Role::create([
-            'id' => 2,
             'type' => User::TYPE_USER,
             'name' => 'Editor',
+        ]);
+
+        Role::create([
+            'type' => User::TYPE_USER,
+            'name' => 'Course Manager',
         ]);
 
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -109,15 +112,37 @@ class PermissionRoleSeeder extends Seeder
             ])
         ]);
 
+        // Role: CourseManager 
+        $courseManager = Permission::create([
+            'type' => User::TYPE_USER,
+            'name' => 'user.access.academic',
+            'description' => 'All Course Manager Permissions',
+        ]);
+
+        $courseManager->children()->saveMany([
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.academic.semesters',
+                'description' => 'Semesters',
+            ]),
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.academic.courses',
+                'description' => 'Courses',
+            ]),
+        ]);
 
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Assign permissions to Roles
 
         Role::findByName('Administrator')->givePermissionTo([
             'admin.access.user',
-            'user.access.editor'
+            'user.access.editor',
+            'user.access.academic'
         ]);
+
         Role::findByName('Editor')->givePermissionTo(['user.access.editor']);
+        Role::findByName('Course Manager')->givePermissionTo(['user.access.academic']);
 
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Assign Permissions to users 

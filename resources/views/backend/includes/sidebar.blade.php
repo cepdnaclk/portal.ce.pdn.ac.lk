@@ -132,7 +132,6 @@
                 </ul>
             </li>
         @endif
-        <<<<<<< HEAD=======>>>>>>> course-management-system
     </ul>
 
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent"

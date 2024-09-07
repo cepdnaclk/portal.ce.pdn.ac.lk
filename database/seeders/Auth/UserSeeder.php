@@ -32,8 +32,6 @@ class UserSeeder extends Seeder
 
         // Only for the local testings
         if (app()->environment(['local', 'testing'])) {
-
-
             User::create([
                 'type' => User::TYPE_USER,
                 'name' => 'Test User',
@@ -57,6 +55,15 @@ class UserSeeder extends Seeder
                 'name' => 'EventEditor1',
                 'email' => env('SEED_EVENT_EDITOR_EMAIL', 'events.editor@portal.ce.pdn.ac.lk'),
                 'password' => env('SEED_EVENT_EDITOR_PASSWORD', 'events'),
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
+
+            User::create([
+                'type' => User::TYPE_USER,
+                'name' => 'CourseManager',
+                'email' => env('SEED_COURSE_MANAGER_EMAIL', 'course_manager@portal.ce.pdn.ac.lk'),
+                'password' => env('SEED_COURSE_MANAGER_PASSWORD', 'course_manager'),
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
