@@ -89,8 +89,6 @@ class PermissionRoleSeeder extends Seeder
                 'description' => 'Change User Passwords',
                 'sort' => 6,
             ]),
-
-
         ]);
 
         // Role: Editor
