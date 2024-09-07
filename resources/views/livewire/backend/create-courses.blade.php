@@ -28,7 +28,7 @@
                                                 <label for="drop1">
                                                     Academic Program
                                                     <span title="e.g., Undergraduate or Postgraduate" 
-                                                          style="cursor: pointer;">&#x1F6C8;</span>
+                                                        style="cursor: pointer;">&#x1F6C8;</span>
                                                 </label>
                                             </div>
                                             <select class="form-select" wire:model="academicProgram">
@@ -124,101 +124,118 @@
                                         @error('content') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
 
-                                    <div class="div my-2">
+                                    <div class="div my-2 mx-3">
                                         <div class="row">
-                                            <div x-data="{ time_allocation: $wire.entangle('time_allocation') }" class="col-6">
-                                                <div class="div text-center">
-                                                    <label>Time Allocation</label>
+                                            <div class="col-md-6  px-3 my-2" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
+                                                <div class="div pt-3">
+                                                    <label for="drop1">Time Allocation</label>
                                                 </div>
                                                 <hr>
                                                 <div class="row pb-2">
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-md-3 col-3">
                                                             <label>Lectures</label>
                                                         </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="time_allocation.lecture" wire:model.defer="time_allocation.lecture">
-                                                            @error('time_allocation.lecture') <div class="text-danger">{{ $message }}</div> @enderror
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">hours</span>
                                                         </div>
                                                     </div>
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Tutorial</label>
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-md-3 col-3">
+                                                            <label>Tutorials</label>
                                                         </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="time_allocation.tutorial" wire:model.defer="time_allocation.tutorial">
-                                                            @error('time_allocation.tutorial') <div class="text-danger">{{ $message }}</div> @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row pb-2">
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Practical</label>
-                                                        </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="time_allocation.practical" wire:model.defer="time_allocation.practical">
-                                                            @error('time_allocation.practical') <div class="text-danger">{{ $message }}</div> @enderror
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">hours</span>
                                                         </div>
                                                     </div>
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Assignment</label>
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-md-3 col-3">
+                                                            <label>Practicles</label>
                                                         </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="time_allocation.assignment" wire:model.defer="time_allocation.assignment">
-                                                            @error('time_allocation.assignment') <div class="text-danger">{{ $message }}</div> @enderror
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">hours</span>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-md-3 col-3">
+                                                            <label>Assignments</label>
+                                                        </div>
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">hours</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-md-3 col-3">
+                                                            <label>Total</label>
+                                                        </div>
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">hours</span>
+                                                        </div>
+                                                    </div>
+                    
+                                                </div>                          
                                             </div>
-                                                                                                           
-                                            <div x-data="{ marks_allocation: $wire.entangle('marks_allocation') }" class="col-6">
-                                                <div class="div text-center">
-                                                    <label>Marks Allocation</label>
+                    
+                                            <div class="col-md-6 py-2 px-3 my-2" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
+                                                <div class="div pt-3">
+                                                    <label for="drop1">Marks Allocation</label>
                                                 </div>
                                                 <hr>
                                                 <div class="row pb-2">
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Practicals</label>
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-md-3 col-3 ">
+                                                            <label>Practicles</label>
                                                         </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="marks_allocation.practicals" wire:model.defer="marks_allocation.practicals">
-                                                            @error('time_allocation.practicals') <div class="text-danger">{{ $message }}</div> @enderror
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">%</span>
                                                         </div>
                                                     </div>
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-md-3 col-3 ">
                                                             <label>Project</label>
                                                         </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="marks_allocation.project" wire:model.defer="marks_allocation.project">
-                                                            @error('time_allocation.project') <div class="text-danger">{{ $message }}</div> @enderror
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">%</span>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row pb-2">
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-3 w-sm-auto">
                                                             <label>Mid-Exam</label>
                                                         </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="marks_allocation.mid_exam" wire:model.defer="marks_allocation.mid_exam">
-                                                            @error('time_allocation.mid_exam') <div class="text-danger">{{ $message }}</div> @enderror
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">%</span>
                                                         </div>
                                                     </div>
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-md-3 col-3 ">
                                                             <label>End-Exam</label>
                                                         </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="marks_allocation.end_exam" wire:model.defer="marks_allocation.end_exam">
-                                                            @error('time_allocation.end_exam') <div class="text-danger">{{ $message }}</div> @enderror
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">%</span>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                    <div class="row d-flex align-items-center">
+                                                        <div class="col-md-3 col-3 ">
+                                                            <label>Total</label>
+                                                        </div>
+                                                        <div class="input-group mb-3 col ms-3">
+                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                            <span class="input-group-text" id="basic-addon2">%</span>
+                                                        </div>
+                                                    </div>
+                    
+                                                </div>                          
                                             </div>
+                                            
                                         </div>
                                     </div>
                             </div>
