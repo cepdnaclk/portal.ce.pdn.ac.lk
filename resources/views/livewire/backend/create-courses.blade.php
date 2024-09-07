@@ -206,7 +206,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3 w-auto">
+                                                        <div class="col-md-3 col-3 ">
                                                             <label>Mid-Exam</label>
                                                         </div>
                                                         <div class="input-group mb-3 col ms-3">
