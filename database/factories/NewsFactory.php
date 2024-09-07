@@ -34,6 +34,7 @@ class NewsFactory extends Factory
             'enabled' => $this->faker->boolean,
             'link_url' => $this->faker->url,
             'link_caption' => $this->faker->words(3, true),
+            'url' => urlencode($this->faker->name),
             'published_at' => now()->subWeek(),
 
         ];
