@@ -46,7 +46,7 @@ class SemesterTable extends DataTableComponent
     public function filters(): array
     {
         $type = ["" => "Any"];
-        foreach (Semester::types() as $key => $value) {
+        foreach (Semester::getAcademicPrograms() as $key => $value) {
             $type[$key] = $value;
         }
         

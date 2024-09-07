@@ -317,3 +317,16 @@
         </div>
     </x-slot>
 </x-backend.card>
+
+<script>
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('courseCreated', function () {
+            Swal.fire({
+                title: 'Course Created!',
+                text: 'The course has been successfully created.',
+                icon: 'success',
+                confirmButtonText: 'Great'
+            });
+        });
+    });
+</script>

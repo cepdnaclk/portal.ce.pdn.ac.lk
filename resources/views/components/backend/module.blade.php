@@ -1,37 +1,34 @@
 <div class="container mx-auto mt-6 px-3 py-2">
     <div 
-    x-data="{
-        modules: @entangle('modules'),
-        nextId: 1,
-        addModule() {
-            const module = {
-                id: this.nextId++,
-                name: '',
-                description: '',
-                time_allocation: {
-                    lectures: 0,
-                    tutorials: 0,
-                    practicals: 0,
-                    assignments: 0
-                }
-            };
+        x-data="{
+            modules: @entangle('modules'),
+            nextId: 1,
+            addModule() {
+                const module = {
+                    id: this.nextId++,
+                    name: '',
+                    description: '',
+                    time_allocation: {
+                        lectures: 0,
+                        tutorials: 0,
+                        practicals: 0,
+                        assignments: 0
+                    }
+                };
 
-            // Push to the local array
-            this.modules.push(module);
-
-            // Manually sync with Livewire
-            $wire.modules = this.modules;
-        },
-        removeModule(index) {
-            // Remove from the local array
-            this.modules.splice(index, 1);
-
-            // Manually sync with Livewire
-            $wire.modules = this.modules;
-        }
-    }"
->
-
+                // Push to the local array
+                this.modules.push(module);
+                // Manually sync with Livewire
+                $wire.set('modules', this.modules);
+            },
+            removeModule(index) {
+                // Remove from the local array
+                this.modules.splice(index, 1);
+                // Manually sync with Livewire
+                $wire.set('modules', this.modules);
+            }
+        }"
+    >
         <template x-for="(module, index) in modules" :key="module.id">
             <div x-transition x-cloak class="px-3 py-3 my-6 rounded mb-4" style="border: 1px solid rgb(209, 209, 209)">
                 <div class="mb-3">
@@ -40,7 +37,7 @@
                         type="text"  
                         class="form-control border p-2 mb-2 rounded-md"
                         x-model="modules[index].name"
-                        x-on:input="$wire.modules = modules">
+                        x-on:input="$wire.set('modules', modules)">
                 </div>
                 <div class="mb-3">
                     <label>Description</label>
@@ -49,7 +46,7 @@
                             class="form-control auto-resize-textarea"
                             oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
                             x-model="modules[index].description"
-                            x-on:input="$wire.modules = modules"></textarea>
+                            x-on:input="$wire.set('modules', modules)"></textarea>
                     </div>
                 </div>
                 <div class="row">
@@ -59,7 +56,7 @@
                             class="form-control"
                             type="number"
                             x-model.number="modules[index].time_allocation.lectures"
-                            x-on:input="$wire.modules = modules">
+                            x-on:input="$wire.set('modules', modules)">
                     </div>
                     <div class="col d-flex align-items-center col-md-3 col-6">
                         <label>Tutorials</label>
@@ -67,7 +64,7 @@
                             class="form-control"
                             type="number"
                             x-model.number="modules[index].time_allocation.tutorials"
-                            x-on:input="$wire.modules = modules">
+                            x-on:input="$wire.set('modules', modules)">
                     </div>
                     <div class="col d-flex align-items-center col-md-3 col-6">
                         <label>Practicals</label>
@@ -75,7 +72,7 @@
                             class="form-control"
                             type="number"
                             x-model.number="modules[index].time_allocation.practicals"
-                            x-on:input="$wire.modules = modules">
+                            x-on:input="$wire.set('modules', modules)">
                     </div>
                     <div class="col d-flex align-items-center col-md-3 col-6">
                         <label>Assignments</label>
@@ -83,7 +80,7 @@
                             class="form-control"
                             type="number"
                             x-model.number="modules[index].time_allocation.assignments"
-                            x-on:input="$wire.modules = modules">
+                            x-on:input="$wire.set('modules', modules)">
                     </div>
                 </div>
                 <button

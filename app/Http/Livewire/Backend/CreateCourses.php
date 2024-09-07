@@ -130,7 +130,7 @@ class CreateCourses extends Component
             $this->validate([
                 'modules' => 'nullable|array|min:1',
                 'modules.*.name' => 'required|string|min:3|max:255',
-                'modules.*.description' => 'required|string|min:10',
+                'modules.*.description' => 'required|string',
                 'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
                 'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
                 'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
@@ -190,7 +190,7 @@ class CreateCourses extends Component
         try {
             //$this->validate();
             $this->storeCourse();
-            session()->flash('success', 'Course and modules created successfully.');
+            $this->emit('courseCreated');
         } catch (\Exception $e) {
             \Log::error("Error in submit method: " . $e->getMessage());
             session()->flash('error', 'There was an error creating the course: ' . $e->getMessage());
@@ -272,23 +272,6 @@ class CreateCourses extends Component
             \Log::error("Error in storeCourse method: " . $e->getMessage());
             throw $e;
         }
-        // dump($this->academicProgram,$this->semester,$this->version,
-        // $this->type,
-        // $this->code,
-        // $this->name,
-        // $this->credits,
-        // $this->faq_page,
-        // $this->content,
-        // json_encode($this->time_allocation),
-        // json_encode($this->marks_allocation),
-        // $this->objectives,
-        // json_encode($this->ilos),
-        // json_encode($this->references),
-        // auth()->id(),
-        // $this->modules
-
-
-        //     );
     }
     
 
