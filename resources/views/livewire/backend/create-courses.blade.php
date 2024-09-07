@@ -126,7 +126,7 @@
 
                                     <div class="div my-2 mx-3">
                                         <div class="row">
-                                            <div class="col-md-6  px-3 my-2" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
+                                            <div class="col-md-6 py-2 px-3 my-2" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
                                                 <div class="div pt-3">
                                                     <label for="drop1">Time Allocation</label>
                                                 </div>
@@ -206,7 +206,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row d-flex align-items-center">
-                                                        <div class="col-3 w-sm-auto">
+                                                        <div class="col-md-3 col-3 w-auto">
                                                             <label>Mid-Exam</label>
                                                         </div>
                                                         <div class="input-group mb-3 col ms-3">
