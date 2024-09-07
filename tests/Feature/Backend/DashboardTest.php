@@ -20,7 +20,7 @@ class DashboardTest extends TestCase
     }
 
     /** @test */
-    public function not_authorized_users_cant_access_admin_dashboard()
+    public function all_users_can_access_admin_dashboard()
     {
         $this->actingAs(User::factory()->user()->create());
 

@@ -52,6 +52,43 @@
             font-size: 84px;
         }
 
+        .subtitle {
+            font-size: 48px;
+        }
+
+        /* Medium screens (tablets) */
+        @media (max-width: 1024px) {
+            .title {
+                font-size: 64px;
+            }
+
+            .subtitle {
+                font-size: 36px;
+            }
+        }
+
+        /* Small screens (mobile) */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 48px;
+            }
+
+            .subtitle {
+                font-size: 28px;
+            }
+        }
+
+        /* Extra small screens (smaller mobile devices) */
+        @media (max-width: 480px) {
+            .title {
+                font-size: 36px;
+            }
+
+            .subtitle {
+                font-size: 24px;
+            }
+        }
+
         .links>a {
             color: #636b6f;
             padding: 0 25px;
@@ -62,7 +99,7 @@
             text-transform: uppercase;
         }
 
-        .m-b-md {
+        .mb-30 {
             margin-bottom: 30px;
         }
     </style>
@@ -78,10 +115,8 @@
         <div class="top-right links">
             @auth
                 <a href="{{ route('intranet.user.index') }}">@lang('Intranet')</a>
-                @if ($logged_in_user->isAdmin())
-                    <a href="{{ route('dashboard.home') }}">@lang('Dashboard')</a>
-                @endif
-                <a href="{{ route('intranet.user.account') }}">@lang('Account')</a>
+                <a href="{{ route('dashboard.home') }}">@lang('Dashboard')</a>
+                <a href="{{ route('intranet.user.account') }}">@lang('Profile')</a>
             @else
                 <a href="{{ route('frontend.auth.login') }}">@lang('Login')</a>
 
@@ -89,22 +124,25 @@
                     <a href="{{ route('frontend.auth.register') }}">@lang('Register')</a>
                 @endif
             @endauth
-        </div><!--top-right-->
-
+        </div>
         <div class="content">
             @include('includes.partials.messages')
 
-            <div class="title m-b-md">
-                {{ config('app.name', 'Laravel') }}
-            </div><!--title-->
+            <div class="mb-30">
+                <div class="title">
+                    {{ config('app.name', 'Laravel') }}
+                </div>
+                <div class="subtitle">Department of Computer Engineering</div>
+            </div>
+
+            <hr>
 
             <div class="links">
                 <a href="https://github.com/cepdnaclk/portal.ce.pdn.ac.lk" target="_blank"><i class="fab fa-github"></i>
                     GitHub</a>
-            </div><!--links-->
-        </div><!--content-->
-    </div><!--app-->
-
+            </div>
+        </div>
+    </div>
     @stack('before-scripts')
     <script src="{{ mix('js/manifest.js') }}"></script>
     <script src="{{ mix('js/vendor.js') }}"></script>

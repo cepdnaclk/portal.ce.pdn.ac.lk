@@ -37,15 +37,15 @@ if (!function_exists('homeRoute')) {
      */
     function homeRoute()
     {
-        if (auth()->check()) {
-            if (auth()->user()->isAdmin()) {
-                return 'dashboard.home';
-            }
+        // if (auth()->check()) {
+        //     if (auth()->user()->isAdmin()) {
+        //         return 'dashboard.home';
+        //     }
 
-            if (auth()->user()->isUser()) {
-                return 'intranet.user.index';
-            }
-        }
+        //     if (auth()->user()->isUser()) {
+        //         return 'intranet.user.index';
+        //     }
+        // }
 
         return 'frontend.index';
     }

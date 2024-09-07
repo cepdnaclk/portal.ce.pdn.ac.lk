@@ -4,6 +4,8 @@ Internal and Public web service provider of the Department of Computer Engineeri
 
 ## Team of Developers
 
+To be updated
+
 ## Useful Commands and Instructions
 
 You need to install WAMP or XAMP server and run it before following commands.
@@ -115,3 +117,12 @@ php artisan test
 | POST   | /photos/               | store   | photos.store   |
 | PUT    | /photos/{photo}        | update  | photos.update  |
 | DELETE | /photos/{photo}        | destroy | photos.destroy |
+
+
+## Contributors
+
+Thanks to all the contributors who have helped with this project!
+
+<a href="https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cepdnaclk/portal.ce.pdn.ac.lk" />
+</a>

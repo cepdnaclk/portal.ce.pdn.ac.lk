@@ -54,6 +54,73 @@
     <script src="{{ mix('js/backend.js') }}"></script>
     <livewire:scripts />
     @stack('after-scripts')
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        var toolbarOptions = [
+            ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+
+            [{
+                'header': 1
+            }, {
+                'header': 2
+            }], // custom button values
+            [{
+                'list': 'ordered'
+            }, {
+                'list': 'bullet'
+            }],
+            [{
+                'script': 'sub'
+            }, {
+                'script': 'super'
+            }], // superscript/subscript
+            [{
+                'indent': '-1'
+            }, {
+                'indent': '+1'
+            }], // outdent/indent
+
+            [{
+                'size': ['small', false, 'large', 'huge']
+            }], // custom dropdown
+            [{
+                'header': [1, 2, 3, 4, 5, 6, false]
+            }],
+
+            [{
+                'color': []
+            }, {
+                'background': []
+            }], // dropdown with defaults from theme
+            [{
+                'align': []
+            }],
+
+            ['clean'] // remove formatting button
+        ];
+
+        var quill = new Quill('#editor-container', {
+            theme: 'snow',
+            modules: {
+                toolbar: toolbarOptions
+            }
+        });
+
+        document.getElementById('submit-button').addEventListener('click', function(event) {
+            // Get Quill content
+            var quillContent = quill.root.innerHTML;
+
+            // Check if the content is just the empty paragraph
+            if (quillContent === '<p><br></p>') {
+                quillContent = ''; // Set it to an empty string
+            }
+
+            // Populate hidden form field with quill data
+            var description = document.querySelector('textarea[name=description]');
+            description.value = quillContent;
+        });
+    </script>
 </body>
 
 </html>
