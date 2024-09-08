@@ -10,8 +10,8 @@
                     <label>Lectures</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">hours</span>
+                    <input type="number" class="form-control" aria-describedby="lectures">
+                    <span class="input-group-text" id="lectures">hours</span>
                 </div>
             </div>
             <div class="row d-flex align-items-center">
@@ -19,8 +19,8 @@
                     <label>Tutorials</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">hours</span>
+                    <input type="number" class="form-control" aria-describedby="tutorials">
+                    <span class="input-group-text" id="tutorials">hours</span>
                 </div>
             </div>
             <div class="row d-flex align-items-center">
@@ -28,8 +28,8 @@
                     <label>Practicles</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">hours</span>
+                    <input type="number" class="form-control" aria-describedby="practicles">
+                    <span class="input-group-text" id="practicles">hours</span>
                 </div>
             </div>
             <div class="row d-flex align-items-center">
@@ -37,8 +37,8 @@
                     <label>Assignments</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">hours</span>
+                    <input type="number" class="form-control" aria-describedby="assignments">
+                    <span class="input-group-text" id="assignments">hours</span>
                 </div>
             </div>
             <div class="row d-flex align-items-center">
@@ -46,8 +46,8 @@
                     <label>Total</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">hours</span>
+                    <input type="number" class="form-control" aria-describedby="total">
+                    <span class="input-group-text" id="total">hours</span>
                 </div>
             </div>
         </div>

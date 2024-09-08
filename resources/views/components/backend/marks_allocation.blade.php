@@ -10,8 +10,8 @@
                     <label>Practicles</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">%</span>
+                    <input type="number" class="form-control" aria-describedby="practicles">
+                    <span class="input-group-text" id="practicles">%</span>
                 </div>
             </div>
             <div class="row d-flex align-items-center">
@@ -19,8 +19,8 @@
                     <label>Project</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">%</span>
+                    <input type="number" class="form-control" aria-describedby="project">
+                    <span class="input-group-text" id="project">%</span>
                 </div>
             </div>
             <div class="row d-flex align-items-center">
@@ -28,26 +28,26 @@
                     <label style="white-space: nowrap;">Mid-Exam</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">%</span>
+                    <input type="number" class="form-control" aria-describedby="mid_exam">
+                    <span class="input-group-text" id="mid_exam">%</span>
                 </div>
             </div>
             <div class="row d-flex align-items-center">
-                <div class="col-md-3 col-3 ">
+                <div class="col-md-3 col-3">
                     <label style="white-space: nowrap;">End-Exam</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">%</span>
+                    <input type="number" class="form-control" aria-describedby="end_exam">
+                    <span class="input-group-text" id="end_exam">%</span>
                 </div>
             </div>
             <div class="row d-flex align-items-center">
-                <div class="col-md-3 col-3 ">
+                <div class="col-md-3 col-3">
                     <label>Total</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
-                    <input type="number" class="form-control" aria-describedby="basic-addon2">
-                    <span class="input-group-text" id="basic-addon2">%</span>
+                    <input type="number" class="form-control" aria-describedby="total">
+                    <span class="input-group-text" id="total">%</span>
                 </div>
             </div>
         </div>
