@@ -87,8 +87,10 @@
                 <div class="form-group row">
                     {!! Form::label('enabled', 'Enabled*', ['class' => 'col-md-2 form-check-label']) !!}
 
-                    <div class="col-md-4 form-check">
-                        {!! Form::checkbox('enabled', '1', ['class' => 'form-check-input', 'required' => true]) !!}
+                    <div class="col-md-4 form-check form-switch mx-4">
+                        <input type="checkbox" id="checkEnable" name="enabled" value="1"
+                            class="form-check-input checkbox-lg" checked />
+                        <label class="form-check-label" for="checkEnable">Visibility</label>
                         @error('enabled')
                             <strong>{{ $message }}</strong>
                         @enderror
