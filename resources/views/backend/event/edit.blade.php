@@ -21,7 +21,7 @@
 
         <x-backend.card>
             <x-slot name="header">
-                Event : Edit | {{ $event->id }}
+                Event : Edit | {{ $event->title }}
             </x-slot>
 
             <x-slot name="body">
@@ -98,9 +98,10 @@
                 <div class="form-group row">
                     {!! Form::label('enabled', 'Enabled', ['class' => 'col-md-2 form-check-label']) !!}
 
-                    <div class="col-md-4 form-check">
-                        <input type="checkbox" name="enabled" value="1" class="form-check-input0"
-                            {{ $event->enabled == 1 ? 'checked' : '' }} />
+                    <div class="col-md-4 form-check form-switch mx-4">
+                        <input type="checkbox" id="checkEnable" name="enabled" value={{ $event->enable ? 'checked' : '""' }}
+                            class="form-check-input checkbox-lg" {{ $event->enabled == 1 ? 'checked' : '' }} />
+                        <label class="form-check-label" for="checkEnable">Visibility</label>
                         @error('enabled')
                             <strong>{{ $message }}</strong>
                         @enderror
