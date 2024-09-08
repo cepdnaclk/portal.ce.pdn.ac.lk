@@ -41,7 +41,7 @@ class EventTest extends TestCase
     {
         $user = $this->loginAsEditor();
 
-        $response = $this->post('/dashboard/event/', [
+        $response = $this->post('/dashboard/events/', [
             'title' => 'test event',
             'description' => 'Nostrum qui qui ut deserunt dolores quaerat. Est quos sed ea quo placeat maxime. Sequi temporibus alias atque assumenda facere modi deleniti. Recusandae autem quia officia iste laudantium veritatis aut.',
             'url' => "test-event",
