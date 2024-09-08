@@ -55,6 +55,7 @@
                             'class' => 'form-control',
                             'placeholder' => 'Select Academic Program',
                             'required' => true,
+                            'id' => 'academic_program',
                         ]) !!}
                         @error('academic_program')
                             <strong>{{ $message }}</strong>
@@ -92,12 +93,34 @@
                 <div class="form-group row">
                     {!! Form::label('url', 'URL', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        {!! Form::text('url', old('url'), ['class' => 'form-control']) !!}
+                        <div class="d-inline-flex align-items-center flex-nowrap w-100">
+                            <span class="me-2" id="url_hint">https://www.ce.pdn.ac.lk/courses/{academic_program}/&nbsp;</span>
+                            <span class="flex-grow-1"> 
+                                {!! Form::text('url', old('url', ''), ['class' => 'form-control', 'required' => true]) !!}
+                            </span>
+                        </div>
                         @error('url')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
+                    
+                        
                 </div>
+                <script>
+                    document.getElementById('academic_program').addEventListener('change', function() {
+                        let selectedProgram = this.value;
+                        const urlHint = document.getElementById('url_hint');
+
+                        if (!selectedProgram) {
+                            urlHint.textContent= `https://www.ce.pdn.ac.lk/courses/academic_program/`;
+                        }
+                        else{
+                            urlHint.textContent= `https://www.ce.pdn.ac.lk/courses/${selectedProgram}/`;   
+                        }
+                        
+                    });
+                </script>
+            </div>
 
             </x-slot>
 

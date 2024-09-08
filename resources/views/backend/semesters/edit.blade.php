@@ -79,16 +79,34 @@
                     </div>
                 </div>
 
-                <!-- URL -->
+               <!-- URL -->
                 <div class="form-group row">
                     {!! Form::label('url', 'URL', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        {!! Form::text('url', null, ['class' => 'form-control']) !!}
+                        <div class="d-inline-flex align-items-center flex-nowrap w-100">
+                            <span class="me-2" id="url_hint">
+                                https://www.ce.pdn.ac.lk/courses/{{ $semester->academic_program ?? 'academic_program' }}/&nbsp;
+                            </span>
+                            <span class="flex-grow-1"> 
+                                {!! Form::text('url', old('url', $semester->url), ['class' => 'form-control', 'required' => true]) !!}
+                            </span>
+                        </div>
                         @error('url')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
+
+                <script>
+                    document.getElementById('academic_program').addEventListener('change', function() {
+                        const selectedProgram = this.value;
+                        const urlHint = document.getElementById('url_hint');
+                        urlHint.textContent = `https://www.ce.pdn.ac.lk/courses/${selectedProgram}/`;
+
+                       
+                    });
+                </script>
+
 
             </x-slot>
 
