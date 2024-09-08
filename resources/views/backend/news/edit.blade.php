@@ -89,18 +89,19 @@
                         </div>
 
                         <!-- Image preview -->
-                        <img class="mt-3" src="{{ $news->image ? $news->thumbURL() : asset('NewsImages/no-image.png') }}"
-                            alt="Image preview" style="max-width: 150px; max-height: 150px;" />
+                        <img class="mt-3" src="{{ $news->thumbURL() }}" alt="Image preview"
+                            style="max-width: 150px; max-height: 150px;" />
                     </div>
                 </div>
 
                 <!-- Enabled -->
-                <div class="form-group row">
+                <div class="form-group row ">
                     {!! Form::label('enabled', 'Enabled*', ['class' => 'col-md-2 form-check-label']) !!}
 
-                    <div class="col-md-4 form-check">
-                        <input type="checkbox" name="enabled" value={{ $news->enable ? 'checked' : '' }}
-                            class="form-check-input" {{ $news->enabled == 1 ? 'checked' : '' }} />
+                    <div class="col-md-4 form-check form-switch mx-4">
+                        <input type="checkbox" id="checkEnable" name="enabled" value={{ $news->enable ? 'checked' : '""' }}
+                            class="form-check-input checkbox-lg" {{ $news->enabled == 1 ? 'checked' : '' }} />
+                        <label class="form-check-label" for="checkEnable">Visibility</label>
                         @error('enabled')
                             <strong>{{ $message }}</strong>
                         @enderror

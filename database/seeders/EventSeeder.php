@@ -28,7 +28,7 @@ class EventSeeder extends Seeder
                 "url" => "escape-2020",
                 "published_at" => "2024-08-27",
                 "image" => "1724778446.jpg",
-                "link_url" => "https:\/\/aces.ce.pdn.ac.lk\/escape\/2020\/",
+                "link_url" => "https://aces.ce.pdn.ac.lk/escape/2020/",
                 "link_caption" => "Further details of the event",
                 "start_at" => "2024-08-27 08:30:00",
                 "end_at" => "2024-08-27 14:30:00",
