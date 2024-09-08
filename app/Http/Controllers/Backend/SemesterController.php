@@ -52,6 +52,7 @@ class SemesterController extends Controller
         ]);
         try {
             $validatedData['created_by'] = auth()->user()->id;
+            $validatedData['updated_by'] = auth()->user()->id;
             Semester::create($validatedData);
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester created successfully.');
         } catch (\Exception $e) {

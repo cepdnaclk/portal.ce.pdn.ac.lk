@@ -3,7 +3,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->version }}
+    {{ \App\Domains\Semester\Models\Semester::getVersions()[$row->version] ?? 'Unknown Version' }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

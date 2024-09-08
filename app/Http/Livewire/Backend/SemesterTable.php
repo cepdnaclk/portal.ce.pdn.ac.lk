@@ -40,7 +40,8 @@ class SemesterTable extends DataTableComponent
     public function query(): Builder
     {
         return Semester::query()
-            ->when($this->getFilter('academic_program'), fn ($query, $type) => $query->where('academic_program', $type));
+            ->when($this->getFilter('academic_program'), fn ($query, $type) => $query->where('academic_program', $type))
+            ->when($this->getFilter('version'), fn($query, $version) => $query->where('version', $version));
     }
 
     public function filters(): array
@@ -49,11 +50,17 @@ class SemesterTable extends DataTableComponent
         foreach (Semester::getAcademicPrograms() as $key => $value) {
             $type[$key] = $value;
         }
+        $versionOptions = ["" => "Any"];
+        foreach (Semester::getVersions() as $key => $value) {
+            $versionOptions[$key] = $value;
+        }
         
 
         return [
             'academic_program' => Filter::make('Academic Program')
                 ->select($type),
+            'version' => Filter::make('Version')
+                ->select($versionOptions),
         ];
     }
 
