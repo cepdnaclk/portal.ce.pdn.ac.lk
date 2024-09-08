@@ -21,7 +21,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Basics</h5>
-                            <div class="basics">
+                            < class="basics">
                                     <div class="row" id="row1">
                                         <div class="col-6 col-xl-3 py-3">
                                             <div class="col">
@@ -124,120 +124,124 @@
                                         @error('content') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
 
-                                    <div class="div my-2 mx-3">
+                                    <div class="div my-3 mx-3">
                                         <div class="row">
-                                            <div class="col-md-6 py-2 px-3 my-2" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
-                                                <div class="div pt-3">
-                                                    <label for="drop1">Time Allocation</label>
-                                                </div>
-                                                <hr>
-                                                <div class="row pb-2">
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3">
-                                                            <label>Lectures</label>
+                                            <div class="col-md-6">
+                                                <div class=" py-2 px-3 my-2" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
+                                                    <div class="div pt-3">
+                                                        <label for="drop1">Time Allocation</label>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row pb-2">
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3">
+                                                                <label>Lectures</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">hours</span>
+                                                            </div>
                                                         </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">hours</span>
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3">
+                                                                <label>Tutorials</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">hours</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3">
+                                                                <label>Practicles</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">hours</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3">
+                                                                <label>Assignments</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">hours</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3">
+                                                                <label>Total</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">hours</span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3">
-                                                            <label>Tutorials</label>
-                                                        </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">hours</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3">
-                                                            <label>Practicles</label>
-                                                        </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">hours</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3">
-                                                            <label>Assignments</label>
-                                                        </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">hours</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3">
-                                                            <label>Total</label>
-                                                        </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">hours</span>
-                                                        </div>
-                                                    </div>
-                    
                                                 </div>                          
                                             </div>
-                    
-                                            <div class="col-md-6 py-2 px-3 my-2" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
-                                                <div class="div pt-3">
-                                                    <label for="drop1">Marks Allocation</label>
-                                                </div>
-                                                <hr>
-                                                <div class="row pb-2">
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3 ">
-                                                            <label>Practicles</label>
+
+                                            <div class="col-md-6" >
+                                                <div class="py-2 px-3 my-2" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
+                                                    <div class="div pt-3">
+                                                        <label for="drop1">Marks Allocation</label>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row pb-2">
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3 ">
+                                                                <label>Practicles</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">%</span>
+                                                            </div>
                                                         </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">%</span>
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3 ">
+                                                                <label>Project</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3 ">
+                                                                <label>Mid-Exam</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3 ">
+                                                                <label>End-Exam</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-3 col-3 ">
+                                                                <label>Total</label>
+                                                            </div>
+                                                            <div class="input-group mb-3 col ms-3">
+                                                                <input type="number" class="form-control" aria-describedby="basic-addon2">
+                                                                <span class="input-group-text" id="basic-addon2">%</span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3 ">
-                                                            <label>Project</label>
-                                                        </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3 ">
-                                                            <label>Mid-Exam</label>
-                                                        </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3 ">
-                                                            <label>End-Exam</label>
-                                                        </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex align-items-center">
-                                                        <div class="col-md-3 col-3 ">
-                                                            <label>Total</label>
-                                                        </div>
-                                                        <div class="input-group mb-3 col ms-3">
-                                                            <input type="number" class="form-control" aria-describedby="basic-addon2">
-                                                            <span class="input-group-text" id="basic-addon2">%</span>
-                                                        </div>
-                                                    </div>
-                    
                                                 </div>                          
                                             </div>
-                                            
+
                                         </div>
                                     </div>
+
+                                    
                             </div>
                         </div>
                     </div>
