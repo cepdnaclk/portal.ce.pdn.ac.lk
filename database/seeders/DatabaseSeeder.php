@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Database\Seeders\Traits\TruncateTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 
 
 /**
@@ -30,6 +31,11 @@ class DatabaseSeeder extends Seeder
         $this->call(AnnouncementSeeder::class);
         $this->call(NewsSeeder::class);
         $this->call(EventSeeder::class);
+
+        if (App::environment('local')) {
+            $this->call(SemesterSeeder::class);
+            $this->call(CourseSeeder::class);
+        }
 
         Model::reguard();
     }
