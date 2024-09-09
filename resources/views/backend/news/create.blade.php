@@ -64,13 +64,12 @@
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        <div id="editor-container" style="height: auto;min-height: 200px;"></div>
-                        <textarea name="description" id="description" style="display:none;" required="true"></textarea>
+                        <div id="editor-container" style="height: auto; min-height: 200px; border: 1px solid #ced4da; border-radius: .25rem;"></div>
+                        <textarea name="description" id="description" style="display:none;" required ='true'></textarea>
+                        <div id="description-error" class="text-danger mt-1" style="display: none;"></div> 
                     </div>
-                    @error('description')
-                        <strong>{{ $message }}</strong>
-                    @enderror
                 </div>
+                
 
                 <!-- Image -->
                 <div class="form-group row">
