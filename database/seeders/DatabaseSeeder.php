@@ -27,12 +27,12 @@ class DatabaseSeeder extends Seeder
             'failed_jobs',
         ]);
 
-        $this->call(AuthSeeder::class);
-        $this->call(AnnouncementSeeder::class);
-        $this->call(NewsSeeder::class);
-        $this->call(EventSeeder::class);
-
+        
         if (App::environment('local')) {
+            $this->call(AuthSeeder::class);
+            $this->call(AnnouncementSeeder::class);
+            $this->call(NewsSeeder::class);
+            $this->call(EventSeeder::class);
             $this->call(SemesterSeeder::class);
             $this->call(CourseSeeder::class);
         }
