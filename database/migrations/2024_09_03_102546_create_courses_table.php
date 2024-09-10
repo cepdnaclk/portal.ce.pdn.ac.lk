@@ -17,7 +17,8 @@ class CreateCoursesTable extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();  // Primary key, auto-incrementing
             $table->string('code', 16)->unique();  // Course code with a unique constraint
-            $table->foreignId('semester_id')->constrained('semesters');  // Foreign key to semesters.id
+            $table->foreignId('semester_id')->constrained('semesters')->on('semesters')
+                ->onDelete('cascade');;  // Foreign key to semesters.id
             $table->enum('academic_program', array_keys(Course::getAcademicPrograms()));  // Enum for academic program 
             $table->enum('version', array_keys(Course::getVersions()));  // Enum for version as numeric keys
             $table->string('name', 255);  // Course name
