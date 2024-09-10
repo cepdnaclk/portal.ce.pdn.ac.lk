@@ -27,16 +27,16 @@ class CreateCourses extends Component
     public $name;
     public $credits,$faq_page,$content;
     public $time_allocation = [
-        'lecture' => 0,
-        'tutorial' => 0,
-        'practical' => 0,
-        'assignment' => 0,
+        'lecture' => null,
+        'tutorial' => null,
+        'practical' => null,
+        'assignment' => null
     ];
     public $marks_allocation = [
-        'practicals' => 0,
-        'project' => 0,
-        'mid_exam' => 0,
-        'end_exam' => 0,
+        'practicals' => null,
+        'project' => null,
+        'mid_exam' => null,
+        'end_exam' => null,
     ];
 
     //2nd form step
@@ -124,6 +124,10 @@ class CreateCourses extends Component
                 'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
                 'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
             ]);
+            $this->validateMarksAllocation();
+            if ($this->getErrorBag()->has('marks_allocation.total')) {
+                return; 
+            }
             break;
 
         case 3:
@@ -140,6 +144,26 @@ class CreateCourses extends Component
     }
 }
 
+protected function validateMarksAllocation()
+{
+    // Check if at least one field is set (not null or empty)
+    if (!empty($this->marks_allocation['practicals']) || 
+        !empty($this->marks_allocation['project']) || 
+        !empty($this->marks_allocation['mid_exam']) || 
+        !empty($this->marks_allocation['end_exam'])) {
+        
+        // Cast all values to integers (treat empty values as 0)
+        $totalMarks = (int) ($this->marks_allocation['practicals'] ?? 0) +
+                      (int) ($this->marks_allocation['project'] ?? 0) +
+                      (int) ($this->marks_allocation['mid_exam'] ?? 0) +
+                      (int) ($this->marks_allocation['end_exam'] ?? 0);
+
+        // Check if total is exactly 100
+        if ($totalMarks != 100) {
+            $this->addError('marks_allocation.total', 'The total of marks allocation must be 100.');
+        }
+    }
+}
 
     public function updated($propertyName)
     {
@@ -162,22 +186,12 @@ class CreateCourses extends Component
         
         $this->emit('refreshItems' . ucfirst($type), $newItems);
     }
-
-    public function updatedTimeAllocation($value, $key)
-    {
-        // For example, ensure the value is non-negative
-        $this->time_allocation[$key] = max(0, $value);
-    }
-
-    public function updatedMarksAllocation($value, $key)
-    {
-        // For example, ensure the value is non-negative
-        $this->marks_allocation[$key] = max(0, $value);
-    }
     
     public function next(){
-
         $this->validateCurrentStep();
+        if ($this->getErrorBag()->has('marks_allocation.total')) {
+            return; // Do not proceed to the next step if the marks total is invalid
+        }
         $this->formStep++;
     }
     
@@ -188,7 +202,7 @@ class CreateCourses extends Component
     public function submit(){
         \Log::info("Submit method called");
         try {
-            //$this->validate();
+            $this->validate();
             $this->storeCourse();
             $this->emit('courseCreated');
         } catch (\Exception $e) {

@@ -98,6 +98,10 @@ class EditCourses extends Component
         switch ($this->formStep) {
             case 1:
                 $this->validate($this->rules());
+                $this->validateMarksAllocation();
+                if ($this->getErrorBag()->has('marks_allocation.total')) {
+                    return; 
+                }
                 break;
 
             case 3:
@@ -111,6 +115,27 @@ class EditCourses extends Component
                     'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
                 ]);
                 break;
+        }
+    }
+
+    protected function validateMarksAllocation()
+    {
+        // Check if at least one field is set (not null or empty)
+        if (!empty($this->marks_allocation['practicals']) || 
+            !empty($this->marks_allocation['project']) || 
+            !empty($this->marks_allocation['mid_exam']) || 
+            !empty($this->marks_allocation['end_exam'])) {
+            
+            // Cast all values to integers (treat empty values as 0)
+            $totalMarks = (int) ($this->marks_allocation['practicals'] ?? 0) +
+                        (int) ($this->marks_allocation['project'] ?? 0) +
+                        (int) ($this->marks_allocation['mid_exam'] ?? 0) +
+                        (int) ($this->marks_allocation['end_exam'] ?? 0);
+
+            // Check if total is exactly 100
+            if ($totalMarks != 100) {
+                $this->addError('marks_allocation.total', 'The total of marks allocation must be 100.');
+            }
         }
     }
 
@@ -185,19 +210,13 @@ class EditCourses extends Component
         $this->emit('refreshItems' . ucfirst($type), $newItems);
     }
 
-    public function updatedTimeAllocation($value, $key)
-    {
-        $this->time_allocation[$key] = max(0, $value);
-    }
-
-    public function updatedMarksAllocation($value, $key)
-    {
-        $this->marks_allocation[$key] = max(0, $value);
-    }
     
     public function next()
     {
         $this->validateCurrentStep();
+        if ($this->getErrorBag()->has('marks_allocation.total')) {
+            return; // Do not proceed to the next step if the marks total is invalid
+        }
         $this->formStep++;
     }
     

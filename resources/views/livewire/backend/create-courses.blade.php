@@ -21,14 +21,14 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Basics</h5>
-                            < class="basics">
+                            <div class="basics">
                                     <div class="row" id="row1">
                                         <div class="col-6 col-xl-3 py-3">
                                             <div class="col">
                                                 <label for="drop1">
                                                     Academic Program
                                                     <span title="e.g., Undergraduate or Postgraduate" 
-                                                        style="cursor: pointer;">&#x1F6C8;</span>
+                                                          style="cursor: pointer;">&#x1F6C8;</span>
                                                 </label>
                                             </div>
                                             <select class="form-select" wire:model="academicProgram">
@@ -128,10 +128,13 @@
                                         <div class="row">
                                             <x-backend.time_allocation></x-backend.time_allocation>
                                             <x-backend.marks_allocation></x-backend.marks_allocation>
+                                            {{-- @if($errors->has('marks_allocation.total'))
+                                                <div class="alert alert-danger">
+                                                    {{ $errors->first('marks_allocation.total') }}
+                                                </div>
+                                            @endif --}}
                                         </div>
                                     </div>
-
-                                    
                             </div>
                         </div>
                     </div>
