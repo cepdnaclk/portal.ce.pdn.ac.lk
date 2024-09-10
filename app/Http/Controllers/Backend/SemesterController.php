@@ -45,7 +45,6 @@ class SemesterController extends Controller
             'academic_program' => ['required', Rule::in(array_values(Semester::getAcademicPrograms()))],
             'description' => 'nullable|string',
             'url' => [
-            'nullable',
             'string',
             'unique:semesters', 
         ],
@@ -88,7 +87,6 @@ class SemesterController extends Controller
             'academic_program' => ['required', Rule::in(array_values(Semester::getAcademicPrograms()))],
             'description' => 'nullable|string',
             'url' => [
-                'nullable',
                 'string',
                 Rule::unique('semesters', 'url')->ignore($semester->id),
             ],
