@@ -45,13 +45,15 @@ class SemesterController extends Controller
             'academic_program' => ['required', Rule::in(array_values(Semester::getAcademicPrograms()))],
             'description' => 'nullable|string',
             'url' => [
-            'string',
-            'unique:semesters', 
+                'required',
+                'string',
+                'unique:semesters', 
         ],
         ]);
         try {
             $validatedData['created_by'] = auth()->user()->id;
             $validatedData['updated_by'] = auth()->user()->id;
+            $validatedData['url'] = urlencode(str_replace(" ", "-", $request->url));
             Semester::create($validatedData);
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester created successfully.');
         } catch (\Exception $e) {
@@ -87,12 +89,14 @@ class SemesterController extends Controller
             'academic_program' => ['required', Rule::in(array_values(Semester::getAcademicPrograms()))],
             'description' => 'nullable|string',
             'url' => [
+                'required',
                 'string',
                 Rule::unique('semesters', 'url')->ignore($semester->id),
             ],
         ]);
         try {
             $validatedData['updated_by'] = auth()->user()->id;
+            $validatedData['url'] = urlencode(str_replace(" ", "-", $request->url));
             $semester->update($validatedData);
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester updated successfully.');
         } catch (\Exception $e) { 
@@ -108,7 +112,7 @@ class SemesterController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function delete(Semester $semester)
+    public function delete(Semester $semester)
     {
         return view('backend.semesters.delete', compact('semester'));
     }
