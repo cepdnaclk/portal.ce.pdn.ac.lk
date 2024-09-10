@@ -39,6 +39,6 @@ class ValidateAsInternalEmail implements Rule
      */
     public function message()
     {
-        return "Only Department of Computer Engineering students/staff are allowed to register by themself.";
+        return "Only Department of Computer Engineering students/staff are allowed to register by themselves.";
     }
 }
