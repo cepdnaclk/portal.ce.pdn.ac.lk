@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         
-        if (App::environment('local')) {
+        if (App::environment('local', 'testing')) {
             $this->call(AuthSeeder::class);
             $this->call(AnnouncementSeeder::class);
             $this->call(NewsSeeder::class);
