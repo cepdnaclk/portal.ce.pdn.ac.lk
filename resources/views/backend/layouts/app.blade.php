@@ -55,6 +55,7 @@
     <livewire:scripts />
     @stack('after-scripts')
 
+    <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
         var toolbarOptions = [
