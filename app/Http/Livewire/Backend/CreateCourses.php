@@ -26,18 +26,8 @@ class CreateCourses extends Component
     public $code;
     public $name;
     public $credits,$faq_page,$content;
-    public $time_allocation = [
-        'lecture' => null,
-        'tutorial' => null,
-        'practical' => null,
-        'assignment' => null
-    ];
-    public $marks_allocation = [
-        'practicals' => null,
-        'project' => null,
-        'mid_exam' => null,
-        'end_exam' => null,
-    ];
+    public $time_allocation;
+    public $marks_allocation;
 
     //2nd form step
     public $objectives;
@@ -71,7 +61,7 @@ class CreateCourses extends Component
             'marks_allocation.project' => 'nullable|integer|min:0|max:100',
             'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
             'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
-            'modules' => 'nullable|array|min:1',
+            'modules' => 'nullable|array',
             'modules.*.name' => 'required|string|min:3|max:255',
             'modules.*.description' => 'required|string|min:10',
             'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
@@ -144,26 +134,22 @@ class CreateCourses extends Component
     }
 }
 
-protected function validateMarksAllocation()
-{
-    // Check if at least one field is set (not null or empty)
-    if (!empty($this->marks_allocation['practicals']) || 
-        !empty($this->marks_allocation['project']) || 
-        !empty($this->marks_allocation['mid_exam']) || 
-        !empty($this->marks_allocation['end_exam'])) {
-        
-        // Cast all values to integers (treat empty values as 0)
-        $totalMarks = (int) ($this->marks_allocation['practicals'] ?? 0) +
-                      (int) ($this->marks_allocation['project'] ?? 0) +
-                      (int) ($this->marks_allocation['mid_exam'] ?? 0) +
-                      (int) ($this->marks_allocation['end_exam'] ?? 0);
+    protected function validateMarksAllocation()
+    {
+        $totalMarks = 0;
+        $hasValue = false;
 
-        // Check if total is exactly 100
-        if ($totalMarks != 100) {
+        foreach ($this->marks_allocation as $key => $value){
+            if(!empty($value)){
+                $hasValue = true;
+                $totalMarks += (int) $value;
+            }
+        }
+
+        if ($hasValue && $totalMarks != 100){
             $this->addError('marks_allocation.total', 'The total of marks allocation must be 100.');
         }
     }
-}
 
     public function updated($propertyName)
     {
@@ -175,6 +161,8 @@ protected function validateMarksAllocation()
     public function mount()
     {
         $this->academicProgramsList = Course::getAcademicPrograms();
+        $this->time_allocation = Course::getTimeAllocation();
+        $this->marks_allocation = Course::getMarksAllocation();
     }
 
     public function updateItems($type,$newItems){

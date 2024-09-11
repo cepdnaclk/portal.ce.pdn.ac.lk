@@ -26,18 +26,8 @@ class EditCourses extends Component
     public $code;
     public $name;
     public $credits, $faq_page, $content;
-    public $time_allocation = [
-        'lecture' => 0,
-        'tutorial' => 0,
-        'practical' => 0,
-        'assignment' => 0,
-    ];
-    public $marks_allocation = [
-        'practicals' => 0,
-        'project' => 0,
-        'mid_exam' => 0,
-        'end_exam' => 0,
-    ];
+    public $time_allocation;
+    public $marks_allocation;
 
     // 2nd form step
     public $objectives;
@@ -55,10 +45,10 @@ class EditCourses extends Component
     {
         return [
             'academicProgram' => 'required|string',
-            'semester' => 'required|integer',
+            'semester' => 'required|string',
             'version' => 'required|string',
             'type' => 'required|string|in:Core,GE,TE',
-            'code' => 'required|string',
+            'code' => 'required|string|unique:courses,code',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:30',
             'faq_page' => 'nullable|url',
@@ -71,6 +61,13 @@ class EditCourses extends Component
             'marks_allocation.project' => 'nullable|integer|min:0|max:100',
             'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
             'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
+            'modules' => 'nullable|array',
+            'modules.*.name' => 'required|string|min:3|max:255',
+            'modules.*.description' => 'required|string|min:10',
+            'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
+            'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
+            'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
+            'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
         ];
     }
 
@@ -120,22 +117,18 @@ class EditCourses extends Component
 
     protected function validateMarksAllocation()
     {
-        // Check if at least one field is set (not null or empty)
-        if (!empty($this->marks_allocation['practicals']) || 
-            !empty($this->marks_allocation['project']) || 
-            !empty($this->marks_allocation['mid_exam']) || 
-            !empty($this->marks_allocation['end_exam'])) {
-            
-            // Cast all values to integers (treat empty values as 0)
-            $totalMarks = (int) ($this->marks_allocation['practicals'] ?? 0) +
-                        (int) ($this->marks_allocation['project'] ?? 0) +
-                        (int) ($this->marks_allocation['mid_exam'] ?? 0) +
-                        (int) ($this->marks_allocation['end_exam'] ?? 0);
+        $totalMarks = 0;
+        $hasValue = false;
 
-            // Check if total is exactly 100
-            if ($totalMarks != 100) {
-                $this->addError('marks_allocation.total', 'The total of marks allocation must be 100.');
+        foreach ($this->marks_allocation as $key => $value){
+            if(!empty($value)){
+                $hasValue = true;
+                $totalMarks += (int) $value;
             }
+        }
+
+        if ($hasValue && $totalMarks != 100){
+            $this->addError('marks_allocation.total', 'The total of marks allocation must be 100.');
         }
     }
 
@@ -149,6 +142,8 @@ class EditCourses extends Component
     public function mount(Course $course)
     {
         $this->academicProgramsList = Course::getAcademicPrograms();
+        $this->time_allocation = Course::getTimeAllocation();
+        $this->marks_allocation = Course::getMarksAllocation();
         $this->course = $course;
 
         // Populate form fields with existing course data

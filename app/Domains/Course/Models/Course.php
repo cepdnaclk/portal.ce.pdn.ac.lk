@@ -60,6 +60,26 @@ class Course extends Model
         'updated_at' => 'datetime',
     ];
 
+    public static function getMarksAllocation(): array
+    {
+        return [
+            'practicals' => null,
+            'project' => null,
+            'mid_exam' => null,
+            'end_exam' => null
+        ];
+    }
+
+    public static function getTimeAllocation(): array
+    {
+        return [
+            'lecture' => null,
+            'tutorial' => null,
+            'practical' => null,
+            'assignment' => null
+        ];
+    }
+
     public static function getTypes(): array
     {
         return [
