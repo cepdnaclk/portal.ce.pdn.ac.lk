@@ -2,7 +2,7 @@
     <x-slot name="header">
         Course : Edit
     </x-slot>
-    
+
     <x-slot name="body">
         <div class="container mt-1" id="app">
             <div class="step-indicator">
@@ -124,101 +124,15 @@
                                         @error('content') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
 
-                                    <div class="div my-2">
+                                    <div class="div my-3">
                                         <div class="row">
-                                            <div x-data="{ time_allocation: $wire.entangle('time_allocation') }" class="col-6">
-                                                <div class="div text-center">
-                                                    <label>Time Allocation</label>
+                                            <x-backend.time_allocation></x-backend.time_allocation>
+                                            <x-backend.marks_allocation></x-backend.marks_allocation>
+                                            {{-- @if($errors->has('marks_allocation.total'))
+                                                <div class="alert alert-danger">
+                                                    {{ $errors->first('marks_allocation.total') }}
                                                 </div>
-                                                <hr>
-                                                <div class="row pb-2">
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Lectures</label>
-                                                        </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="time_allocation.lecture" wire:model.defer="time_allocation.lecture">
-                                                            @error('time_allocation.lecture') <div class="text-danger">{{ $message }}</div> @enderror
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Tutorial</label>
-                                                        </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="time_allocation.tutorial" wire:model.defer="time_allocation.tutorial">
-                                                            @error('time_allocation.tutorial') <div class="text-danger">{{ $message }}</div> @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row pb-2">
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Practical</label>
-                                                        </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="time_allocation.practical" wire:model.defer="time_allocation.practical">
-                                                            @error('time_allocation.practical') <div class="text-danger">{{ $message }}</div> @enderror
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Assignment</label>
-                                                        </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="time_allocation.assignment" wire:model.defer="time_allocation.assignment">
-                                                            @error('time_allocation.assignment') <div class="text-danger">{{ $message }}</div> @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                                                                                           
-                                            <div x-data="{ marks_allocation: $wire.entangle('marks_allocation') }" class="col-6">
-                                                <div class="div text-center">
-                                                    <label>Marks Allocation</label>
-                                                </div>
-                                                <hr>
-                                                <div class="row pb-2">
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Practicals</label>
-                                                        </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="marks_allocation.practicals" wire:model.defer="marks_allocation.practicals">
-                                                            @error('time_allocation.practicals') <div class="text-danger">{{ $message }}</div> @enderror
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Project</label>
-                                                        </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="marks_allocation.project" wire:model.defer="marks_allocation.project">
-                                                            @error('time_allocation.project') <div class="text-danger">{{ $message }}</div> @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row pb-2">
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>Mid-Exam</label>
-                                                        </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="marks_allocation.mid_exam" wire:model.defer="marks_allocation.mid_exam">
-                                                            @error('time_allocation.mid_exam') <div class="text-danger">{{ $message }}</div> @enderror
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex justify-content-between align-items-center col-md-6">
-                                                        <div class="col">
-                                                            <label>End-Exam</label>
-                                                        </div>
-                                                        <div class="col ms-auto py-3">
-                                                            <input class="form-control" type="number" x-model.number="marks_allocation.end_exam" wire:model.defer="marks_allocation.end_exam">
-                                                            @error('time_allocation.end_exam') <div class="text-danger">{{ $message }}</div> @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            @endif --}}
                                         </div>
                                     </div>
                             </div>

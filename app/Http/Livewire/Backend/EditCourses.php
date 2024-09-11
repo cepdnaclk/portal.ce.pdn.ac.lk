@@ -26,18 +26,8 @@ class EditCourses extends Component
     public $code;
     public $name;
     public $credits, $faq_page, $content;
-    public $time_allocation = [
-        'lecture' => 0,
-        'tutorial' => 0,
-        'practical' => 0,
-        'assignment' => 0,
-    ];
-    public $marks_allocation = [
-        'practicals' => 0,
-        'project' => 0,
-        'mid_exam' => 0,
-        'end_exam' => 0,
-    ];
+    public $time_allocation;
+    public $marks_allocation;
 
     // 2nd form step
     public $objectives;
@@ -55,10 +45,10 @@ class EditCourses extends Component
     {
         return [
             'academicProgram' => 'required|string',
-            'semester' => 'required|integer',
+            'semester' => 'required|string',
             'version' => 'required|string',
             'type' => 'required|string|in:Core,GE,TE',
-            'code' => 'required|string',
+            'code' => 'required|string|unique:courses,code',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:30',
             'faq_page' => 'nullable|url',
@@ -71,6 +61,13 @@ class EditCourses extends Component
             'marks_allocation.project' => 'nullable|integer|min:0|max:100',
             'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
             'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
+            'modules' => 'nullable|array',
+            'modules.*.name' => 'required|string|min:3|max:255',
+            'modules.*.description' => 'required|string|min:10',
+            'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
+            'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
+            'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
+            'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
         ];
     }
 
@@ -98,6 +95,10 @@ class EditCourses extends Component
         switch ($this->formStep) {
             case 1:
                 $this->validate($this->rules());
+                $this->validateMarksAllocation();
+                if ($this->getErrorBag()->has('marks_allocation.total')) {
+                    return; 
+                }
                 break;
 
             case 3:
@@ -114,6 +115,23 @@ class EditCourses extends Component
         }
     }
 
+    protected function validateMarksAllocation()
+    {
+        $totalMarks = 0;
+        $hasValue = false;
+
+        foreach ($this->marks_allocation as $key => $value){
+            if(!empty($value)){
+                $hasValue = true;
+                $totalMarks += (int) $value;
+            }
+        }
+
+        if ($hasValue && $totalMarks != 100){
+            $this->addError('marks_allocation.total', 'The total of marks allocation must be 100.');
+        }
+    }
+
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
@@ -124,6 +142,8 @@ class EditCourses extends Component
     public function mount(Course $course)
     {
         $this->academicProgramsList = Course::getAcademicPrograms();
+        $this->time_allocation = Course::getTimeAllocation();
+        $this->marks_allocation = Course::getMarksAllocation();
         $this->course = $course;
 
         // Populate form fields with existing course data
@@ -185,19 +205,13 @@ class EditCourses extends Component
         $this->emit('refreshItems' . ucfirst($type), $newItems);
     }
 
-    public function updatedTimeAllocation($value, $key)
-    {
-        $this->time_allocation[$key] = max(0, $value);
-    }
-
-    public function updatedMarksAllocation($value, $key)
-    {
-        $this->marks_allocation[$key] = max(0, $value);
-    }
     
     public function next()
     {
         $this->validateCurrentStep();
+        if ($this->getErrorBag()->has('marks_allocation.total')) {
+            return; // Do not proceed to the next step if the marks total is invalid
+        }
         $this->formStep++;
     }
     
