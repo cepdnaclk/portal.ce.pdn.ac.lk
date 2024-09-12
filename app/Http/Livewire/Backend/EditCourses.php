@@ -45,10 +45,10 @@ class EditCourses extends Component
     {
         return [
             'academicProgram' => 'required|string',
-            'semester' => 'required|string',
+            'semester' => 'required|int',
             'version' => 'required|string',
             'type' => 'required|string|in:Core,GE,TE',
-            'code' => 'required|string|unique:courses,code',
+            'code' => 'required|string',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:30',
             'faq_page' => 'nullable|url',
@@ -103,9 +103,9 @@ class EditCourses extends Component
 
             case 3:
                 $this->validate([
-                    'modules' => 'nullable|array|min:1',
-                    'modules.*.name' => 'required|string|min:3|max:255',
-                    'modules.*.description' => 'required|string',
+                    'modules' => 'nullable|array',
+                    'modules.*.name' => 'nullable|string|max:255',
+                    'modules.*.description' => 'nullable|string',
                     'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
                     'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
                     'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
@@ -156,18 +156,8 @@ class EditCourses extends Component
         $this->credits = $course->credits;
         $this->faq_page = $course->faq_page;
         $this->content = $course->content;
-        $this->time_allocation = json_decode($course->time_allocation, true) ?? [
-            'lecture' => 0,
-            'tutorial' => 0,
-            'practical' => 0,
-            'assignment' => 0,
-        ];
-        $this->marks_allocation = json_decode($course->marks_allocation, true) ?? [
-            'practicals' => 0,
-            'project' => 0,
-            'mid_exam' => 0,
-            'end_exam' => 0,
-        ];
+        $this->time_allocation = json_decode($course->time_allocation, true) ?? Course::getTimeAllocation();
+        $this->marks_allocation = json_decode($course->marks_allocation, true) ?? Course::getMarksAllocation();
         $this->objectives = $course->objectives;
         $this->ilos = json_decode($course->ilos, true) ?? [
             'knowledge' => [],
@@ -224,6 +214,7 @@ class EditCourses extends Component
     {
         \Log::info("update method called");
         try {
+
             $this->validateCurrentStep();
             $this->updateCourse();
             $this->emit('courseUpdated');
@@ -263,13 +254,14 @@ class EditCourses extends Component
         try {
             \DB::beginTransaction();
 
-            $course = Course::where('code', $this->code)->firstOrFail();
+            $course = Course::where('id', $this->course->id)->firstOrFail();
 
             $course->update([
                 'academic_program' => $this->academicProgram,
                 'semester_id' => (int)$this->semester,
                 'version' => (int)$this->version,
                 'type' => $this->type,
+                'code' => $this->code,
                 'name' => $this->name,
                 'credits' => (int)$this->credits,
                 'faq_page' => $this->faq_page,
@@ -321,18 +313,8 @@ class EditCourses extends Component
         $this->credits = null;
         $this->faq_page = '';
         $this->content = '';
-        $this->time_allocation = [
-            'lecture' => 0,
-            'tutorial' => 0,
-            'practical' => 0,
-            'assignment' => 0,
-        ];
-        $this->marks_allocation = [
-            'practicals' => 0,
-            'project' => 0,
-            'mid_exam' => 0,
-            'end_exam' => 0,
-        ];
+        $this->time_allocation = Course::getTimeAllocation();
+        $this->marks_allocation = Course::getMarksAllocation();
         $this->objectives = '';
         $this->ilos = [
             'knowledge' => [],

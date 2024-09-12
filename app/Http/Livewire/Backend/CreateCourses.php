@@ -122,7 +122,7 @@ class CreateCourses extends Component
 
         case 3:
             $this->validate([
-                'modules' => 'nullable|array|min:1',
+                'modules' => 'nullable|array',
                 'modules.*.name' => 'required|string|min:3|max:255',
                 'modules.*.description' => 'required|string',
                 'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
@@ -289,18 +289,8 @@ class CreateCourses extends Component
         $this->credits = 0;
         $this->faq_page = '';
         $this->content = '';
-        $this->time_allocation = [
-            'lecture' => 0,
-            'tutorial' => 0,
-            'practical' => 0,
-            'assignment' => 0,
-        ];
-        $this->marks_allocation = [
-            'practicals' => 0,
-            'project' => 0,
-            'mid_exam' => 0,
-            'end_exam' => 0,
-        ];
+        $this->time_allocation = Course::getTimeAllocation();
+        $this->marks_allocation = Course::getMarksAllocation();
         $this->objectives = '';
         $this->ilos = [
             'knowledge' => [],
@@ -308,6 +298,7 @@ class CreateCourses extends Component
             'attitudes' => [],
         ];
         $this->references = [];
+        $this->modules = [];
     }
 
     public function render()
