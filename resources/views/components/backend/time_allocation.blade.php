@@ -28,7 +28,7 @@
                 </div>
                 <div class="input-group mb-3 col ms-3">
                     <input type="number" class="form-control" aria-describedby="key" :class="!isValidInput(key) ? 'is-invalid' : ''" x-model.number="time_allocation[key]" :wire:model.defer="`time_allocation.${key}`">
-                    <span class="input-group-text" id="key">%</span>
+                    <span class="input-group-text" id="key">hours</span>
                     <div class="invalid-feedback" >value must be a positive integer</div>
                 </div>
             </div>

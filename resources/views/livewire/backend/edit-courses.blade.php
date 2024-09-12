@@ -209,6 +209,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col" style="padding: 0px;">
+                        @if ($canUpdate)
+                                <button type="button" class="btn btn-dark" style="float: center;"
+                                wire:click="update">Update & Exit</button>
+                            @endif
                         <div class="btn-group" style="float: right;">
                             @if ($formStep == 1)
                                 <button type="button" class="btn btn-primary next-step"
