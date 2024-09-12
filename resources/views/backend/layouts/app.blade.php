@@ -109,36 +109,46 @@
 
         
 
-        document.getElementById('submit-button').addEventListener('click', function(event) {
-            // Get Quill content
-            var quillContent = quill.root.innerHTML;
+    // Event listener for form submission
+    document.getElementById('submit-button').addEventListener('click', function(data) {
+        // Get Quill content
+        var quillContent = quill.root.innerHTML;
 
-            // Reference to the error message div and the editor container
-            var descriptionError = document.getElementById('description-error');
-            var editorContainer = document.getElementById('editor-container');
+        // Reference to the error message div and the editor container
+        var descriptionError = document.getElementById('description-error');
+        var editorContainer = document.getElementById('editor-container');
 
-            // Check if the content is just the empty paragraph or is empty
-            if (quillContent === '<p><br></p>' || quillContent.trim() === '') {
-                 // Prevent form submission
+        // Check if the content is just the empty paragraph or is empty
+        if (quillContent === '<p><br></p>' || quillContent.trim() === '') {
+            
+            data.preventDefault();
 
-                // Show custom error message
-                descriptionError.innerHTML = 'Description is required';
-                descriptionError.style.display = 'block';
+            // Show custom error message
+            descriptionError.innerHTML = 'Description is required';
+            descriptionError.style.display = 'block';
 
-                // Highlight the Quill editor by changing its border color
-                editorContainer.style.border = '2px solid red';
+            // Highlight the Quill editor by changing its border color
+            editorContainer.style.border = '2px solid red';
 
-                return; 
-            }
+            return; 
+        }
 
-            // Hide the error message if content is valid
-            descriptionError.style.display = 'none';
-            editorContainer.style.border = '1px solid #ced4da'; // Reset border color
+        
 
-            // Populate hidden form field with Quill data
-            var description = document.querySelector('textarea[name=description]');
-            description.value = quillContent;
-        });
+        // Populate hidden form field with Quill data
+        var description = document.querySelector('textarea[name=description]');
+        description.value = quillContent;
+    });
+
+    
+    quill.on('text-change', function() {
+        var descriptionError = document.getElementById('description-error');
+        var editorContainer = document.getElementById('editor-container');
+
+        descriptionError.style.display = 'none';
+        editorContainer.style.border = '1px solid #ced4da'; 
+    });
+
 
 
     </script>
