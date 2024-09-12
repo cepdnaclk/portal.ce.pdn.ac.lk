@@ -56,7 +56,6 @@ class CourseController extends Controller
         ]);
         try {
             Course::create($validatedData);
-            return redirect()->route('dashboard.courses.index')->with('success', 'Course created successfully.');
         } catch (\Exception $e) {
             return abort(500);
         }
@@ -102,7 +101,6 @@ class CourseController extends Controller
         ]);
         try {
             $course->update($validatedData);
-            return redirect()->route('dashboard.courses.index')->with('success', 'Course updated successfully.');
         } catch (\Exception $e) {
             return abort(500);
         }

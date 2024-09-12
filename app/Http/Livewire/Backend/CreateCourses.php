@@ -192,7 +192,7 @@ class CreateCourses extends Component
         try {
             $this->validate();
             $this->storeCourse();
-            $this->emit('courseCreated');
+            return redirect()->route('dashboard.courses.index')->with('Success', 'Course created successfully.');
         } catch (\Exception $e) {
             \Log::error("Error in submit method: " . $e->getMessage());
             session()->flash('error', 'There was an error creating the course: ' . $e->getMessage());
