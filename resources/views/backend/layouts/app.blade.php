@@ -108,19 +108,50 @@
             }
         });
 
-        document.getElementById('submit-button').addEventListener('click', function(event) {
-            // Get Quill content
-            var quillContent = quill.root.innerHTML;
+        
 
-            // Check if the content is just the empty paragraph
-            if (quillContent === '<p><br></p>') {
-                quillContent = ''; // Set it to an empty string
-            }
+    // Event listener for form submission
+    document.getElementById('submit-button').addEventListener('click', function(data) {
+        // Get Quill content
+        var quillContent = quill.root.innerHTML;
 
-            // Populate hidden form field with quill data
-            var description = document.querySelector('textarea[name=description]');
-            description.value = quillContent;
-        });
+        // Reference to the error message div and the editor container
+        var descriptionError = document.getElementById('description-error');
+        var editorContainer = document.getElementById('editor-container');
+
+        // Check if the content is just the empty paragraph or is empty
+        if (quillContent === '<p><br></p>' || quillContent.trim() === '') {
+            
+            data.preventDefault();
+
+            // Show custom error message
+            descriptionError.innerHTML = 'Description is required';
+            descriptionError.style.display = 'block';
+
+            // Highlight the Quill editor by changing its border color
+            editorContainer.style.border = '2px solid red';
+
+            return; 
+        }
+
+        
+
+        // Populate hidden form field with Quill data
+        var description = document.querySelector('textarea[name=description]');
+        description.value = quillContent;
+    });
+
+    
+    quill.on('text-change', function() {
+        var descriptionError = document.getElementById('description-error');
+        var editorContainer = document.getElementById('editor-container');
+
+        descriptionError.style.display = 'none';
+        editorContainer.style.border = '1px solid #ced4da'; 
+    });
+
+
+
     </script>
 </body>
 
