@@ -3,7 +3,7 @@
 use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\SemesterController;
 
-Route::group([], function () {
+Route::group(['middleware' => ['permission:user.access.academic.semester']], function () {
 
     // Index
     Route::get('/semesters', function () {
@@ -56,4 +56,5 @@ Route::group([], function () {
     // Destroy
     Route::delete('semesters/{semester}', [SemesterController::class, 'destroy'])
         ->name('semesters.destroy');
+
 });
