@@ -109,4 +109,9 @@ class Course extends Model
     {
         return $this->hasMany(CourseModule::class);
     }
+
+    protected static function newFactory()
+    {
+        return CourseFactory::new();
+    }
 }

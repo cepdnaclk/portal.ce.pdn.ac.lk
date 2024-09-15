@@ -4,7 +4,7 @@ use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Livewire\Backend\CreateCourses;
 
-Route::group([], function () {
+Route::group(['middleware' => ['permission:user.access.academic.course']], function () {
 
     // Index
     Route::get('/courses', function () {
@@ -12,7 +12,7 @@ Route::group([], function () {
     })->name('courses.index')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-            ->push(__('Academic Program'), route('dashboard.academic_program.index'))
+                ->push(__('Academic Program'), route('dashboard.academic_program.index'))
                 ->push(__('Courses'), route('dashboard.courses.index'));
         });
 
@@ -26,6 +26,10 @@ Route::group([], function () {
                 ->push(__('courses'), route('dashboard.courses.index'))
                 ->push(__('Create'));
         });
+
+    // Store
+    Route::post('courses', [CourseController::class, 'store'])
+        ->name('courses.store');
 
     // Edit
     Route::get('courses/edit/{course}', [CourseController::class, 'edit'])
@@ -53,4 +57,5 @@ Route::group([], function () {
     // Destroy
     Route::delete('courses/{course}', [CourseController::class, 'destroy'])
         ->name('courses.destroy');
+
 });

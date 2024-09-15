@@ -113,7 +113,7 @@
         @endif
 
         {{-- Academic Program --}}
-        @if ($logged_in_user->hasAllAccess())
+        @if ($logged_in_user->hasPermissionTo('user.access.academic'))
             <li class="c-sidebar-nav-dropdown">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-book" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Academic Program')"></x-utils.link>
@@ -128,7 +128,7 @@
                     <li class="c-sidebar-nav-item">
                         <x-utils.link :href="route('dashboard.courses.index')" class="c-sidebar-nav-link" :text="__('Courses')"
                             :active="activeClass(Route::is('dashboard.courses.*'), 'c-active')"></x-utils.link>
-                    </li>
+                    </li>       
                 </ul>
             </li>
         @endif

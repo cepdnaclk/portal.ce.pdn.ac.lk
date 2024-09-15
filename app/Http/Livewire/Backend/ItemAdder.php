@@ -6,34 +6,13 @@ use Livewire\Component;
 
 class ItemAdder extends Component
 {
-    public $type;
     public $items = [];
-    public $size = "col-12";
+    public $type;
 
-    protected $listeners = ['refreshItems' => 'refreshItems'];
-
-    public function mount($type, $items = [])
+    public function mount($type, $items)
     {
+        $this->items = $items;
         $this->type = $type;
-        $this->items = $items;
-    }
-
-    public function addItem($item)
-    {
-        $this->items[] = $item;
-        $this->emitUp('itemsUpdated', $this->type, $this->items);
-    }
-
-    public function removeItem($index)
-    {
-        unset($this->items[$index]);
-        $this->items = array_values($this->items);
-        $this->emitUp('itemsUpdated', $this->type, $this->items);
-    }
-
-    public function refreshItems($items)
-    {
-        $this->items = $items;
     }
 
     public function render()

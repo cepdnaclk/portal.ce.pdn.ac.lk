@@ -1,128 +1,129 @@
-<div>
-    <div x-data="{ 
-        items: @entangle('items'),
-        userInput: '', 
-        selectedItem: null, 
-        editIndex: null,
-        isEditing: false
-    }">
-        {{-- <form wire:submit.prevent>
-            <div class="input-group mb-3 {{$size}}" style="margin-left: 0;">
-                <input x-model="userInput" placeholder="Enter item" type="text" class="form-control item-box">
-                <div class="input-group-append">
-                    <button class="btn btn-primary add-btn" x-text="isEditing ? 'Update' : 'Add'" x-on:click="
-                        if(userInput.trim().length > 0) {
-                            if (isEditing) {
-                                items[editIndex] = userInput;
-                                editIndex = null;
-                                isEditing = false;
-                            } else {
-                                items.push(userInput);
-                            }
-                            $wire.emitUp('itemsUpdated', '{{ $type }}', items);
-                            userInput = '';
-                            selectedItem = null;
-                        }">
-                    </button>
+<div x-data="{
+    items: @entangle('items') || [],
+    userInput: '', 
+    selectedItem: null, 
+    editIndex: null,
+    isEditing: false,
+    ClearAll() {
+        this.items = [];
+        this.selectedItem = null;
+        $wire.emitUp('itemsUpdated', '{{ $type }}', this.items);
+    },
+    deleteItem() {
+        if (this.selectedItem !== null) { 
+            this.items.splice(this.selectedItem, 1); 
+            $wire.emitUp('itemsUpdated', '{{ $type }}', this.items);
+            this.selectedItem = null; 
+        }
+    },
+    moveUp(){
+        if(this.selectedItem > 0) { 
+                let temp = this.items[this.selectedItem-1]; 
+                this.items[this.selectedItem-1] = this.items[this.selectedItem]; 
+                this.items[this.selectedItem] = temp; 
+                this.selectedItem -= 1; 
+                $wire.emitUp('itemsUpdated', '{{ $type }}', this.items);
+            }
+    },
+    moveDown(){
+        if(this.selectedItem < this.items.length - 1) { 
+                let temp = this.items[this.selectedItem+1]; 
+                this.items[this.selectedItem+1] = this.items[this.selectedItem]; 
+                this.items[this.selectedItem] = temp; 
+                this.selectedItem += 1; 
+                $wire.emitUp('itemsUpdated', '{{ $type }}', this.items);
+            }
+    },
+    editItem() {
+        if(this.selectedItem !== null) { 
+            this.editIndex = this.selectedItem; 
+            this.userInput = this.items[this.selectedItem]; 
+            this.isEditing = true;
+            document.getElementById('add{{$type}}ItemModalLabel').innerHTML = 'Edit {{$type}}';
+            new bootstrap.Modal(document.getElementById('add{{$type}}ItemModal')).show();
+        }
+    },
+    handleSave() {
+        if (this.userInput.trim().length > 0) {
+            if (this.isEditing) {
+                this.items[this.editIndex] = this.userInput;
+                this.editIndex = null;
+                this.isEditing = false;
+            } else {
+                this.items.push(this.userInput);
+            }
+            $wire.emitUp('itemsUpdated', '{{ $type }}', this.items);
+            this.userInput = '';
+            this.selectedItem = null;
+        }
+    }
+}"
+>
+    <!-- don't remove this template tag. if you do Close All button won't be rendered initially when items exists -->
+    <template x-for="(item, index) in items">   
+    </template>
+
+    <h5>{{ ucfirst($type) }}</h5>
+    <div class="d-flex justify-content-between mb-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add{{$type}}ItemModal" @click="userInput = '';document.getElementById('add{{$type}}ItemModalLabel').innerHTML = 'Add {{$type}}'">
+            <i class="fas fa-plus me-2"></i>Add
+        </button>
+        <button class="btn btn-dark" x-show="items.length" x-transition @click="ClearAll()">
+            <i class="fas fa-times me-2"></i>Clear All
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="add{{$type}}ItemModal" tabindex="-1" aria-labelledby="add{{$type}}ItemModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="add{{$type}}ItemModalLabel"></h1> 
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <textarea class="form-control w-100" style="overflow:hidden;" x-model="userInput"
+                        oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" x-on:click="handleSave()">Save Changes</button>
                 </div>
             </div>
-        </form> --}}
-        <form wire:submit.prevent>
-            <div class="input-group mb-3 {{$size}}" style="margin-left: 0;">
-                <div class="form-floating" style="width: 94%;  display: flex; flex-direction: row;">
-                    
-                    {{-- <input x-model="userInput" placeholder="Enter item" type="text" class="form-control item-box" > --}}
-                    <textarea x-model="userInput" placeholder="Enter item" class="form-control item-box" style="height: auto; resize: vertical; overflow: hidden;"></textarea>
-
-                    <label for="itemInput"> {{ ucfirst($type) }} </label>
-
-                </div>
-                <div class="input-group-append" style="margin-left: 10px;">
-                    <button class="btn btn-primary add-btn" x-text="isEditing ? 'Update' : 'Add'" x-on:click="
-                        if(userInput.trim().length > 0) {
-                            if (isEditing) {
-                                items[editIndex] = userInput;
-                                editIndex = null;
-                                isEditing = false;
-                            } else {
-                                items.push(userInput);
-                            }
-                            $wire.emitUp('itemsUpdated', '{{ $type }}', items);
-                            userInput = '';
-                            selectedItem = null;
-                        }" style="height: 58px;">
-                    </button>
-                </div>
-            </div>
-        </form>
-        
-
-        <ul class="list-group custom-list  ml-3">
-            <template x-for="(item, index) in items" :key="index">
-                <li class="list-group-item custom-list-item d-flex justify-content-between align-items-center"
-                    :class="{'active': selectedItem === index}"
-                    @click="selectedItem = selectedItem === index ? null : index">
-                    <span>
+        </div>
+    </div> 
+    
+    <ul class="list-group" :style="{padding-left: 0;margin-left: 0;}">
+        <template x-for="(item, index) in items" :key="item + '-' + index">
+            <li class="list-group-item position-relative"
+                :style="{ backgroundColor: selectedItem === index ? '#9EC5FE' : '' }"
+                @click="selectedItem = selectedItem === index ? null : index">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                    <div class="mb-2 mb-md-0 me-md-3">
                         <strong x-text="index + 1 + '. '"></strong>
                         <span x-text="item"></span>
-                    </span>
-                    <span class="badge badge-primary badge-pill" x-text="selectedItem === index ? 'Selected' : ''"></span>
-                </li>
-            </template>
-        </ul>
+                    </div>
 
-        <div class="mt-3 ml-3">
-            <button @click="if(selectedItem !== null) { 
-                editIndex = selectedItem; 
-                userInput = items[selectedItem]; 
-                isEditing = true;
-            }" class="btn btn-outline-warning btn-sm" :disabled="selectedItem === null">✏️ Edit</button>
-            <button @click="if(selectedItem !== null) { 
-                items.splice(selectedItem, 1); 
-                $wire.emitUp('itemsUpdated', '{{ $type }}', items);
-                selectedItem = null; 
-            }" class="btn btn-danger btn-sm ml-1" :disabled="selectedItem === null">🗑️ Delete</button>
-            <button @click="if(selectedItem > 0) { 
-                let temp = items[selectedItem-1]; 
-                items[selectedItem-1] = items[selectedItem]; 
-                items[selectedItem] = temp; 
-                selectedItem -= 1; 
-                $wire.emitUp('itemsUpdated', '{{ $type }}', items);
-            }" class="btn btn-secondary btn-sm ml-1" :disabled="selectedItem === null || selectedItem === 0">⬆️ Up</button>
-            <button @click="if(selectedItem < items.length - 1) { 
-                let temp = items[selectedItem+1]; 
-                items[selectedItem+1] = items[selectedItem]; 
-                items[selectedItem] = temp; 
-                selectedItem += 1; 
-                $wire.emitUp('itemsUpdated', '{{ $type }}', items);
-            }" class="btn btn-secondary btn-sm ml-1" :disabled="selectedItem === null || selectedItem === items.length - 1">⬇️ Down</button>
-
-            <button @click="items = []; selectedItem = null; $wire.emitUp('itemsUpdated', '{{ $type }}', items);" x-show="items.length" class="clear-btn btn btn-warning ml-2">Clear All</button>
-
-        </div>
-
-        
-        {{-- <button @click="items = []; selectedItem = null; $wire.emitUp('itemsUpdated', '{{ $type }}', items);" x-show="items.length" class="clear-btn btn btn-warning mt-2">Clear All</button> --}}
-        
-    </div>
+                    <div class="d-flex flex-column flex-md-row align-items-md-end ms-auto">
+                        <div x-show="selectedItem === index" class="btn-group" role="group" aria-label="Item actions">
+                            <button type="button" class="btn btn-sm btn-secondary me-1 me-md-2 rounded"  @click.stop="moveUp()">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary me-1 me-md-2 rounded"  @click.stop="moveDown()">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-warning me-1 me-md-2 rounded"  @click.stop="editItem()">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger rounded"  @click.stop="deleteItem()">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </template>
+    </ul> 
+    
 </div>
 
-<style>
-    .custom-list {
-        margin-bottom: 10px;
-    }
-    .custom-list-item {
-        padding: 5px 10px;
-        font-size: 14px;
-    }
-    .list-group-item.active {
-        background-color: #007bff;
-        color: white;
-    }
-    .form-control {
-        
-        padding: 5px 10px;
-    }
-    
-    
-</style>

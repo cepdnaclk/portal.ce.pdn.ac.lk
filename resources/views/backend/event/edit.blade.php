@@ -72,6 +72,7 @@
                     <div class="col-md-10">
                         <div id="editor-container" style="height: auto;min-height: 200px;">{!! $event->description !!}</div>
                         <textarea name="description" id="description" style="display:none;" required="true"></textarea>
+                        <div id="description-error" class="text-danger mt-1" style="display: none;"></div> 
                         @error('description')
                             <strong>{{ $message }}</strong>
                         @enderror

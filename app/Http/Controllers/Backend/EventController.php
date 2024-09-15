@@ -84,9 +84,9 @@ class EventController extends Controller
         $data = request()->validate([
             'title' => ['required'],
             'url' =>
-            ['required', Rule::unique('news')->ignore($event->id)],
+            ['required', Rule::unique('event')->ignore($event->id)],
             'published_at' => 'required|date_format:Y-m-d',
-            'description' => 'string',
+            'description' => 'string|required',
             'enabled' => 'nullable',
             'link_url' => 'nullable|url',
             'link_caption' => 'nullable|string',

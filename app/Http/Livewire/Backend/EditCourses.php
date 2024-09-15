@@ -12,6 +12,7 @@ class EditCourses extends Component
 {
     public $course;
     public $formStep = 1;
+    public $canUpdate = true;
 
     // Selectors
     public $academicProgramsList = [];
@@ -96,9 +97,6 @@ class EditCourses extends Component
             case 1:
                 $this->validate($this->rules());
                 $this->validateMarksAllocation();
-                if ($this->getErrorBag()->has('marks_allocation.total')) {
-                    return; 
-                }
                 break;
 
             case 3:
@@ -134,7 +132,12 @@ class EditCourses extends Component
 
     public function updated($propertyName)
     {
-        $this->validateOnly($propertyName);
+        $this->canUpdate = false;
+        $this->validateCurrentStep();
+        if ($this->getErrorBag()->has('marks_allocation.total')) {
+            return; 
+        }
+        $this->canUpdate = true;
     }
 
     protected $listeners = ['itemsUpdated' => 'updateItems'];
