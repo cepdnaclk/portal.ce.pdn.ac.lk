@@ -172,17 +172,11 @@
 
                             {{-- ILO --}}
 
-                            <div class="mt-5">
-                                @livewire('backend.item-adder', ['type' => 'knowledge', 'items' => $ilos['knowledge']], key('ilos-knowledge-adder'))
-                            </div>
+                            @livewire('backend.item-adder', ['type' => 'knowledge', 'items' => $ilos['knowledge']], key('ilos-knowledge-adder'))
 
-                            <div class="mt-5">
-                                @livewire('backend.item-adder', ['type' => 'skills', 'items' => $ilos['skills']], key('ilos-skill-adder'))
-                            </div>
+                            @livewire('backend.item-adder', ['type' => 'skills', 'items' => $ilos['skills']], key('ilos-skill-adder'))
 
-                            <div class="mt-5">
-                                @livewire('backend.item-adder', ['type' => 'attitudes', 'items' => $ilos['attitudes']], key('ilos-attitude-adder'))
-                            </div>
+                            @livewire('backend.item-adder', ['type' => 'attitudes', 'items' => $ilos['attitudes']], key('ilos-attitude-adder'))
 
                         </div>
                     </div>
@@ -193,10 +187,8 @@
                         <div class="card-body">
                             <h5 class="card-title">Modules & References</h5>
 
-                            <x-backend.module></x-backend.module>
-
-                            <h6>References</h6>
                             @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
+
                         </div>
                     </div>
                 </div>
