@@ -171,8 +171,6 @@ class CreateCourses extends Component
         }else{
             $this->ilos[$type] = $newItems;
         }
-        
-        $this->emit('refreshItems' . ucfirst($type), $newItems);
     }
     
     public function next(){
