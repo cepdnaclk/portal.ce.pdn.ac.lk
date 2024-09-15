@@ -65,7 +65,7 @@
 
     <h5>{{ ucfirst($type) }}</h5>
     <div class="d-flex justify-content-between mb-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add{{$type}}ItemModal" @click="userInput = '';document.getElementById('add{{$type}}ItemModalLabel').innerHTML = 'Add {{$type}}'">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add{{$type}}ItemModal" @click="userInput = '';document.getElementById('add{{$type}}ItemModalLabel').innerHTML = 'Add {{$type}}';isEditing=false">
             <i class="fas fa-plus me-2"></i>Add
         </button>
         <button class="btn btn-dark" x-show="items.length" x-transition @click="ClearAll()">
