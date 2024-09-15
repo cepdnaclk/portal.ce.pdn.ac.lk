@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Domains\Semester\Models\Semester;
+use App\Domains\Course\Models\Course;
 use Illuminate\Support\Facades\Log;
 
 class SemesterController extends Controller
@@ -112,10 +113,16 @@ class SemesterController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function delete(Semester $semester)
-    {
-        return view('backend.semesters.delete', compact('semester'));
-    }
+     public function delete(Semester $semester)
+     {
+         $courses = Course::where('semester_id', $semester->id)->get();
+     
+         if ($courses->count() > 0) {
+             return view('backend.semesters.delete', compact('semester', 'courses'));
+         }
+     
+         return view('backend.semesters.delete', compact('semester','courses'));
+     }
 
     public function destroy(Semester $semester)
     {
