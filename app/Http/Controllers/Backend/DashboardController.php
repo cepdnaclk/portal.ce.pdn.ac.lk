@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * Class DashboardController.
  */
@@ -12,6 +14,7 @@ class DashboardController
      */
     public function index()
     {
+        Log::debug('Entering DashboardController@index');
         return view('backend.dashboard');
     }
 }

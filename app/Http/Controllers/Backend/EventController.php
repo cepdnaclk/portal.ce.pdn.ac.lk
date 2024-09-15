@@ -20,6 +20,7 @@ class EventController extends Controller
      */
     public function create()
     {
+        Log::debug('Entering EventController@create');
         return view('backend.event.create');
     }
 
@@ -31,6 +32,8 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug('Entering EventController@store', ['request' => $request->all()]);
+        
         $data = request()->validate([
             'title' => 'string|required',
             'url' => ['required', 'unique:events'],
@@ -43,8 +46,12 @@ class EventController extends Controller
             'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
             'location' => 'string|required',
         ]);
+
+        Log::debug('Validated data', ['data' => $data]);
+
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb(null, $request->image, "events");
+            Log::debug('Image uploaded', ['image' => $data['image']]);
         }
 
         try {
@@ -54,13 +61,13 @@ class EventController extends Controller
             $event->created_by = Auth::user()->id;
             $event->save();
 
+            Log::info('Event created successfully', ['event_id' => $event->id]);
             return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event was created !');
         } catch (\Exception $ex) {
-            Log::error($ex->getMessage());
+            Log::error('Failed to create event', ['error' => $ex->getMessage()]);
             return abort(500);
         }
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -69,6 +76,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
+        Log::debug('Entering EventController@edit', ['event_id' => $event->id]);
         return view('backend.event.edit', compact('event'));
     }
 
@@ -81,10 +89,11 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        Log::debug('Entering EventController@update', ['event_id' => $event->id, 'request' => $request->all()]);
+        
         $data = request()->validate([
             'title' => ['required'],
-            'url' =>
-            ['required', Rule::unique('event')->ignore($event->id)],
+            'url' => ['required', Rule::unique('events')->ignore($event->id)],
             'published_at' => 'required|date_format:Y-m-d',
             'description' => 'string|required',
             'enabled' => 'nullable',
@@ -94,8 +103,12 @@ class EventController extends Controller
             'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
             'location' => 'string|required',
         ]);
+
+        Log::debug('Validated data', ['data' => $data]);
+
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb($event->image, $request->image, "events");
+            Log::debug('Image uploaded', ['image' => $data['image']]);
         } else {
             $data['image'] = $event->image;
         }
@@ -107,11 +120,14 @@ class EventController extends Controller
             $event->created_by = Auth::user()->id;
             $event->save();
 
+            Log::info('Event updated successfully', ['event_id' => $event->id]);
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was updated !');
         } catch (\Exception $ex) {
+            Log::error('Failed to update event', ['event_id' => $event->id, 'error' => $ex->getMessage()]);
             return abort(500);
         }
     }
+
 
     /**
      * Confirm to delete the specified resource from storage.
@@ -121,6 +137,7 @@ class EventController extends Controller
      */
     public function delete(Event $event)
     {
+        Log::debug('Entering EventController@delete', ['event_id' => $event->id]);
         return view('backend.event.delete', compact('event'));
     }
 
@@ -132,27 +149,32 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
+        Log::debug('Entering EventController@destroy', ['event_id' => $event->id]);
         try {
             $event->delete();
+            Log::info('Event deleted successfully', ['event_id' => $event->id]);
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was deleted !');
         } catch (\Exception $ex) {
+            Log::error('Failed to delete event', ['event_id' => $event->id, 'error' => $ex->getMessage()]);
             return abort(500);
         }
     }
-
     // Private function to handle deleting images
     private function deleteThumb($currentURL)
     {
+        Log::debug('Entering EventController@deleteThumb', ['currentURL' => $currentURL]);
         if ($currentURL != null) {
             $oldImage = public_path($currentURL);
-            if (File::exists($oldImage)) unlink($oldImage);
+            if (File::exists($oldImage)) {
+                unlink($oldImage);
+                Log::debug('Thumbnail deleted', ['path' => $oldImage]);
+            }
         }
     }
-
     // Private function to handle uploading  images
     private function uploadThumb($currentURL, $newImage, $folder)
     {
-        // Delete the existing image
+        Log::debug('Entering EventController@uploadThumb', ['currentURL' => $currentURL, 'folder' => $folder]);
         $this->deleteThumb($currentURL);
 
         $imageName = time() . '.' . $newImage->extension();
@@ -161,6 +183,7 @@ class EventController extends Controller
         $image = Image::make(public_path($imagePath));
         $image->save();
 
+        Log::debug('Thumbnail uploaded', ['path' => $imagePath]);
         return $imageName;
     }
 }

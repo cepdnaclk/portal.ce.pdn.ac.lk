@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
 use App\Domains\Course\Models\Course;
+use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller
 {
@@ -16,7 +17,9 @@ class CourseController extends Controller
      */
     public function index()
     {
+        Log::debug('Entering CourseController@index');
         $courses = Course::all();
+        Log::debug('Fetched all courses', ['count' => $courses->count()]);
         return view('backend.courses.index', compact('courses'));
     }
 
@@ -27,6 +30,7 @@ class CourseController extends Controller
      */
     public function create()
     {
+        Log::debug('Entering CourseController@create');
         return view('backend.courses.create');
     }
 
@@ -38,6 +42,7 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug('Entering CourseController@store', ['request' => $request->all()]);
         $validatedData = $request->validate([
             'code' => 'required|string|max:16|unique:courses,code',
             'semester_id' => 'required|integer|exists:semesters,id',
@@ -54,13 +59,16 @@ class CourseController extends Controller
             'urls' => 'nullable|json',
             'references' => 'nullable|json',
         ]);
+        Log::debug('Validated data', ['data' => $validatedData]);
         try {
-            Course::create($validatedData);
+            $course = Course::create($validatedData);
+            Log::info('Course created successfully', ['course_id' => $course->id]);
+            return redirect()->route('dashboard.courses.index')->with('success', 'Course created successfully.');
         } catch (\Exception $e) {
+            Log::error('Error creating course: ' . $e->getMessage());
             return abort(500);
         }
     }
-
 
     /**
      * Show the form for editing the specified course.
@@ -70,6 +78,7 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
+        Log::debug('Entering CourseController@edit', ['course_id' => $course->id]);
         return view('backend.courses.edit', compact('course'));
     }
 
@@ -82,6 +91,7 @@ class CourseController extends Controller
      */
     public function update(Request $request, Course $course)
     {
+        Log::debug('Entering CourseController@update', ['course_id' => $course->id, 'request' => $request->all()]);
         $validatedData = $request->validate([
             'code' => 'required|string|max:16|unique:courses,code,' . $course->id,
             'semester_id' => 'required|integer|exists:semesters,id',
@@ -99,9 +109,13 @@ class CourseController extends Controller
             'urls' => 'nullable|json',
             'references' => 'nullable|json',
         ]);
+        Log::debug('Validated data', ['data' => $validatedData]);
         try {
             $course->update($validatedData);
+            Log::info('Course updated successfully', ['course_id' => $course->id]);
+            return redirect()->route('dashboard.courses.index')->with('success', 'Course updated successfully.');
         } catch (\Exception $e) {
+            Log::error('Error updating course: ' . $e->getMessage());
             return abort(500);
         }
     }
@@ -112,18 +126,21 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-
     public function delete(Course $course)
     {
+        Log::debug('Entering CourseController@delete', ['course_id' => $course->id]);
         return view('backend.courses.delete', compact('course'));
     }
 
     public function destroy(Course $course)
     {
+        Log::debug('Entering CourseController@destroy', ['course_id' => $course->id]);
         try {
             $course->delete();
+            Log::info('Course deleted successfully', ['course_id' => $course->id]);
             return redirect()->route('dashboard.courses.index')->with('success', 'Course deleted successfully.');
         } catch (\Exception $e) {
+            Log::error('Error in deleting course: ' . $e->getMessage());
             return abort(500);
         }
     }
