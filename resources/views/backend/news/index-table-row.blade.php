@@ -31,12 +31,16 @@
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
         <div class="btn-group" role="group" aria-label="">
-            <a href="{{ route('dashboard.news.edit', $row) }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"
+            <a href="{{ route('dashboard.news.preview', $row) }}" class="btn  btn-warning"  target="_blank">
+                <i class="fa fa-eye" title="Preview"></i>
+            </a>
+            <a href="{{ route('dashboard.news.edit', $row) }}" class="btn  btn-info"><i class="fa fa-pencil"
                     title="Edit"></i>
             </a>
-            <a href="{{ route('dashboard.news.delete', $row) }}" class="btn btn-danger btn-xs"><i class="fa fa-trash"
+            <a href="{{ route('dashboard.news.delete', $row) }}" class="btn  btn-danger"><i class="fa fa-trash"
                     title="Delete"></i>
             </a>
+            
         </div>
     </div>
 </x-livewire-tables::table.cell>

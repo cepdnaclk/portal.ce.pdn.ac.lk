@@ -2,11 +2,12 @@
 
 namespace App\Domains\News\Models;
 
-use App\Domains\News\Models\Traits\Scope\NewsScope;
+use App\Domains\Auth\Models\User;
 use Database\Factories\NewsFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Domains\News\Models\Traits\Scope\NewsScope;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class News.
@@ -45,6 +46,11 @@ class News extends Model
     {
         if ($this->image != null) return '/img/news/' . $this->image;
         else return config('constants.frontend.dummy_thumb');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
