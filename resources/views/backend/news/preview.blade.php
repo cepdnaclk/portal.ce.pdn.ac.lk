@@ -6,6 +6,7 @@
 </head>
 
 <body>
+    @include('includes.partials.news-preview')
     <div class="container vh-75">
         <div class="container  col-sm-12 col-md-10 col-lg-10 mx-auto mt-3 py-2">
             <span class="h3 pb-2">{{ $news->title }}</span><br>
@@ -18,6 +19,17 @@
                 {{ $news->user->name }} &middot;
             </span>
             @endif
+
+            @if($news->description)
+            @php
+                $words = str_word_count(strip_tags($news->description));
+                $read_time = ceil($words / 200);
+            @endphp
+            <span class="text-muted">
+                {{ $read_time }} mins read
+            </span>
+            @endif
+            
             <hr>
 
             @if($news->image)

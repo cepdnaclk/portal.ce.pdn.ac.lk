@@ -47,7 +47,7 @@
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
         <div class="btn-group" role="group" aria-label="">
-            <a href="{{ route('dashboard.event.preview', $row) }}" class="btn  btn-warning"  target="_blank">
+            <a href="{{ route('dashboard.event.preview', $row) }}" class="btn  btn-warning">
                 <i class="fa fa-eye" title="Preview"></i>
             </a>
             <a href="{{ route('dashboard.event.edit', $row) }}" class="btn btn-info"><i class="fa fa-pencil"
