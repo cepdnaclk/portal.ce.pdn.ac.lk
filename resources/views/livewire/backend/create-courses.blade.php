@@ -23,7 +23,7 @@
                             <h5 class="card-title">Basics</h5>
                             <div class="basics">
                                     <div class="row" id="row1">
-                                        <div class="col-6 py-2">
+                                        <div class="col-12 col-sm-6 py-2">
                                             <div class="col ps-0">
                                                 <label for="drop1">
                                                     Academic Program
@@ -39,7 +39,7 @@
                                             </select>
                                             @error('academicProgram') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
-                                        <div class="col-6 py-2">
+                                        <div class="col-12 col-sm-6 py-2">
                                             <div class="col ps-0">
                                                 <label for="drop1">Version</label>
                                             </div>
@@ -63,7 +63,7 @@
                                             </select>  
                                             @error('semester') <div class="text-danger">{{ $message }}</div> @enderror  
                                         </div>
-                                        <div class="col-3 py-2">
+                                        <div class="col-12 col-sm-3 py-2">
                                             <div class="col ps-0">
                                                 <label>Code</label>
                                             </div>
@@ -72,7 +72,7 @@
                                                 @error('code') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
-                                        <div class="col-9 py-2">
+                                        <div class="col-12 col-sm-9 py-2">
                                             <div class="col ps-0">
                                                 <label>Name</label>
                                             </div>
@@ -83,7 +83,7 @@
                                         </div>
                                     </div>
                                     <div class="row" id="row2">
-                                        <div class="col-6 py-2">
+                                        <div class="col-12 col-sm-6 py-2">
                                             <div class="col ps-0">
                                                 <label for="drop1">Type</label>
                                             </div>
@@ -95,7 +95,7 @@
                                             </select> 
                                             @error('type') <div class="text-danger">{{ $message }}</div> @enderror                                           
                                         </div>
-                                        <div class="col-6 py-2">
+                                        <div class="col-12 col-sm-6 py-2">
                                             <div class="col ps-0">
                                                 <label>Credits</label>
                                             </div>
@@ -122,7 +122,7 @@
 
                                     
 
-                                    <div class="div my-3">
+                                    <div class="div mb-1 my-2">
                                         <div class="row">
                                             <x-backend.time_allocation></x-backend.time_allocation>
                                             <x-backend.marks_allocation></x-backend.marks_allocation>
