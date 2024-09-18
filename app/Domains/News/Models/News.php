@@ -49,9 +49,9 @@ class News extends Model
         else return config('constants.frontend.dummy_thumb');
     }
 
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class,'created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
