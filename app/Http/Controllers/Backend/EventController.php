@@ -36,7 +36,6 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        Log::debug('Entering EventController@store', ['request' => $request->all()]);
         
         $data = request()->validate([
             'title' => 'string|required',
@@ -51,11 +50,8 @@ class EventController extends Controller
             'location' => 'string|required',
         ]);
 
-        Log::debug('Validated data', ['data' => $data]);
-
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb(null, $request->image, "events");
-            Log::debug('Image uploaded', ['image' => $data['image']]);
         }
 
         try {
@@ -65,7 +61,6 @@ class EventController extends Controller
             $event->created_by = Auth::user()->id;
             $event->save();
 
-            Log::info('Event created successfully', ['event_id' => $event->id]);
             return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event was created !');
         } catch (\Exception $ex) {
             Log::error('Failed to create event', ['error' => $ex->getMessage()]);
@@ -97,7 +92,6 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        Log::debug('Entering EventController@update', ['event_id' => $event->id, 'request' => $request->all()]);
         
         $data = request()->validate([
             'title' => ['required'],
@@ -112,11 +106,9 @@ class EventController extends Controller
             'location' => 'string|required',
         ]);
 
-        Log::debug('Validated data', ['data' => $data]);
 
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb($event->image, $request->image, "events");
-            Log::debug('Image uploaded', ['image' => $data['image']]);
         } else {
             $data['image'] = $event->image;
         }
@@ -128,7 +120,6 @@ class EventController extends Controller
             $event->created_by = Auth::user()->id;
             $event->save();
 
-            Log::info('Event updated successfully', ['event_id' => $event->id]);
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was updated !');
         } catch (\Exception $ex) {
             Log::error('Failed to update event', ['event_id' => $event->id, 'error' => $ex->getMessage()]);
