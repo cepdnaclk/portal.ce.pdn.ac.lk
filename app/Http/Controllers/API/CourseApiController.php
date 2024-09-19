@@ -12,35 +12,33 @@ class CourseApiController extends Controller
 {
     public function index(Request $request)
     {
-        Log::debug('Entering CourseApiController@index', ['request' => $request->all()]);
+        try {
+            $query = Course::where('academic_program', 'Undergraduate');
 
-        $query = Course::where('academic_program', 'Undergraduate');
+            if ($request->has('curriculum')) {
+                $query->where('version', $request->curriculum);
+            }
 
-        if ($request->has('curriculum')) {
-            $query->where('version', $request->curriculum);
-            Log::debug('Filtering by curriculum', ['curriculum' => $request->curriculum]);
+            if ($request->has('semester')) {
+                $query->where('semester_id', $request->semester);
+            }
+
+            if ($request->has('type')) {
+                $query->where('type', $request->type);
+            }
+
+            $courses = $query->paginate(20);
+
+            if ($courses->isEmpty()) {
+                return response()->json([
+                    'message' => 'Course not found',                  
+                ], 404);
+            }
+
+            return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            Log::error('Error in CourseApiController@index', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'An error occurred while fetching courses'], 500);
         }
-
-        if ($request->has('semester')) {
-            $query->where('semester_id', $request->semester);
-            Log::debug('Filtering by semester', ['semester' => $request->semester]);
-        }
-
-        if ($request->has('type')) {
-            $query->where('type', $request->type);
-            Log::debug('Filtering by type', ['type' => $request->type]);
-        }
-
-        $courses = $query->paginate(20);
-        Log::debug('Courses fetched', ['count' => $courses->count()]);
-
-        if ($courses->isEmpty()) {
-            Log::info('No courses found for the given criteria');
-            return response()->json([
-                'message' => 'Course not found',                  
-            ], 404);
-        }
-
-        return CourseResource::collection($courses);
     }
 }

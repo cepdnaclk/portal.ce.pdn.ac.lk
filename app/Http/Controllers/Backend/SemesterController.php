@@ -17,10 +17,13 @@ class SemesterController extends Controller
      */
     public function index()
     {
-        Log::debug('Entering SemesterController@index');
-        $semesters = Semester::all();
-        Log::debug('Fetched all semesters', ['count' => $semesters->count()]);
-        return view('backend.semesters.index', compact('semesters'));
+        try {
+            $semesters = Semester::all();
+            return view('backend.semesters.index', compact('semesters'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching semesters: ' . $e->getMessage());
+            return abort(500);
+        }
     }
 
     /**
@@ -30,8 +33,12 @@ class SemesterController extends Controller
      */
     public function create()
     {
-        Log::debug('Entering SemesterController@create');
-        return view('backend.semesters.create');
+        try {
+            return view('backend.semesters.create');
+        } catch (\Exception $e) {
+            Log::error('Error loading semester creation page: ' . $e->getMessage());
+            return abort(500);
+        }
     }
 
     /**
@@ -42,7 +49,6 @@ class SemesterController extends Controller
      */
     public function store(Request $request)
     {
-        Log::debug('Entering SemesterController@store', ['request' => $request->all()]);
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'version' => ['required', 'integer', Rule::in(array_keys(Semester::getVersions()))],
@@ -54,13 +60,12 @@ class SemesterController extends Controller
                 'unique:semesters', 
             ],
         ]);
-        Log::debug('Validated data', ['data' => $validatedData]);
+       
         try {
             $validatedData['created_by'] = auth()->user()->id;
             $validatedData['updated_by'] = auth()->user()->id;
             $validatedData['url'] = urlencode(str_replace(" ", "-", $request->url));
             $semester = Semester::create($validatedData);
-            Log::info('Semester created successfully', ['semester_id' => $semester->id]);
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester created successfully.');
         } catch (\Exception $e) {
             Log::error('Error in storing semester: '.$e->getMessage());
@@ -76,8 +81,12 @@ class SemesterController extends Controller
      */
     public function edit(Semester $semester)
     {
-        Log::debug('Entering SemesterController@edit', ['semester_id' => $semester->id]);
-        return view('backend.semesters.edit', compact('semester'));
+        try{
+            return view('backend.semesters.edit', compact('semester'));
+        } catch (\Exception $e) {
+            Log::error('Error loading semester edit page: ' . $e->getMessage());
+            return abort(500);
+        }
     }
 
     /**
@@ -89,7 +98,6 @@ class SemesterController extends Controller
      */
     public function update(Request $request, Semester $semester)
     {
-        Log::debug('Entering SemesterController@update', ['semester_id' => $semester->id, 'request' => $request->all()]);
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'version' => ['required', 'integer', Rule::in(array_keys(Semester::getVersions()))],
@@ -101,12 +109,11 @@ class SemesterController extends Controller
                 Rule::unique('semesters', 'url')->ignore($semester->id),
             ],
         ]);
-        Log::debug('Validated data', ['data' => $validatedData]);
+        
         try {
             $validatedData['updated_by'] = auth()->user()->id;
             $validatedData['url'] = urlencode(str_replace(" ", "-", $request->url));
             $semester->update($validatedData);
-            Log::info('Semester updated successfully', ['semester_id' => $semester->id]);
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester updated successfully.');
         } catch (\Exception $e) { 
             Log::error('Error in updating semester: '.$e->getMessage());  
@@ -122,16 +129,13 @@ class SemesterController extends Controller
      */
     public function delete(Semester $semester)
     {
-        Log::debug('Entering SemesterController@delete', ['semester_id' => $semester->id]);
         return view('backend.semesters.delete', compact('semester'));
     }
 
     public function destroy(Semester $semester)
     {
-        Log::debug('Entering SemesterController@destroy', ['semester_id' => $semester->id]);
         try{
             $semester->delete();
-            Log::info('Semester deleted successfully', ['semester_id' => $semester->id]);
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Error in deleting semester: '.$e->getMessage());

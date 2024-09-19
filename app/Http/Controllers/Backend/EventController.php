@@ -20,8 +20,12 @@ class EventController extends Controller
      */
     public function create()
     {
-        Log::debug('Entering EventController@create');
-        return view('backend.event.create');
+        try {
+            return view('backend.event.create');
+        } catch (\Exception $ex) {
+            Log::error('Failed to load event creation page', ['error' => $ex->getMessage()]);
+            return abort(500);
+        }
     }
 
     /**
@@ -76,8 +80,12 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        Log::debug('Entering EventController@edit', ['event_id' => $event->id]);
-        return view('backend.event.edit', compact('event'));
+        try{
+            return view('backend.event.edit', compact('event'));
+        } catch (\Exception $ex) {
+            Log::error('Failed to edit event', ['error' => $ex->getMessage()]);
+            return abort(500);
+        };
     }
 
     /**
@@ -137,7 +145,6 @@ class EventController extends Controller
      */
     public function delete(Event $event)
     {
-        Log::debug('Entering EventController@delete', ['event_id' => $event->id]);
         return view('backend.event.delete', compact('event'));
     }
 
@@ -149,10 +156,8 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        Log::debug('Entering EventController@destroy', ['event_id' => $event->id]);
         try {
             $event->delete();
-            Log::info('Event deleted successfully', ['event_id' => $event->id]);
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was deleted !');
         } catch (\Exception $ex) {
             Log::error('Failed to delete event', ['event_id' => $event->id, 'error' => $ex->getMessage()]);
@@ -162,19 +167,14 @@ class EventController extends Controller
     // Private function to handle deleting images
     private function deleteThumb($currentURL)
     {
-        Log::debug('Entering EventController@deleteThumb', ['currentURL' => $currentURL]);
         if ($currentURL != null) {
             $oldImage = public_path($currentURL);
-            if (File::exists($oldImage)) {
-                unlink($oldImage);
-                Log::debug('Thumbnail deleted', ['path' => $oldImage]);
-            }
+            if (File::exists($oldImage))  unlink($oldImage);     
         }
     }
     // Private function to handle uploading  images
     private function uploadThumb($currentURL, $newImage, $folder)
     {
-        Log::debug('Entering EventController@uploadThumb', ['currentURL' => $currentURL, 'folder' => $folder]);
         $this->deleteThumb($currentURL);
 
         $imageName = time() . '.' . $newImage->extension();
@@ -183,7 +183,6 @@ class EventController extends Controller
         $image = Image::make(public_path($imagePath));
         $image->save();
 
-        Log::debug('Thumbnail uploaded', ['path' => $imagePath]);
         return $imageName;
     }
 }
