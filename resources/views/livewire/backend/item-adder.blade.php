@@ -58,11 +58,10 @@
         }
     }
 }"
->
-    <!-- don't remove this template tag. if you do Close All button won't be rendered initially when items exists -->
-    <template x-for="(item, index) in items">   
-    </template>
-
+x-cloak>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
     <h5>{{ ucfirst($type) }}</h5>
     <div class="d-flex justify-content-between mb-3">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add{{$type}}ItemModal" @click="userInput = '';document.getElementById('add{{$type}}ItemModalLabel').innerHTML = 'Add {{$type}}';isEditing=false">
@@ -93,14 +92,14 @@
         </div>
     </div> 
     
-    <ul class="list-group" :style="{padding-left: 0;margin-left: 0;}">
+    <ul class="list-group" :style="{padding-left: 0;margin-left: 0;}" >
         <template x-for="(item, index) in items" :key="item + '-' + index">
-            <li class="list-group-item position-relative"
-                :style="{ backgroundColor: selectedItem === index ? '#9EC5FE' : '' }"
+            <li class="list-group-item position-relative" style="padding: 8px;"
+                :style="{ backgroundColor: selectedItem === index ? '#cfe2ff' : '' }"
                 @click="selectedItem = selectedItem === index ? null : index">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
                     <div class="mb-2 mb-md-0 me-md-3">
-                        <strong x-text="index + 1 + '. '"></strong>
+                        <strong x-text="index + 1 + '.'"></strong>
                         <span x-text="item"></span>
                     </div>
 
