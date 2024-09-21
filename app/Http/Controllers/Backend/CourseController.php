@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
 use App\Domains\Course\Models\Course;
+use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller
 {
@@ -16,8 +17,13 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::all();
-        return view('backend.courses.index', compact('courses'));
+        try {
+            $courses = Course::all();
+            return view('backend.courses.index', compact('courses'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching courses: ' . $e->getMessage());
+            return abort(500);
+        }
     }
 
     /**
@@ -27,7 +33,12 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return view('backend.courses.create');
+        try {
+            return view('backend.courses.create');
+        } catch (\Exception $e) {
+            Log::error('Error loading course creation page: ' . $e->getMessage());
+            return abort(500);
+        }
     }
 
     /**
@@ -54,13 +65,15 @@ class CourseController extends Controller
             'urls' => 'nullable|json',
             'references' => 'nullable|json',
         ]);
+        
         try {
-            Course::create($validatedData);
+            $course = Course::create($validatedData);
+            return redirect()->route('dashboard.courses.index')->with('success', 'Course created successfully.');
         } catch (\Exception $e) {
+            Log::error('Error creating course: ' . $e->getMessage());
             return abort(500);
         }
     }
-
 
     /**
      * Show the form for editing the specified course.
@@ -70,9 +83,13 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        return view('backend.courses.edit', compact('course'));
+        try {
+            return view('backend.courses.edit', compact('course'));
+        } catch (\Exception $e) {
+            Log::error('Error loading course edit page: ' . $e->getMessage());
+            return abort(500);
+        }
     }
-
     /**
      * Update the specified course in storage.
      *
@@ -101,7 +118,9 @@ class CourseController extends Controller
         ]);
         try {
             $course->update($validatedData);
+            return redirect()->route('dashboard.courses.index')->with('success', 'Course updated successfully.');
         } catch (\Exception $e) {
+            Log::error('Error updating course: ' . $e->getMessage());
             return abort(500);
         }
     }
@@ -112,7 +131,6 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-
     public function delete(Course $course)
     {
         return view('backend.courses.delete', compact('course'));
@@ -124,6 +142,7 @@ class CourseController extends Controller
             $course->delete();
             return redirect()->route('dashboard.courses.index')->with('success', 'Course deleted successfully.');
         } catch (\Exception $e) {
+            Log::error('Error in deleting course: ' . $e->getMessage());
             return abort(500);
         }
     }
