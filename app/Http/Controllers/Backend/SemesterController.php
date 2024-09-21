@@ -132,7 +132,7 @@ class SemesterController extends Controller
 
         if ($courses->count() > 0) {
             return redirect()->route('dashboard.semesters.index')
-                ->withErrors('Cannot delete semester as it has associated courses. Please reassign or delete these courses first.');
+                ->withErrors('Can not delete the semester as it already has associated courses. Please reassign or delete those courses first.');
         }
 
         
