@@ -105,12 +105,6 @@
         document.getElementById('submit-button').addEventListener('click', function(event) {
             // Get Quill content
             var quillContent = quill.root.innerHTML;
-
-            // Check if the content is just the empty paragraph
-            if (quillContent === '<p><br></p>') {
-                quillContent = ''; // Set it to an empty string
-            }
-
             // Populate hidden form field with quill data
             var description = document.querySelector('textarea[name=description]');
             description.value = quillContent;
