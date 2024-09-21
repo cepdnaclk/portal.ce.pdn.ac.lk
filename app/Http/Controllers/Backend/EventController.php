@@ -36,7 +36,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $data = request()->validate([
             'title' => 'string|required',
             'url' => ['required', 'unique:events'],
@@ -75,7 +75,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        try{
+        try {
             return view('backend.event.edit', compact('event'));
         } catch (\Exception $ex) {
             Log::error('Failed to edit event', ['error' => $ex->getMessage()]);
@@ -92,7 +92,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        
+
         $data = request()->validate([
             'title' => ['required'],
             'url' => ['required', Rule::unique('events')->ignore($event->id)],
@@ -160,7 +160,7 @@ class EventController extends Controller
     {
         if ($currentURL != null) {
             $oldImage = public_path($currentURL);
-            if (File::exists($oldImage))  unlink($oldImage);     
+            if (File::exists($oldImage))  unlink($oldImage);
         }
     }
     // Private function to handle uploading  images
