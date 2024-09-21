@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Domains\Semester\Models\Semester;
+use App\Domains\Course\Models\Course;
 use Illuminate\Support\Facades\Log;
 
 class SemesterController extends Controller
@@ -127,13 +128,29 @@ class SemesterController extends Controller
      * @param  \App\Domains\Semester\Models\Semester  $semester
      * @return \Illuminate\Http\Response
      */
-    public function delete(Semester $semester)
-    {
-        return view('backend.semesters.delete', compact('semester'));
-    }
+     public function delete(Semester $semester)
+     {
+         $courses = Course::where('semester_id', $semester->id)->get();
+     
+         if ($courses->count() > 0) {
+             return view('backend.semesters.delete', compact('semester', 'courses'));
+         }
+     
+         return view('backend.semesters.delete', compact('semester','courses'));
+     }
+
 
     public function destroy(Semester $semester)
     {
+        
+        $courses = Course::where('semester_id', $semester->id)->get();
+
+        if ($courses->count() > 0) {
+            return redirect()->route('dashboard.semesters.index')
+                ->withErrors('Can not delete the semester as it already has associated courses. Please reassign or delete those courses first.');
+        }
+
+        
         try{
             $semester->delete();
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester deleted successfully.');
