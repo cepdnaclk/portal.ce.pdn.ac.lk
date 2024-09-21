@@ -20,7 +20,12 @@ class EventController extends Controller
      */
     public function create()
     {
-        return view('backend.event.create');
+        try {
+            return view('backend.event.create');
+        } catch (\Exception $ex) {
+            Log::error('Failed to load event creation page', ['error' => $ex->getMessage()]);
+            return abort(500);
+        }
     }
 
     /**
@@ -31,6 +36,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        
         $data = request()->validate([
             'title' => 'string|required',
             'url' => ['required', 'unique:events'],
@@ -43,6 +49,7 @@ class EventController extends Controller
             'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
             'location' => 'string|required',
         ]);
+
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb(null, $request->image, "events");
         }
@@ -56,11 +63,10 @@ class EventController extends Controller
 
             return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event was created !');
         } catch (\Exception $ex) {
-            Log::error($ex->getMessage());
+            Log::error('Failed to create event', ['error' => $ex->getMessage()]);
             return abort(500);
         }
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -69,7 +75,12 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        return view('backend.event.edit', compact('event'));
+        try{
+            return view('backend.event.edit', compact('event'));
+        } catch (\Exception $ex) {
+            Log::error('Failed to edit event', ['error' => $ex->getMessage()]);
+            return abort(500);
+        };
     }
 
     /**
@@ -81,10 +92,10 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        
         $data = request()->validate([
             'title' => ['required'],
-            'url' =>
-            ['required', Rule::unique('event')->ignore($event->id)],
+            'url' => ['required', Rule::unique('events')->ignore($event->id)],
             'published_at' => 'required|date_format:Y-m-d',
             'description' => 'string|required',
             'enabled' => 'nullable',
@@ -94,6 +105,8 @@ class EventController extends Controller
             'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
             'location' => 'string|required',
         ]);
+
+
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb($event->image, $request->image, "events");
         } else {
@@ -109,9 +122,11 @@ class EventController extends Controller
 
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was updated !');
         } catch (\Exception $ex) {
+            Log::error('Failed to update event', ['event_id' => $event->id, 'error' => $ex->getMessage()]);
             return abort(500);
         }
     }
+
 
     /**
      * Confirm to delete the specified resource from storage.
@@ -136,23 +151,21 @@ class EventController extends Controller
             $event->delete();
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was deleted !');
         } catch (\Exception $ex) {
+            Log::error('Failed to delete event', ['event_id' => $event->id, 'error' => $ex->getMessage()]);
             return abort(500);
         }
     }
-
     // Private function to handle deleting images
     private function deleteThumb($currentURL)
     {
         if ($currentURL != null) {
             $oldImage = public_path($currentURL);
-            if (File::exists($oldImage)) unlink($oldImage);
+            if (File::exists($oldImage))  unlink($oldImage);     
         }
     }
-
     // Private function to handle uploading  images
     private function uploadThumb($currentURL, $newImage, $folder)
     {
-        // Delete the existing image
         $this->deleteThumb($currentURL);
 
         $imageName = time() . '.' . $newImage->extension();
