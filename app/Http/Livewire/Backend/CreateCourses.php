@@ -27,6 +27,7 @@ class CreateCourses extends Component
     public $name;
     public $credits,$faq_page,$content;
     public $time_allocation;
+    public $module_time_allocation;
     public $marks_allocation;
 
     //2nd form step
@@ -62,8 +63,8 @@ class CreateCourses extends Component
             'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
             'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
             'modules' => 'nullable|array',
-            'modules.*.name' => 'required|string|min:3|max:255',
-            'modules.*.description' => 'required|string|min:10',
+            'modules.*.name' => 'required|string|max:255',
+            'modules.*.description' => 'nullable|string',
             'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
             'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
             'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
@@ -163,6 +164,7 @@ class CreateCourses extends Component
         $this->academicProgramsList = Course::getAcademicPrograms();
         $this->time_allocation = Course::getTimeAllocation();
         $this->marks_allocation = Course::getMarksAllocation();
+        $this->module_time_allocation = Course::getTimeAllocation();
     }
 
     public function updateItems($type,$newItems){
@@ -223,11 +225,9 @@ class CreateCourses extends Component
 
     protected function storeCourse()
     {
-        \Log::info("storeCourse method called");
-        
+        \Log::info("storeCourse method called");  
         try {
             \DB::beginTransaction();
-
             $course = Course::create([
                 'academic_program' => $this->academicProgram,
                 'semester_id' => (int)$this->semester,
@@ -246,7 +246,6 @@ class CreateCourses extends Component
                 'created_by' => auth()->id(),
                 'updated_by' => auth()->id()
             ]);
-
             \Log::info("Course created with ID: " . $course->id);
 
             if (empty($this->modules)) {
@@ -289,6 +288,7 @@ class CreateCourses extends Component
         $this->content = '';
         $this->time_allocation = Course::getTimeAllocation();
         $this->marks_allocation = Course::getMarksAllocation();
+        $this->module_time_allocation = Course::getTimeAllocation();
         $this->objectives = '';
         $this->ilos = [
             'knowledge' => [],
