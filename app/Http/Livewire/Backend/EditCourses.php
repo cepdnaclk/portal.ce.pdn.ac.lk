@@ -28,6 +28,7 @@ class EditCourses extends Component
     public $name;
     public $credits, $faq_page, $content;
     public $time_allocation;
+    public $module_time_allocation;
     public $marks_allocation;
 
     // 2nd form step
@@ -63,8 +64,8 @@ class EditCourses extends Component
             'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
             'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
             'modules' => 'nullable|array',
-            'modules.*.name' => 'required|string|min:3|max:255',
-            'modules.*.description' => 'required|string|min:10',
+            'modules.*.name' => 'required|string|max:255',
+            'modules.*.description' => 'nullable|string',
             'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
             'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
             'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
@@ -146,6 +147,7 @@ class EditCourses extends Component
     {
         $this->academicProgramsList = Course::getAcademicPrograms();
         $this->time_allocation = Course::getTimeAllocation();
+        $this->module_time_allocation = Course::getTimeAllocation();
         $this->marks_allocation = Course::getMarksAllocation();
         $this->course = $course;
 
@@ -220,7 +222,7 @@ class EditCourses extends Component
 
             $this->validateCurrentStep();
             $this->updateCourse();
-            $this->emit('courseUpdated');
+            return redirect()->route('dashboard.courses.index')->with('Success', 'Course updated successfully.');
         } catch (\Exception $e) {
             \Log::error("Error in update method: " . $e->getMessage());
             session()->flash('error', 'There was an error updating the course: ' . $e->getMessage());
@@ -318,6 +320,7 @@ class EditCourses extends Component
         $this->content = '';
         $this->time_allocation = Course::getTimeAllocation();
         $this->marks_allocation = Course::getMarksAllocation();
+        $this->module_time_allocation = Course::getTimeAllocation();
         $this->objectives = '';
         $this->ilos = [
             'knowledge' => [],

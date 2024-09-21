@@ -128,11 +128,6 @@
                                         <div class="row">
                                             <x-backend.time_allocation></x-backend.time_allocation>
                                             <x-backend.marks_allocation></x-backend.marks_allocation>
-                                            {{-- @if($errors->has('marks_allocation.total'))
-                                                <div class="alert alert-danger">
-                                                    {{ $errors->first('marks_allocation.total') }}
-                                                </div>
-                                            @endif --}}
                                         </div>
                                     </div>
                             </div>
@@ -194,8 +189,7 @@
                             <h5 class="card-title">Modules & References</h5>
 
                             <x-backend.module></x-backend.module>
-
-                            <h6>References</h6>
+                            <br>
                             @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
                         </div>
                     </div>
@@ -235,16 +229,3 @@
         </div>
     </x-slot>
 </x-backend.card>
-
-<script>
-    document.addEventListener('livewire:load', function () {
-        Livewire.on('courseUpdated', function () {
-            Swal.fire({
-                title: 'Course Updated!',
-                text: 'The course has been successfully updated.',
-                icon: 'success',
-                confirmButtonText: 'Great'
-            });
-        });
-    });
-</script>
