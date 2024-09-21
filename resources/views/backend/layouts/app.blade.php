@@ -49,13 +49,12 @@
     </div><!--c-wrapper-->
 
     @stack('before-scripts')
+    <livewire:scripts />
     <script src="{{ mix('js/manifest.js') }}"></script>
     <script src="{{ mix('js/vendor.js') }}"></script>
     <script src="{{ mix('js/backend.js') }}"></script>
-    <livewire:scripts />
     @stack('after-scripts')
 
-    <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
         var toolbarOptions = [

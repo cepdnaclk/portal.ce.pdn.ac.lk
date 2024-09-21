@@ -128,11 +128,6 @@
                                         <div class="row">
                                             <x-backend.time_allocation></x-backend.time_allocation>
                                             <x-backend.marks_allocation></x-backend.marks_allocation>
-                                            {{-- @if($errors->has('marks_allocation.total'))
-                                                <div class="alert alert-danger">
-                                                    {{ $errors->first('marks_allocation.total') }}
-                                                </div>
-                                            @endif --}}
                                         </div>
                                     </div>
                             </div>
@@ -165,7 +160,7 @@
                                 </div>
                             </div>
 
-                            <div class="h4 font-weight-bold mt-5">
+                            <div class="h4 font-weight-bold">
                                 ILOs:
                                 <hr>
                             </div>
@@ -186,7 +181,8 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Modules & References</h5>
-
+                            
+                            <x-backend.module></x-backend.module>
                             @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
 
                         </div>
