@@ -124,8 +124,18 @@ class SemesterController extends Controller
          return view('backend.semesters.delete', compact('semester','courses'));
      }
 
+
     public function destroy(Semester $semester)
     {
+        
+        $courses = Course::where('semester_id', $semester->id)->get();
+
+        if ($courses->count() > 0) {
+            return redirect()->route('dashboard.semesters.index')
+                ->withErrors('Cannot delete semester as it has associated courses. Please reassign or delete these courses first.');
+        }
+
+        
         try{
             $semester->delete();
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester deleted successfully.');
