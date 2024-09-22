@@ -137,79 +137,74 @@
                                     </div>
                                 </div>
 
-
-
-                                <div class="div mb-1 my-2">
+                                <div class="div my-3">
                                     <div class="row">
                                         <x-backend.time_allocation></x-backend.time_allocation>
                                         <x-backend.marks_allocation></x-backend.marks_allocation>
-                                        {{-- @if ($errors->has('marks_allocation.total'))
-                                                <div class="alert alert-danger">
-                                                    {{ $errors->first('marks_allocation.total') }}
-                                                </div>
-                                            @endif --}}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            @elseif ($formStep == 2)
-                <div class="step active">
-                    <div class="card">
-                        <div class="card-body">
-                            {{-- Objectives --}}
-                            <div class="h4 font-weight-bold mt-3">
-                                Aims/Objectives:
-                                <hr>
-                            </div>
+        </div>
+    @elseif ($formStep == 2)
+        <div class="step active">
+            <div class="card">
+                <div class="card-body">
+                    {{-- Objectives --}}
+                    <div class="h4 font-weight-bold mt-3">
+                        Aims/Objectives:
+                        <hr>
+                    </div>
 
-                            {{-- objectives --}}
-                            <div class="form-group mt-3">
-                                <div class="form-floating">
-                                    {!! Form::textarea('objectives', '', [
-                                        'class' => 'form-control' . ($errors->has('objectives') ? ' is-invalid' : ''),
-                                        'id' => 'floatingTextarea',
-                                        'placeholder' => '',
-                                        'rows' => 8,
-                                        'style' => 'height: 200px;',
-                                        'wire:model.lazy' => 'objectives',
-                                    ]) !!}
-                                    <label for="floatingTextarea">Objectives</label>
-                                    @error('objectives')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="h4 font-weight-bold mt-5">
-                                ILOs:
-                                <hr>
-                            </div>
-
-                            {{-- ILO --}}
-
-                            @livewire('backend.item-adder', ['type' => 'knowledge', 'items' => $ilos['knowledge']], key('ilos-knowledge-adder'))
-
-                            @livewire('backend.item-adder', ['type' => 'skills', 'items' => $ilos['skills']], key('ilos-skill-adder'))
-
-                            @livewire('backend.item-adder', ['type' => 'attitudes', 'items' => $ilos['attitudes']], key('ilos-attitude-adder'))
-
+                    {{-- objectives --}}
+                    <div class="form-group mt-3">
+                        <div class="form-floating">
+                            {!! Form::textarea('objectives', '', [
+                                'class' => 'form-control' . ($errors->has('objectives') ? ' is-invalid' : ''),
+                                'id' => 'floatingTextarea',
+                                'placeholder' => '',
+                                'rows' => 8,
+                                'style' => 'height: 200px;',
+                                'wire:model.lazy' => 'objectives',
+                            ]) !!}
+                            <label for="floatingTextarea">Objectives</label>
+                            @error('objectives')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
-                </div>
-            @elseif ($formStep == 3)
-                <div class="step active">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Modules & References</h5>
 
-                            @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
-
-                        </div>
+                    <div class="h4 font-weight-bold">
+                        ILOs:
+                        <hr>
                     </div>
+
+                    {{-- ILO --}}
+
+                    @livewire('backend.item-adder', ['type' => 'knowledge', 'items' => $ilos['knowledge']], key('ilos-knowledge-adder'))
+
+                    @livewire('backend.item-adder', ['type' => 'skills', 'items' => $ilos['skills']], key('ilos-skill-adder'))
+
+                    @livewire('backend.item-adder', ['type' => 'attitudes', 'items' => $ilos['attitudes']], key('ilos-attitude-adder'))
+
                 </div>
-            @endif
+            </div>
+        </div>
+    @elseif ($formStep == 3)
+        <div class="step active">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Modules & References</h5>
+
+                    <x-backend.module></x-backend.module>
+                    @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
+
+                </div>
+            </div>
+        </div>
+        @endif
         </div>
     </x-slot>
 

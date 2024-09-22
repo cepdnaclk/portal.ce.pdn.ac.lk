@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Domains\Semester\Models\Semester;
+use App\Domains\Course\Models\Course;
 use Illuminate\Support\Facades\Log;
 
 class SemesterController extends Controller
@@ -17,8 +18,13 @@ class SemesterController extends Controller
      */
     public function index()
     {
-        $semesters = Semester::all();
-        return view('backend.semesters.index', compact('semesters'));
+        try {
+            $semesters = Semester::all();
+            return view('backend.semesters.index', compact('semesters'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching semesters: ' . $e->getMessage());
+            return abort(500);
+        }
     }
 
     /**
@@ -28,7 +34,12 @@ class SemesterController extends Controller
      */
     public function create()
     {
-        return view('backend.semesters.create');
+        try {
+            return view('backend.semesters.create');
+        } catch (\Exception $e) {
+            Log::error('Error loading semester creation page: ' . $e->getMessage());
+            return abort(500);
+        }
     }
 
     /**
@@ -48,13 +59,14 @@ class SemesterController extends Controller
                 'required',
                 'string',
                 'unique:semesters', 
-        ],
+            ],
         ]);
+       
         try {
             $validatedData['created_by'] = auth()->user()->id;
             $validatedData['updated_by'] = auth()->user()->id;
             $validatedData['url'] = urlencode(str_replace(" ", "-", $request->url));
-            Semester::create($validatedData);
+            $semester = Semester::create($validatedData);
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester created successfully.');
         } catch (\Exception $e) {
             Log::error('Error in storing semester: '.$e->getMessage());
@@ -62,7 +74,6 @@ class SemesterController extends Controller
         }
     }
 
-    
     /**
      * Show the form for editing the specified semester.
      *
@@ -71,7 +82,12 @@ class SemesterController extends Controller
      */
     public function edit(Semester $semester)
     {
-        return view('backend.semesters.edit', compact('semester'));
+        try{
+            return view('backend.semesters.edit', compact('semester'));
+        } catch (\Exception $e) {
+            Log::error('Error loading semester edit page: ' . $e->getMessage());
+            return abort(500);
+        }
     }
 
     /**
@@ -94,6 +110,7 @@ class SemesterController extends Controller
                 Rule::unique('semesters', 'url')->ignore($semester->id),
             ],
         ]);
+        
         try {
             $validatedData['updated_by'] = auth()->user()->id;
             $validatedData['url'] = urlencode(str_replace(" ", "-", $request->url));
@@ -111,14 +128,29 @@ class SemesterController extends Controller
      * @param  \App\Domains\Semester\Models\Semester  $semester
      * @return \Illuminate\Http\Response
      */
+     public function delete(Semester $semester)
+     {
+         $courses = Course::where('semester_id', $semester->id)->get();
+     
+         if ($courses->count() > 0) {
+             return view('backend.semesters.delete', compact('semester', 'courses'));
+         }
+     
+         return view('backend.semesters.delete', compact('semester','courses'));
+     }
 
-    public function delete(Semester $semester)
-    {
-        return view('backend.semesters.delete', compact('semester'));
-    }
 
     public function destroy(Semester $semester)
     {
+        
+        $courses = Course::where('semester_id', $semester->id)->get();
+
+        if ($courses->count() > 0) {
+            return redirect()->route('dashboard.semesters.index')
+                ->withErrors('Can not delete the semester as it already has associated courses. Please reassign or delete those courses first.');
+        }
+
+        
         try{
             $semester->delete();
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester deleted successfully.');

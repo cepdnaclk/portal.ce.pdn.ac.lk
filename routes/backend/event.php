@@ -1,6 +1,7 @@
 <?php
 
 use Tabuna\Breadcrumbs\Trail;
+use App\Domains\Event\Models\Event;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\EventController;
 
@@ -53,4 +54,9 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
     // Destroy
     Route::delete('events/{event}', [EventController::class, 'destroy'])
         ->name('event.destroy');
+
+    //Preview
+    Route::get('events/preview/{event}', function (Event $event){
+        return view('backend.event.preview', compact('event'));
+    })->name('event.preview');
 });

@@ -142,7 +142,7 @@
 
 
 
-                                <div class="div mb-1 my-2">
+                                <div class="div my-3">
                                     <div class="row">
                                         <x-backend.time_allocation></x-backend.time_allocation>
                                         <x-backend.marks_allocation></x-backend.marks_allocation>
@@ -214,8 +214,7 @@
                             <h5 class="card-title">Modules & References</h5>
 
                             <x-backend.module></x-backend.module>
-
-                            <h6>References</h6>
+                            <br>
                             @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
                         </div>
                     </div>
