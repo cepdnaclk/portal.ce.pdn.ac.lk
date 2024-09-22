@@ -8,6 +8,9 @@
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
 @endpush
 
+@push('before-scripts')
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+@endpush
 
 @section('content')
     <div>
@@ -36,7 +39,7 @@
                         ]) !!}
                     </div>
                     @error('title')
-                        <strong>{{ $message }}</strong>
+                        <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                 </div>
 
@@ -46,7 +49,7 @@
                     <div class="col-md-3">
                         {!! Form::date('published_at', $event->published_at, ['class' => 'form-control', 'required' => true]) !!}
                         @error('published_at')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -60,7 +63,7 @@
                             <span class="flex-grow-1"> {!! Form::text('url', $event->url, ['class' => 'form-control', 'required' => true]) !!}</span>
                         </div>
                         @error('url')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -68,31 +71,60 @@
                 <!-- Description -->
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
-
                     <div class="col-md-10">
-                        <div id="editor-container" style="height: auto;min-height: 200px;">{!! $event->description !!}</div>
-                        <textarea name="description" id="description" style="display:none;" required="true"></textarea>
-                        <div id="description-error" class="text-danger mt-1" style="display: none;"></div> 
-                        @error('description')
-                            <strong>{{ $message }}</strong>
-                        @enderror
+                        <div x-data="{ content: '{{$event->description}}' }" x-init="
+                            (() => {
+                                const quill = new Quill($refs.editor, {
+                                    theme: 'snow',
+                                    modules: {
+                                        toolbar: [
+                                            ['bold', 'italic', 'underline', 'strike'],
+                                            [{ 'header': 1 }, { 'header': 2 }],
+                                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                            [{ 'script': 'sub' }, { 'script': 'super' }],
+                                            [{ 'indent': '-1' }, { 'indent': '+1' }],
+                                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                                            [{ 'color': [] }, { 'background': [] }],
+                                            [{ 'align': [] }],
+                                            ['clean']
+                                        ]
+                                    }
+                                });
+                                quill.clipboard.dangerouslyPasteHTML('{{$event->description}}');
+                                quill.on('text-change', function () {
+                                    content = quill.root.innerHTML;
+                                });
+                            })();
+                        ">
+                            <div x-ref="editor" style="min-height: 200px;"></div>
+                            <textarea name="description" id="description" x-model="content" style="display: none;"></textarea>
+                            <div class="col-md-12">
+                                @error('description')
+                                    <strong>{{ $message }}</strong>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Image -->
-                <div class="form-group row">
-                    {!! Form::label('image', 'Image*', ['class' => 'col-md-2 col-form-label']) !!}
-
-                    <div class="col-md-10">
-                        <div>
-                            <img src="{{ $event->thumbURL() }}" alt="Image preview" class="pb-2"
-                                style="max-width: 150px; max-height: 150px;" />
-                        </div>
-                        {!! Form::file('image', ['accept' => '.jpeg,.png,.jpg,.gif,.svg']) !!}
+                <div class="form-group row" x-data="{ imagePreview: '{{ $event->thumbURL() }}', updatePreview(event) { 
+                    const file = event.target.files[0]; 
+                    const reader = new FileReader(); 
+                    reader.onload = (e) => { this.imagePreview = e.target.result; }; 
+                    if (file) reader.readAsDataURL(file); 
+                } }">
+                {!! Form::label('image', 'Image', ['class' => 'col-md-2 col-form-label']) !!}
+                <div class="col-md-10">
+                    <div>
+                        {!! Form::file('image', ['accept' => 'image/*', 'x-on:change' => 'updatePreview($event)']) !!}
                         @error('image')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
+                    <img class="mt-3" x-bind:src="imagePreview" alt="Image preview" style="max-width: 150px; max-height: 150px; object-fit: cover;" />
+                </div>
                 </div>
 
                 <!-- Enabled -->
@@ -104,7 +136,7 @@
                             class="form-check-input checkbox-lg" {{ $event->enabled == 1 ? 'checked' : '' }} />
                         <label class="form-check-label" for="checkEnable">Visibility</label>
                         @error('enabled')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -118,7 +150,7 @@
                             'class' => 'form-control',
                         ]) !!}
                         @error('link_url')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -132,7 +164,7 @@
                             'class' => 'form-control',
                         ]) !!}
                         @error('link_caption')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -146,7 +178,7 @@
                             'required' => true,
                         ]) !!}
                         @error('start_at')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                     <div class="col-md-6">
@@ -162,7 +194,7 @@
                             'class' => 'form-control',
                         ]) !!}
                         @error('end_at')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                     <div class="col-md-6">
@@ -180,13 +212,13 @@
                             'required' => true,
                         ]) !!}
                         @error('location')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
             </x-slot>
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right']) !!}
             </x-slot>
 
         </x-backend.card>

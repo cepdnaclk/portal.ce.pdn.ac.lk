@@ -8,6 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
 @endpush
 
+@push('before-scripts')
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+@endpush
+
 @section('content')
     <div>
         {!! Form::open([
@@ -28,9 +32,9 @@
                 <div class="form-group row">
                     {!! Form::label('title', 'Title*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        {!! Form::text('title', '', ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::text('title', '', ['class' => 'form-control']) !!}
                         @error('title')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -39,9 +43,9 @@
                 <div class="form-group row">
                     {!! Form::label('published_at', 'Publish at*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-3">
-                        {!! Form::date('published_at', date('Y-m-d'), ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::date('published_at', date('Y-m-d'), ['class' => 'form-control']) !!}
                         @error('published_at')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -52,10 +56,10 @@
                     <div class="col-md-10">
                         <div class="d-inline-flex align-items-center flex-nowrap w-100">
                             <span class="me-2">https://ce.pdn.ac.lk/news/{yyyy-mm-dd}-&nbsp;</span>
-                            <span class="flex-grow-1"> {!! Form::text('url', '', ['class' => 'form-control', 'required' => true]) !!}</span>
+                            <span class="flex-grow-1"> {!! Form::text('url', '', ['class' => 'form-control']) !!}</span>
                         </div>
                         @error('url')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -64,27 +68,65 @@
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        <div id="editor-container" style="height: auto; min-height: 200px; "></div>
-                        <textarea name="description" id="description" style="display:none;" required ='true'></textarea>
-                        <div id="description-error" class="text-danger mt-1" style="display: none;"></div> 
-                        @error('description')
-                            <strong>{{ $message }}</strong>
-                        @enderror
+                        <div x-data="{ content: '' }" x-init="
+                            (() => {
+                                const quill = new Quill($refs.editor, {
+                                    theme: 'snow',
+                                    modules: {
+                                        toolbar: [
+                                            ['bold', 'italic', 'underline', 'strike'],
+                                            [{ 'header': 1 }, { 'header': 2 }],
+                                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                            [{ 'script': 'sub' }, { 'script': 'super' }],
+                                            [{ 'indent': '-1' }, { 'indent': '+1' }],
+                                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                                            [{ 'color': [] }, { 'background': [] }],
+                                            [{ 'align': [] }],
+                                            ['clean']
+                                        ]
+                                    }
+                                });
+                
+                                quill.on('text-change', function () {
+                                    content = quill.root.innerHTML;
+                                });
+                            })();
+                        ">
+                            <div x-ref="editor" style="min-height: 200px;"></div>
+                            <textarea name="description" id="description" x-model="content" style="display: none;"></textarea>
+                            <div id="description-error" class="text-danger mt-1" style="display: none;"></div>
+                            <div class="col-md-12">
+                                @error('description')
+                                    <strong class="text-danger">{{ $message }}</strong>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
-
                 </div>
                 
 
                 <!-- Image -->
-                <div class="form-group row">
-                    {!! Form::label('image', 'Image', ['class' => 'col-md-2 col-form-label']) !!}
-                    <div class="col-md-10">
-                        {!! Form::file('image', ['accept' => 'image/*']) !!}
-                        @error('image')
-                            <strong>{{ $message }}</strong>
-                        @enderror
+                <div class="form-group row" x-data="{ imagePreview: null, updatePreview(event) { 
+                    const file = event.target.files[0]; 
+                    const reader = new FileReader(); 
+                    reader.onload = (e) => { this.imagePreview = e.target.result; }; 
+                    if (file) reader.readAsDataURL(file); 
+                } }">
+                {!! Form::label('image', 'Image', ['class' => 'col-md-2 col-form-label']) !!}
+                <div class="col-md-10">
+                    {!! Form::file('image', ['accept' => 'image/*', 'x-on:change' => 'updatePreview($event)']) !!}
+                    @error('image')
+                        <strong class="text-danger">{{ $message }}</strong>
+                    @enderror
+                    
+                    <div x-show="imagePreview" style="margin-top: 10px;">
+                        <img x-bind:src="imagePreview" alt="Image Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;" />
                     </div>
                 </div>
+                </div>
+
+
 
                 <!-- Enabled -->
                 <div class="form-group row">
@@ -95,7 +137,7 @@
                             class="form-check-input checkbox-lg" checked />
                         <label class="form-check-label" for="checkEnable">Visibility</label>
                         @error('enabled')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -106,7 +148,7 @@
                     <div class="col-md-10">
                         {!! Form::text('link_url', '', ['class' => 'form-control']) !!}
                         @error('link_url')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -117,7 +159,7 @@
                     <div class="col-md-10">
                         {!! Form::text('link_caption', '', ['class' => 'form-control']) !!}
                         @error('link_caption')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -125,7 +167,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
+                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right']) !!}
             </x-slot>
 
         </x-backend.card>
