@@ -22,120 +22,137 @@
                         <div class="card-body">
                             <h5 class="card-title">Basics</h5>
                             <div class="basics">
-                                    <div class="row" id="row1">
-                                        <div class="col-12 col-sm-6 py-2">
-                                            <div class="col ps-0">
-                                                <label for="drop1">
-                                                    Academic Program
-                                                    <span title="e.g., Undergraduate or Postgraduate" 
-                                                        style="cursor: pointer;">&#x1F6C8;</span>
-                                                </label>
-                                            </div>
-                                            <select class="form-select" wire:model="academicProgram">
-                                                <option style="display:none" selected></option>
-                                                @foreach($academicProgramsList as $academicProgramId => $academicProgramTitle)
-                                                    <option value="{{ $academicProgramId }}">{{ $academicProgramTitle }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('academicProgram') <div class="text-danger">{{ $message }}</div> @enderror
+                                <div class="row" id="row1">
+                                    <div class="col-12 col-sm-6 py-2">
+                                        <div class="col ps-0">
+                                            <label for="drop1">
+                                                Academic Program
+                                            </label>
                                         </div>
-                                        <div class="col-12 col-sm-6 py-2">
-                                            <div class="col ps-0">
-                                                <label for="drop1">Version</label>
-                                            </div>
-                                            <select class="form-select" wire:model="version">
-                                                <option style="display:none" selected></option>
-                                                @foreach(App\Domains\Course\Models\Course::getVersions() as $key => $value)
-                                                    <option value="{{ $key }}">{{ $value }}</option>
-                                                @endforeach
-                                            </select>                                                                                     
-                                            @error('version') <div class="text-danger">{{ $message }}</div> @enderror
+                                        <select class="form-select" wire:model="academicProgram">
+                                            <option style="display:none" selected></option>
+                                            @foreach ($academicProgramsList as $academicProgramId => $academicProgramTitle)
+                                                <option value="{{ $academicProgramId }}">{{ $academicProgramTitle }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('academicProgram')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-12 col-sm-6 py-2">
+                                        <div class="col ps-0">
+                                            <label for="drop1">Version</label>
                                         </div>
-                                        <div class="col-12 py-2">
-                                            <div class="col ps-0">
-                                                <label for="drop1">Semester</label>
-                                            </div>
-                                            <select class="form-select" wire:model="semester">
-                                                <option style="display:none" selected></option>
-                                                @foreach($semestersList as $semesterId => $semesterTitle)
-                                                    <option value="{{ $semesterId }}">{{ $semesterTitle }}</option>
-                                                @endforeach
-                                            </select>  
-                                            @error('semester') <div class="text-danger">{{ $message }}</div> @enderror  
+                                        <select class="form-select" wire:model="version">
+                                            <option style="display:none" selected></option>
+                                            @foreach (App\Domains\Course\Models\Course::getVersions() as $key => $value)
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('version')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-12 py-2">
+                                        <div class="col ps-0">
+                                            <label for="drop1">Semester</label>
                                         </div>
-                                        <div class="col-12 col-sm-3 py-2">
-                                            <div class="col ps-0">
-                                                <label>Code</label>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" wire:model.lazy = "code">
-                                                @error('code') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
+                                        <select class="form-select" wire:model="semester">
+                                            <option style="display:none" selected></option>
+                                            @foreach ($semestersList as $semesterId => $semesterTitle)
+                                                <option value="{{ $semesterId }}">{{ $semesterTitle }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('semester')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-12 col-sm-3 py-2">
+                                        <div class="col ps-0">
+                                            <label>Code</label>
                                         </div>
-                                        <div class="col-12 col-sm-9 py-2">
-                                            <div class="col ps-0">
-                                                <label>Name</label>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" wire:model.lazy = "name"
-                                                    placeholder="Database Systems">
-                                                    @error('name') <div class="text-danger">{{ $message }}</div> @enderror
-                                            </div>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" wire:model.lazy = "code">
+                                            @error('code')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
-
-                                    <div class="row" id="row2">
-                                        <div class="col-12 col-sm-6 py-2">
-                                            <div class="col ps-0">
-                                                <label for="drop1">Type</label>
-                                            </div>
-                                            <select class="form-select" wire:model="type">
-                                                <option style="display:none" selected></option>
-                                                @foreach(App\Domains\Course\Models\Course::getTypes() as $key => $value)
-                                                    <option value="{{ $key }}">{{ $value }}</option>
-                                                @endforeach
-                                            </select> 
-                                            @error('type') <div class="text-danger">{{ $message }}</div> @enderror                                           
+                                    <div class="col-12 col-sm-9 py-2">
+                                        <div class="col ps-0">
+                                            <label>Name</label>
                                         </div>
-                                        <div class="col-12 col-sm-6 py-2">
-                                            <div class="col ps-0">
-                                                <label>Credits</label>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" wire:model.lazy ="credits">
-                                                @error('credits') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-12 py-2">
-                                            <div class="col ps-0">
-                                                <label>FAQ page</label>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" wire:model.lazy = "faq_page"
-                                                    placeholder="https://www.url.com">
-                                                @error('faq_page') <div class="text-danger">{{ $message }}</div> @enderror
-                                            </div>
-                                        </div>
-                                        <div class="my-2" id="contentarea">
-                                            <label for="contentTextarea">Content</label>
-                                            <textarea class="form-control" id="contentTextarea" wire:model.lazy = "content" rows="3"></textarea>
-                                            @error('content') <div class="text-danger">{{ $message }}</div> @enderror
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" wire:model.lazy = "name"
+                                                placeholder="Database Systems">
+                                            @error('name')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row" id="row2">
+                                    <div class="col-12 col-sm-6 py-2">
+                                        <div class="col ps-0">
+                                            <label for="drop1">Type</label>
+                                        </div>
+                                        <select class="form-select" wire:model="type">
+                                            <option style="display:none" selected></option>
+                                            @foreach (App\Domains\Course\Models\Course::getTypes() as $key => $value)
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('type')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-12 col-sm-6 py-2">
+                                        <div class="col ps-0">
+                                            <label>Credits</label>
+                                        </div>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" wire:model.lazy ="credits">
+                                            @error('credits')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-12 py-2">
+                                        <div class="col ps-0">
+                                            <label>FAQ page</label>
+                                        </div>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" wire:model.lazy = "faq_page"
+                                                placeholder="https://www.url.com">
+                                            @error('faq_page')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="my-2" id="contentarea">
+                                        <label for="contentTextarea">Content</label>
+                                        <textarea class="form-control" id="contentTextarea" wire:model.lazy = "content" rows="3"></textarea>
+                                        @error('content')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
 
 
 
-                                    <div class="div mb-1 my-2">
-                                        <div class="row">
-                                            <x-backend.time_allocation></x-backend.time_allocation>
-                                            <x-backend.marks_allocation></x-backend.marks_allocation>
-                                            {{-- @if($errors->has('marks_allocation.total'))
+                                <div class="div mb-1 my-2">
+                                    <div class="row">
+                                        <x-backend.time_allocation></x-backend.time_allocation>
+                                        <x-backend.marks_allocation></x-backend.marks_allocation>
+                                        {{-- @if ($errors->has('marks_allocation.total'))
                                                 <div class="alert alert-danger">
                                                     {{ $errors->first('marks_allocation.total') }}
                                                 </div>
                                             @endif --}}
-                                        </div>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -159,10 +176,12 @@
                                         'placeholder' => '',
                                         'rows' => 8,
                                         'style' => 'height: 200px;',
-                                        'wire:model.lazy' => 'objectives'
+                                        'wire:model.lazy' => 'objectives',
                                     ]) !!}
                                     <label for="floatingTextarea">Objectives</label>
-                                    @error('objectives') <div class="text-danger">{{ $message }}</div> @enderror
+                                    @error('objectives')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -211,9 +230,9 @@
                 <div class="row">
                     <div class="col" style="padding: 0px;">
                         @if ($canUpdate)
-                                <button type="button" class="btn btn-dark" style="float: center;"
+                            <button type="button" class="btn btn-dark" style="float: center;"
                                 wire:click="update">Update & Exit</button>
-                            @endif
+                        @endif
                         <div class="btn-group" style="float: right;">
                             @if ($formStep == 1)
                                 <button type="button" class="btn btn-primary next-step"
@@ -238,8 +257,8 @@
 </x-backend.card>
 
 <script>
-    document.addEventListener('livewire:load', function () {
-        Livewire.on('courseUpdated', function () {
+    document.addEventListener('livewire:load', function() {
+        Livewire.on('courseUpdated', function() {
             Swal.fire({
                 title: 'Course Updated!',
                 text: 'The course has been successfully updated.',
