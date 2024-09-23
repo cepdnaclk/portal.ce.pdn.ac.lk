@@ -29,7 +29,7 @@ class CourseSeeder extends Seeder
             'version' => 1, 
             'content' => 'Language development, Communication through reading, Communication through listening, Communication through writing, Communication through speech',
             'objectives' => '',
-            'ilos' => json_encode(['knowledge' => 'NULL', 'skills' => 'NULL', 'attitudes' => 'NULL']),
+            'ilos' => json_encode(['knowledge' => [], 'skills' => [], 'attitudes' => []]),
             'time_allocation' => json_encode(['lecture' => '20', 'assignment' => '50' ,'tutorial' => '','practical' =>'1']),
             'marks_allocation' => json_encode([
                 
