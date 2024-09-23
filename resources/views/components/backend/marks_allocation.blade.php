@@ -1,4 +1,4 @@
-<div class="col-md-6" x-data="{ 
+<div class="col-12 col-sm-6" x-data="{ 
             marks_allocation: $wire.entangle('marks_allocation'),
             totalIsValid : true,
             isEmpty: true, // Track whether all fields are empty
@@ -18,7 +18,7 @@
                     return { valid: false, message: 'Value must be a positive integer' };
                 }
                 return { valid: true };
-              },
+            },
             calculateTotal() {
                 let total = 0;
                 let hasValue = false;

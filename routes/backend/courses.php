@@ -23,7 +23,7 @@ Route::group(['middleware' => ['permission:user.access.academic.course']], funct
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
                 ->push(__('Academic Program'), route('dashboard.academic_program.index'))
-                ->push(__('courses'), route('dashboard.courses.index'))
+                ->push(__('Courses'), route('dashboard.courses.index'))
                 ->push(__('Create'));
         });
 
@@ -37,7 +37,7 @@ Route::group(['middleware' => ['permission:user.access.academic.course']], funct
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
                 ->push(__('Academic Program'), route('dashboard.academic_program.index'))
-                ->push(__('courses'), route('dashboard.courses.index'))
+                ->push(__('Courses'), route('dashboard.courses.index'))
                 ->push(__('Edit'));
         });
 
@@ -50,12 +50,11 @@ Route::group(['middleware' => ['permission:user.access.academic.course']], funct
         ->name('courses.delete')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('courses'), route('dashboard.courses.index'))
+                ->push(__('Courses'), route('dashboard.courses.index'))
                 ->push(__('Delete'));
         });
 
     // Destroy
     Route::delete('courses/{course}', [CourseController::class, 'destroy'])
         ->name('courses.destroy');
-
 });

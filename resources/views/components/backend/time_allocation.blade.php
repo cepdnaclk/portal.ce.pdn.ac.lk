@@ -1,4 +1,4 @@
-<div class="col-md-6" x-data="{ 
+<div class="col-12 col-sm-6" x-data="{ 
         time_allocation: $wire.entangle('time_allocation'),
         isValidInput(key) {
             const value = Number(this.time_allocation[key]);
