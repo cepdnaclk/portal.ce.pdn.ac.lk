@@ -92,7 +92,7 @@ x-cloak>
         </div>
     </div> 
     
-    <ul class="list-group" :style="{padding-left: 0;margin-left: 0;}" >
+    <ul class="list-group" :style="{'padding-left': '0', 'margin-left': '0'}">
         <template x-for="(item, index) in items" :key="item + '-' + index">
             <li class="list-group-item position-relative" style="padding: 8px;"
                 :style="{ backgroundColor: selectedItem === index ? '#cfe2ff' : '' }"

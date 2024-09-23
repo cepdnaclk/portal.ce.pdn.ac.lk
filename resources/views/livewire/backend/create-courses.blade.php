@@ -204,8 +204,7 @@
                 </div>
             </div>
         </div>
-        @endif
-        </div>
+    @endif
     </x-slot>
 
     <x-slot name="footer">
