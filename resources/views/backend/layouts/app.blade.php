@@ -13,7 +13,6 @@
 
     @stack('before-styles')
     <link href="{{ mix('css/backend.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/multi-form.css') }}" rel="stylesheet" />
     <livewire:styles />
     @stack('after-styles')
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap"
@@ -58,96 +57,6 @@
     <script src="{{ mix('js/backend.js') }}"></script>
     @stack('after-scripts')
 
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script>
-        var toolbarOptions = [
-            ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-
-            [{
-                'header': 1
-            }, {
-                'header': 2
-            }], // custom button values
-            [{
-                'list': 'ordered'
-            }, {
-                'list': 'bullet'
-            }],
-            [{
-                'script': 'sub'
-            }, {
-                'script': 'super'
-            }], // superscript/subscript
-            [{
-                'indent': '-1'
-            }, {
-                'indent': '+1'
-            }], // outdent/indent
-
-            [{
-                'size': ['small', false, 'large', 'huge']
-            }], // custom dropdown
-            [{
-                'header': [1, 2, 3, 4, 5, 6, false]
-            }],
-
-            [{
-                'color': []
-            }, {
-                'background': []
-            }], // dropdown with defaults from theme
-            [{
-                'align': []
-            }],
-
-            ['clean'] // remove formatting button
-        ];
-
-        var quill = new Quill('#editor-container', {
-            theme: 'snow',
-            modules: {
-                toolbar: toolbarOptions
-            }
-        });
-
-        // Event listener for form submission
-        document.getElementById('submit-button').addEventListener('click', function(data) {
-            // Get Quill content
-            var quillContent = quill.root.innerHTML;
-
-            // Reference to the error message div and the editor container
-            var descriptionError = document.getElementById('description-error');
-            var editorContainer = document.getElementById('editor-container');
-
-            // Check if the content is just the empty paragraph or is empty
-            if (quillContent === '<p><br></p>' || quillContent.trim() === '') {
-
-                data.preventDefault();
-
-                // Show custom error message
-                descriptionError.innerHTML = 'Description is required';
-                descriptionError.style.display = 'block';
-
-                // Highlight the Quill editor by changing its border color
-                editorContainer.style.border = '2px solid red';
-
-                return;
-            }
-
-            // Populate hidden form field with Quill data
-            var description = document.querySelector('textarea[name=description]');
-            description.value = quillContent;
-        });
-
-
-        quill.on('text-change', function() {
-            var descriptionError = document.getElementById('description-error');
-            var editorContainer = document.getElementById('editor-container');
-
-            descriptionError.style.display = 'none';
-            editorContainer.style.border = '1px solid #ced4da';
-        });
-    </script>
 </body>
 
 </html>
