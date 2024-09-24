@@ -74,22 +74,21 @@
                                         </div>
                                         <div class="input-group">
                                             <input type="text" class="form-control" wire:model.lazy = "code">
-                                            @error('code')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
                                         </div>
+                                        @error('code')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                     <div class="col-12 col-sm-9 py-2">
                                         <div class="col ps-0">
                                             <label>Name</label>
                                         </div>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" wire:model.lazy = "name"
-                                                placeholder="Database Systems">
-                                            @error('name')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
+                                            <input type="text" class="form-control" wire:model.lazy = "name">
                                         </div>
+                                        @error('name')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -114,10 +113,10 @@
                                         </div>
                                         <div class="input-group">
                                             <input type="text" class="form-control" wire:model.lazy ="credits">
-                                            @error('credits')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
                                         </div>
+                                        @error('credits')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                     <div class="col-12 py-2">
                                         <div class="col ps-0">
@@ -125,11 +124,11 @@
                                         </div>
                                         <div class="input-group">
                                             <input type="text" class="form-control" wire:model.lazy = "faq_page"
-                                                placeholder="https://www.url.com">
-                                            @error('faq_page')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
+                                                placeholder="https://faq.ce.pdn.ac.lk/academics/">
                                         </div>
+                                        @error('faq_page')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="my-2" id="contentarea">
                                         <label for="contentTextarea">Content</label>
@@ -206,7 +205,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Modules & References</h5>
 
-                            <x-backend.module></x-backend.module>
+                            <x-backend.course_module></x-backend.course_module>
                             <br>
                             @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
                         </div>
