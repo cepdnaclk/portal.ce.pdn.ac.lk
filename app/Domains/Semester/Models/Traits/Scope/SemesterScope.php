@@ -30,6 +30,4 @@ trait SemesterScope
     {
         return $query->where('academic_program', $program);
     }
-
-    
 }

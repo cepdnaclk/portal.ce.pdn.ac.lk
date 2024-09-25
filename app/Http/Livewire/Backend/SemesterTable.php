@@ -27,9 +27,9 @@ class SemesterTable extends DataTableComponent
                 ->sortable(),
             Column::make("Description", "description")
                 ->searchable(),
-            // Column::make("URL", "url")
-            //     ->searchable(),
-            Column::make("Created At", "created_at")
+            Column::make("URL", "url")
+                ->searchable(),
+            Column::make("Updated by", "created_by")
                 ->sortable(),
             Column::make("Updated At", "updated_at")
                 ->sortable(),
@@ -40,7 +40,7 @@ class SemesterTable extends DataTableComponent
     public function query(): Builder
     {
         return Semester::query()
-            ->when($this->getFilter('academic_program'), fn ($query, $type) => $query->where('academic_program', $type))
+            ->when($this->getFilter('academic_program'), fn($query, $type) => $query->where('academic_program', $type))
             ->when($this->getFilter('version'), fn($query, $version) => $query->where('version', $version));
     }
 
@@ -54,7 +54,7 @@ class SemesterTable extends DataTableComponent
         foreach (Semester::getVersions() as $key => $value) {
             $versionOptions[$key] = $value;
         }
-        
+
 
         return [
             'academic_program' => Filter::make('Academic Program')

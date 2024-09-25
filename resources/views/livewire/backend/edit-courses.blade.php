@@ -32,7 +32,8 @@
                                         <select class="form-select" wire:model="academicProgram">
                                             <option style="display:none" selected></option>
                                             @foreach ($academicProgramsList as $academicProgramId => $academicProgramTitle)
-                                                <option value="{{ $academicProgramId }}">{{ $academicProgramTitle }}
+                                                <option value="{{ $academicProgramTitle }}">
+                                                    {{ $academicProgramTitle }}
                                                 </option>
                                             @endforeach
                                         </select>

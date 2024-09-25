@@ -13,14 +13,9 @@ class EventApiController extends Controller
     {
         try {
             $perPage = 20;
-            $event = Event::where('enabled', 1)->orderBy('start_at', 'desc')
-                ->paginate($perPage);
+            $event = Event::where('enabled', 1)->orderBy('start_at', 'desc')->paginate($perPage);
 
-            if ($event->count() > 0) {
-                return EventResource::collection($event);
-            } else {
-                return response()->json(['message' => 'Events not found'], 404);
-            }
+            return EventResource::collection($event);
         } catch (\Exception $e) {
             Log::error('Error in EventApiController@index', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'An error occurred while fetching events'], 500);

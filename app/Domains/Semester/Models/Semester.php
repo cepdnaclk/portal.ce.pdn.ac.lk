@@ -2,12 +2,12 @@
 
 namespace App\Domains\Semester\Models;
 
+use App\Domains\Auth\Models\User;
 use App\Domains\Semester\Models\Traits\Scope\SemesterScope;
 use Database\Factories\SemesterFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-
 
 class Semester extends Model
 {
@@ -18,13 +18,8 @@ class Semester extends Model
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
-
     protected $guarded = ['id'];
 
-
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'title' => 'string',
         'version' => 'integer',
@@ -46,26 +41,29 @@ class Semester extends Model
 
     public static function getVersions(): array
     {
+        // TODO integrate with Taxonomies 
         return [
             1 => 'Current Curriculum',
             2 => 'Curriculum - Effective from E22'
         ];
     }
 
-
-
-    // Accessor to check if this is the latest syllabus version
-    public function getIsNewSyllabusAttribute()
+    public function getLatestSyllabusAttribute()
     {
         $maxVersion = self::where('title', $this->title)->max('version');
         return $this->version === $maxVersion;
     }
 
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
+    public function createdUser()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function updatedUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'id');
+    }
+
     protected static function newFactory()
     {
         return SemesterFactory::new();

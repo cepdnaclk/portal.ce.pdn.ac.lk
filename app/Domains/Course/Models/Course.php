@@ -2,7 +2,9 @@
 
 namespace App\Domains\Course\Models;
 
+use App\Domains\Auth\Models\User;
 use App\Domains\Course\Models\Traits\Scope\CourseScope;
+use App\Domains\Semester\Models\Semester;
 use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -99,10 +101,31 @@ class Course extends Model
 
     public static function getVersions(): array
     {
+        // TODO integrate with Taxonomies 
         return [
             1 => 'Current Curriculum',
             2 => 'Curriculum - Effective from E22'
         ];
+    }
+
+    public function createdUser()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'semester_id');
+    }
+
+    public function version()
+    {
+        return $this->getVersions()[$this->version];
     }
 
     public function modules()

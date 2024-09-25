@@ -29,12 +29,6 @@ class CourseApiController extends Controller
 
             $courses = $query->paginate(20);
 
-            if ($courses->isEmpty()) {
-                return response()->json([
-                    'message' => 'Course not found',                  
-                ], 404);
-            }
-
             return CourseResource::collection($courses);
         } catch (\Exception $e) {
             Log::error('Error in CourseApiController@index', ['error' => $e->getMessage()]);

@@ -21,9 +21,9 @@ class CourseTable extends DataTableComponent
         return [
             Column::make("Code", "code")
                 ->searchable(),
-            Column::make("Name","name")
+            Column::make("Name", "name")
                 ->searchable(),
-            Column::make("Semester","semester_id")
+            Column::make("Semester", "semester")
                 ->searchable(),
             Column::make("Academic Program", "academic_program")
                 ->sortable(),
@@ -33,7 +33,9 @@ class CourseTable extends DataTableComponent
                 ->sortable(),
             Column::make("Credits", "credits")
                 ->searchable(),
-            Column::make("Created At", "created_at")
+            Column::make("Updated by", "created_by")
+                ->sortable(),
+            Column::make("Updated At", "updated_at")
                 ->sortable(),
             Column::make("Actions")
         ];
@@ -42,7 +44,7 @@ class CourseTable extends DataTableComponent
     public function query(): Builder
     {
         return Course::query()
-        ->when($this->getFilter('semester_id'), fn ($query, $type) => $query->where('semester_id', $type));
+            ->when($this->getFilter('semester_id'), fn($query, $type) => $query->where('semester_id', $type));
     }
 
     public function filters(): array
@@ -56,12 +58,10 @@ class CourseTable extends DataTableComponent
             'type' => Filter::make('Type')
                 ->select($type),
         ];
-
     }
 
     public function rowView(): string
     {
         return 'backend.courses.index-table-row';
     }
-
 }

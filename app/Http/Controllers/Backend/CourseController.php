@@ -65,7 +65,7 @@ class CourseController extends Controller
             'urls' => 'nullable|json',
             'references' => 'nullable|json',
         ]);
-        
+
         try {
             $course = Course::create($validatedData);
             return redirect()->route('dashboard.courses.index')->with('success', 'Course created successfully.');
@@ -106,8 +106,8 @@ class CourseController extends Controller
             'version' => ['required', 'integer', Rule::in(array_keys(Course::getVersions()))],
             'name' => 'required|string|max:255',
             'credits' => 'required|integer',
-            'type' => ['required',Rule::in(array_values(Course::getTypes()))],
-            'type' => ['required',Rule::in(array_values(Course::getTypes()))],
+            'type' => ['required', Rule::in(array_values(Course::getTypes()))],
+            'type' => ['required', Rule::in(array_values(Course::getTypes()))],
             'content' => 'nullable|string',
             'objectives' => 'nullable|json',
             'time_allocation' => 'nullable|json',

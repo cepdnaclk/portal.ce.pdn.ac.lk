@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Domains\Semester\Models\Semester;
 use App\Domains\Course\Models\Course;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class SemesterController extends Controller
 {
@@ -58,18 +59,20 @@ class SemesterController extends Controller
             'url' => [
                 'required',
                 'string',
-                'unique:semesters', 
+                'unique:semesters',
             ],
         ]);
-       
+
         try {
-            $validatedData['created_by'] = auth()->user()->id;
-            $validatedData['updated_by'] = auth()->user()->id;
-            $validatedData['url'] = urlencode(str_replace(" ", "-", $request->url));
-            $semester = Semester::create($validatedData);
+            $semester = new Semester($validatedData);
+            $semester->created_by = Auth::user()->id;
+            $semester->updated_by = Auth::user()->id;
+            $semester->url = urlencode(str_replace(" ", "-", $request->url));
+            $semester->save();
+
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester created successfully.');
         } catch (\Exception $e) {
-            Log::error('Error in storing semester: '.$e->getMessage());
+            Log::error('Error in storing semester: ' . $e->getMessage());
             return abort(500);
         }
     }
@@ -82,7 +85,7 @@ class SemesterController extends Controller
      */
     public function edit(Semester $semester)
     {
-        try{
+        try {
             return view('backend.semesters.edit', compact('semester'));
         } catch (\Exception $e) {
             Log::error('Error loading semester edit page: ' . $e->getMessage());
@@ -110,14 +113,16 @@ class SemesterController extends Controller
                 Rule::unique('semesters', 'url')->ignore($semester->id),
             ],
         ]);
-        
+
         try {
-            $validatedData['updated_by'] = auth()->user()->id;
-            $validatedData['url'] = urlencode(str_replace(" ", "-", $request->url));
             $semester->update($validatedData);
+            $semester->updated_by = Auth::user()->id;
+            $semester->url =  urlencode(str_replace(" ", "-", $request->url));
+            $semester->save();
+
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester updated successfully.');
-        } catch (\Exception $e) { 
-            Log::error('Error in updating semester: '.$e->getMessage());  
+        } catch (\Exception $e) {
+            Log::error('Error in updating semester: ' . $e->getMessage());
             return abort(500);
         }
     }
@@ -128,21 +133,15 @@ class SemesterController extends Controller
      * @param  \App\Domains\Semester\Models\Semester  $semester
      * @return \Illuminate\Http\Response
      */
-     public function delete(Semester $semester)
-     {
-         $courses = Course::where('semester_id', $semester->id)->get();
-     
-         if ($courses->count() > 0) {
-             return view('backend.semesters.delete', compact('semester', 'courses'));
-         }
-     
-         return view('backend.semesters.delete', compact('semester','courses'));
-     }
+    public function delete(Semester $semester)
+    {
+        $courses = Course::where('semester_id', $semester->id)->get();
+        return view('backend.semesters.delete', compact('semester', 'courses'));
+    }
 
 
     public function destroy(Semester $semester)
     {
-        
         $courses = Course::where('semester_id', $semester->id)->get();
 
         if ($courses->count() > 0) {
@@ -150,12 +149,11 @@ class SemesterController extends Controller
                 ->withErrors('Can not delete the semester as it already has associated courses. Please reassign or delete those courses first.');
         }
 
-        
-        try{
+        try {
             $semester->delete();
             return redirect()->route('dashboard.semesters.index')->with('success', 'Semester deleted successfully.');
         } catch (\Exception $e) {
-            Log::error('Error in deleting semester: '.$e->getMessage());
+            Log::error('Error in deleting semester: ' . $e->getMessage());
             return abort(500);
         }
     }

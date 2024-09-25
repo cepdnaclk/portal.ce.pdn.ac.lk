@@ -12,9 +12,9 @@ class SemesterApiController extends Controller
 {
     public function index(Request $request)
     {
-        try{
+        try {
             $query = Semester::where('academic_program', 'Undergraduate');
-            
+
             if ($request->has('curriculum')) {
                 $query->where('version', $request->curriculum);
             }
@@ -24,12 +24,6 @@ class SemesterApiController extends Controller
             }
 
             $semesters = $query->paginate(20);
-
-            if ($semesters->isEmpty()) {
-                return response()->json([
-                    'message' => 'Semester not found',                  
-                ], 404);
-            }
 
             return SemesterResource::collection($semesters);
         } catch (\Exception $e) {

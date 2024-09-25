@@ -7,7 +7,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->semester_id }}
+    {{ $row->semester->title }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
@@ -19,7 +19,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->version }}
+    {{ $row->version() }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
@@ -27,7 +27,11 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->created_at }}
+    {{ $row->updatedUser->name }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    {{ $row->updated_at }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
@@ -36,8 +40,8 @@
             <a href="{{ route('dashboard.courses.edit', $row) }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"
                     title="Edit"></i>
             </a>
-            <a href="{{ route('dashboard.courses.delete', $row) }}" class="btn btn-danger btn-xs"><i
-                    class="fa fa-trash" title="Delete"></i>
+            <a href="{{ route('dashboard.courses.delete', $row) }}" class="btn btn-danger btn-xs"><i class="fa fa-trash"
+                    title="Delete"></i>
             </a>
         </div>
     </div>
