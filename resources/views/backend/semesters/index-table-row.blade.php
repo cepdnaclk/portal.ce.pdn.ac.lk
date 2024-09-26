@@ -7,7 +7,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->academic_program }}
+    {{ $row->academicProgram() }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

@@ -34,8 +34,8 @@ class Semester extends Model
     public static function getAcademicPrograms(): array
     {
         return [
-            'Undergraduate' => 'Undergraduate',
-            'Postgraduate' => 'Postgraduate'
+            'undergraduate' => 'Undergraduate',
+            'postgraduate' => 'Postgraduate'
         ];
     }
 
@@ -62,6 +62,11 @@ class Semester extends Model
     public function updatedUser()
     {
         return $this->belongsTo(User::class, 'updated_by', 'id');
+    }
+
+    public function academicProgram()
+    {
+        return $this->getAcademicPrograms()[$this->academic_program];
     }
 
     protected static function newFactory()

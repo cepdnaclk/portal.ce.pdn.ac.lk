@@ -108,6 +108,11 @@ class Course extends Model
         ];
     }
 
+    public function academicProgram()
+    {
+        return $this->getAcademicPrograms()[$this->academic_program];
+    }
+
     public function createdUser()
     {
         return $this->belongsTo(User::class, 'created_by');

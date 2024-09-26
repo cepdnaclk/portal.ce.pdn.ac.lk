@@ -54,7 +54,7 @@ class SemesterController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'version' => ['required', 'integer', Rule::in(array_keys(Semester::getVersions()))],
-            'academic_program' => ['required', Rule::in(array_values(Semester::getAcademicPrograms()))],
+            'academic_program' => ['required', Rule::in(array_keys(Semester::getAcademicPrograms()))],
             'description' => 'nullable|string',
             'url' => [
                 'required',
@@ -105,7 +105,7 @@ class SemesterController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'version' => ['required', 'integer', Rule::in(array_keys(Semester::getVersions()))],
-            'academic_program' => ['required', Rule::in(array_values(Semester::getAcademicPrograms()))],
+            'academic_program' => ['required', Rule::in(array_keys(Semester::getAcademicPrograms()))],
             'description' => 'nullable|string',
             'url' => [
                 'required',
