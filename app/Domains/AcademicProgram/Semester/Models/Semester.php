@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Domains\Semester\Models;
+namespace App\Domains\AcademicProgram\Semester\Models;
 
 use App\Domains\Auth\Models\User;
-use App\Domains\Semester\Models\Traits\Scope\SemesterScope;
+use App\Domains\AcademicProgram\AcademicProgram;
+use App\Domains\AcademicProgram\Semester\Models\Traits\Scope\SemesterScope;
 use Database\Factories\SemesterFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Semester extends Model
+class Semester extends AcademicProgram
 {
     use SemesterScope,
         HasFactory,
@@ -31,22 +31,7 @@ class Semester extends Model
         'created_by' => 'integer',
         'updated_by' => 'integer',
     ];
-    public static function getAcademicPrograms(): array
-    {
-        return [
-            'undergraduate' => 'Undergraduate',
-            'postgraduate' => 'Postgraduate'
-        ];
-    }
 
-    public static function getVersions(): array
-    {
-        // TODO integrate with Taxonomies 
-        return [
-            1 => 'Current Curriculum',
-            2 => 'Curriculum - Effective from E22'
-        ];
-    }
 
     public function getLatestSyllabusAttribute()
     {

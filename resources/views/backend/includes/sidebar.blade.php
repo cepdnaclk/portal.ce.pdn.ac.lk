@@ -72,7 +72,8 @@
 
         {{-- Announcements --}}
         @if ($logged_in_user->hasAllAccess())
-            <li class="c-sidebar-nav-dropdown">
+            <li
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.announcements.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-bullhorn"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Announcements')"></x-utils.link>
 
@@ -89,7 +90,8 @@
         @if (
             $logged_in_user->hasPermissionTo('user.access.editor.news') ||
                 $logged_in_user->hasPermissionTo('user.access.editor.event'))
-            <li class="c-sidebar-nav-dropdown">
+            <li
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.news.*') || Route::is('dashboard.event.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-newspaper"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Content Management')"></x-utils.link>
 
@@ -114,7 +116,8 @@
 
         {{-- Academic Program --}}
         @if ($logged_in_user->hasPermissionTo('user.access.academic'))
-            <li class="c-sidebar-nav-dropdown">
+            <li
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.semesters.*') || Route::is('dashboard.courses.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-book" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Academic Program')"></x-utils.link>
 
@@ -128,7 +131,7 @@
                     <li class="c-sidebar-nav-item">
                         <x-utils.link :href="route('dashboard.courses.index')" class="c-sidebar-nav-link" :text="__('Courses')"
                             :active="activeClass(Route::is('dashboard.courses.*'), 'c-active')"></x-utils.link>
-                    </li>       
+                    </li>
                 </ul>
             </li>
         @endif

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domains\Course\Models;
+namespace App\Domains\AcademicProgram\Course\Models;
 
-use App\Domains\Course\Models\Traits\Scope\CourseScope;
+use App\Domains\AcademicProgram\Course\Models\Traits\Scope\CourseScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;

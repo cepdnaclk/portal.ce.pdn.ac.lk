@@ -43,11 +43,11 @@
                                     </div>
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label for="drop1">Version</label>
+                                            <label for="drop1">Curriculum</label>
                                         </div>
                                         <select class="form-select" wire:model="version">
                                             <option style="display:none" selected></option>
-                                            @foreach (App\Domains\Course\Models\Course::getVersions() as $key => $value)
+                                            @foreach (App\Domains\AcademicProgram\Course\Models\Course::getVersions() as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
@@ -100,7 +100,7 @@
                                         </div>
                                         <select class="form-select" wire:model="type">
                                             <option style="display:none" selected></option>
-                                            @foreach (App\Domains\Course\Models\Course::getTypes() as $key => $value)
+                                            @foreach (App\Domains\AcademicProgram\Course\Models\Course::getTypes() as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>

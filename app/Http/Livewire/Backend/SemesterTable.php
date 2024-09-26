@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Backend;
 
-use App\Domains\Semester\Models\Semester;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -21,7 +21,7 @@ class SemesterTable extends DataTableComponent
         return [
             Column::make("Title", "title")
                 ->searchable(),
-            Column::make("Version", "version")
+            Column::make("Curriculum", "version")
                 ->sortable(),
             Column::make("Academic Program", "academic_program")
                 ->sortable(),
@@ -46,9 +46,9 @@ class SemesterTable extends DataTableComponent
 
     public function filters(): array
     {
-        $type = ["" => "Any"];
+        $academicProgramOptions = ["" => "Any"];
         foreach (Semester::getAcademicPrograms() as $key => $value) {
-            $type[$key] = $value;
+            $academicProgramOptions[$key] = $value;
         }
         $versionOptions = ["" => "Any"];
         foreach (Semester::getVersions() as $key => $value) {
@@ -58,7 +58,7 @@ class SemesterTable extends DataTableComponent
 
         return [
             'academic_program' => Filter::make('Academic Program')
-                ->select($type),
+                ->select($academicProgramOptions),
             'version' => Filter::make('Version')
                 ->select($versionOptions),
         ];

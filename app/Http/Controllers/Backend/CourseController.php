@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
-use App\Domains\Course\Models\Course;
+use App\Domains\AcademicProgram\Course\Models\Course;
 use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Domains\Semester\Models\Semester;
-use App\Domains\Course\Models\Course;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
+use App\Domains\AcademicProgram\Course\Models\Course;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
@@ -80,7 +80,7 @@ class SemesterController extends Controller
     /**
      * Show the form for editing the specified semester.
      *
-     * @param  \App\Domains\Semester\Models\Semester  $semester
+     * @param  \App\Domains\AcademicProgram\Semester\Models\Semester  $semester
      * @return \Illuminate\Http\Response
      */
     public function edit(Semester $semester)
@@ -97,7 +97,7 @@ class SemesterController extends Controller
      * Update the specified semester in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Domains\Semester\Models\Semester  $semester
+     * @param  \App\Domains\AcademicProgram\Semester\Models\Semester  $semester
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Semester $semester)
@@ -130,7 +130,7 @@ class SemesterController extends Controller
     /**
      * Remove the specified semester from storage.
      *
-     * @param  \App\Domains\Semester\Models\Semester  $semester
+     * @param  \App\Domains\AcademicProgram\Semester\Models\Semester  $semester
      * @return \Illuminate\Http\Response
      */
     public function delete(Semester $semester)

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Backend\Semesters;
 
-use App\Domains\Semester\Models\Semester;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 use App\Domains\Auth\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -40,7 +40,7 @@ class SemesterTest extends TestCase
         $response = $this->post('/dashboard/semesters', [
             'title' => 'Test Semester 1',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'Description of Semester 1',
             'url' => '/semester-1',
         ]);
@@ -59,7 +59,7 @@ class SemesterTest extends TestCase
         $updateData = [
             'title' => 'Test Semester 2',
             'version' => 2,
-            'academic_program' => 'Postgraduate',
+            'academic_program' => 'postgraduate',
             'description' => 'Updated description',
             'url' => '/semester-2',
         ];
@@ -72,7 +72,7 @@ class SemesterTest extends TestCase
         ]);
     }
 
-    
+
     /** @test */
     public function semester_can_be_deleted()
     {
@@ -82,71 +82,71 @@ class SemesterTest extends TestCase
         $this->assertDatabaseMissing('semesters', ['id' => $semester->id]);
     }
 
-     /** @test */
-     public function semester_url_must_be_unique()
-     {
-         $this->loginAsCourseManager();
- 
-         
-         Semester::factory()->create([
-             'url' => '/unique-url'
-         ]);
- 
-         
-         $response = $this->post('/dashboard/semesters', [
-             'title' => 'Test Semester 2',
-             'version' => 1,
-             'academic_program' => 'Undergraduate',
-             'description' => 'Description of Semester 2',
-             'url' => '/unique-url',
-         ]);
- 
-         $response->assertSessionHasErrors('url');
-     }
- 
-     /** @test */
-     public function semester_must_have_valid_academic_program()
-     {
-         $this->loginAsCourseManager();
- 
-       
-         $response = $this->post('/dashboard/semesters', [
-             'title' => 'Test Semester 3',
-             'version' => 1,
-             'academic_program' => 'InvalidProgram',  
-             'description' => 'Description of Semester 3',
-             'url' => '/valid-url',
-         ]);
- 
-       
-         $response->assertSessionHasErrors('academic_program');
-     }
- 
-     /** @test */
-     public function semester_can_be_updated_with_unique_url()
-     {
-         $this->loginAsCourseManager();
- 
-         
-         $semester = Semester::factory()->create([
-             'url' => '/old-url'
-         ]);
- 
-         Semester::factory()->create([
-             'url' => '/existing-url'
-         ]);
- 
-         $response = $this->put("/dashboard/semesters/{$semester->id}", [
-             'title' => 'Updated Semester',
-             'version' => 1,
-             'academic_program' => 'Undergraduate',
-             'description' => 'Updated description',
-             'url' => '/existing-url', 
-         ]);
- 
-         
-         $response->assertSessionHasErrors('url');
-     }
+    /** @test */
+    public function semester_url_must_be_unique()
+    {
+        $this->loginAsCourseManager();
+
+
+        Semester::factory()->create([
+            'url' => '/unique-url'
+        ]);
+
+
+        $response = $this->post('/dashboard/semesters', [
+            'title' => 'Test Semester 2',
+            'version' => 1,
+            'academic_program' => 'undergraduate',
+            'description' => 'Description of Semester 2',
+            'url' => '/unique-url',
+        ]);
+
+        $response->assertSessionHasErrors('url');
+    }
+
+    /** @test */
+    public function semester_must_have_valid_academic_program()
+    {
+        $this->loginAsCourseManager();
+
+
+        $response = $this->post('/dashboard/semesters', [
+            'title' => 'Test Semester 3',
+            'version' => 1,
+            'academic_program' => 'InvalidProgram',
+            'description' => 'Description of Semester 3',
+            'url' => '/valid-url',
+        ]);
+
+
+        $response->assertSessionHasErrors('academic_program');
+    }
+
+    /** @test */
+    public function semester_can_be_updated_with_unique_url()
+    {
+        $this->loginAsCourseManager();
+
+
+        $semester = Semester::factory()->create([
+            'url' => '/old-url'
+        ]);
+
+        Semester::factory()->create([
+            'url' => '/existing-url'
+        ]);
+
+        $response = $this->put("/dashboard/semesters/{$semester->id}", [
+            'title' => 'Updated Semester',
+            'version' => 1,
+            'academic_program' => 'undergraduate',
+            'description' => 'Updated description',
+            'url' => '/existing-url',
+        ]);
+
+
+        $response->assertSessionHasErrors('url');
+    }
 
     /** @test */
     public function unauthorized_user_cannot_access_semester_pages()

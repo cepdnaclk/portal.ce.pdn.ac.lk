@@ -3,17 +3,17 @@
 @section('title', __('Create Semester'))
 
 @push('after-styles')
-<style>
-    /* Style dropdown fields to ensure arrows are visible */
-    select.form-control {
-        appearance: none; 
-        -webkit-appearance: none; 
-        -moz-appearance: none; 
-        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon points="70,140 140,0 0,0" style="fill:%23000" /></svg>') no-repeat right 10px center;
-        background-size: 10px;
-        padding-right: 30px;
-    }
-</style>
+    <style>
+        /* Style dropdown fields to ensure arrows are visible */
+        select.form-control {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon points="70,140 140,0 0,0" style="fill:%23000" /></svg>') no-repeat right 10px center;
+            background-size: 10px;
+            padding-right: 30px;
+        }
+    </style>
 @endpush
 
 
@@ -51,12 +51,17 @@
                 <div class="form-group row">
                     {!! Form::label('academic_program', 'Academic Program*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        {!! Form::select('academic_program', \App\Domains\Semester\Models\Semester::getAcademicPrograms(), null, [
-                            'class' => 'form-control',
-                            'placeholder' => 'Select Academic Program',
-                            'required' => true,
-                            'id' => 'academic_program',
-                        ]) !!}
+                        {!! Form::select(
+                            'academic_program',
+                            \App\Domains\AcademicProgram\Semester\Models\Semester::getAcademicPrograms(),
+                            null,
+                            [
+                                'class' => 'form-control',
+                                'placeholder' => 'Select Academic Program',
+                                'required' => true,
+                                'id' => 'academic_program',
+                            ],
+                        ) !!}
                         @error('academic_program')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -67,7 +72,7 @@
                 <div class="form-group row">
                     {!! Form::label('version', 'Version*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        {!! Form::select('version', \App\Domains\Semester\Models\Semester::getVersions(), null, [
+                        {!! Form::select('version', \App\Domains\AcademicProgram\Semester\Models\Semester::getVersions(), null, [
                             'class' => 'form-control',
                             'placeholder' => 'Select Version',
                             'required' => true,
@@ -94,8 +99,9 @@
                     {!! Form::label('url', 'URL', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         <div class="d-inline-flex align-items-center flex-nowrap w-100">
-                            <span class="me-2" id="url_hint">https://www.ce.pdn.ac.lk/courses/{academic_program}/&nbsp;</span>
-                            <span class="flex-grow-1"> 
+                            <span class="me-2" id="url_hint">
+                                https://www.ce.pdn.ac.lk/academics/{academic_program}/semesters/&nbsp;&nbsp;</span>
+                            <span class="flex-grow-1">
                                 {!! Form::text('url', old('url', ''), ['class' => 'form-control', 'required' => true]) !!}
                             </span>
                         </div>
@@ -103,25 +109,19 @@
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>
-                    
-                        
+
+
                 </div>
                 <script>
+                    // TODO convert to jQuery and add the version 
                     document.getElementById('academic_program').addEventListener('change', function() {
-                        let selectedProgram = this.value;
+                        let selectedProgram = this.value.toLowerCase();
                         const urlHint = document.getElementById('url_hint');
+                        urlHint.textContent =
+                            `https://www.ce.pdn.ac.lk/academics/${selectedProgram ? selectedProgram: '{academic_program}'}/semesters/`;
 
-                        if (!selectedProgram) {
-                            urlHint.textContent= `https://www.ce.pdn.ac.lk/courses/academic_program/`;
-                        }
-                        else{
-                            urlHint.textContent= `https://www.ce.pdn.ac.lk/courses/${selectedProgram}/`;   
-                        }
-                        
                     });
                 </script>
-            </div>
-
             </x-slot>
 
             <x-slot name="footer">
@@ -132,4 +132,3 @@
         {!! Form::close() !!}
     </div>
 @endsection
-

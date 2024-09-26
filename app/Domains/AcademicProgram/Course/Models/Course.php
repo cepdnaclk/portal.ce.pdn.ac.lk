@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Domains\Course\Models;
+namespace App\Domains\AcademicProgram\Course\Models;
 
 use App\Domains\Auth\Models\User;
-use App\Domains\Course\Models\Traits\Scope\CourseScope;
-use App\Domains\Semester\Models\Semester;
+use App\Domains\AcademicProgram\AcademicProgram;
+use App\Domains\AcademicProgram\Course\Models\Traits\Scope\CourseScope;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class Course.
  */
-class Course extends Model
+class Course extends AcademicProgram
 {
     use CourseScope,
         HasFactory,
@@ -88,23 +88,6 @@ class Course extends Model
             'Core' => 'Core',
             'GE' => 'General Elective',
             'TE' => 'Technical Elective'
-        ];
-    }
-
-    public static function getAcademicPrograms(): array
-    {
-        return [
-            'undergraduate' => 'Undergraduate',
-            'postgraduate' => 'Postgraduate'
-        ];
-    }
-
-    public static function getVersions(): array
-    {
-        // TODO integrate with Taxonomies 
-        return [
-            1 => 'Current Curriculum',
-            2 => 'Curriculum - Effective from E22'
         ];
     }
 

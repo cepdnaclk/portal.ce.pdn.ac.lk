@@ -3,10 +3,10 @@
 namespace App\Http\Livewire\Backend;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\Log;
-use App\Domains\Course\Models\Course;
-use App\Domains\Course\Models\CourseModule;
-use App\Domains\Semester\Models\Semester;
+use Illuminate\Validation\Rule;
+use App\Domains\AcademicProgram\Course\Models\Course;
+use App\Domains\AcademicProgram\Course\Models\CourseModule;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 
 
 class CreateCourses extends Component
@@ -25,7 +25,9 @@ class CreateCourses extends Component
     public $type;
     public $code;
     public $name;
-    public $credits,$faq_page,$content;
+    public $credits;
+    public $faq_page;
+    public $content;
     public $time_allocation;
     public $module_time_allocation;
     public $marks_allocation;
@@ -37,7 +39,7 @@ class CreateCourses extends Component
         'skills' => [],
         'attitudes' => [],
     ];
-    
+
     //3rd form step
     public $references = [];
     public $modules = [];
@@ -47,11 +49,11 @@ class CreateCourses extends Component
         return [
             'academicProgram' => 'required|string',
             'semester' => 'required|string',
-            'version' => 'required|string',
-            'type' => 'required|string|in:Core,GE,TE',
+            'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
+            'type'  => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
             'code' => 'required|string|unique:courses,code',
             'name' => 'required|string|max:255',
-            'credits' => 'required|integer|min:1|max:30',
+            'credits' => 'required|integer|min:1|max:18',
             'faq_page' => 'nullable|url',
             'content' => 'nullable|string',
             'time_allocation.lecture' => 'nullable|integer|min:0',
@@ -85,7 +87,7 @@ class CreateCourses extends Component
             'name.required' => 'Please provide a course name.',
             'credits.required' => 'Please specify the number of credits.',
             'credits.min' => 'The course must have at least 1 credit.',
-            'credits.max' => 'The course cannot have more than 30 credits.',
+            'credits.max' => 'The course cannot have more than 18 credits.',
             'modules.*.name.required' => 'Each module must have a name.',
             'modules.*.description.required' => 'Each module must have a description.',
             'modules.*.description.min' => 'Module descriptions should be at least 10 characters long.',
@@ -93,61 +95,61 @@ class CreateCourses extends Component
     }
 
     protected function validateCurrentStep()
-{
-    switch ($this->formStep) {
-        case 1:
-            $this->validate([
-                'academicProgram' => 'required|string',
-                'semester' => 'required|string',
-                'version' => 'required|string',
-                'type' => 'required|string|in:Core,GE,TE',
-                'code' => 'required|string|unique:courses,code',
-                'name' => 'required|string|max:255',
-                'credits' => 'required|integer|min:1|max:30',
-                'faq_page' => 'nullable|url',
-                'content' => 'nullable|string',
-                'time_allocation.lecture' => 'nullable|integer|min:0',
-                'time_allocation.tutorial' => 'nullable|integer|min:0',
-                'time_allocation.practical' => 'nullable|integer|min:0',
-                'time_allocation.assignment' => 'nullable|integer|min:0',
-                'marks_allocation.practicals' => 'nullable|integer|min:0|max:100',
-                'marks_allocation.project' => 'nullable|integer|min:0|max:100',
-                'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
-                'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
-            ]);
-            $this->validateMarksAllocation();
-            if ($this->getErrorBag()->has('marks_allocation.total')) {
-                return; 
-            }
-            break;
+    {
+        switch ($this->formStep) {
+            case 1:
+                $this->validate([
+                    'academicProgram' => 'required|string',
+                    'semester' => 'required|string',
+                    'version' => ['required', 'string', Rule::in(array_values(Course::getVersions()))],
+                    'type'  => ['required', 'string', Rule::in(array_values(Course::getTypes()))],
+                    'code' => 'required|string|unique:courses,code',
+                    'name' => 'required|string|max:255',
+                    'credits' => 'required|integer|min:1|max:18',
+                    'faq_page' => 'nullable|url',
+                    'content' => 'nullable|string',
+                    'time_allocation.lecture' => 'nullable|integer|min:0',
+                    'time_allocation.tutorial' => 'nullable|integer|min:0',
+                    'time_allocation.practical' => 'nullable|integer|min:0',
+                    'time_allocation.assignment' => 'nullable|integer|min:0',
+                    'marks_allocation.practicals' => 'nullable|integer|min:0|max:100',
+                    'marks_allocation.project' => 'nullable|integer|min:0|max:100',
+                    'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
+                    'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
+                ]);
+                $this->validateMarksAllocation();
+                if ($this->getErrorBag()->has('marks_allocation.total')) {
+                    return;
+                }
+                break;
 
-        case 3:
-            $this->validate([
-                'modules' => 'nullable|array',
-                'modules.*.name' => 'required|string|min:3|max:255',
-                'modules.*.description' => 'required|string',
-                'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
-                'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
-                'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
-                'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
-            ]);
-            break;
+            case 3:
+                $this->validate([
+                    'modules' => 'nullable|array',
+                    'modules.*.name' => 'required|string|min:3|max:255',
+                    'modules.*.description' => 'required|string',
+                    'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
+                    'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
+                    'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
+                    'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
+                ]);
+                break;
+        }
     }
-}
 
     protected function validateMarksAllocation()
     {
         $totalMarks = 0;
         $hasValue = false;
 
-        foreach ($this->marks_allocation as $key => $value){
-            if(!empty($value)){
+        foreach ($this->marks_allocation as $key => $value) {
+            if (!empty($value)) {
                 $hasValue = true;
                 $totalMarks += (int) $value;
             }
         }
 
-        if ($hasValue && $totalMarks != 100){
+        if ($hasValue && $totalMarks != 100) {
             $this->addError('marks_allocation.total', 'The total of marks allocation must be 100.');
         }
     }
@@ -167,27 +169,31 @@ class CreateCourses extends Component
         $this->module_time_allocation = Course::getTimeAllocation();
     }
 
-    public function updateItems($type,$newItems){
-        if($type == 'references'){
+    public function updateItems($type, $newItems)
+    {
+        if ($type == 'references') {
             $this->$type = $newItems;
-        }else{
+        } else {
             $this->ilos[$type] = $newItems;
         }
     }
-    
-    public function next(){
+
+    public function next()
+    {
         $this->validateCurrentStep();
         if ($this->getErrorBag()->has('marks_allocation.total')) {
             return; // Do not proceed to the next step if the marks total is invalid
         }
         $this->formStep++;
     }
-    
-    public function previous(){
+
+    public function previous()
+    {
         $this->formStep--;
     }
 
-    public function submit(){
+    public function submit()
+    {
         \Log::info("Submit method called");
         try {
             $this->validate();
@@ -199,7 +205,7 @@ class CreateCourses extends Component
         }
         $this->resetForm();
     }
-    
+
     public function updatedAcademicProgram()
     {
         $this->updateSemestersList();
@@ -214,9 +220,9 @@ class CreateCourses extends Component
     {
         if ($this->academicProgram && $this->version) {
             $this->semestersList = Semester::where('academic_program', $this->academicProgram)
-                                           ->where('version', $this->version)
-                                           ->pluck('title', 'id')
-                                           ->toArray();
+                ->where('version', $this->version)
+                ->pluck('title', 'id')
+                ->toArray();
         } else {
             $this->semestersList = [];
         }
@@ -225,7 +231,7 @@ class CreateCourses extends Component
 
     protected function storeCourse()
     {
-        \Log::info("storeCourse method called");  
+
         try {
             \DB::beginTransaction();
             $course = Course::create([
@@ -246,7 +252,6 @@ class CreateCourses extends Component
                 'created_by' => auth()->id(),
                 'updated_by' => auth()->id()
             ]);
-            \Log::info("Course created with ID: " . $course->id);
 
             if (empty($this->modules)) {
                 \Log::warning("No modules to create");
@@ -260,19 +265,17 @@ class CreateCourses extends Component
                         'created_by' => auth()->id(),
                         'updated_by' => auth()->id(),
                     ]);
-                    \Log::info("Created module with ID: " . $createdModule->id);
                 }
             }
 
             \DB::commit();
-            \Log::info("storeCourse method completed successfully");
         } catch (\Exception $e) {
             \DB::rollBack();
             \Log::error("Error in storeCourse method: " . $e->getMessage());
             throw $e;
         }
     }
-    
+
 
     protected function resetForm()
     {

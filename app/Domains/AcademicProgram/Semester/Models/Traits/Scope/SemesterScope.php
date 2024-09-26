@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domains\Semester\Models\Traits\Scope;
+namespace App\Domains\AcademicProgram\Semester\Models\Traits\Scope;
 
 /**
  * Class SemesterScope.

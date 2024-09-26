@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Backend;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
-use App\Domains\Course\Models\Course;
-use App\Domains\Course\Models\CourseModule;
-use App\Domains\Semester\Models\Semester;
+use App\Domains\AcademicProgram\Course\Models\Course;
+use App\Domains\AcademicProgram\Course\Models\CourseModule;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 
 class EditCourses extends Component
 {
@@ -38,7 +38,7 @@ class EditCourses extends Component
         'skills' => [],
         'attitudes' => [],
     ];
-    
+
     // 3rd form step
     public $references = [];
     public $modules = [];
@@ -52,7 +52,7 @@ class EditCourses extends Component
             'type' => 'required|string|in:Core,GE,TE',
             'code' => 'required|string',
             'name' => 'required|string|max:255',
-            'credits' => 'required|integer|min:1|max:30',
+            'credits' => 'required|integer|min:1|max:18',
             'faq_page' => 'nullable|url',
             'content' => 'nullable|string',
             'time_allocation.lecture' => 'nullable|integer|min:0',
@@ -85,7 +85,7 @@ class EditCourses extends Component
             'name.required' => 'Please provide a course name.',
             'credits.required' => 'Please specify the number of credits.',
             'credits.min' => 'The course must have at least 1 credit.',
-            'credits.max' => 'The course cannot have more than 30 credits.',
+            'credits.max' => 'The course cannot have more than 18 credits.',
             'modules.*.name.required' => 'Each module must have a name.',
             'modules.*.description.required' => 'Each module must have a description.',
             'modules.*.description.min' => 'Module descriptions should be at least 10 characters long.',
@@ -119,14 +119,14 @@ class EditCourses extends Component
         $totalMarks = 0;
         $hasValue = false;
 
-        foreach ($this->marks_allocation as $key => $value){
-            if(!empty($value)){
+        foreach ($this->marks_allocation as $key => $value) {
+            if (!empty($value)) {
                 $hasValue = true;
                 $totalMarks += (int) $value;
             }
         }
 
-        if ($hasValue && $totalMarks != 100){
+        if ($hasValue && $totalMarks != 100) {
             $this->addError('marks_allocation.total', 'The total of marks allocation must be 100.');
         }
     }
@@ -136,7 +136,7 @@ class EditCourses extends Component
         $this->canUpdate = false;
         $this->validateCurrentStep();
         if ($this->getErrorBag()->has('marks_allocation.total')) {
-            return; 
+            return;
         }
         $this->canUpdate = true;
     }
@@ -172,7 +172,7 @@ class EditCourses extends Component
         $this->references = json_decode($course->references, true) ?? [];
 
         // Load modules
-        $this->modules = $course->modules()->get()->map(function($module, $index) {
+        $this->modules = $course->modules()->get()->map(function ($module, $index) {
             return [
                 'id' => $index + 1, // or use $module->id if available
                 'name' => $module->topic,
@@ -196,11 +196,11 @@ class EditCourses extends Component
         } else {
             $this->ilos[$type] = $newItems;
         }
-        
+
         $this->emit('refreshItems' . ucfirst($type), $newItems);
     }
 
-    
+
     public function next()
     {
         $this->validateCurrentStep();
@@ -209,7 +209,7 @@ class EditCourses extends Component
         }
         $this->formStep++;
     }
-    
+
     public function previous()
     {
         $this->formStep--;
@@ -229,7 +229,7 @@ class EditCourses extends Component
         }
         $this->resetForm();
     }
-    
+
     public function updatedAcademicProgram()
     {
         $this->updateSemestersList();
@@ -244,9 +244,9 @@ class EditCourses extends Component
     {
         if ($this->academicProgram && $this->version) {
             $this->semestersList = Semester::where('academic_program', $this->academicProgram)
-                                           ->where('version', $this->version)
-                                           ->pluck('title', 'id')
-                                           ->toArray();
+                ->where('version', $this->version)
+                ->pluck('title', 'id')
+                ->toArray();
         } else {
             $this->semestersList = [];
         }
@@ -255,7 +255,7 @@ class EditCourses extends Component
     protected function updateCourse()
     {
         \Log::info("updateCourse method called");
-        
+
         try {
             \DB::beginTransaction();
 

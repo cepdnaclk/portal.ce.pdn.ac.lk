@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Database\Seeders\Traits\DisableForeignKeys;
 use Database\Seeders\Traits\TruncateTable;
-use App\Domains\Course\Models\Course;
+use App\Domains\AcademicProgram\Course\Models\Course;
 
 use Illuminate\Database\Seeder;
 

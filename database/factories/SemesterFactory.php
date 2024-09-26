@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\Auth\Models\User;
-use App\Domains\Semester\Models\Semester;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
