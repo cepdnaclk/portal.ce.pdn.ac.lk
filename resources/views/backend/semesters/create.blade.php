@@ -85,7 +85,7 @@
 
                 <!-- Description -->
                 <div class="form-group row">
-                    {!! Form::label('description', 'Description', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         {!! Form::textarea('description', old('description'), ['class' => 'form-control']) !!}
                         @error('description')
@@ -96,11 +96,11 @@
 
                 <!-- URL -->
                 <div class="form-group row">
-                    {!! Form::label('url', 'URL', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('url', 'URL*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         <div class="d-inline-flex align-items-center flex-nowrap w-100">
                             <span class="me-2" id="url_hint">
-                                https://www.ce.pdn.ac.lk/academics/{academic_program}/semesters/&nbsp;&nbsp;</span>
+                                https://www.ce.pdn.ac.lk/academics/{academic_program}/semesters/</span>
                             <span class="flex-grow-1">
                                 {!! Form::text('url', old('url', ''), ['class' => 'form-control', 'required' => true]) !!}
                             </span>
@@ -112,16 +112,6 @@
 
 
                 </div>
-                <script>
-                    // TODO convert to jQuery and add the version 
-                    document.getElementById('academic_program').addEventListener('change', function() {
-                        let selectedProgram = this.value.toLowerCase();
-                        const urlHint = document.getElementById('url_hint');
-                        urlHint.textContent =
-                            `https://www.ce.pdn.ac.lk/academics/${selectedProgram ? selectedProgram: '{academic_program}'}/semesters/`;
-
-                    });
-                </script>
             </x-slot>
 
             <x-slot name="footer">
@@ -131,4 +121,13 @@
         </x-backend.card>
         {!! Form::close() !!}
     </div>
+
+    <script>
+        document.getElementById('academic_program').addEventListener('change', function() {
+            const selectedProgram = document.getElementById('academic_program').value;
+            const version = document.getElementById('version').value.toLowerCase(); // To be used in the URL
+            const urlHint = document.getElementById('url_hint').textContent =
+                `https://www.ce.pdn.ac.lk/academics/${selectedProgram ? selectedProgram: '{academic_program}'}/semesters/`;
+        });
+    </script>
 @endsection
