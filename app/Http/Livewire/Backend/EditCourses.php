@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Backend;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use App\Domains\AcademicProgram\Course\Models\Course;
 use App\Domains\AcademicProgram\Course\Models\CourseModule;
 use App\Domains\AcademicProgram\Semester\Models\Semester;
@@ -48,8 +48,8 @@ class EditCourses extends Component
         return [
             'academicProgram' => 'required|string',
             'semester' => 'required|int',
-            'version' => 'required|string',
-            'type' => 'required|string|in:Core,GE,TE',
+            'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
+            'type' => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
             'code' => 'required|string',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:18',
@@ -78,7 +78,7 @@ class EditCourses extends Component
         return [
             'academicProgram.required' => 'Please select an academic program.',
             'semester.required' => 'Please select a semester.',
-            'version.required' => 'Please provide a version.',
+            'version.required' => 'Please provide a curriculum.',
             'type.required' => 'Please select a course type.',
             'type.in' => 'The course type must be Core, GE, or TE.',
             'code.required' => 'Please provide a course code.',

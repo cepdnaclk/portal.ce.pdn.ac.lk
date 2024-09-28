@@ -56,7 +56,7 @@ Route::group(['middleware' => ['permission:user.access.editor.news']], function 
         ->name('news.destroy');
 
     //Preview
-    Route::get('news/preview/{news}', function (News $news){
+    Route::get('news/preview/{news}', function (News $news) {
         return view('backend.news.preview', compact('news'));
     })->name('news.preview');
 });

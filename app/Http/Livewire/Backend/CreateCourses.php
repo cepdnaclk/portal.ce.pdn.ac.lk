@@ -13,7 +13,7 @@ class CreateCourses extends Component
 {
     public $formStep = 1;
 
-    //for slectors 
+    //for selectors 
     public $academicProgramsList = [];
     public $semestersList = [];
 
@@ -79,9 +79,9 @@ class CreateCourses extends Component
         return [
             'academicProgram.required' => 'Please select an academic program.',
             'semester.required' => 'Please select a semester.',
-            'version.required' => 'Please provide a version.',
+            'version.required' => 'Please provide a curriculum.',
             'type.required' => 'Please select a course type.',
-            'type.in' => 'The course type must be core, elective, or optional.',
+            'type.in' => 'The course type must be Core, GE, or TE.',
             'code.required' => 'Please provide a course code.',
             'code.unique' => 'This course code is already in use.',
             'name.required' => 'Please provide a course name.',
@@ -231,7 +231,6 @@ class CreateCourses extends Component
 
     protected function storeCourse()
     {
-
         try {
             \DB::beginTransaction();
             $course = Course::create([
@@ -257,7 +256,7 @@ class CreateCourses extends Component
                 \Log::warning("No modules to create");
             } else {
                 foreach ($this->modules as $module) {
-                    $createdModule = CourseModule::create([
+                    CourseModule::create([
                         'course_id' => $course->id,
                         'topic' => $module['name'],
                         'description' => $module['description'],
