@@ -3,7 +3,7 @@
 namespace Tests\Feature\Backend\Semesters;
 
 use App\Domains\AcademicProgram\Semester\Models\Semester;
-use App\Domains\Auth\Models\User;
+use App\Domains\AcademicProgram\Course\Models\Course;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -72,7 +72,6 @@ class SemesterTest extends TestCase
         ]);
     }
 
-
     /** @test */
     public function semester_can_be_deleted()
     {
@@ -83,15 +82,26 @@ class SemesterTest extends TestCase
     }
 
     /** @test */
+    public function semester_can_not_be_deleted_if_courses_already_associated()
+    {
+        $this->loginAsCourseManager();
+        $semester = Semester::factory()->create();
+        $course = Course::factory()->create();
+        $course->semester_id = $semester->id;
+        $course->save();
+
+        $response = $this->delete('/dashboard/semesters/' . $semester->id);
+        $response->assertSessionHasErrors();
+    }
+
+    /** @test */
     public function semester_url_must_be_unique()
     {
         $this->loginAsCourseManager();
 
-
         Semester::factory()->create([
             'url' => '/unique-url'
         ]);
-
 
         $response = $this->post('/dashboard/semesters', [
             'title' => 'Test Semester 2',
@@ -109,7 +119,6 @@ class SemesterTest extends TestCase
     {
         $this->loginAsCourseManager();
 
-
         $response = $this->post('/dashboard/semesters', [
             'title' => 'Test Semester 3',
             'version' => 1,
@@ -118,7 +127,6 @@ class SemesterTest extends TestCase
             'url' => '/valid-url',
         ]);
 
-
         $response->assertSessionHasErrors('academic_program');
     }
 
@@ -126,7 +134,6 @@ class SemesterTest extends TestCase
     public function semester_can_be_updated_with_unique_url()
     {
         $this->loginAsCourseManager();
-
 
         $semester = Semester::factory()->create([
             'url' => '/old-url'
@@ -143,7 +150,6 @@ class SemesterTest extends TestCase
             'description' => 'Updated description',
             'url' => '/existing-url',
         ]);
-
 
         $response->assertSessionHasErrors('url');
     }
