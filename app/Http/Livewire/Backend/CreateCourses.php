@@ -101,8 +101,8 @@ class CreateCourses extends Component
                 $this->validate([
                     'academicProgram' => 'required|string',
                     'semester' => 'required|string',
-                    'version' => ['required', 'string', Rule::in(array_values(Course::getVersions()))],
-                    'type'  => ['required', 'string', Rule::in(array_values(Course::getTypes()))],
+                    'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
+                    'type'  => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
                     'code' => 'required|string|unique:courses,code',
                     'name' => 'required|string|max:255',
                     'credits' => 'required|integer|min:1|max:18',
