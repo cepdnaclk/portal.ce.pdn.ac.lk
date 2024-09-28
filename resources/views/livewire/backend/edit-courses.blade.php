@@ -219,24 +219,27 @@
         <div class="navigation">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col" style="padding: 0px;">
-                        @if ($canUpdate)
-                            <button type="button" class="btn btn-dark" style="float: center;"
-                                wire:click="update">Update & Exit</button>
-                        @endif
-                        <div class="btn-group" style="float: right;">
+                    <div class="col p-3">
+                        <div class="float-end">
+                            @if ($canUpdate)
+                                <button type="button" class="btn btn-dark btn-w-150 me-4" wire:click="update">
+                                    Update & Exit
+                                </button>
+                            @endif
+
                             @if ($formStep == 1)
-                                <button type="button" class="btn btn-primary next-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 next-step"
                                     wire:click="next">Next</button>
                             @elseif ($formStep == 2)
-                                <button type="button" class="btn btn-primary prev-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 prev-step"
                                     wire:click="previous">Previous</button>
-                                <button type="button" class="btn btn-primary next-step"
+
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 next-step"
                                     wire:click="next">Next</button>
                             @elseif ($formStep == 3)
-                                <button type="button" class="btn btn-primary prev-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 prev-step"
                                     wire:click="previous">Previous</button>
-                                <button type="button" class="btn btn-primary next-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 next-step"
                                     wire:click="update">Update</button>
                             @endif
                         </div>

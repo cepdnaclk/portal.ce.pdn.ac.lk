@@ -134,7 +134,7 @@
                     <div class="col-md-4 form-check form-switch mx-4">
                         <input type="checkbox" id="checkEnable" name="enabled" value="1"
                             class="form-check-input checkbox-lg" checked />
-                        <label class="form-check-label" for="checkEnable">Visibility</label>
+                        <label class="form-check-label" for="checkEnable">&nbsp;</label>
                         @error('enabled')
                             <strong class="text-danger">{{ $message }}</strong>
                         @enderror
@@ -207,7 +207,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
+                {!! Form::submit('Create', ['class' => 'btn btn-primary btn-w-150 float-right', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>

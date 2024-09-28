@@ -115,7 +115,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right']) !!}
+                {!! Form::submit('Create', ['class' => 'btn btn-primary float-right btn-w-150']) !!}
             </x-slot>
 
         </x-backend.card>

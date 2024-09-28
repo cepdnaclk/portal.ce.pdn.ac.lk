@@ -221,20 +221,20 @@
         <div class="navigation">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col" style="padding: 0px;">
-                        <div class="btn-group" style="float: right;">
+                    <div class="col p-3">
+                        <div class="float-end">
                             @if ($formStep == 1)
-                                <button type="button" class="btn btn-primary next-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 next-step"
                                     wire:click="next">Next</button>
                             @elseif ($formStep == 2)
-                                <button type="button" class="btn btn-primary prev-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 prev-step"
                                     wire:click="previous">Previous</button>
-                                <button type="button" class="btn btn-primary next-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 next-step"
                                     wire:click="next">Next</button>
                             @elseif ($formStep == 3)
-                                <button type="button" class="btn btn-primary prev-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 prev-step"
                                     wire:click="previous">Previous</button>
-                                <button type="button" class="btn btn-primary next-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 next-step"
                                     wire:click="submit">Submit</button>
                             @endif
                         </div>

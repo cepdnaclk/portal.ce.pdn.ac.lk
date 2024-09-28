@@ -97,11 +97,11 @@
     </style>
     <h5>Modules</h5>
     <div class="d-flex justify-content-between mb-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModuleItemModal"
+        <button type="button" class="btn btn-primary btn-w-150" data-bs-toggle="modal" data-bs-target="#addModuleItemModal"
             @click="resetForm(); document.getElementById('addModuleItemModalLabel').innerHTML = 'Add Module'; isEditing=false">
             <i class="fas fa-plus me-2"></i>Add
         </button>
-        <button class="btn btn-dark" x-show="modules.length" x-transition @click="ClearAll()">
+        <button class="btn btn-dark btn-w-150" x-show="modules.length" x-transition @click="ClearAll()">
             <i class="fas fa-times me-2"></i>Clear All
         </button>
     </div>
@@ -213,8 +213,9 @@
                     </div>
                 </form>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" x-on:click="!moduleNameError && handleSave()">Save
+                    <button type="button" class="btn btn-secondary btn-w-150" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-w-150"
+                        x-on:click="!moduleNameError && handleSave()">Save
                         Changes</button>
                 </div>
             </div>

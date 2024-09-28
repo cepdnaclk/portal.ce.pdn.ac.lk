@@ -132,8 +132,8 @@
                 <div class="form-group row">
                     {!! Form::label('enabled', 'Enabled*', ['class' => 'col-md-2 form-check-label']) !!}
                     <div class="col-md-4 form-check form-switch mx-4">
-                        <input type="checkbox" id="checkEnable" name="enabled" value="1" class="form-check-input"
-                            {{ $news->enabled ? 'checked' : '' }} />
+                        <input type="checkbox" id="checkEnable" name="enabled" value={{ $news->enable ? 'checked' : '""' }}
+                            class="form-check-input checkbox-lg" {{ $news->enabled == 1 ? 'checked' : '' }} />
                         <label class="form-check-label" for="checkEnable">&nbsp;</label>
                         @error('enabled')
                             <strong class="text-danger">{{ $message }}</strong>
@@ -165,7 +165,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-right', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>

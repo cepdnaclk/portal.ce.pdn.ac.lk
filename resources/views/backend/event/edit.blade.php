@@ -138,7 +138,7 @@
                         <input type="checkbox" id="checkEnable" name="enabled"
                             value={{ $event->enable ? 'checked' : '""' }} class="form-check-input checkbox-lg"
                             {{ $event->enabled == 1 ? 'checked' : '' }} />
-                        <label class="form-check-label" for="checkEnable">Visibility</label>
+                        <label class="form-check-label" for="checkEnable">&nbsp;</label>
                         @error('enabled')
                             <strong class="text-danger">{{ $message }}</strong>
                         @enderror
@@ -222,7 +222,7 @@
                 </div>
             </x-slot>
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-right']) !!}
             </x-slot>
 
         </x-backend.card>
