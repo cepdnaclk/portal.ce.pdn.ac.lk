@@ -23,7 +23,7 @@
                     {!! Form::label('area', 'Area*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::select('area', $areas, null, ['class' => 'form-control', 'required' => true, 'placeholder' => '']) !!}
+                        {!! Form::select('area', $areas, null, ['class' => 'form-select', 'required' => true, 'placeholder' => '']) !!}
                         @error('area')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -35,7 +35,7 @@
                     {!! Form::label('type', 'Type*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::select('type', $types, null, ['class' => 'form-control', 'required' => true, 'placeholder' => '']) !!}
+                        {!! Form::select('type', $types, null, ['class' => 'form-select', 'required' => true, 'placeholder' => '']) !!}
                         @error('type')
                             <strong>{{ $message }}</strong>
                         @enderror

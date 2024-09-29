@@ -33,7 +33,7 @@ class Semester extends AcademicProgram
     ];
 
 
-    public function getLatestSyllabusAttribute()
+    public function getLatestCurriculumAttribute()
     {
         $maxVersion = self::where('title', $this->title)->max('version');
         return $this->version === $maxVersion;

@@ -24,7 +24,7 @@
 
                     <div class="col-md-10">
                         {!! Form::select('area', $areas, $announcement->area, [
-                            'class' => 'form-control',
+                            'class' => 'form-select',
                             'required' => true,
                             'placeholder' => '',
                         ]) !!}
@@ -40,7 +40,7 @@
 
                     <div class="col-md-10">
                         {!! Form::select('type', $types, $announcement->type, [
-                            'class' => 'form-control',
+                            'class' => 'form-select',
                             'required' => true,
                             'placeholder' => '',
                         ]) !!}

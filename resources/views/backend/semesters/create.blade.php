@@ -2,21 +2,6 @@
 
 @section('title', __('Create Semester'))
 
-@push('after-styles')
-    <style>
-        /* Style dropdown fields to ensure arrows are visible */
-        select.form-control {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon points="70,140 140,0 0,0" style="fill:%23000" /></svg>') no-repeat right 10px center;
-            background-size: 10px;
-            padding-right: 30px;
-        }
-    </style>
-@endpush
-
-
 @section('content')
     <div>
         {!! Form::open([
@@ -56,7 +41,7 @@
                             \App\Domains\AcademicProgram\Semester\Models\Semester::getAcademicPrograms(),
                             null,
                             [
-                                'class' => 'form-control',
+                                'class' => 'form-select',
                                 'placeholder' => 'Select Academic Program',
                                 'required' => true,
                                 'id' => 'academic_program',
@@ -73,7 +58,7 @@
                     {!! Form::label('version', 'Version*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         {!! Form::select('version', \App\Domains\AcademicProgram\Semester\Models\Semester::getVersions(), null, [
-                            'class' => 'form-control',
+                            'class' => 'form-select',
                             'placeholder' => 'Select Version',
                             'required' => true,
                         ]) !!}
