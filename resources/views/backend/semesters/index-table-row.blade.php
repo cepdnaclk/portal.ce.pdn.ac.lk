@@ -3,23 +3,24 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ \App\Domains\Semester\Models\Semester::getVersions()[$row->version] ?? 'Unknown Version' }}
+    {{ \App\Domains\AcademicProgram\Semester\Models\Semester::getVersions()[$row->version] ?? 'Unknown Version' }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->academic_program }}    
+    {{ $row->academicProgram() }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
     {{ $row->description }}
 </x-livewire-tables::table.cell>
 
-{{-- <x-livewire-tables::table.cell>
-    {{ $row->url }}
-</x-livewire-tables::table.cell> --}}
+<x-livewire-tables::table.cell>
+    <a href="https://www.ce.pdn.ac.lk/academics/{{ strtolower($row->academic_program) }}/semesters/{{ $row->url }}"
+        target="_blank">/{{ $row->url }}</a>
+</x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->created_at }}
+    {{ $row->updatedUser->name }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

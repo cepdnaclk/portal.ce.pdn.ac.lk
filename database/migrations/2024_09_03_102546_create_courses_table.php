@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Domains\Course\Models\Course;
+use App\Domains\AcademicProgram\Course\Models\Course;
 
 class CreateCoursesTable extends Migration
 {
@@ -22,7 +22,7 @@ class CreateCoursesTable extends Migration
             $table->enum('academic_program', array_keys(Course::getAcademicPrograms()));  // Enum for academic program 
             $table->enum('version', array_keys(Course::getVersions()));  // Enum for version as numeric keys
             $table->string('name', 255);  // Course name
-            $table->integer('credits');  // Credit hours
+            $table->integer('credits')->max(18)->min(0);  // Credit hours
             $table->enum('type', array_keys(Course::getTypes()));  // Enum for course type
             $table->text('content')->nullable();  // Course content, nullable
             $table->json('objectives')->nullable();  // JSON for course objectives, nullable
@@ -31,7 +31,7 @@ class CreateCoursesTable extends Migration
             $table->json('ilos')->nullable();  // JSON for intended learning outcomes, nullable
             $table->json('references')->nullable();  // JSON for references, nullable
             $table->string('faq_page', 191)->nullable();
-            $table->timestamps();  // Created_at and updated_at
+            $table->timestamps();
             $table->foreignId('created_by')->constrained('users');  // Foreign key to users.id for created_by
             $table->foreignId('updated_by')->constrained('users');  // Foreign key to users.id for updated_by
         });

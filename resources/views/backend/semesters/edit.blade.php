@@ -2,20 +2,6 @@
 
 @section('title', __('Edit Semester'))
 
-@push('after-styles')
-<style>
-    /* Style dropdown fields to ensure arrows are visible */
-    select.form-control {
-        appearance: none; 
-        -webkit-appearance: none; 
-        -moz-appearance: none; 
-        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon points="70,140 140,0 0,0" style="fill:%23000" /></svg>') no-repeat right 10px center;
-        background-size: 10px;
-        padding-right: 30px;
-    }
-</style>
-@endpush
-
 @section('content')
     <div>
         {!! Form::model($semester, [
@@ -50,7 +36,15 @@
                 <div class="form-group row">
                     {!! Form::label('academic_program', 'Academic Program*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        {!! Form::select('academic_program', \App\Domains\Semester\Models\Semester::getAcademicPrograms(), null, ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::select(
+                            'academic_program',
+                            \App\Domains\AcademicProgram\Semester\Models\Semester::getAcademicPrograms(),
+                            null,
+                            [
+                                'class' => 'form-control',
+                                'required' => true,
+                            ],
+                        ) !!}
                         @error('academic_program')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -61,7 +55,10 @@
                 <div class="form-group row">
                     {!! Form::label('version', 'Version*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        {!! Form::select('version', \App\Domains\Semester\Models\Semester::getVersions(), null, ['class' => 'form-control', 'required' => true]) !!}
+                        {!! Form::select('version', \App\Domains\AcademicProgram\Semester\Models\Semester::getVersions(), null, [
+                            'class' => 'form-control',
+                            'required' => true,
+                        ]) !!}
                         @error('version')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -70,7 +67,7 @@
 
                 <!-- Description -->
                 <div class="form-group row">
-                    {!! Form::label('description', 'Description', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
                         @error('description')
@@ -79,15 +76,15 @@
                     </div>
                 </div>
 
-               <!-- URL -->
+                <!-- URL -->
                 <div class="form-group row">
-                    {!! Form::label('url', 'URL', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('url', 'URL*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         <div class="d-inline-flex align-items-center flex-nowrap w-100">
                             <span class="me-2" id="url_hint">
-                                https://www.ce.pdn.ac.lk/courses/{{ $semester->academic_program ?? 'academic_program' }}/&nbsp;
+                                https://www.ce.pdn.ac.lk/academics/{{ strtolower($semester->academic_program ?? 'academic_program') }}/semesters/&nbsp;
                             </span>
-                            <span class="flex-grow-1"> 
+                            <span class="flex-grow-1">
                                 {!! Form::text('url', old('url', $semester->url), ['class' => 'form-control', 'required' => true]) !!}
                             </span>
                         </div>
@@ -96,25 +93,22 @@
                         @enderror
                     </div>
                 </div>
-
-                <script>
-                    document.getElementById('academic_program').addEventListener('change', function() {
-                        const selectedProgram = this.value;
-                        const urlHint = document.getElementById('url_hint');
-                        urlHint.textContent = `https://www.ce.pdn.ac.lk/courses/${selectedProgram}/`;
-
-                       
-                    });
-                </script>
-
-
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right btn-w-150']) !!}
             </x-slot>
 
         </x-backend.card>
         {!! Form::close() !!}
     </div>
+
+    <script>
+        document.getElementById('academic_program').addEventListener('change', function() {
+            const selectedProgram = document.getElementById('academic_program').value.toLowerCase();
+            const version = document.getElementById('version').value.toLowerCase(); // To be used in the URL
+            const urlHint = document.getElementById('url_hint').textContent =
+                `https://www.ce.pdn.ac.lk/academics/${selectedProgram}/semesters/`;
+        });
+    </script>
 @endsection

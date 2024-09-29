@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Domains\Semester\Models\Semester;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 
 class CreateSemestersTable extends Migration
 {
@@ -21,7 +21,7 @@ class CreateSemestersTable extends Migration
             $table->enum('academic_program', array_keys(Semester::getAcademicPrograms()));
             $table->text('description')->nullable();
             $table->string('url', 200)->unique();
-            $table->timestamps(); // This will create `created_at` and `updated_at` fields automatically
+            $table->timestamps();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
         });

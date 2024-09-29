@@ -59,7 +59,8 @@
                     {!! Form::label('url', 'URL*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         <div class="d-inline-flex align-items-center flex-nowrap w-100">
-                            <span class="me-2">https://ce.pdn.ac.lk/events/{{ $event->published_at }}-&nbsp;</span>
+                            <span class="me-2"
+                                id="url_hint">https://ce.pdn.ac.lk/events/{{ $event->published_at }}-&nbsp;</span>
                             <span class="flex-grow-1"> {!! Form::text('url', $event->url, ['class' => 'form-control', 'required' => true]) !!}</span>
                         </div>
                         @error('url')
@@ -72,31 +73,29 @@
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        <div x-data="{ content: '{{$event->description}}' }" x-init="
-                            (() => {
-                                const quill = new Quill($refs.editor, {
-                                    theme: 'snow',
-                                    modules: {
-                                        toolbar: [
-                                            ['bold', 'italic', 'underline', 'strike'],
-                                            [{ 'header': 1 }, { 'header': 2 }],
-                                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                            [{ 'script': 'sub' }, { 'script': 'super' }],
-                                            [{ 'indent': '-1' }, { 'indent': '+1' }],
-                                            [{ 'size': ['small', false, 'large', 'huge'] }],
-                                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                                            [{ 'color': [] }, { 'background': [] }],
-                                            [{ 'align': [] }],
-                                            ['clean']
-                                        ]
-                                    }
-                                });
-                                quill.clipboard.dangerouslyPasteHTML('{{$event->description}}');
-                                quill.on('text-change', function () {
-                                    content = quill.root.innerHTML;
-                                });
-                            })();
-                        ">
+                        <div x-data="{ content: '{{ $event->description }}' }" x-init="(() => {
+                            const quill = new Quill($refs.editor, {
+                                theme: 'snow',
+                                modules: {
+                                    toolbar: [
+                                        ['bold', 'italic', 'underline', 'strike'],
+                                        [{ 'header': 1 }, { 'header': 2 }],
+                                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                        [{ 'script': 'sub' }, { 'script': 'super' }],
+                                        [{ 'indent': '-1' }, { 'indent': '+1' }],
+                                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                                        [{ 'color': [] }, { 'background': [] }],
+                                        [{ 'align': [] }],
+                                        ['clean']
+                                    ]
+                                }
+                            });
+                            quill.clipboard.dangerouslyPasteHTML('{{ $event->description }}');
+                            quill.on('text-change', function() {
+                                content = quill.root.innerHTML;
+                            });
+                        })();">
                             <div x-ref="editor" style="min-height: 200px;"></div>
                             <textarea name="description" id="description" x-model="content" style="display: none;"></textarea>
                             <div class="col-md-12">
@@ -109,22 +108,26 @@
                 </div>
 
                 <!-- Image -->
-                <div class="form-group row" x-data="{ imagePreview: '{{ $event->thumbURL() }}', updatePreview(event) { 
-                    const file = event.target.files[0]; 
-                    const reader = new FileReader(); 
-                    reader.onload = (e) => { this.imagePreview = e.target.result; }; 
-                    if (file) reader.readAsDataURL(file); 
-                } }">
-                {!! Form::label('image', 'Image', ['class' => 'col-md-2 col-form-label']) !!}
-                <div class="col-md-10">
-                    <div>
-                        {!! Form::file('image', ['accept' => 'image/*', 'x-on:change' => 'updatePreview($event)']) !!}
-                        @error('image')
-                            <strong class="text-danger">{{ $message }}</strong>
-                        @enderror
+                <div class="form-group row" x-data="{
+                    imagePreview: '{{ $event->thumbURL() }}',
+                    updatePreview(event) {
+                        const file = event.target.files[0];
+                        const reader = new FileReader();
+                        reader.onload = (e) => { this.imagePreview = e.target.result; };
+                        if (file) reader.readAsDataURL(file);
+                    }
+                }">
+                    {!! Form::label('image', 'Image', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        <div>
+                            {!! Form::file('image', ['accept' => 'image/*', 'x-on:change' => 'updatePreview($event)']) !!}
+                            @error('image')
+                                <strong class="text-danger">{{ $message }}</strong>
+                            @enderror
+                        </div>
+                        <img class="mt-3" x-bind:src="imagePreview" alt="Image preview"
+                            style="max-width: 150px; max-height: 150px; object-fit: cover;" />
                     </div>
-                    <img class="mt-3" x-bind:src="imagePreview" alt="Image preview" style="max-width: 150px; max-height: 150px; object-fit: cover;" />
-                </div>
                 </div>
 
                 <!-- Enabled -->
@@ -132,9 +135,10 @@
                     {!! Form::label('enabled', 'Enabled', ['class' => 'col-md-2 form-check-label']) !!}
 
                     <div class="col-md-4 form-check form-switch mx-4">
-                        <input type="checkbox" id="checkEnable" name="enabled" value={{ $event->enable ? 'checked' : '""' }}
-                            class="form-check-input checkbox-lg" {{ $event->enabled == 1 ? 'checked' : '' }} />
-                        <label class="form-check-label" for="checkEnable">Visibility</label>
+                        <input type="checkbox" id="checkEnable" name="enabled"
+                            value={{ $event->enable ? 'checked' : '""' }} class="form-check-input checkbox-lg"
+                            {{ $event->enabled == 1 ? 'checked' : '' }} />
+                        <label class="form-check-label" for="checkEnable">&nbsp;</label>
                         @error('enabled')
                             <strong class="text-danger">{{ $message }}</strong>
                         @enderror
@@ -218,10 +222,17 @@
                 </div>
             </x-slot>
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-right']) !!}
             </x-slot>
 
         </x-backend.card>
         {!! Form::close() !!}
     </div>
+
+    <script>
+        document.getElementById('published_at').addEventListener('change', function() {
+            document.getElementById('url_hint').textContent =
+                `https://www.ce.pdn.ac.lk/events/${this.value.toLowerCase() ?? 'yyyy-mm-dd'}-`;
+        });
+    </script>
 @endsection

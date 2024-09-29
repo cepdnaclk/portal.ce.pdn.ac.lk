@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SemesterResource;
-use App\Domains\Semester\Models\Semester;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -12,9 +12,9 @@ class SemesterApiController extends Controller
 {
     public function index(Request $request)
     {
-        try{
+        try {
             $query = Semester::where('academic_program', 'Undergraduate');
-            
+
             if ($request->has('curriculum')) {
                 $query->where('version', $request->curriculum);
             }
@@ -24,12 +24,6 @@ class SemesterApiController extends Controller
             }
 
             $semesters = $query->paginate(20);
-
-            if ($semesters->isEmpty()) {
-                return response()->json([
-                    'message' => 'Semester not found',                  
-                ], 404);
-            }
 
             return SemesterResource::collection($semesters);
         } catch (\Exception $e) {

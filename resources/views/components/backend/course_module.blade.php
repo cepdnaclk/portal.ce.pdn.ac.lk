@@ -97,11 +97,11 @@
     </style>
     <h5>Modules</h5>
     <div class="d-flex justify-content-between mb-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModuleItemModal"
+        <button type="button" class="btn btn-primary btn-w-150" data-bs-toggle="modal" data-bs-target="#addModuleItemModal"
             @click="resetForm(); document.getElementById('addModuleItemModalLabel').innerHTML = 'Add Module'; isEditing=false">
             <i class="fas fa-plus me-2"></i>Add
         </button>
-        <button class="btn btn-dark" x-show="modules.length" x-transition @click="ClearAll()">
+        <button class="btn btn-dark btn-w-150" x-show="modules.length" x-transition @click="ClearAll()">
             <i class="fas fa-times me-2"></i>Clear All
         </button>
     </div>
@@ -145,7 +145,7 @@
                         <span
                             x-show="module.time_allocation && Object.values(module.time_allocation).some(value => value != null && value !== 0)"
                             x-text="Object.entries(module.time_allocation)
-                                     .filter(([key, value]) => value != null && value !== 0)
+                                     .filter(([key, value]) => value !== null && value !== 0 && value !=='')
                                      .map(([key, value]) => key.charAt(0).toUpperCase() + key.slice(1) + ': ' + value + ' h')
                                      .join(', ')">
                         </span>
@@ -173,16 +173,19 @@
                                         <h4 class="mb-3">Module Description</h4>
                                         <div class="mb-3">
                                             <label for="moduleName" class="form-label">Name*</label>
-                                            <input type="text" class="form-control" id="moduleName"
+                                            <input type="text" class="form-control" id="moduleName" autofocus
                                                 x-model="newModule.name"
-                                                :class="{ 'is-invalid': moduleNameError, 'is-valid': newModule.name.trim()
-                                                        .length > 0 }"
+                                                :class="{
+                                                    'is-invalid': moduleNameError,
+                                                    'is-valid': newModule.name.trim()
+                                                        .length > 0
+                                                }"
                                                 @input="moduleNameError = false" required>
                                             <div id="moduleNameError" class="invalid-feedback" x-show="moduleNameError">
                                                 Please enter a module name.</div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="moduleDescription" class="form-label">Description*</label>
+                                            <label for="moduleDescription" class="form-label">Description</label>
                                             <textarea class="form-control w-100" style="overflow:hidden;" id="moduleDescription" x-model="newModule.description"
                                                 oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';"></textarea>
                                         </div>
@@ -195,7 +198,7 @@
                                             :key="key + '-' + value + '-' + newModule.name">
                                             <div class="mb-2">
                                                 <label :for="key" class="form-label"
-                                                    x-text="key"></label>
+                                                    x-text="key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')"></label>
                                                 <div class="input-group">
                                                     <input type="number" class="form-control" :id="key"
                                                         x-model="newModule.time_allocation[key]">
@@ -210,8 +213,9 @@
                     </div>
                 </form>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" x-on:click="!moduleNameError && handleSave()">Save
+                    <button type="button" class="btn btn-secondary btn-w-150" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-w-150"
+                        x-on:click="!moduleNameError && handleSave()">Save
                         Changes</button>
                 </div>
             </div>

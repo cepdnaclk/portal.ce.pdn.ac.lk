@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Backend\Courses;
 
-use App\Domains\Course\Models\Course;
-use App\Domains\Semester\Models\Semester;
+use App\Domains\AcademicProgram\Course\Models\Course;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -70,7 +70,7 @@ class CourseTest extends TestCase
             ->set('semester', (string) $course->semester_id)
             ->set('version', (string) $course->version)
             ->set('type', $course->type)
-            ->set('code', 'CS102')  
+            ->set('code', 'CS102')
             ->set('name', 'Advanced Computer Science')
             ->set('credits', 3)
             ->set('content', 'Advanced topics in computer science.')

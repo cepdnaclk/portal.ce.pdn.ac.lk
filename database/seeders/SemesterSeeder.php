@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Domains\Semester\Models\Semester;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 
 class SemesterSeeder extends Seeder
 {
@@ -12,19 +12,19 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'Semester 1',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'First semester of the undergraduate program.',
-            'url' => '/semester1',
+            'url' => 'semester-1',
             'created_by' => 1,
-            'updated_by' => 1, // Assuming user with ID 1 exists
+            'updated_by' => 1,
         ]);
 
         Semester::create([
             'title' => 'Semester 2',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'Second semester of the undergraduate program.',
-            'url' => '/semester2',
+            'url' => 'semester-2',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -32,9 +32,9 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'Semester 3',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'Third semester of the undergraduate program.',
-            'url' => '/semester3',
+            'url' => 'semester-3',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -42,9 +42,9 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'Semester 4',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'Fourth semester of the undergraduate program.',
-            'url' => '/semester4',
+            'url' => 'semester-4',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -52,9 +52,9 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'Short Semester',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'During this semester, the students will follow a Guided Software Engineering project with General Elective courses of at least 9 credits. The semester is 7 weeks long.',
-            'url' => '/short-semester',
+            'url' => 'short-semester',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -62,9 +62,9 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'Semester 5',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'Fifth semester of the undergraduate program.',
-            'url' => '/semester5',
+            'url' => 'semester-5',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -72,9 +72,9 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'Semester 6',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'Sixth semester of the undergraduate program.',
-            'url' => '/semester6',
+            'url' => 'semester-6',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -82,9 +82,9 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'Semester 7',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'This is a short semester of 8 weeks, the students will start their final year projects and follow a few mandatory general elective courses.',
-            'url' => '/semester7',
+            'url' => 'semester-7',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -92,9 +92,9 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'Semester 8',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'Eighth semester of the undergraduate program.',
-            'url' => '/semester8',
+            'url' => 'semester-8',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -102,9 +102,9 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'General Electives',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'General Electives',
-            'url' => '/general-electives',
+            'url' => 'general-electives',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -112,9 +112,9 @@ class SemesterSeeder extends Seeder
         Semester::create([
             'title' => 'Technical Electives',
             'version' => 1,
-            'academic_program' => 'Undergraduate',
+            'academic_program' => 'undergraduate',
             'description' => 'Technical Electives',
-            'url' => '/technical-electives',
+            'url' => 'technical-electives',
             'created_by' => 1,
             'updated_by' => 1,
         ]);

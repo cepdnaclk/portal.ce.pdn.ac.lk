@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
-use App\Domains\Course\Models\Course;
+use App\Domains\AcademicProgram\Course\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -28,12 +28,6 @@ class CourseApiController extends Controller
             }
 
             $courses = $query->paginate(20);
-
-            if ($courses->isEmpty()) {
-                return response()->json([
-                    'message' => 'Course not found',                  
-                ], 404);
-            }
 
             return CourseResource::collection($courses);
         } catch (\Exception $e) {

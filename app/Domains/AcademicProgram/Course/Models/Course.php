@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Domains\Course\Models;
+namespace App\Domains\AcademicProgram\Course\Models;
 
-use App\Domains\Course\Models\Traits\Scope\CourseScope;
+use App\Domains\Auth\Models\User;
+use App\Domains\AcademicProgram\AcademicProgram;
+use App\Domains\AcademicProgram\Course\Models\Traits\Scope\CourseScope;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class Course.
  */
-class Course extends Model
+class Course extends AcademicProgram
 {
     use CourseScope,
         HasFactory,
@@ -89,20 +91,29 @@ class Course extends Model
         ];
     }
 
-    public static function getAcademicPrograms(): array
+    public function academicProgram()
     {
-        return [
-            'undergraduate' => 'Undergraduate',
-            'postgraduate' => 'Postgraduate'
-        ];
+        return $this->getAcademicPrograms()[$this->academic_program];
     }
 
-    public static function getVersions(): array
+    public function createdUser()
     {
-        return [
-            1 => 'Current Curriculum',
-            2 => 'Curriculum - Effective from E22'
-        ];
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'semester_id');
+    }
+
+    public function version()
+    {
+        return $this->getVersions()[$this->version];
     }
 
     public function modules()

@@ -42,11 +42,11 @@
                                     </div>
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label for="drop1">Version</label>
+                                            <label for="drop1">Curriculum</label>
                                         </div>
                                         <select class="form-select" wire:model="version">
                                             <option style="display:none" selected></option>
-                                            @foreach (App\Domains\Course\Models\Course::getVersions() as $key => $value)
+                                            @foreach (App\Domains\AcademicProgram\Course\Models\Course::getVersions() as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
@@ -99,7 +99,7 @@
                                         </div>
                                         <select class="form-select" wire:model="type">
                                             <option style="display:none" selected></option>
-                                            @foreach (App\Domains\Course\Models\Course::getTypes() as $key => $value)
+                                            @foreach (App\Domains\AcademicProgram\Course\Models\Course::getTypes() as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
@@ -219,24 +219,27 @@
         <div class="navigation">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col" style="padding: 0px;">
-                        @if ($canUpdate)
-                            <button type="button" class="btn btn-dark" style="float: center;"
-                                wire:click="update">Update & Exit</button>
-                        @endif
-                        <div class="btn-group" style="float: right;">
+                    <div class="col p-3">
+                        <div class="float-end">
+                            @if ($canUpdate)
+                                <button type="button" class="btn btn-dark btn-w-150 me-4" wire:click="update">
+                                    Update & Exit
+                                </button>
+                            @endif
+
                             @if ($formStep == 1)
-                                <button type="button" class="btn btn-primary next-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 next-step"
                                     wire:click="next">Next</button>
                             @elseif ($formStep == 2)
-                                <button type="button" class="btn btn-primary prev-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 prev-step"
                                     wire:click="previous">Previous</button>
-                                <button type="button" class="btn btn-primary next-step"
+
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 next-step"
                                     wire:click="next">Next</button>
                             @elseif ($formStep == 3)
-                                <button type="button" class="btn btn-primary prev-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 prev-step"
                                     wire:click="previous">Previous</button>
-                                <button type="button" class="btn btn-primary next-step"
+                                <button type="button" class="btn btn-primary btn-w-150 me-2 next-step"
                                     wire:click="update">Update</button>
                             @endif
                         </div>

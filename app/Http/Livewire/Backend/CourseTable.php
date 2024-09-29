@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Backend;
 
-use App\Domains\Course\Models\Course;
+use App\Domains\AcademicProgram\Course\Models\Course;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -21,19 +21,21 @@ class CourseTable extends DataTableComponent
         return [
             Column::make("Code", "code")
                 ->searchable(),
-            Column::make("Name","name")
+            Column::make("Name", "name")
                 ->searchable(),
-            Column::make("Semester","semester_id")
+            Column::make("Semester", "semester")
                 ->searchable(),
             Column::make("Academic Program", "academic_program")
                 ->sortable(),
             Column::make("Type", "type")
                 ->sortable(),
-            Column::make("Version", "version")
+            Column::make("Curriculum", "version")
                 ->sortable(),
             Column::make("Credits", "credits")
                 ->searchable(),
-            Column::make("Created At", "created_at")
+            Column::make("Updated by", "created_by")
+                ->sortable(),
+            Column::make("Updated At", "updated_at")
                 ->sortable(),
             Column::make("Actions")
         ];
@@ -42,26 +44,40 @@ class CourseTable extends DataTableComponent
     public function query(): Builder
     {
         return Course::query()
-        ->when($this->getFilter('semester_id'), fn ($query, $type) => $query->where('semester_id', $type));
+            ->when($this->getFilter('academic_program'), fn($query, $type) => $query->where('academic_program', $type))
+            ->when($this->getFilter('semester_id'), fn($query, $type) => $query->where('semester_id', $type))
+            ->when($this->getFilter('version'), fn($query, $version) => $query->where('version', $version));;
     }
 
     public function filters(): array
     {
-        $type = ["" => "Any"];
+        $academicProgramOptions = ["" => "Any"];
+        foreach (Course::getAcademicPrograms() as $key => $value) {
+            $academicProgramOptions[$key] = $value;
+        }
+
+        $typeOptions = ["" => "Any"];
         foreach (Course::getTypes() as $key => $value) {
-            $type[$key] = $value;
+            $typeOptions[$key] = $value;
+        }
+
+        $versionOptions = ["" => "Any"];
+        foreach (Course::getVersions() as $key => $value) {
+            $versionOptions[$key] = $value;
         }
 
         return [
+            'academic_program' => Filter::make('Academic Program')
+                ->select($academicProgramOptions),
             'type' => Filter::make('Type')
-                ->select($type),
+                ->select($typeOptions),
+            'version' => Filter::make('Version')
+                ->select($versionOptions),
         ];
-
     }
 
     public function rowView(): string
     {
         return 'backend.courses.index-table-row';
     }
-
 }

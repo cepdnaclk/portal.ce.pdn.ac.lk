@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Domains\Course\Models;
+namespace App\Domains\AcademicProgram\Course\Models;
 
-use App\Domains\Course\Models\Traits\Scope\CourseScope;
-use Database\Factories\CourseFactory;
+use App\Domains\AcademicProgram\Course\Models\Traits\Scope\CourseScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -54,5 +53,4 @@ class CourseModule extends Model
     {
         return $this->belongsTo(Course::class);
     }
-
 }

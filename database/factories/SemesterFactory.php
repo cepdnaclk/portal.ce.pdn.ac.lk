@@ -2,7 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Domains\Semester\Models\Semester;
+use App\Domains\Auth\Models\User;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,14 +28,13 @@ class SemesterFactory extends Factory
         return [
             'title' => $this->faker->sentence(3),
             'version' => $this->faker->randomElement(array_keys(Semester::getVersions())),
-            'academic_program' => $this->faker->randomElement(array_keys(Semester::getAcademicPrograms())), 
-            'description' => $this->faker->paragraph, 
-            'url' => $this->faker->url, 
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'), 
-            'updated_at' => now(), 
-            'created_by' => \App\Domains\Auth\Models\User::inRandomOrder()->first()->id,
-            'updated_by' => \App\Domains\Auth\Models\User::inRandomOrder()->first()->id,
+            'academic_program' => $this->faker->randomElement(array_keys(Semester::getAcademicPrograms())),
+            'description' => $this->faker->paragraph,
+            'url' => $this->faker->url,
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => now(),
+            'created_by' => User::inRandomOrder()->first()->id,
+            'updated_by' => User::inRandomOrder()->first()->id,
         ];
     }
-
 }
