@@ -20,7 +20,7 @@ class SemesterTable extends DataTableComponent
     {
         return [
             Column::make("Title", "title")
-                ->searchable(),
+                ->searchable()->sortable(),
             Column::make("Curriculum", "version")
                 ->sortable(),
             Column::make("Academic Program", "academic_program")
