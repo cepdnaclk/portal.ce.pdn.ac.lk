@@ -99,17 +99,6 @@ class Course extends AcademicProgram
         ];
     }
 
-
-    public static function getTypes(): array
-    {
-        // TODO Get the list from Taxonomies
-        return [
-            'Core' => 'Core',
-            'GE' => 'General Elective',
-            'TE' => 'Technical Elective'
-        ];
-    }
-
     public function academicProgram()
     {
         return $this->getAcademicPrograms()[$this->academic_program];

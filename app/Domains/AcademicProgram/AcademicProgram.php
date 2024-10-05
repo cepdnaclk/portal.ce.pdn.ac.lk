@@ -29,6 +29,7 @@ class AcademicProgram extends Model
     public static function getTypes(): array
     {
         return [
+            'Found' => 'Foundation',
             'Core' => 'Core',
             'GE' => 'General Elective',
             'TE' => 'Technical Elective'
