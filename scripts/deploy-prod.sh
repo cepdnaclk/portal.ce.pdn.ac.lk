@@ -15,6 +15,9 @@ pnpm install
 echo "Running: pnpm run prod"
 pnpm run prod
 
+echo "Running: migrate the database (no seed)"
+php artisan migrate
+
 # Not running. Should check on CI/CD level
 # echo "Running: Unit test"
 # touch database/database.sqlite
