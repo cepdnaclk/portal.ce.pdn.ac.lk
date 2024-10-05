@@ -59,7 +59,7 @@ class SemesterTable extends DataTableComponent
         return [
             'academic_program' => Filter::make('Academic Program')
                 ->select($academicProgramOptions),
-            'version' => Filter::make('Version')
+            'version' => Filter::make('Curriculum')
                 ->select($versionOptions),
         ];
     }
