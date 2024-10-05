@@ -183,18 +183,11 @@
                             </div>
 
                             {{-- ILO --}}
-
-                            <div class="mt-5">
-                                @livewire('backend.item-adder', ['type' => 'knowledge', 'items' => $ilos['knowledge']], key('ilos-knowledge-adder'))
-                            </div>
-
-                            <div class="mt-5">
-                                @livewire('backend.item-adder', ['type' => 'skills', 'items' => $ilos['skills']], key('ilos-skill-adder'))
-                            </div>
-
-                            <div class="mt-5">
-                                @livewire('backend.item-adder', ['type' => 'attitudes', 'items' => $ilos['attitudes']], key('ilos-attitude-adder'))
-                            </div>
+                            @foreach ($ilos as $key => $value)
+                                <div class="mt-5">
+                                    @livewire('backend.item-adder', ['type' => $key, 'items' => $ilos[$key]], key("ilos-$key-adder"))
+                                </div>
+                            @endforeach
 
                         </div>
                     </div>
