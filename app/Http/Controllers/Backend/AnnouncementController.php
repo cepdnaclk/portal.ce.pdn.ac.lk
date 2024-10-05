@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Domains\Announcement\Models\Announcement;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class AnnouncementController extends Controller
 {
@@ -17,9 +18,14 @@ class AnnouncementController extends Controller
      */
     public function create()
     {
-        $areas = Announcement::areas();
-        $types = Announcement::types();
-        return view('backend.announcements.create', compact('areas', 'types'));
+        try {
+            $areas = Announcement::areas();
+            $types = Announcement::types();
+            return view('backend.announcements.create', compact('areas', 'types'));
+        } catch (\Exception $ex) {
+            Log::error('Failed to load announcement creation page', ['error' => $ex->getMessage()]);
+            return abort(500);
+        }
     }
 
     /**
@@ -46,6 +52,7 @@ class AnnouncementController extends Controller
 
             return redirect()->route('dashboard.announcements.index', $announcement)->with('Success', 'Announcement was created !');
         } catch (\Exception $ex) {
+            Log::error('Failed to create announcement', ['error' => $ex->getMessage()]);
             return abort(500);
         }
     }
@@ -58,9 +65,14 @@ class AnnouncementController extends Controller
      */
     public function edit(Announcement $announcement)
     {
-        $areas = Announcement::areas();
-        $types = Announcement::types();
-        return view('backend.announcements.edit', compact('announcement', 'areas', 'types'));
+        try {
+            $areas = Announcement::areas();
+            $types = Announcement::types();
+            return view('backend.announcements.edit', compact('announcement', 'areas', 'types'));
+        } catch (\Exception $ex) {
+            Log::error('Failed to load announcement edit page', ['announcement_id' => $announcement->id, 'error' => $ex->getMessage()]);
+            return abort(500);
+        }
     }
 
     /**
@@ -71,7 +83,7 @@ class AnnouncementController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Announcement $announcement)
-    {
+    {  
         $data = request()->validate([
             'area' => ['required', Rule::in(array_keys(Announcement::areas()))],
             'type' => ['required', Rule::in(array_keys(Announcement::types()))],
@@ -86,6 +98,7 @@ class AnnouncementController extends Controller
             $announcement->update($data);
             return redirect()->route('dashboard.announcements.index')->with('Success', 'Announcement was updated !');
         } catch (\Exception $ex) {
+            Log::error('Failed to update announcement', ['announcement_id' => $announcement->id, 'error' => $ex->getMessage()]);
             return abort(500);
         }
     }
@@ -114,6 +127,7 @@ class AnnouncementController extends Controller
             $announcement->delete();
             return redirect()->route('dashboard.announcements.index')->with('Success', 'Announcement was deleted !');
         } catch (\Exception $ex) {
+            Log::error('Failed to delete announcement', ['announcement_id' => $announcement->id, 'error' => $ex->getMessage()]);
             return abort(500);
         }
     }

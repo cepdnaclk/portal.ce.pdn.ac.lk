@@ -2,11 +2,12 @@
 
 namespace App\Domains\Event\Models;
 
-use App\Domains\Event\Models\Traits\Scope\EventScope;
+use App\Domains\Auth\Models\User;
 use Database\Factories\EventFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Domains\Event\Models\Traits\Scope\EventScope;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class News.
@@ -51,6 +52,11 @@ class Event extends Model
     {
         if ($this->image != null) return '/img/events/' . $this->image;
         else return config('constants.frontend.dummy_thumb');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**

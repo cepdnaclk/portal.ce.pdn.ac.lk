@@ -54,7 +54,7 @@ class EventsTable extends DataTableComponent
                 } elseif ($enabled === 0) {
                     $query->where('enabled', false);
                 }
-            });
+            })->orderBy('published_at', 'desc');
     }
     public function toggleEnable($eventId)
     {

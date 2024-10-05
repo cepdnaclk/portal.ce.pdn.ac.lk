@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
         if (app()->environment(['local', 'testing'])) {
             User::create([
                 'type' => User::TYPE_USER,
-                'name' => 'Test User',
+                'name' => 'User',
                 'email' => env('SEED_USER_EMAIL', 'user@portal.ce.pdn.ac.lk'),
                 'password' => env('SEED_USER_PASSWORD', 'regular_user'),
                 'email_verified_at' => now(),
@@ -43,8 +43,8 @@ class UserSeeder extends Seeder
 
             User::create([
                 'type' => User::TYPE_USER,
-                'name' => 'NewsEditor1',
-                'email' => env('SEED_NEWS_EDITOR_EMAIL', 'news.editor@portal.ce.pdn.ac.lk'),
+                'name' => 'News Editor',
+                'email' => env('SEED_NEWS_EDITOR_EMAIL', 'user+news.editor@portal.ce.pdn.ac.lk'),
                 'password' => env('SEED_NEWS_EDITOR_PASSWORD', 'news'),
                 'email_verified_at' => now(),
                 'active' => true,
@@ -52,9 +52,18 @@ class UserSeeder extends Seeder
 
             User::create([
                 'type' => User::TYPE_USER,
-                'name' => 'EventEditor1',
-                'email' => env('SEED_EVENT_EDITOR_EMAIL', 'events.editor@portal.ce.pdn.ac.lk'),
+                'name' => 'Event Editor',
+                'email' => env('SEED_EVENT_EDITOR_EMAIL', 'user+events.editor@portal.ce.pdn.ac.lk'),
                 'password' => env('SEED_EVENT_EDITOR_PASSWORD', 'events'),
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
+
+            User::create([
+                'type' => User::TYPE_USER,
+                'name' => 'CourseManager',
+                'email' => env('SEED_COURSE_MANAGER_EMAIL', 'course_manager@portal.ce.pdn.ac.lk'),
+                'password' => env('SEED_COURSE_MANAGER_PASSWORD', 'course_manager'),
                 'email_verified_at' => now(),
                 'active' => true,
             ]);

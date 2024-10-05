@@ -25,18 +25,13 @@ class DashboardTest extends TestCase
         $this->actingAs(User::factory()->user()->create());
 
         $response = $this->get('/dashboard/home');
-
-        // $response->assertRedirect('/');
-        $response->assertStatus(200); // As all auth users can access the dashboard
-
-        // $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
+        $response->assertStatus(200);
     }
 
     /** @test */
     public function admin_can_access_admin_dashboard()
     {
         $this->loginAsAdmin();
-
         $this->get('/dashboard/home')->assertOk();
     }
 }

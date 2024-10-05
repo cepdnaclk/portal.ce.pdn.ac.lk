@@ -79,7 +79,7 @@ class Kernel extends HttpKernel
         'is_admin' => \App\Domains\Auth\Http\Middleware\AdminCheck::class,
         'is_super_admin' => \App\Domains\Auth\Http\Middleware\SuperAdminCheck::class,
         'is_user' => \App\Domains\Auth\Http\Middleware\UserCheck::class,
-        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'password.confirm' => \App\Http\Middleware\CustomRequirePassword::class, // \Illuminate\Auth\Middleware\RequirePassword::class,
         'password.expires' => \App\Domains\Auth\Http\Middleware\PasswordExpires::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
