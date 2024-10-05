@@ -28,7 +28,8 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-echo "Running: Setting permissions"
+# Not run in dev mode. Must manually done 
+# echo "Running: Setting permissions"
 # sudo chown -R www-data:www-data ./
 # sudo find ./ -type f -exec chmod 644 {} \;
 # sudo find ./ -type d -exec chmod 755 {} \;
