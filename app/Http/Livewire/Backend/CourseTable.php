@@ -71,7 +71,7 @@ class CourseTable extends DataTableComponent
                 ->select($academicProgramOptions),
             'type' => Filter::make('Type')
                 ->select($typeOptions),
-            'version' => Filter::make('Version')
+            'version' => Filter::make('Curriculum')
                 ->select($versionOptions),
         ];
     }

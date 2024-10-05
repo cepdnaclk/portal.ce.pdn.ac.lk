@@ -42,7 +42,6 @@ sudo find ./ -type f -exec chmod 644 {} \;
 sudo chmod -R 775 ./storage
 sudo chmod -R 775 ./bootstrap/cache
 
-
 echo "Running: Restarting the queue"
 php artisan queue:restart
 
