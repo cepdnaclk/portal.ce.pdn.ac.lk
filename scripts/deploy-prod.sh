@@ -4,7 +4,7 @@ echo "Running: Down the site for maintenance"
 php artisan down --refresh=30 --render='errors::503'
 
 echo "Running: Update the branch with latest"
-git pull
+sudo git pull
 
 echo "Running: composer install in prod-mode"
 composer install --optimize-autoloader --no-dev
