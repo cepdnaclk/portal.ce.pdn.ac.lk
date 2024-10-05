@@ -34,11 +34,7 @@ class CreateCourses extends Component
 
     //2nd form step
     public $objectives;
-    public $ilos = [
-        'knowledge' => [],
-        'skills' => [],
-        'attitudes' => [],
-    ];
+    public $ilos = [];
 
     //3rd form step
     public $references = [];
@@ -98,7 +94,7 @@ class CreateCourses extends Component
     {
         switch ($this->formStep) {
             case 1:
-                $this->validate([
+                $validationRules = [
                     'academicProgram' => 'required|string',
                     'semester' => 'required|string',
                     'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
@@ -108,15 +104,16 @@ class CreateCourses extends Component
                     'credits' => 'required|integer|min:1|max:18',
                     'faq_page' => 'nullable|url',
                     'content' => 'nullable|string',
-                    'time_allocation.lecture' => 'nullable|integer|min:0',
-                    'time_allocation.tutorial' => 'nullable|integer|min:0',
-                    'time_allocation.practical' => 'nullable|integer|min:0',
-                    'time_allocation.assignment' => 'nullable|integer|min:0',
-                    'marks_allocation.practicals' => 'nullable|integer|min:0|max:100',
-                    'marks_allocation.project' => 'nullable|integer|min:0|max:100',
-                    'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
-                    'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
-                ]);
+                ];
+
+                foreach (Course::getTimeAllocation() as $key => $value) {
+                    $validationRules["time_allocation.$key"] = 'nullable|integer|min:0';
+                }
+                foreach (Course::getMarksAllocation() as $key => $value) {
+                    $validationRules["marks_allocation.$key"] = 'nullable|integer|min:0|max:100';
+                }
+
+                $this->validate($validationRules);
                 $this->validateMarksAllocation();
                 if ($this->getErrorBag()->has('marks_allocation.total')) {
                     return;
@@ -124,15 +121,17 @@ class CreateCourses extends Component
                 break;
 
             case 3:
-                $this->validate([
+                $validationRules = [
                     'modules' => 'nullable|array',
                     'modules.*.name' => 'required|string|min:3|max:255',
                     'modules.*.description' => 'required|string',
-                    'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
-                    'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
-                    'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
-                    'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
-                ]);
+                ];
+
+                foreach (Course::getTimeAllocation() as $key => $value) {
+                    $validationRules["modules.*.time_allocation.$key"] = 'nullable|integer|min:0';
+                }
+
+                $this->validate($validationRules);
                 break;
         }
     }
@@ -167,6 +166,7 @@ class CreateCourses extends Component
         $this->time_allocation = Course::getTimeAllocation();
         $this->marks_allocation = Course::getMarksAllocation();
         $this->module_time_allocation = Course::getTimeAllocation();
+        $this->ilos =  Course::getILOTemplate();
     }
 
     public function updateItems($type, $newItems)
@@ -292,11 +292,7 @@ class CreateCourses extends Component
         $this->marks_allocation = Course::getMarksAllocation();
         $this->module_time_allocation = Course::getTimeAllocation();
         $this->objectives = '';
-        $this->ilos = [
-            'knowledge' => [],
-            'skills' => [],
-            'attitudes' => [],
-        ];
+        $this->ilos = Course::getILOTemplate();
         $this->references = [];
         $this->modules = [];
     }

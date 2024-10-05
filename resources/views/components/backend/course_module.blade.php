@@ -186,8 +186,8 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="moduleDescription" class="form-label">Description</label>
-                                            <textarea class="form-control w-100" style="overflow:hidden;" id="moduleDescription" x-model="newModule.description"
-                                                oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';"></textarea>
+                                            <textarea class="form-control w-100" rows="10" style="overflow:hidden;" id="moduleDescription"
+                                                x-model="newModule.description" oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';"></textarea>
                                         </div>
                                     </div>
                                 </div>

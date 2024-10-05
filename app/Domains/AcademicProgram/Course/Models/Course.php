@@ -62,28 +62,47 @@ class Course extends AcademicProgram
         'updated_at' => 'datetime',
     ];
 
+    public static function getILOTemplate(): array
+    {
+        // TODO Get the list from Taxonomies
+        return [
+            'general' => [],
+            'knowledge' => [],
+            'skills' => [],
+            'attitudes' => [],
+        ];
+    }
     public static function getMarksAllocation(): array
     {
+        // TODO Get the list from Taxonomies
         return [
             'practicals' => null,
-            'project' => null,
+            'tutorials' => null,
+            'quizzes' => null,
+            'projects' => null,
+            'participation' => null,
             'mid_exam' => null,
-            'end_exam' => null
+            'end_exam' => null,
         ];
     }
 
     public static function getTimeAllocation(): array
     {
+        // TODO Get the list from Taxonomies
         return [
             'lecture' => null,
             'tutorial' => null,
             'practical' => null,
-            'assignment' => null
+            'design' => null,
+            'assignment' => null,
+            'independent_learning' => null
         ];
     }
 
+
     public static function getTypes(): array
     {
+        // TODO Get the list from Taxonomies
         return [
             'Core' => 'Core',
             'GE' => 'General Elective',

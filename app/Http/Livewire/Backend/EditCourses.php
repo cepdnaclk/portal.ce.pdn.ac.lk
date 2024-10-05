@@ -45,7 +45,8 @@ class EditCourses extends Component
 
     public function rules()
     {
-        return [
+
+        $validationRules = [
             'academicProgram' => 'required|string',
             'semester' => 'required|int',
             'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
@@ -55,14 +56,6 @@ class EditCourses extends Component
             'credits' => 'required|integer|min:1|max:18',
             'faq_page' => 'nullable|url',
             'content' => 'nullable|string',
-            'time_allocation.lecture' => 'nullable|integer|min:0',
-            'time_allocation.tutorial' => 'nullable|integer|min:0',
-            'time_allocation.practical' => 'nullable|integer|min:0',
-            'time_allocation.assignment' => 'nullable|integer|min:0',
-            'marks_allocation.practicals' => 'nullable|integer|min:0|max:100',
-            'marks_allocation.project' => 'nullable|integer|min:0|max:100',
-            'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
-            'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
             'modules' => 'nullable|array',
             'modules.*.name' => 'required|string|max:255',
             'modules.*.description' => 'nullable|string',
@@ -71,6 +64,16 @@ class EditCourses extends Component
             'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
             'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
         ];
+
+        foreach (Course::getTimeAllocation() as $key => $value) {
+            $validationRules["time_allocation.$key"] = 'nullable|integer|min:0';
+            $validationRules["modules.*.time_allocation.$key"] = 'nullable|integer|min:0';
+        }
+        foreach (Course::getMarksAllocation() as $key => $value) {
+            $validationRules["marks_allocation.$key"] = 'nullable|integer|min:0|max:100';
+        }
+
+        return $validationRules;
     }
 
     public function messages()
@@ -161,14 +164,10 @@ class EditCourses extends Component
         $this->credits = $course->credits;
         $this->faq_page = $course->faq_page;
         $this->content = $course->content;
-        $this->time_allocation = json_decode($course->time_allocation, true) ?? Course::getTimeAllocation();
-        $this->marks_allocation = json_decode($course->marks_allocation, true) ?? Course::getMarksAllocation();
+        $this->time_allocation = array_merge(Course::getTimeAllocation(), json_decode($course->time_allocation, true));
+        $this->marks_allocation = array_merge(Course::getMarksAllocation(), json_decode($course->marks_allocation, true));
         $this->objectives = $course->objectives;
-        $this->ilos = json_decode($course->ilos, true) ?? [
-            'knowledge' => [],
-            'skills' => [],
-            'attitudes' => [],
-        ];
+        $this->ilos = array_merge(Course::getILOTemplate(), json_decode($course->ilos, true) ?? []);
         $this->references = json_decode($course->references, true) ?? [];
 
         // Load modules
@@ -177,12 +176,7 @@ class EditCourses extends Component
                 'id' => $index + 1, // or use $module->id if available
                 'name' => $module->topic,
                 'description' => $module->description,
-                'time_allocation' => json_decode($module->time_allocation, true) ?? [
-                    'lectures' => 0,
-                    'tutorials' => 0,
-                    'practicals' => 0,
-                    'assignments' => 0,
-                ],
+                'time_allocation' => array_merge(Course::getTimeAllocation(), json_decode($module->time_allocation, true))
             ];
         })->toArray();
         // Update semesters list based on academic program and version
@@ -322,11 +316,7 @@ class EditCourses extends Component
         $this->marks_allocation = Course::getMarksAllocation();
         $this->module_time_allocation = Course::getTimeAllocation();
         $this->objectives = '';
-        $this->ilos = [
-            'knowledge' => [],
-            'skills' => [],
-            'attitudes' => [],
-        ];
+        $this->ilos = Course::getILOTemplate();
         $this->references = [];
         $this->modules = [];
     }

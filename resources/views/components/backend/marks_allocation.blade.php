@@ -48,7 +48,7 @@
 
             <template x-for="(value, key) in marks_allocation" :key="key">
                 <div class="row d-flex align-items-center">
-                    <div class="col-md-3 col-3">
+                    <div class="col-md-4 col-12">
                         <label x-text="key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')"></label>
                     </div>
                     <div class="input-group mb-3 col ms-3">
@@ -62,7 +62,7 @@
             </template>
 
             <div class="row d-flex align-items-center">
-                <div class="col-md-3 col-3">
+                <div class="col-md-4 col-12">
                     <label>Total</label>
                 </div>
                 <div class="input-group mb-3 col ms-3">
