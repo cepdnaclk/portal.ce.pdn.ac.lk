@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * Class DashboardController.
  */
@@ -12,6 +14,11 @@ class DashboardController
      */
     public function index()
     {
-        return view('backend.dashboard');
+        try{
+            return view('backend.dashboard');
+        }catch (\Exception $ex) {       
+            Log::error('Failed to load dashboard', ['error' => $ex->getMessage()]);
+            return abort(500);
+        }
     }
 }

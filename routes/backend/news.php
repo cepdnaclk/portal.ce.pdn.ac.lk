@@ -3,6 +3,8 @@
 use Tabuna\Breadcrumbs\Trail;
 use App\Domains\News\Models\News;
 use Illuminate\Support\Facades\Route;
+use App\Domains\News\Models\News;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\NewsController;
 
 
@@ -56,7 +58,7 @@ Route::group(['middleware' => ['permission:user.access.editor.news']], function 
         ->name('news.destroy');
 
     //Preview
-    Route::get('news/preview/{news}', function (News $news){
+    Route::get('news/preview/{news}', function (News $news) {
         return view('backend.news.preview', compact('news'));
     })->name('news.preview');
 });

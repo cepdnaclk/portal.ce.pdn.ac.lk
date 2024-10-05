@@ -6,17 +6,14 @@ composer install
 echo "Running : composer update"
 composer update
 
-echo "Running : npm install"
-npm install
+echo "Running : pnpm install"
+pnpm install
 
-echo "Running : npm run dev"
-npm run dev
+echo "Running : pnpm run dev"
+pnpm run dev
 
 echo "Running : php artisan storage:link"
 php artisan storage:link
-
-echo "Running : php artisan migrate"
-php artisan migrate
 
 echo "Running : php artisan migrate:fresh --seed"
 php artisan migrate:fresh --seed
