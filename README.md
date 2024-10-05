@@ -106,6 +106,15 @@ php artisan test
 
 ```
 
+#### Maintenance Scripts
+
+Can be found under `./scripts.` folder. In the production environment, scripts need to be run with `sudo` from the base directory to work correctly.
+
+Ex:
+```bash 
+sudo sh ./scripts/deploy-prod.sh
+```
+
 #### Resource Routes - Standardard Pattern
 
 | Verb   | URI                    | Action  | Route Name     |
