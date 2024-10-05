@@ -3,8 +3,6 @@
 use Tabuna\Breadcrumbs\Trail;
 use App\Domains\News\Models\News;
 use Illuminate\Support\Facades\Route;
-use App\Domains\News\Models\News;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\NewsController;
 
 
