@@ -1,111 +1,153 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ appName() }}</title>
-        <meta name="description" content="@yield('meta_description', appName())">
-        <meta name="author" content="@yield('meta_author', 'Anthony Rappa')">
-        @yield('meta')
 
-        @stack('before-styles')
-        <link rel="dns-prefetch" href="//fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-        <link href="{{ mix('css/frontend.css') }}" rel="stylesheet">
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ appName() }}</title>
+    <meta name="description" content="@yield('meta_description', appName())">
+    <meta name="author" content="@yield('meta_author', 'Anthony Rappa')">
+    @yield('meta')
 
-            .full-height {
-                height: 100vh;
-            }
+    @stack('before-styles')
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="{{ mix('css/frontend.css') }}" rel="stylesheet">
+    <style>
+        html,
+        body {
+            background-color: #fff;
+            color: #636b6f;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 200;
+            height: 100vh;
+            margin: 0;
+        }
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+        .full-height {
+            height: 100vh;
+        }
 
-            .position-ref {
-                position: relative;
-            }
+        .flex-center {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+        .position-ref {
+            position: relative;
+        }
 
-            .content {
-                text-align: center;
-            }
+        .top-right {
+            position: absolute;
+            right: 10px;
+            top: 18px;
+        }
 
+        .content {
+            text-align: center;
+        }
+
+        .title {
+            font-size: 84px;
+        }
+
+        .subtitle {
+            font-size: 48px;
+        }
+
+        /* Medium screens (tablets) */
+        @media (max-width: 1024px) {
             .title {
-                font-size: 84px;
+                font-size: 64px;
             }
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
+            .subtitle {
+                font-size: 36px;
+            }
+        }
+
+        /* Small screens (mobile) */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 48px;
             }
 
-            .m-b-md {
-                margin-bottom: 30px;
+            .subtitle {
+                font-size: 28px;
             }
-        </style>
-        @stack('after-styles')
-    </head>
-    <body>
-        @include('includes.partials.read-only')
-        @include('includes.partials.logged-in-as')
-        @include('includes.partials.announcements')
+        }
 
-        <div id="app" class="flex-center position-ref full-height">
-            <div class="top-right links">
-                @auth
-                    @if ($logged_in_user->isUser())
-                        <a href="{{ route('frontend.user.dashboard') }}">@lang('Dashboard')</a>
-                    @endif
+        /* Extra small screens (smaller mobile devices) */
+        @media (max-width: 480px) {
+            .title {
+                font-size: 36px;
+            }
 
-                    <a href="{{ route('frontend.user.account') }}">@lang('Account')</a>
-                @else
-                    <a href="{{ route('frontend.auth.login') }}">@lang('Login')</a>
+            .subtitle {
+                font-size: 24px;
+            }
+        }
 
-                    @if (config('boilerplate.access.user.registration'))
-                        <a href="{{ route('frontend.auth.register') }}">@lang('Register')</a>
-                    @endif
-                @endauth
-            </div><!--top-right-->
+        .links>a {
+            color: #636b6f;
+            padding: 0 25px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .1rem;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
 
-            <div class="content">
-                @include('includes.partials.messages')
+        .mb-30 {
+            margin-bottom: 30px;
+        }
+    </style>
+    @stack('after-styles')
+</head>
 
-                <div class="title m-b-md">
+<body>
+    @include('includes.partials.read-only')
+    @include('includes.partials.logged-in-as')
+    @include('includes.partials.announcements')
+
+    <div id="app" class="flex-center position-ref full-height">
+        <div class="top-right links">
+            @auth
+                <a href="{{ route('intranet.user.index') }}">@lang('Intranet')</a>
+                <a href="{{ route('dashboard.home') }}">@lang('Dashboard')</a>
+                <a href="{{ route('intranet.user.account') }}">@lang('Profile')</a>
+            @else
+                <a href="{{ route('frontend.auth.login') }}">@lang('Login')</a>
+
+                @if (config('boilerplate.access.user.registration'))
+                    <a href="{{ route('frontend.auth.register') }}">@lang('Register')</a>
+                @endif
+            @endauth
+        </div>
+        <div class="content">
+            @include('includes.partials.messages')
+
+            <div class="mb-30">
+                <div class="title">
                     {{ config('app.name', 'Laravel') }}
-                </div><!--title-->
+                </div>
+                <div class="subtitle">Department of Computer Engineering</div>
+            </div>
 
-                <div class="links">
-                    <a href="https://github.com/cepdnaclk/dental-patient-management-system/wiki" target="_blank"><i class="fa fa-book"></i> @lang('Docs')</a>
-                    <a href="https://github.com/cepdnaclk/dental-patient-management-system" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                </div><!--links-->
-            </div><!--content-->
-        </div><!--app-->
+            <hr>
 
-        @stack('before-scripts')
-        <script src="{{ mix('js/manifest.js') }}"></script>
-        <script src="{{ mix('js/vendor.js') }}"></script>
-        <script src="{{ mix('js/frontend.js') }}"></script>
-        @stack('after-scripts')
-    </body>
+            <div class="links">
+                <a href="https://github.com/cepdnaclk/portal.ce.pdn.ac.lk" target="_blank"><i class="fab fa-github"></i>
+                    GitHub</a>
+            </div>
+        </div>
+    </div>
+    @stack('before-scripts')
+    <script src="{{ mix('js/manifest.js') }}"></script>
+    <script src="{{ mix('js/vendor.js') }}"></script>
+    <script src="{{ mix('js/frontend.js') }}"></script>
+    @stack('after-scripts')
+</body>
+
 </html>

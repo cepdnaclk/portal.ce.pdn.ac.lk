@@ -2,23 +2,24 @@
 
 use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\AnnouncementController;
+use Illuminate\Support\Facades\Route;
 
 Route::group([], function () {
 
-    Route::get('/announcements', function () {
+    Route::get('announcements', function () {
         return view('backend.announcements.index');
     })->name('announcements.index')
         ->breadcrumbs(function (Trail $trail) {
-            $trail->push(__('Home'), route('admin.dashboard'))
-                ->push(__('Announcements'), route('admin.announcements.index'));
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Announcements'), route('dashboard.announcements.index'));
         });
 
     // Create
     Route::get('announcements/create', [AnnouncementController::class, 'create'])
         ->name('announcements.create')
         ->breadcrumbs(function (Trail $trail) {
-            $trail->push(__('Home'), route('admin.dashboard'))
-                ->push(__('Announcements'), route('admin.announcements.index'))
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Announcements'), route('dashboard.announcements.index'))
                 ->push(__('Create'));
         });
 
@@ -30,8 +31,8 @@ Route::group([], function () {
     Route::get('announcements/edit/{announcement}', [AnnouncementController::class, 'edit'])
         ->name('announcements.edit')
         ->breadcrumbs(function (Trail $trail) {
-            $trail->push(__('Home'), route('admin.dashboard'))
-                ->push(__('Announcements'), route('admin.announcements.index'))
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Announcements'), route('dashboard.announcements.index'))
                 ->push(__('Edit'));
         });
 
@@ -43,8 +44,8 @@ Route::group([], function () {
     Route::get('announcements/delete/{announcement}', [AnnouncementController::class, 'delete'])
         ->name('announcements.delete')
         ->breadcrumbs(function (Trail $trail) {
-            $trail->push(__('Home'), route('admin.dashboard'))
-                ->push(__('Announcements'), route('admin.announcements.index'))
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Announcements'), route('dashboard.announcements.index'))
                 ->push(__('Delete'));
         });
 
