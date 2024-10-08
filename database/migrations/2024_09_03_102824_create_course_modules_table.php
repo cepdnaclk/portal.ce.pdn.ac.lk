@@ -15,7 +15,7 @@ class CreateCourseModulesTable extends Migration
     {
         Schema::create('course_modules', function (Blueprint $table) {
             $table->id();  // Primary key, auto-incrementing
-            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');  // Foreign key to courses.id
+            $table->foreignId('course_id')->constrained('courses');  // Foreign key to courses.id
             $table->string('topic', 255);  // module topic
             $table->text('description')->nullable();  // Course content, nullable
             $table->json('time_allocation')->nullable();  // JSON for time allocation, nullable
