@@ -21,7 +21,8 @@ class EventController extends Controller
     public function create()
     {
         try {
-            return view('backend.event.create');
+            $events = Event::all();
+            return view('backend.event.create', compact('events'));
         } catch (\Exception $ex) {
             Log::error('Failed to load event creation page', ['error' => $ex->getMessage()]);
             return abort(500);
@@ -40,6 +41,7 @@ class EventController extends Controller
         $data = request()->validate([
             'title' => 'string|required',
             'url' => ['required', 'unique:events'],
+            'event_type' => 'required|array',
             'published_at' => 'required|date_format:Y-m-d',
             'description' => 'string|required',
             'enabled' => 'nullable',
@@ -50,11 +52,15 @@ class EventController extends Controller
             'location' => 'string|required',
         ]);
 
+        
+
+
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb(null, $request->image, "events");
         }
 
         try {
+
             $event = new Event($data);
             $event->enabled = ($request->enabled != null);
             $event->url =  urlencode(str_replace(" ", "-", $request->url));
@@ -76,6 +82,10 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         try {
+
+            $eventTypes = $event->event_type; 
+
+
             return view('backend.event.edit', compact('event'));
         } catch (\Exception $ex) {
             Log::error('Failed to edit event', ['error' => $ex->getMessage()]);
@@ -97,6 +107,7 @@ class EventController extends Controller
             'title' => ['required'],
             'url' =>
             ['required', Rule::unique('events')->ignore($event->id)],
+            'event_type' => 'required|array',
             'published_at' => 'required|date_format:Y-m-d',
             'description' => 'string|required',
             'enabled' => 'nullable',
@@ -116,6 +127,7 @@ class EventController extends Controller
 
         try {
             $event->update($data);
+
             $event->enabled = ($request->enabled != null);
             $event->url =  urlencode(str_replace(" ", "-", $request->url));
             $event->created_by = Auth::user()->id;

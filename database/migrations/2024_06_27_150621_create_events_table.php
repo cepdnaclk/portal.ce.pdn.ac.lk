@@ -18,6 +18,7 @@ class CreateEventsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->text('url');
+            $table->json('event_type')->nullable()->default(null);  
             $table->date('published_at');
             $table->string('image')->nullable();
             $table->string('link_url')->nullable();
