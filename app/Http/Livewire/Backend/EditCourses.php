@@ -33,6 +33,7 @@ class EditCourses extends Component
 
     // 2nd form step
     public $objectives;
+    public $prerequisites = [];
     public $ilos = [
         'knowledge' => [],
         'skills' => [],
@@ -144,7 +145,7 @@ class EditCourses extends Component
         $this->canUpdate = true;
     }
 
-    protected $listeners = ['itemsUpdated' => 'updateItems'];
+    protected $listeners = ['itemsUpdated' => 'updateItems','prerequisitesUpdated' => 'updatePrerequisites'];
 
     public function mount(Course $course)
     {
@@ -179,8 +180,13 @@ class EditCourses extends Component
                 'time_allocation' => array_merge(Course::getTimeAllocation(), json_decode($module->time_allocation, true))
             ];
         })->toArray();
+        $this->prerequisites = $course->prerequisites->pluck('id')->toArray();      
         // Update semesters list based on academic program and version
         $this->updateSemestersList();
+    }
+
+    public function updatePrerequisites($selectedCourses){
+        $this->prerequisites = $selectedCourses;
     }
 
     public function updateItems($type, $newItems)
@@ -290,7 +296,13 @@ class EditCourses extends Component
                     \Log::info("Created module with ID: " . $createdModule->id);
                 }
             }
-
+            // Sync prerequisites
+            if (!empty($this->prerequisites)) {
+                $course->prerequisites()->sync(collect($this->prerequisites)->pluck('id')->toArray());
+            } else {
+                // If no prerequisites, detach all
+                $course->prerequisites()->detach();
+            }
             \DB::commit();
             \Log::info("updateCourse method completed successfully");
         } catch (\Exception $e) {
@@ -319,6 +331,7 @@ class EditCourses extends Component
         $this->ilos = Course::getILOTemplate();
         $this->references = [];
         $this->modules = [];
+        $this->prerequisites = [];
     }
 
     public function render()
