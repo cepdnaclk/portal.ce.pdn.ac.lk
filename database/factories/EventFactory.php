@@ -30,7 +30,7 @@ class EventFactory extends Factory
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'url' => urlencode($this->faker->firstName()),
-            'event_type' => $this->faker->randomElement(array_keys(Event::eventTypeMap())),
+            'event_type' => [$this->faker->randomElement(array_keys(Event::eventTypeMap()))],
             'image' => $this->faker->imageUrl(),
             'created_by' => 4,
             'enabled' => $this->faker->boolean,
