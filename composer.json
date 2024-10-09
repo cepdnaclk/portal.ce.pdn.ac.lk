@@ -28,7 +28,7 @@
         "marvinlabs/laravel-discord-logger": "^1.4",
         "rappasoft/laravel-livewire-tables": "^3",
         "rappasoft/lockout": "^5.0",
-        "spatie/laravel-activitylog": "^4",
+        "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-permission": "^6.9",
         "tabuna/breadcrumbs": "*"
     },

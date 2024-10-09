@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Domains\Event\Models\Traits\Scope\EventScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * Class News.
@@ -67,5 +68,13 @@ class Event extends Model
     protected static function newFactory()
     {
         return EventFactory::new();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('Event') // Set a custom log name
+            ->setDescriptionForEvent(fn(string $eventName) => "This event has been {$eventName}.")
+        ;
     }
 }
