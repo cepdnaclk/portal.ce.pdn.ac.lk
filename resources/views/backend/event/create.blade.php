@@ -65,7 +65,6 @@
                     </div>
                 </div>
 
-               
                 <!-- Event Type (Dropdown with Checkboxes) -->
                 <div class="form-group row" x-data="{ selectedTypes: [] }">
                     {!! Form::label('event_type', 'Event Type*', ['class' => 'col-md-2 col-form-label']) !!}
@@ -76,7 +75,10 @@
                             </button>
                             <ul class="dropdown-menu w-100 p-3" aria-labelledby="dropdownMenuButton" style="max-height: 300px; overflow-y: auto;">
                                 @foreach(\App\Domains\Event\Models\Event::eventTypeMap() as $key => $value)
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item"
+                                    style="outline: none; box-shadow: none; background-color: transparent; color: black;" 
+                                    onfocus="this.style.outline='none'; this.style.boxShadow='none';"
+                                    onmouseout="this.style.backgroundColor='transparent';">
                                         <label class="form-check-label d-block w-100" for="event_type_{{ $key }}">
                                             <input class="form-check-input me-2" type="checkbox" name="event_type[]" value="{{ $key }}" id="event_type_{{ $key }}"
                                                 x-on:change="if($event.target.checked) selectedTypes.push('{{ $value }}'); else selectedTypes = selectedTypes.filter(type => type !== '{{ $value }}')"
