@@ -34,6 +34,7 @@ class CreateCourses extends Component
 
     //2nd form step
     public $objectives;
+    public $prerequisites = [];
     public $ilos = [];
 
     //3rd form step
@@ -158,7 +159,7 @@ class CreateCourses extends Component
         $this->validateOnly($propertyName);
     }
 
-    protected $listeners = ['itemsUpdated' => 'updateItems'];
+    protected $listeners = ['itemsUpdated' => 'updateItems','prerequisitesUpdated' => 'updatePrerequisites'];
 
     public function mount()
     {
@@ -167,6 +168,10 @@ class CreateCourses extends Component
         $this->marks_allocation = Course::getMarksAllocation();
         $this->module_time_allocation = Course::getTimeAllocation();
         $this->ilos =  Course::getILOTemplate();
+    }
+
+    public function updatePrerequisites($selectedCourses){
+        $this->prerequisites = $selectedCourses;
     }
 
     public function updateItems($type, $newItems)
@@ -264,6 +269,13 @@ class CreateCourses extends Component
                         'updated_by' => auth()->id(),
                     ]);
                 }
+            }
+            // Sync prerequisites
+            if (!empty($this->prerequisites)) {
+                $course->prerequisites()->sync(collect($this->prerequisites)->pluck('id')->toArray());
+            } else {
+                // If no prerequisites, detach all
+                $course->prerequisites()->detach();
             }
 
             \DB::commit();
