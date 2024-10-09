@@ -199,7 +199,6 @@ class CreateCourses extends Component
 
     public function submit()
     {
-        \Log::info("Submit method called");
         try {
             $this->validate();
             $this->storeCourse();
