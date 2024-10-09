@@ -1,12 +1,4 @@
 <div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
-    <div class="c-sidebar-brand d-lg-down-none">
-        <!-- <svg class="c-sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
-            <use xlink:href="{{ asset('img/brand/coreui.svg#full') }}"></use>
-        </svg>
-        <svg class="c-sidebar-brand-minimized" width="46" height="46" alt="CoreUI Logo">
-            <use xlink:href="{{ asset('img/brand/coreui.svg#signet') }}"></use>
-        </svg> -->
-    </div><!--c-sidebar-brand-->
 
     <ul class="c-sidebar-nav">
         <li class="c-sidebar-nav-item">
@@ -69,9 +61,11 @@
                 </ul>
             </li>
         @endif
+
+        {{-- Announcements --}}
         @if ($logged_in_user->hasAllAccess())
-            {{-- Announcements --}}
-            <li class="c-sidebar-nav-dropdown">
+            <li
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.announcements.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-bullhorn"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Announcements')"></x-utils.link>
 
@@ -84,10 +78,12 @@
             </li>
         @endif
 
+        {{-- News and Events --}}
         @if (
             $logged_in_user->hasPermissionTo('user.access.editor.news') ||
                 $logged_in_user->hasPermissionTo('user.access.editor.event'))
-            <li class="c-sidebar-nav-dropdown">
+            <li
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.news.*') || Route::is('dashboard.event.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-newspaper"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Content Management')"></x-utils.link>
 
@@ -110,7 +106,27 @@
             </li>
         @endif
 
+        {{-- Academic Program --}}
+        @if ($logged_in_user->hasPermissionTo('user.access.academic'))
+            <li
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.semesters.*') || Route::is('dashboard.courses.*'), 'c-open c-show') }}">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-book" class="c-sidebar-nav-dropdown-toggle"
+                    :text="__('Academic Program')"></x-utils.link>
 
+                <ul class="c-sidebar-nav-dropdown-items">
+                    {{-- Semesters --}}
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.semesters.index')" class="c-sidebar-nav-link" :text="__('Semesters')"
+                            :active="activeClass(Route::is('dashboard.semesters.*'), 'c-active')"></x-utils.link>
+                    </li>
+                    {{-- Courses --}}
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.courses.index')" class="c-sidebar-nav-link" :text="__('Courses')"
+                            :active="activeClass(Route::is('dashboard.courses.*'), 'c-active')"></x-utils.link>
+                    </li>
+                </ul>
+            </li>
+        @endif
     </ul>
 
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent"
