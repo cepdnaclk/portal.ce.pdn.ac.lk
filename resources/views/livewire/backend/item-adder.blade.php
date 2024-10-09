@@ -85,7 +85,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <textarea class="form-control w-100" style="overflow:hidden;" x-model="userInput" autofocus
+                    <textarea rows="6" class="form-control w-100" style="overflow:hidden;" x-model="userInput" autofocus
                         oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';"></textarea>
                 </div>
                 <div class="modal-footer">

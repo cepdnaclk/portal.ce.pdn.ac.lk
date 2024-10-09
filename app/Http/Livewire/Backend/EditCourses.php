@@ -211,7 +211,6 @@ class EditCourses extends Component
 
     public function update()
     {
-        \Log::info("update method called");
         try {
 
             $this->validateCurrentStep();
@@ -248,7 +247,6 @@ class EditCourses extends Component
 
     protected function updateCourse()
     {
-        \Log::info("updateCourse method called");
 
         try {
             \DB::beginTransaction();
@@ -273,7 +271,6 @@ class EditCourses extends Component
                 'updated_by' => auth()->id()
             ]);
 
-            \Log::info("Course updated with ID: " . $course->id);
 
             $course->modules()->delete(); // Delete existing modules before adding new ones
 
@@ -287,12 +284,10 @@ class EditCourses extends Component
                         'created_by' => auth()->id(),
                         'updated_by' => auth()->id(),
                     ]);
-                    \Log::info("Created module with ID: " . $createdModule->id);
                 }
             }
 
             \DB::commit();
-            \Log::info("updateCourse method completed successfully");
         } catch (\Exception $e) {
             \DB::rollBack();
             \Log::error("Error in updateCourse method: " . $e->getMessage());
