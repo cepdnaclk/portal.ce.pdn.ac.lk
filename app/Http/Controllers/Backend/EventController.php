@@ -21,8 +21,7 @@ class EventController extends Controller
     public function create()
     {
         try {
-            $events = Event::all();
-            return view('backend.event.create', compact('events'));
+            return view('backend.event.create');
         } catch (\Exception $ex) {
             Log::error('Failed to load event creation page', ['error' => $ex->getMessage()]);
             return abort(500);
@@ -81,16 +80,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        try {
-
-            $eventTypes = $event->event_type; 
-
-
-            return view('backend.event.edit', compact('event'));
-        } catch (\Exception $ex) {
-            Log::error('Failed to edit event', ['error' => $ex->getMessage()]);
-            return abort(500);
-        };
+        return view('backend.event.edit', compact('event'));
     }
 
     /**
