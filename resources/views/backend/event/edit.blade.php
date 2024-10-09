@@ -69,6 +69,77 @@
                     </div>
                 </div>
 
+                <!-- Event Type (Dropdown with Checkboxes) -->
+                <div class="form-group row">
+                    {!! Form::label('event_type', 'Event Type*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-5">
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #d3d3d3; color: #000;">
+                                Select Event Type
+                            </button>
+                            <ul class="dropdown-menu w-100 p-3" aria-labelledby="dropdownMenuButton" style="max-height: 300px; overflow-y: auto;">
+                                @foreach(\App\Domains\Event\Models\Event::eventTypeMap() as $key => $value)
+                                    <li class="dropdown-item">
+                                        <label class="form-check-label d-block w-100" for="event_type_{{ $key }}">
+                                            <input class="form-check-input me-2 event-type-checkbox" type="checkbox" name="event_type[]" value="{{ $key }}" id="event_type_{{ $key }}" data-label="{{ $value }}"
+                                                @if(is_array($event->event_type) && in_array($key, $event->event_type)) checked @endif> <!-- Populate based on existing data -->
+                                            {{ $value }}
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @error('event_type')
+                            <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+
+                    <!-- Selected tags appear here -->
+                    <div class="col-md-5">
+                        <div id="selected-tags" class="mt-2"></div>
+                    </div>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const checkboxes = document.querySelectorAll('.event-type-checkbox');
+                        const selectedTagsContainer = document.getElementById('selected-tags');
+
+                        // Initialize selected tags on page load
+                        updateTags();
+
+                        checkboxes.forEach(function(checkbox) {
+                            checkbox.addEventListener('change', function() {
+                                updateTags();
+                            });
+                        });
+
+                        function updateTags() {
+                            selectedTagsContainer.innerHTML = ''; // Clear previous tags
+                            checkboxes.forEach(function(checkbox) {
+                                if (checkbox.checked) {
+                                    const tagLabel = checkbox.getAttribute('data-label');
+                                    const tagElement = document.createElement('span');
+                                    tagElement.classList.add('badge', 'bg-primary', 'me-1', 'mb-1');
+                                    tagElement.innerHTML = tagLabel + ' <i class="bi bi-x-circle ms-1" style="cursor:pointer;"></i>'; // 'x' icon for removal
+                                    
+                                    // Remove tag when clicked
+                                    tagElement.querySelector('i').addEventListener('click', function() {
+                                        checkbox.checked = false;
+                                        updateTags();
+                                    });
+
+                                    selectedTagsContainer.appendChild(tagElement);
+                                }
+                            });
+                        }
+                    });
+                </script>
+
+
+                
+
+
                 <!-- Description -->
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}

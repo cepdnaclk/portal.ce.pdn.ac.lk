@@ -28,6 +28,7 @@ class Event extends Model
     protected $fillable = [
         'title',
         'url',
+        'event_type',
         'published_at',
         'description',
         'image',
@@ -46,7 +47,22 @@ class Event extends Model
      */
     protected $casts = [
         'enabled' => 'boolean',
+        'event_type' =>'array',
     ];
+
+   
+    public static function eventTypeMap():array   
+    {
+        return [
+            0 => 'General',
+            1 => 'Seminar',
+            2 => 'ACES',
+            
+        ];
+    }
+
+    
+
 
     public function thumbURL()
     {
