@@ -12,12 +12,17 @@ class AnnouncementTable extends DataTableComponent
 {
     public array $perPageAccepted = [25, 50, 100];
     public bool $perPageAll = true;
-
-    public string $defaultSortColumn = 'starts_at';
     public string $defaultSortDirection = 'desc';
+
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+    }
 
     public function columns(): array
     {
+        $this->setDefaultSort('starts_at');
+
         return [
             Column::make("Display Area", "area")
                 ->sortable(),
@@ -41,8 +46,8 @@ class AnnouncementTable extends DataTableComponent
     public function query(): Builder
     {
         return Announcement::query()
-            ->when($this->getFilter('area'), fn ($query, $status) => $query->where('area', $status))
-            ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type));
+            ->when($this->getFilter('area'), fn($query, $status) => $query->where('area', $status))
+            ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type));
     }
 
     public function toggleEnable($announcementId)
