@@ -4,6 +4,8 @@ echo "Running: Down the site for maintenance"
 php artisan down --refresh=30 --render='errors::503'
 
 echo "Running: Update the branch with latest"
+git reset --hard
+git fetch origin
 sudo git pull
 
 echo "Running: composer install in prod-mode"
@@ -39,8 +41,8 @@ sudo find ./ -type d -exec chmod 755 {} \;
 sudo find ./ -type f -exec chmod 644 {} \;
 
 # Ensure storage and cache directories are writable
-sudo chmod -R 775 ./storage
-sudo chmod -R 775 ./bootstrap/cache
+sudo chmod -R 775 ./storage/*
+sudo chmod -R 775 ./bootstrap/cache/*
 
 echo "Running: Restarting the queue"
 php artisan queue:restart
