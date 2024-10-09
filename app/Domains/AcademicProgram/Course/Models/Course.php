@@ -5,6 +5,7 @@ namespace App\Domains\AcademicProgram\Course\Models;
 use App\Domains\Auth\Models\User;
 use Database\Factories\CourseFactory;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 use App\Domains\AcademicProgram\AcademicProgram;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Domains\AcademicProgram\Semester\Models\Semester;
@@ -149,5 +150,13 @@ class Course extends AcademicProgram
     protected static function newFactory()
     {
         return CourseFactory::new();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('course') // Set a custom log name
+            ->setDescriptionForEvent(fn(string $eventName) => "This course has been {$eventName}.")
+        ;
     }
 }

@@ -7,8 +7,8 @@ use Database\Factories\NewsFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Domains\News\Models\Traits\Scope\NewsScope;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * Class News.
@@ -62,5 +62,13 @@ class News extends Model
     protected static function newFactory()
     {
         return NewsFactory::new();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('News') // Set a custom log name
+            ->setDescriptionForEvent(fn(string $eventName) => "This news has been {$eventName}.")
+        ;
     }
 }

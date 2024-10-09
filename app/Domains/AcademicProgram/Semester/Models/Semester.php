@@ -8,6 +8,7 @@ use App\Domains\AcademicProgram\Semester\Models\Traits\Scope\SemesterScope;
 use Database\Factories\SemesterFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Semester extends AcademicProgram
 {
@@ -57,5 +58,13 @@ class Semester extends AcademicProgram
     protected static function newFactory()
     {
         return SemesterFactory::new();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('semester') // Set a custom log name
+            ->setDescriptionForEvent(fn(string $eventName) => "This semester has been {$eventName}.")
+        ;
     }
 }
