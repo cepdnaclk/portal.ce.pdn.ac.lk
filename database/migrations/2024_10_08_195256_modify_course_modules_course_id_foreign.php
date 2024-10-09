@@ -15,7 +15,9 @@ class ModifyCourseModulesCourseIdForeign extends Migration
     {
         Schema::table('course_modules', function (Blueprint $table) {
             // Drop the current foreign key
-            $table->dropForeign(['course_id']);
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->dropForeign(['course_id']);
+            }
             
             // Recreate the foreign key with 'onDelete' cascade
             $table->foreign('course_id')
@@ -34,7 +36,9 @@ class ModifyCourseModulesCourseIdForeign extends Migration
     {
         Schema::table('course_modules', function (Blueprint $table) {
             // Drop the new foreign key
-            $table->dropForeign(['course_id']);
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->dropForeign(['course_id']);
+            }
             
             // Restore the old foreign key without 'onDelete' cascade
             $table->foreign('course_id')
