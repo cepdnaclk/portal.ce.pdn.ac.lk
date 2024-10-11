@@ -145,7 +145,7 @@ class EditCourses extends Component
         $this->canUpdate = true;
     }
 
-    protected $listeners = ['itemsUpdated' => 'updateItems','prerequisitesUpdated' => 'updatePrerequisites'];
+    protected $listeners = ['itemsUpdated' => 'updateItems', 'prerequisitesUpdated' => 'updatePrerequisites'];
 
     public function mount(Course $course)
     {
@@ -180,12 +180,13 @@ class EditCourses extends Component
                 'time_allocation' => array_merge(Course::getTimeAllocation(), json_decode($module->time_allocation, true))
             ];
         })->toArray();
-        $this->prerequisites = $course->prerequisites->pluck('id')->toArray();      
+        $this->prerequisites = $course->prerequisites->pluck('id')->toArray();
         // Update semesters list based on academic program and version
         $this->updateSemestersList();
     }
 
-    public function updatePrerequisites($selectedCourses){
+    public function updatePrerequisites($selectedCourses)
+    {
         $this->prerequisites = $selectedCourses;
     }
 

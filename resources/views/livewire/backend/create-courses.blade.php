@@ -158,8 +158,7 @@
                         Aims/Objectives:
                         <hr>
                     </div>
-                    
-                    {{-- objectives --}}
+
                     <div class="form-group mt-3">
                         <div class="form-floating">
                             {!! Form::textarea('objectives', '', [
@@ -180,7 +179,7 @@
                         Prerequisites:
                         <hr>
                     </div>
-                    @livewire('backend.prerequisite-selector', ['academic_program' => $academicProgram, 'version' => $version,'semester'=>$semester])
+                    @livewire('backend.prerequisite-selector', ['academic_program' => $academicProgram, 'version' => $version, 'semester' => $semester])
                     <div class="h4 font-weight-bold">
                         ILOs:
                         <hr>

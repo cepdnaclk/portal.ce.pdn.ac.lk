@@ -159,7 +159,7 @@ class CreateCourses extends Component
         $this->validateOnly($propertyName);
     }
 
-    protected $listeners = ['itemsUpdated' => 'updateItems','prerequisitesUpdated' => 'updatePrerequisites'];
+    protected $listeners = ['itemsUpdated' => 'updateItems', 'prerequisitesUpdated' => 'updatePrerequisites'];
 
     public function mount()
     {
@@ -170,7 +170,8 @@ class CreateCourses extends Component
         $this->ilos =  Course::getILOTemplate();
     }
 
-    public function updatePrerequisites($selectedCourses){
+    public function updatePrerequisites($selectedCourses)
+    {
         $this->prerequisites = $selectedCourses;
     }
 

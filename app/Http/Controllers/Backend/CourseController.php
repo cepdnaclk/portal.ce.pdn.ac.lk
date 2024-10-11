@@ -58,7 +58,6 @@ class CourseController extends Controller
         }
     }
 
-
     /**
      * Remove the specified course from storage.
      *

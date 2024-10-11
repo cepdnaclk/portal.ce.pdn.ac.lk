@@ -51,9 +51,6 @@ class EventController extends Controller
             'location' => 'string|required',
         ]);
 
-        
-
-
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb(null, $request->image, "events");
         }
