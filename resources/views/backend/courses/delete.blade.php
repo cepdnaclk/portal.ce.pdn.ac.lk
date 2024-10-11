@@ -20,6 +20,18 @@
                         'class' => 'container',
                     ]) !!}
 
+                    @if ($course->prerequisiteFor()->exists())
+                    <div class="alert alert-warning">
+                        <strong>Warning:</strong> 
+                            This course is a prerequisite for the following course{{ $course->prerequisiteFor->count() == 1 ? '' : 's' }}:
+                        <ul>
+                            @foreach ($course->prerequisiteFor as $dependentCourse)
+                                <li>{{ $dependentCourse->name }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+
                     <a href="{{ route('dashboard.courses.index') }}" class="btn btn-light mr-2">Back</a>
                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
 
