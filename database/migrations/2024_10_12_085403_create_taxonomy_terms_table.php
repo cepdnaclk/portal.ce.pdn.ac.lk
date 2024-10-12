@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaxonomiesTable extends Migration
+class CreateTaxonomyTermsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateTaxonomiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('taxonomies', function (Blueprint $table) {
+        Schema::create('taxonomy_terms', function (Blueprint $table) {
             $table->id();
             $table->string('code', 32)->unique();
             $table->string('name', 191);
-            $table->string('description')->nullable();
-            $table->json('properties');
+            $table->foreignId('taxonomy_id')->constrained('taxonomies');
+            $table->foreignId('parent_id')->nullable()->constrained('taxonomy_terms');
+            $table->json('metadata');
             $table->foreignId('created_by')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
@@ -32,6 +33,6 @@ class CreateTaxonomiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('taxonomies');
+        Schema::dropIfExists('taxonomy_terms');
     }
 }
