@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Backend;
+namespace App\Livewire\Backend;
 
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,8 +12,8 @@ class PrerequisiteSelector extends Component
 
     public $courseId;
     public $semester;
-    public $academic_program; 
-    public $version; 
+    public $academic_program;
+    public $version;
     public $searchTerm = '';
     public $selectedCourses = [];
     protected $paginationTheme = 'bootstrap';
@@ -30,7 +30,7 @@ class PrerequisiteSelector extends Component
         $course = Course::find($courseId);
         if ($course && !in_array($courseId, collect($this->selectedCourses)->pluck('id')->toArray())) {
             $this->selectedCourses[] = $course->toArray();
-            $this->emit('prerequisitesUpdated', $this->selectedCourses); 
+            $this->emit('prerequisitesUpdated', $this->selectedCourses);
         }
     }
 
@@ -53,7 +53,7 @@ class PrerequisiteSelector extends Component
 
             if ($course && $course->prerequisites) {
                 // Assuming prerequisites is a relation on the Course model
-                $this->selectedCourses = $course->prerequisites->map(function($prerequisite) {
+                $this->selectedCourses = $course->prerequisites->map(function ($prerequisite) {
                     return $prerequisite->toArray();
                 })->toArray();
             }
@@ -65,7 +65,7 @@ class PrerequisiteSelector extends Component
         $filteredAvailableCourses = Course::where('code', 'like', '%' . $this->searchTerm . '%')
             ->whereNotIn('id', collect($this->selectedCourses)->pluck('id'))
             ->where('id', '!=', $this->courseId)
-            ->where('semester_id','<',$this->semester)
+            ->where('semester_id', '<', $this->semester)
             ->where('academic_program', $this->academic_program)
             ->where('version', $this->version)
             ->paginate(5);

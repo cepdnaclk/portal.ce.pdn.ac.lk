@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Backend;
+namespace App\Livewire\Backend;
 
 use App\Domains\Event\Models\Event;
 use Illuminate\Database\Eloquent\Builder;
@@ -66,18 +66,18 @@ class EventsTable extends DataTableComponent
     public function filters(): array
     {
         return [
-            'enabled' => Filter::make('Enabled')
-                ->select([
-                    '' => 'Any',
-                    1 => 'Enabled',
-                    0 => 'Not Enabled',
-                ]),
-            'status' => Filter::make('Status')
-                ->select([
-                    '' => 'Any',
-                    1 => 'Upcoming',
-                    0 => 'Past',
-                ]),
+            // 'enabled' => Filter::make('Enabled')
+            //     ->select([
+            //         '' => 'Any',
+            //         1 => 'Enabled',
+            //         0 => 'Not Enabled',
+            //     ]),
+            // 'status' => Filter::make('Status')
+            //     ->select([
+            //         '' => 'Any',
+            //         1 => 'Upcoming',
+            //         0 => 'Past',
+            //     ]),
         ];
     }
 

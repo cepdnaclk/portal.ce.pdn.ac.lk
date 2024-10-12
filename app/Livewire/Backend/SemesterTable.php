@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Backend;
+namespace App\Livewire\Backend;
 
 use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,10 +57,10 @@ class SemesterTable extends DataTableComponent
 
 
         return [
-            'academic_program' => Filter::make('Academic Program')
-                ->select($academicProgramOptions),
-            'version' => Filter::make('Curriculum')
-                ->select($versionOptions),
+            // 'academic_program' => Filter::make('Academic Program')
+            //     ->select($academicProgramOptions),
+            // 'version' => Filter::make('Curriculum')
+            //     ->select($versionOptions),
         ];
     }
 

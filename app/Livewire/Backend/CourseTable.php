@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Backend;
+namespace App\Livewire\Backend;
 
 use App\Domains\AcademicProgram\Course\Models\Course;
 use Illuminate\Database\Eloquent\Builder;
@@ -67,12 +67,12 @@ class CourseTable extends DataTableComponent
         }
 
         return [
-            'academic_program' => Filter::make('Academic Program')
-                ->select($academicProgramOptions),
-            'type' => Filter::make('Type')
-                ->select($typeOptions),
-            'version' => Filter::make('Curriculum')
-                ->select($versionOptions),
+            // 'academic_program' => Filter::make('Academic Program')
+            //     ->select($academicProgramOptions),
+            // 'type' => Filter::make('Type')
+            //     ->select($typeOptions),
+            // 'version' => Filter::make('Curriculum')
+            //     ->select($versionOptions),
         ];
     }
 

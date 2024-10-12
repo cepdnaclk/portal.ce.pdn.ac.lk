@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Backend;
+namespace App\Livewire\Backend;
 
 use Livewire\Component;
 use Illuminate\Validation\Rule;
@@ -8,59 +8,55 @@ use App\Domains\AcademicProgram\Course\Models\Course;
 use App\Domains\AcademicProgram\Course\Models\CourseModule;
 use App\Domains\AcademicProgram\Semester\Models\Semester;
 
-
-class CreateCourses extends Component
+class EditCourses extends Component
 {
+    public $course;
     public $formStep = 1;
+    public $canUpdate = true;
 
-    //for selectors 
+    // Selectors
     public $academicProgramsList = [];
     public $semestersList = [];
 
-    //form inputs
-    //1st form step
+    // Form inputs
+    // 1st form step
     public $academicProgram;
     public $semester;
     public $version;
     public $type;
     public $code;
     public $name;
-    public $credits;
-    public $faq_page;
-    public $content;
+    public $credits, $faq_page, $content;
     public $time_allocation;
     public $module_time_allocation;
     public $marks_allocation;
 
-    //2nd form step
+    // 2nd form step
     public $objectives;
     public $prerequisites = [];
-    public $ilos = [];
+    public $ilos = [
+        'knowledge' => [],
+        'skills' => [],
+        'attitudes' => [],
+    ];
 
-    //3rd form step
+    // 3rd form step
     public $references = [];
     public $modules = [];
 
     public function rules()
     {
-        return [
+
+        $validationRules = [
             'academicProgram' => 'required|string',
-            'semester' => 'required|string',
+            'semester' => 'required|int',
             'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
-            'type'  => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
-            'code' => 'required|string|unique:courses,code',
+            'type' => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
+            'code' => 'required|string',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:18',
             'faq_page' => 'nullable|url',
             'content' => 'nullable|string',
-            'time_allocation.lecture' => 'nullable|integer|min:0',
-            'time_allocation.tutorial' => 'nullable|integer|min:0',
-            'time_allocation.practical' => 'nullable|integer|min:0',
-            'time_allocation.assignment' => 'nullable|integer|min:0',
-            'marks_allocation.practicals' => 'nullable|integer|min:0|max:100',
-            'marks_allocation.project' => 'nullable|integer|min:0|max:100',
-            'marks_allocation.mid_exam' => 'nullable|integer|min:0|max:100',
-            'marks_allocation.end_exam' => 'nullable|integer|min:0|max:100',
             'modules' => 'nullable|array',
             'modules.*.name' => 'required|string|max:255',
             'modules.*.description' => 'nullable|string',
@@ -69,6 +65,16 @@ class CreateCourses extends Component
             'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
             'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
         ];
+
+        foreach (Course::getTimeAllocation() as $key => $value) {
+            $validationRules["time_allocation.$key"] = 'nullable|integer|min:0';
+            $validationRules["modules.*.time_allocation.$key"] = 'nullable|integer|min:0';
+        }
+        foreach (Course::getMarksAllocation() as $key => $value) {
+            $validationRules["marks_allocation.$key"] = 'nullable|integer|min:0|max:100';
+        }
+
+        return $validationRules;
     }
 
     public function messages()
@@ -80,7 +86,6 @@ class CreateCourses extends Component
             'type.required' => 'Please select a course type.',
             'type.in' => 'The course type must be Core, GE, or TE.',
             'code.required' => 'Please provide a course code.',
-            'code.unique' => 'This course code is already in use.',
             'name.required' => 'Please provide a course name.',
             'credits.required' => 'Please specify the number of credits.',
             'credits.min' => 'The course must have at least 1 credit.',
@@ -95,44 +100,20 @@ class CreateCourses extends Component
     {
         switch ($this->formStep) {
             case 1:
-                $validationRules = [
-                    'academicProgram' => 'required|string',
-                    'semester' => 'required|string',
-                    'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
-                    'type'  => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
-                    'code' => 'required|string|unique:courses,code',
-                    'name' => 'required|string|max:255',
-                    'credits' => 'required|integer|min:1|max:18',
-                    'faq_page' => 'nullable|url',
-                    'content' => 'nullable|string',
-                ];
-
-                foreach (Course::getTimeAllocation() as $key => $value) {
-                    $validationRules["time_allocation.$key"] = 'nullable|integer|min:0';
-                }
-                foreach (Course::getMarksAllocation() as $key => $value) {
-                    $validationRules["marks_allocation.$key"] = 'nullable|integer|min:0|max:100';
-                }
-
-                $this->validate($validationRules);
+                $this->validate($this->rules());
                 $this->validateMarksAllocation();
-                if ($this->getErrorBag()->has('marks_allocation.total')) {
-                    return;
-                }
                 break;
 
             case 3:
-                $validationRules = [
+                $this->validate([
                     'modules' => 'nullable|array',
-                    'modules.*.name' => 'required|string|min:3|max:255',
-                    'modules.*.description' => 'required|string',
-                ];
-
-                foreach (Course::getTimeAllocation() as $key => $value) {
-                    $validationRules["modules.*.time_allocation.$key"] = 'nullable|integer|min:0';
-                }
-
-                $this->validate($validationRules);
+                    'modules.*.name' => 'nullable|string|max:255',
+                    'modules.*.description' => 'nullable|string',
+                    'modules.*.time_allocation.lectures' => 'nullable|integer|min:0',
+                    'modules.*.time_allocation.tutorials' => 'nullable|integer|min:0',
+                    'modules.*.time_allocation.practicals' => 'nullable|integer|min:0',
+                    'modules.*.time_allocation.assignments' => 'nullable|integer|min:0',
+                ]);
                 break;
         }
     }
@@ -156,21 +137,56 @@ class CreateCourses extends Component
 
     public function updated($propertyName)
     {
-        $this->validateOnly($propertyName);
+        $this->canUpdate = false;
+        $this->validateCurrentStep();
+        if ($this->getErrorBag()->has('marks_allocation.total')) {
+            return;
+        }
+        $this->canUpdate = true;
     }
 
-    protected $listeners = ['itemsUpdated' => 'updateItems','prerequisitesUpdated' => 'updatePrerequisites'];
+    protected $listeners = ['itemsUpdated' => 'updateItems', 'prerequisitesUpdated' => 'updatePrerequisites'];
 
-    public function mount()
+    public function mount(Course $course)
     {
         $this->academicProgramsList = Course::getAcademicPrograms();
         $this->time_allocation = Course::getTimeAllocation();
-        $this->marks_allocation = Course::getMarksAllocation();
         $this->module_time_allocation = Course::getTimeAllocation();
-        $this->ilos =  Course::getILOTemplate();
+        $this->marks_allocation = Course::getMarksAllocation();
+        $this->course = $course;
+
+        // Populate form fields with existing course data
+        $this->academicProgram = $course->academic_program;
+        $this->semester = $course->semester_id;
+        $this->version = $course->version;
+        $this->type = $course->type;
+        $this->code = $course->code;
+        $this->name = $course->name;
+        $this->credits = $course->credits;
+        $this->faq_page = $course->faq_page;
+        $this->content = $course->content;
+        $this->time_allocation = array_merge(Course::getTimeAllocation(), json_decode($course->time_allocation, true));
+        $this->marks_allocation = array_merge(Course::getMarksAllocation(), json_decode($course->marks_allocation, true));
+        $this->objectives = $course->objectives;
+        $this->ilos = array_merge(Course::getILOTemplate(), json_decode($course->ilos, true) ?? []);
+        $this->references = json_decode($course->references, true) ?? [];
+
+        // Load modules
+        $this->modules = $course->modules()->get()->map(function ($module, $index) {
+            return [
+                'id' => $index + 1, // or use $module->id if available
+                'name' => $module->topic,
+                'description' => $module->description,
+                'time_allocation' => array_merge(Course::getTimeAllocation(), json_decode($module->time_allocation, true))
+            ];
+        })->toArray();
+        $this->prerequisites = $course->prerequisites->pluck('id')->toArray();
+        // Update semesters list based on academic program and version
+        $this->updateSemestersList();
     }
 
-    public function updatePrerequisites($selectedCourses){
+    public function updatePrerequisites($selectedCourses)
+    {
         $this->prerequisites = $selectedCourses;
     }
 
@@ -181,7 +197,10 @@ class CreateCourses extends Component
         } else {
             $this->ilos[$type] = $newItems;
         }
+
+        $this->emit('refreshItems' . ucfirst($type), $newItems);
     }
+
 
     public function next()
     {
@@ -197,15 +216,16 @@ class CreateCourses extends Component
         $this->formStep--;
     }
 
-    public function submit()
+    public function update()
     {
         try {
-            $this->validate();
-            $this->storeCourse();
-            return redirect()->route('dashboard.courses.index')->with('Success', 'Course created successfully.');
+
+            $this->validateCurrentStep();
+            $this->updateCourse();
+            return redirect()->route('dashboard.courses.index')->with('Success', 'Course updated successfully.');
         } catch (\Exception $e) {
-            \Log::error("Error in submit method: " . $e->getMessage());
-            session()->flash('error', 'There was an error creating the course: ' . $e->getMessage());
+            \Log::error("Error in update method: " . $e->getMessage());
+            session()->flash('error', 'There was an error updating the course: ' . $e->getMessage());
         }
         $this->resetForm();
     }
@@ -232,12 +252,15 @@ class CreateCourses extends Component
         }
     }
 
-
-    protected function storeCourse()
+    protected function updateCourse()
     {
+
         try {
             \DB::beginTransaction();
-            $course = Course::create([
+
+            $course = Course::where('id', $this->course->id)->firstOrFail();
+
+            $course->update([
                 'academic_program' => $this->academicProgram,
                 'semester_id' => (int)$this->semester,
                 'version' => (int)$this->version,
@@ -252,15 +275,15 @@ class CreateCourses extends Component
                 'objectives' => $this->objectives,
                 'ilos' => json_encode($this->ilos),
                 'references' => json_encode($this->references),
-                'created_by' => auth()->id(),
                 'updated_by' => auth()->id()
             ]);
 
-            if (empty($this->modules)) {
-                \Log::warning("No modules to create");
-            } else {
+
+            $course->modules()->delete(); // Delete existing modules before adding new ones
+
+            if (!empty($this->modules)) {
                 foreach ($this->modules as $module) {
-                    CourseModule::create([
+                    $createdModule = CourseModule::create([
                         'course_id' => $course->id,
                         'topic' => $module['name'],
                         'description' => $module['description'],
@@ -277,15 +300,13 @@ class CreateCourses extends Component
                 // If no prerequisites, detach all
                 $course->prerequisites()->detach();
             }
-
             \DB::commit();
         } catch (\Exception $e) {
             \DB::rollBack();
-            \Log::error("Error in storeCourse method: " . $e->getMessage());
+            \Log::error("Error in updateCourse method: " . $e->getMessage());
             throw $e;
         }
     }
-
 
     protected function resetForm()
     {
@@ -296,7 +317,7 @@ class CreateCourses extends Component
         $this->type = '';
         $this->code = '';
         $this->name = '';
-        $this->credits = 0;
+        $this->credits = null;
         $this->faq_page = '';
         $this->content = '';
         $this->time_allocation = Course::getTimeAllocation();
@@ -306,10 +327,11 @@ class CreateCourses extends Component
         $this->ilos = Course::getILOTemplate();
         $this->references = [];
         $this->modules = [];
+        $this->prerequisites = [];
     }
 
     public function render()
     {
-        return view('livewire.backend.create-courses');
+        return view('livewire.backend.edit-courses');
     }
 }

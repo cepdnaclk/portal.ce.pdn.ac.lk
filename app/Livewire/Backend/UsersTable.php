@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Backend;
+namespace App\Livewire\Backend;
 
 use App\Domains\Auth\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -58,10 +58,10 @@ class UsersTable extends DataTableComponent
         }
 
         return $query
-            ->when($this->getFilter('search'), fn ($query, $term) => $query->search($term))
-            ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type))
-            ->when($this->getFilter('active'), fn ($query, $active) => $query->where('active', $active === 'yes'))
-            ->when($this->getFilter('verified'), fn ($query, $verified) => $verified === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at'));
+            ->when($this->getFilter('search'), fn($query, $term) => $query->search($term))
+            ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type))
+            ->when($this->getFilter('active'), fn($query, $active) => $query->where('active', $active === 'yes'))
+            ->when($this->getFilter('verified'), fn($query, $verified) => $verified === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at'));
     }
 
     /**
@@ -70,24 +70,24 @@ class UsersTable extends DataTableComponent
     public function filters(): array
     {
         return [
-            'type' => Filter::make('User Type')
-                ->select([
-                    '' => 'Any',
-                    User::TYPE_ADMIN => 'Administrators',
-                    User::TYPE_USER => 'Users',
-                ]),
-            'active' => Filter::make('Active')
-                ->select([
-                    '' => 'Any',
-                    'yes' => 'Yes',
-                    'no' => 'No',
-                ]),
-            'verified' => Filter::make('E-mail Verified')
-                ->select([
-                    '' => 'Any',
-                    'yes' => 'Yes',
-                    'no' => 'No',
-                ]),
+            // 'type' => Filter::make('User Type')
+            //     ->select([
+            //         '' => 'Any',
+            //         User::TYPE_ADMIN => 'Administrators',
+            //         User::TYPE_USER => 'Users',
+            //     ]),
+            // 'active' => Filter::make('Active')
+            //     ->select([
+            //         '' => 'Any',
+            //         'yes' => 'Yes',
+            //         'no' => 'No',
+            //     ]),
+            // 'verified' => Filter::make('E-mail Verified')
+            //     ->select([
+            //         '' => 'Any',
+            //         'yes' => 'Yes',
+            //         'no' => 'No',
+            //     ]),
         ];
     }
 

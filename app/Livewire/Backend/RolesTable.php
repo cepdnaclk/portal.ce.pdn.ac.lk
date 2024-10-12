@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Backend;
+namespace App\Livewire\Backend;
 
 use App\Domains\Auth\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +19,7 @@ class RolesTable extends DataTableComponent
     {
         return Role::with('permissions:id,name,description')
             ->withCount('users')
-            ->when($this->getFilter('search'), fn ($query, $term) => $query->search($term));
+            ->when($this->getFilter('search'), fn($query, $term) => $query->search($term));
     }
 
     public function columns(): array
