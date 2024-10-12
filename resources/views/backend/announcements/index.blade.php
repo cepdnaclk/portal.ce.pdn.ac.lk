@@ -26,7 +26,7 @@
                 @endif
 
                 <livewire:backend.announcement-table />
-                {{-- <livewire:a-table /> --}}
+
             </x-slot>
         </x-backend.card>
     </div>

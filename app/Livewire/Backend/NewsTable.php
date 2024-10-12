@@ -17,6 +17,11 @@ class NewsTable extends DataTableComponent
     public string $defaultSortColumn = 'published_at';
     public string $defaultSortDirection = 'desc';
 
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+    }
+
     public function columns(): array
     {
         return [
@@ -45,8 +50,8 @@ class NewsTable extends DataTableComponent
     public function query(): Builder
     {
         return News::query()
-            ->when($this->getFilter('enabled') !== null, function ($query) {
-                $enabled = $this->getFilter('enabled');
+            ->when($this->getAppliedFilterWithValue('enabled') !== null, function ($query) {
+                $enabled = $this->getAppliedFilterWithValue('enabled');
                 if ($enabled === 1) {
                     $query->where('enabled', true);
                 } elseif ($enabled === 0) {

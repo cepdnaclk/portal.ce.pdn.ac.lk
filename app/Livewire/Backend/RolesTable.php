@@ -12,6 +12,11 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
  */
 class RolesTable extends DataTableComponent
 {
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+    }
+
     /**
      * @return Builder
      */
@@ -19,7 +24,7 @@ class RolesTable extends DataTableComponent
     {
         return Role::with('permissions:id,name,description')
             ->withCount('users')
-            ->when($this->getFilter('search'), fn($query, $term) => $query->search($term));
+            ->when($this->getAppliedFilterWithValue('search'), fn($query, $term) => $query->search($term));
     }
 
     public function columns(): array

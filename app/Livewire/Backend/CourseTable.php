@@ -16,6 +16,11 @@ class CourseTable extends DataTableComponent
     public string $defaultSortColumn = 'created_at';
     public string $defaultSortDirection = 'desc';
 
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+    }
+
     public function columns(): array
     {
         return [
@@ -44,9 +49,9 @@ class CourseTable extends DataTableComponent
     public function query(): Builder
     {
         return Course::query()
-            ->when($this->getFilter('academic_program'), fn($query, $type) => $query->where('academic_program', $type))
-            ->when($this->getFilter('semester_id'), fn($query, $type) => $query->where('semester_id', $type))
-            ->when($this->getFilter('version'), fn($query, $version) => $query->where('version', $version));;
+            ->when($this->getAppliedFilterWithValue('academic_program'), fn($query, $type) => $query->where('academic_program', $type))
+            ->when($this->getAppliedFilterWithValue('semester_id'), fn($query, $type) => $query->where('semester_id', $type))
+            ->when($this->getAppliedFilterWithValue('version'), fn($query, $version) => $query->where('version', $version));;
     }
 
     public function filters(): array

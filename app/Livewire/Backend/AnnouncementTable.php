@@ -6,15 +6,12 @@ use App\Domains\Announcement\Models\Announcement;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Rappasoft\LaravelLivewireTables\Views\Columns\{BooleanColumn, DateColumn};
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class AnnouncementTable extends DataTableComponent
 {
     protected $model = Announcement::class;
-
-    // public array $perPageAccepted = [25, 50, 100];
-    // public bool $perPageAll = true;
-    // public string $defaultSortDirection = 'desc';
 
     public function configure(): void
     {
@@ -24,47 +21,42 @@ class AnnouncementTable extends DataTableComponent
 
     public function columns(): array
     {
-        $this->setDefaultSort('starts_at');
-
         return [
-            Column::make("Display Area", "area")
+
+            Column::make('id')->sortable(),
+            Column::make("Display Area", 'area')
+                ->format(fn($value) => Announcement::areas()[$value])
                 ->sortable(),
-            Column::make("Type", "type")
+            Column::make("Type", 'type')
+                ->format(fn($value) => Announcement::types()[$value])
                 ->sortable(),
             Column::make("Message", "message")
                 ->searchable(),
-            Column::make("Enabled", "enabled")
+            BooleanColumn::make("Enabled", 'enabled'),
+            DateColumn::make("Start", "starts_at")
+                ->inputFormat('Y-m-d H:i:s')
+                ->outputFormat('Y-m-d')
+                ->sortable(),
+            DateColumn::make("End", "ends_at")
+                ->inputFormat('Y-m-d H:i:s')
+                ->outputFormat('Y-m-d')
+                ->sortable(),
+            Column::make('Actions')
                 ->label(
-                    fn($row, Column $column) => 'xxx'
-                )->html(),
-            // ->component('backend.announcement.enabled-toggle')->attributes(fn($value, $row, Column $column) => [
-            //     'announcement' => $row->id
-            // ])
-            // ->sortable(),
-            // ->format(function (Announcement $announcement) {
-            //     return view('backend.announcement.enabled-toggle', ['announcement' => $announcement]);
-            // }),
-            Column::make("Start", "starts_at")
-                ->sortable(),
-            Column::make("End", "ends_at")
-                ->sortable(),
-            Column::make("Actions")->label(
-                fn($row, Column $column) => 'xxx'
-            )->html(),
+                    fn($row, Column $column) => view('livewire.backend.action-column')->with([
+                        'editLink' => route('dashboard.announcements.edit', $row),
+                        'deleteLink' => route('dashboard.announcements.delete', $row),
+                    ])
+                ),
         ];
     }
 
-    // public function builder()
-    // {
-    //     return Announcement::query();
-    // }
-
-    // public function query(): Builder
-    // {
-    //     return Announcement::query()
-    //         ->when($this->getFilter('area'), fn($query, $status) => $query->where('area', $status))
-    //         ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type));
-    // }
+    public function query(): Builder
+    {
+        return Announcement::query()
+            ->when($this->getAppliedFilterWithValue('area'), fn($query, $status) => $query->where('area', $status))
+            ->when($this->getAppliedFilterWithValue('type'), fn($query, $type) => $query->where('type', $type));
+    }
 
     public function toggleEnable($announcementId)
     {
@@ -73,41 +65,26 @@ class AnnouncementTable extends DataTableComponent
         $announcement->save();
     }
 
-    public function builder(): Builder
+
+    public function filters(): array
     {
-        return Announcement::query()
-            // ->with() // Eager load anything
-            // ->join() // Join some tables
-            ->select(); // Select some things
-    }
+        $type = ["" => "Any"];
+        foreach (Announcement::types() as $key => $value) {
+            $type[$key] = $value;
+        }
+        $area = ["" => "Any"];
+        foreach (Announcement::areas() as $key => $value) {
+            $area[$key] = $value;
+        }
 
-
-    // public function filters(): array
-    // {
-    //     $type = ["" => "Any"];
-    //     foreach (Announcement::types() as $key => $value) {
-    //         $type[$key] = $value;
-    //     }
-    //     $area = ["" => "Any"];
-    //     foreach (Announcement::areas() as $key => $value) {
-    //         $area[$key] = $value;
-    //     }
-
-    //     return [
-    //         'area' => Filter::make('Display Area')
-    //             ->select($area),
-    //         'type' => Filter::make('Type')
-    //             ->select($type),
-    //     ];
-    // }
-
-    // public function rowView(): string
-    // {
-    //     return 'backend.announcements.index-table-row';
-    // }
-
-    public function emptyMessage(): string
-    {
-        return 'No rows available';
+        return [
+            SelectFilter::make('Display Area', 'area')
+                ->options($area)
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('area', $value);
+                }),
+            SelectFilter::make('Type')
+                ->options($type),
+        ];
     }
 }

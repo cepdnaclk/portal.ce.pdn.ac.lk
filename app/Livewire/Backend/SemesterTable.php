@@ -16,6 +16,11 @@ class SemesterTable extends DataTableComponent
     public string $defaultSortColumn = 'created_at';
     public string $defaultSortDirection = 'desc';
 
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+    }
+
     public function columns(): array
     {
         return [
@@ -40,8 +45,8 @@ class SemesterTable extends DataTableComponent
     public function query(): Builder
     {
         return Semester::query()
-            ->when($this->getFilter('academic_program'), fn($query, $type) => $query->where('academic_program', $type))
-            ->when($this->getFilter('version'), fn($query, $version) => $query->where('version', $version));
+            ->when($this->getAppliedFilterWithValue('academic_program'), fn($query, $type) => $query->where('academic_program', $type))
+            ->when($this->getAppliedFilterWithValue('version'), fn($query, $version) => $query->where('version', $version));
     }
 
     public function filters(): array

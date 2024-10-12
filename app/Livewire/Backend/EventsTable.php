@@ -14,6 +14,10 @@ class EventsTable extends DataTableComponent
     public bool $perPageAll = true;
     public int $perPage = 10;
 
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+    }
 
     public function columns(): array
     {
@@ -39,16 +43,16 @@ class EventsTable extends DataTableComponent
     public function query(): Builder
     {
         return Event::query()
-            ->when($this->getFilter('status') !== null, function ($query) {
-                $status = $this->getFilter('status');
+            ->when($this->getAppliedFilterWithValue('status') !== null, function ($query) {
+                $status = $this->getAppliedFilterWithValue('status');
                 if ($status === 1) {
                     $query->getUpcomingEvents();
                 } elseif ($status === 0) {
                     $query->getPastEvents();
                 }
             })
-            ->when($this->getFilter('enabled') !== null, function ($query) {
-                $enabled = $this->getFilter('enabled');
+            ->when($this->getAppliedFilterWithValue('enabled') !== null, function ($query) {
+                $enabled = $this->getAppliedFilterWithValue('enabled');
                 if ($enabled === 1) {
                     $query->where('enabled', true);
                 } elseif ($enabled === 0) {
