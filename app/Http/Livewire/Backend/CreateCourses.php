@@ -251,9 +251,7 @@ class CreateCourses extends Component
                 'updated_by' => auth()->id()
             ]);
 
-            if (empty($this->modules)) {
-                \Log::warning("No modules to create");
-            } else {
+            if (!empty($this->modules)) {
                 foreach ($this->modules as $module) {
                     CourseModule::create([
                         'course_id' => $course->id,
