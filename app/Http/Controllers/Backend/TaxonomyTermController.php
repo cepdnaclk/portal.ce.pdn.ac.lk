@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Domains\TaxonomyTerms\Models\TaxonomyTerms;
+use App\Domains\Taxonomy\Models\TaxonomyTerm;
 
-class TaxonomyTermsController extends Controller
+class TaxonomyTermController extends Controller
 {
     /**
      * Show the form for creating a new resource.
@@ -17,7 +17,7 @@ class TaxonomyTermsController extends Controller
     public function create()
     {
         try{
-            return view('backend.taxonomyTerms.create');
+            return view('backend.taxonomy.terms.create');
         }catch (\Exception $ex) {
             Log::error('Failed to load taxonomy terms creation page', ['error' => $ex->getMessage()]);    
             return abort(500);
@@ -36,15 +36,15 @@ class TaxonomyTermsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Domains\TaxonomyTerms\Models\TaxonomyTerms $taxonomyTerms
+     * @param \App\Domains\TaxonomyTerm\Models\TaxonomyTerm $taxonomyTerm
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit(TaxonomyTerms $taxonomyTerms)
+    public function edit(TaxonomyTerm $taxonomyTerm)
     {
         try{
-            return view('backend.taxonomyTerms.edit', ['taxonomyTerms' => $taxonomyTerms]);
+            return view('backend.taxonomy.terms.edit', ['taxonomyTerm' => $taxonomyTerm]);
         }catch (\Exception $ex) {
-            Log::error('Failed to load taxonomy terms edit page', ['error' => $ex->getMessage()]);    
+            Log::error('Failed to load taxonomy term edit page', ['error' => $ex->getMessage()]);    
             return abort(500);
         }
     }
@@ -52,40 +52,39 @@ class TaxonomyTermsController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Domains\TaxonomyTerms\Models\TaxonomyTerms $taxonomyTerms
+     * @param \App\Domains\TaxonomyTerm\Models\TaxonomyTerm $taxonomyTerm
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, TaxonomyTerms $taxonomyTerms)
+    public function update(Request $request, TaxonomyTerm $taxonomyTerm)
     {
 
     }
      /**
      * Confirm to delete the specified resource from storage.
      *
-     * @param \App\Domains\TaxonomyTerms\Models\TaxonomyTerms $taxonomyTerms
+     * @param \App\Domains\TaxonomyTerm\Models\TaxonomyTerm $taxonomyTerm
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function delete(TaxonomyTerms $taxonomyTerms)
+    public function delete(TaxonomyTerm $taxonomyTerm)
     {
-        return view('backend.taxonomyTerms.delete', compact('taxonomyTerms'));
+        return view('backend.taxonomy.terms.delete', compact('taxonomyTerm'));
     }
 
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Domains\TaxonomyTerms\Models\TaxonomyTerms $taxonomyTerms
+     * @param \App\Domains\TaxonomyTerm\Models\TaxonomyTerm $taxonomyTerm
      * @return \Illuminate\Http\RedirectResponse|null
      */
-    public function destroy(TaxonomyTerms $taxonomyTerms)
+    public function destroy(TaxonomyTerm $taxonomyTerm)
     {
         try {
-            $taxonomyTerms->delete();
-            return redirect()->route('dashboard.taxonomyTerms.index')->with('Success', 'Taxonomy term was deleted !');
+            $taxonomyTerm->delete();
+            return redirect()->route('dashboard.taxonomy.terms.index')->with('Success', 'Taxonomy term was deleted !');
         } catch (\Exception $ex) {
-            Log::error('Failed to delete taxonomy term', ['taxonomyTerms_id' => $taxonomyTerms->id, 'error' => $ex->getMessage()]);
+            Log::error('Failed to delete taxonomy term', ['taxonomyTerm_id' => $taxonomyTerm->id, 'error' => $ex->getMessage()]);
             return abort(500);
         }
     }
 }
-
