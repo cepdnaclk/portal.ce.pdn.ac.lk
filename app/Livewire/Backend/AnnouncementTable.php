@@ -22,8 +22,7 @@ class AnnouncementTable extends DataTableComponent
     public function columns(): array
     {
         return [
-
-            Column::make('id')->sortable(),
+            Column::make('id')->hideIf(true),
             Column::make("Display Area", 'area')
                 ->format(fn($value) => Announcement::areas()[$value])
                 ->sortable(),
