@@ -19,8 +19,8 @@ class CreateTaxonomiesTable extends Migration
             $table->string('name', 191);
             $table->string('description')->nullable();
             $table->json('properties');
-            $table->foreignId('created_by')->constrained('users')->onUpdate('cascade')->onDelete('set null');
-            $table->foreignId('updated_by')->constrained('users')->onUpdate('cascade')->onDelete('set null');
+            $table->foreignId('created_by')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
     }
