@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 
@@ -31,7 +32,25 @@ class TaxonomyController extends Controller
      */
     public function store(Request $request)
     {
-
+        $request->validate([
+            'code' => 'required|unique:taxonomies',
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+    
+        try{
+            $taxonomy = new Taxonomy();
+            $taxonomy->code = $request->code;
+            $taxonomy->name = $request->name;
+            $taxonomy->description = $request->description;
+            $taxonomy->properties = $request->properties;
+            $taxonomy->created_by = Auth::user()->id;
+            $taxonomy->save();
+            return redirect()->route('dashboard.taxonomy.index')->with('success', 'Taxonomy created successfully');
+        }catch (\Exception $ex) {
+            Log::error('Failed to create taxonomy', ['error' => $ex->getMessage()]);
+            return abort(500);
+        }
     }
     /**
      * Show the form for editing the specified resource.
