@@ -16,7 +16,7 @@ class AnnouncementTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setFooterStatus(true);
+        $this->setPerPageAccepted([25, 50, 100, -1]);
     }
 
     public function columns(): array
