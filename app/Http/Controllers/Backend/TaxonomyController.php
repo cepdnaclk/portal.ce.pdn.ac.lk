@@ -35,7 +35,7 @@ class TaxonomyController extends Controller
         $request->validate([
             'code' => 'required|unique:taxonomies',
             'name' => 'required',
-            'description' => 'required',
+            'description' => 'nullable',
         ]);
     
         try{
@@ -46,7 +46,7 @@ class TaxonomyController extends Controller
             $taxonomy->properties = $request->properties;
             $taxonomy->created_by = Auth::user()->id;
             $taxonomy->save();
-            return redirect()->route('dashboard.taxonomy.index')->with('success', 'Taxonomy created successfully');
+            return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy created successfully');
         }catch (\Exception $ex) {
             Log::error('Failed to create taxonomy', ['error' => $ex->getMessage()]);
             return abort(500);
@@ -60,13 +60,18 @@ class TaxonomyController extends Controller
      */
     public function edit(Taxonomy $taxonomy)
     {
-        try{
-            return view('backend.taxonomy.edit', ['taxonomy' => $taxonomy]);
-        }catch (\Exception $ex) {
-            Log::error('Failed to load taxonomy edit page', ['error' => $ex->getMessage()]);    
+        try {
+
+            return view('backend.taxonomy.edit', [
+                'taxonomy' => $taxonomy,
+            ]);
+        } catch (\Exception $ex) {
+            Log::error('Failed to load taxonomy edit page', ['error' => $ex->getMessage()]);
             return abort(500);
         }
     }
+    
+
     /**
      * Update the specified resource in storage.
      *
@@ -76,6 +81,25 @@ class TaxonomyController extends Controller
      */
     public function update(Request $request, Taxonomy $taxonomy)
     {
+        $data = $request->validate([
+            'code' => 'required',
+            'name' => 'required',
+            'description' => 'nullable',
+            
+            
+        ]);
+    
+        try{
+            $taxonomy->update($data);
+            $taxonomy->updated_by = Auth::user()->id;
+            if ($request->properties != null) {
+                $taxonomy->properties = $request->properties;}            
+            $taxonomy->save();
+            return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
+        }catch (\Exception $ex) {
+            Log::error('Failed to update taxonomy', ['error' => $ex->getMessage()]);
+            return abort(500);
+        }
 
     }
      /**

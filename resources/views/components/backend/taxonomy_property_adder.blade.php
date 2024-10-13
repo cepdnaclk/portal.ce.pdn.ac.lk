@@ -1,5 +1,5 @@
 <div x-data="{
-    properties: [],
+    
     selectedItem: null,
     editIndex: null,
     isEditing: false,
