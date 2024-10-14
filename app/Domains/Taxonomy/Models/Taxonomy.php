@@ -6,6 +6,7 @@ use App\Domains\Auth\Models\User;
 use Database\Factories\TaxonomyFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Domains\Taxonomy\Models\Traits\Scope\TaxonomyScope;
 
@@ -46,6 +47,11 @@ class Taxonomy extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function terms()
+    {
+        return $this->hasMany(TaxonomyTerm::class, 'taxonomy_id');
     }
 
     /**

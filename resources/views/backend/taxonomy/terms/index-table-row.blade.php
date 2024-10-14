@@ -9,6 +9,10 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->taxonomy->name }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     {{ User::find($row->created_by)->name ?? 'N/A' }}
 </x-livewire-tables::table.cell>
 
@@ -17,15 +21,23 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->created_at }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    {{ $row->updated_at }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
         <div class="btn-group" role="group" aria-label="">
             <!-- Edit Button -->
-            <a href="{{ route('taxonomy.terms.edit', ['taxonomy' => $taxonomy->id, 'term' => $row->id]) }}" class="btn btn-sm btn-warning">
+            <a href="{{ route('dashboard.taxonomy.terms.edit', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}" class="btn btn-sm btn-warning">
                 <i class="fa fa-pencil" title="Edit"></i>
             </a>
 
             <!-- Delete Button -->
-            <a href="{{ route('taxonomy.terms.delete', ['taxonomy' => $taxonomy->id, 'term' => $row->id]) }}" class="btn btn-sm btn-danger">
+            <a href="{{ route('dashboard.taxonomy.terms.delete', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}" class="btn btn-sm btn-danger">
                 <i class="fa fa-trash" title="Delete"></i>
             </a>
 

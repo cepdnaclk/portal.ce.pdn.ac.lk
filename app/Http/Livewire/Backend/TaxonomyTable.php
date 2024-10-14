@@ -36,7 +36,8 @@ class TaxonomyTable extends DataTableComponent
 
     public function query(): Builder
     {
-        return Taxonomy::query();
+        return Taxonomy::query()
+            ->with('user');
     }
 
     public function rowView(): string

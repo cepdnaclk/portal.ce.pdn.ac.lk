@@ -29,22 +29,22 @@
         <div class="btn-group" role="group" aria-label="">
 
             <!-- View Button -->
-            {{-- <a href="{{ route('taxonomy.view', $row->id) }}" class="btn btn-sm btn-primary">
+            {{-- <a href="{{ route('taxonomy.view', $row) }}" class="btn btn-sm btn-primary">
                 <i class="fa fa-eye" title="View"></i>
             </a> --}}
 
             <!-- Manage Button -->
-            <a href="{{ route('dashboard.taxonomy.terms.index', $row->id) }}" class="btn btn-sm btn-secondary">
+            <a href="{{ route('dashboard.taxonomy.terms.index', $row) }}" class="btn btn-sm btn-secondary">
                 <i class="fa fa-list" title="Manage"></i>
             </a>
 
             <!-- Edit Button -->
-            <a href="{{ route('dashboard.taxonomy.edit', $row->id) }}" class="btn btn-sm btn-warning">
+            <a href="{{ route('dashboard.taxonomy.edit', $row) }}" class="btn btn-sm btn-warning">
                 <i class="fa fa-pencil" title="Edit"></i>
             </a>
 
             <!-- Delete Button -->
-            <a href="{{ route('dashboard.taxonomy.delete', $row->id) }}" class="btn btn-sm btn-danger">
+            <a href="{{ route('dashboard.taxonomy.delete', $row) }}" class="btn btn-sm btn-danger">
                 <i class="fa fa-trash" title="Delete"></i>
             </a>
 

@@ -37,6 +37,21 @@ class TaxonomyTerm extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function taxonomy()
+    {
+        return $this->belongsTo(Taxonomy::class, 'taxonomy_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
     /**
      * Create a new factory instance for the model.
      *

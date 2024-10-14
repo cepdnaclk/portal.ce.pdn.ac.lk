@@ -6,11 +6,11 @@
     <div>
         <x-backend.card>
             <x-slot name="header">
-                Taxonomy Terms
+                Taxonomy Terms: {{ $taxonomy->name }}
             </x-slot>
 
             <x-slot name="headerActions">
-                <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('taxonomy-terms.create')" :text="__('Create Term')">
+                <x-utils.link icon="c-icon cil-plus" class="card-header-action"  :href="route('dashboard.taxonomy.terms.create', $taxonomy)" :text="__('Create Term')">
                 </x-utils.link>
             </x-slot>
 
@@ -24,7 +24,7 @@
                     </div>
                 @endif
 
-                <livewire:backend.taxonomy-term-table />
+                <livewire:backend.taxonomy-term-table :taxonomy="$taxonomy"/>
             </x-slot>
         </x-backend.card>
     </div>

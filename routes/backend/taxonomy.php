@@ -59,9 +59,7 @@ Route::group([], function () {
     Route::group(['prefix' => 'taxonomy/{taxonomy}/terms'], function () {
 
         // Index (list terms for a taxonomy)
-        Route::get('/', function(){
-            return view('backend.taxonomy.terms.index');
-        })->name('taxonomy.terms.index')
+        Route::get('/', [TaxonomyTermController::class, 'index'])->name('taxonomy.terms.index')
             ->breadcrumbs(function (Trail $trail, $taxonomy) {
                 $trail->push(__('Home'), route('dashboard.home'))
                     ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))

@@ -15,6 +15,13 @@ class TaxonomyTermTable extends DataTableComponent
     public string $defaultSortColumn = 'created_at';
     public string $defaultSortDirection = 'desc';
 
+    public $taxonomy;
+
+    public function mount($taxonomy)
+    {
+        $this->taxonomy = $taxonomy;
+    }
+
     public function columns(): array
     {
         return [
@@ -22,9 +29,16 @@ class TaxonomyTermTable extends DataTableComponent
                 ->searchable()->sortable(),
             Column::make("Name", "name")
                 ->searchable()->sortable(),
+            Column::make("Taxonomy", "taxonomy.name")
+                ->searchable()
+                ->sortable(),
             Column::make("Created by", "created_by")
                 ->sortable(),
             Column::make("Updated by", "updated_by")
+                ->sortable(),
+            Column::make("Created at", "created_at")
+                ->sortable(),
+            Column::make("Updated at", "updated_at")
                 ->sortable(),
             Column::make("Actions")
         ];
@@ -32,7 +46,9 @@ class TaxonomyTermTable extends DataTableComponent
 
     public function query(): Builder
     {
-        return TaxonomyTerm::query(); 
+        return TaxonomyTerm::query()
+            ->where('taxonomy_id', $this->taxonomy->id)
+            ->with('user');
     }
 
     public function rowView(): string
