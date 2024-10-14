@@ -32,6 +32,17 @@ class Taxonomy extends Model
         'properties',
     ];
 
+    public static $propertyType = [
+        'string'=>'String',
+        'integer' => 'Integer Number',
+        'float' => 'Floating Point Number',
+        'date' => 'Date',
+        'datetime' => 'Date Time',
+        'boolean' => 'Boolean',
+        'url' => 'URL',
+        'image' => 'Image'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by');

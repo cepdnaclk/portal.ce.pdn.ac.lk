@@ -28,6 +28,8 @@ class TaxonomyTable extends DataTableComponent
                 ->sortable(),
             Column::make("Created at", "created_at")
                 ->sortable(),
+            Column::make("Updated at", "updated_at")
+                ->sortable(),
             Column::make("Actions")
         ];
     }
@@ -39,7 +41,7 @@ class TaxonomyTable extends DataTableComponent
 
     public function rowView(): string
     {
-        return 'backend.taxonomies.index-table-row';
+        return 'backend.taxonomy.index-table-row';
     }
 }
 
