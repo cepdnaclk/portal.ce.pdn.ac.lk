@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Domains\TaxonomyTerms\Models;
+namespace App\Domains\Taxonomy\Models;
 
 use App\Domains\Auth\Models\User;
-use Database\Factories\TaxonomyTermsFactory;
+use Database\Factories\TaxonomyTermFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Domains\TaxonomyTerms\Models\Traits\Scope\TaxonomyTermsScope;
 
 /**
- * Class TaxonomyTerms.
+ * Class TaxonomyTerm.
  */
-class TaxonomyTerms extends Model
+class TaxonomyTerm extends Model
 {
-    use TaxonomyTermsScope,
-        HasFactory,
+    use HasFactory,
         LogsActivity;
 
 
@@ -46,6 +44,6 @@ class TaxonomyTerms extends Model
      */
     protected static function newFactory()
     {
-        return TaxonomyTermsFactory::new();
+        return TaxonomyTermFactory::new();
     }
 }

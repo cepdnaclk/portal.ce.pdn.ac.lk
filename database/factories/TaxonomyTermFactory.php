@@ -1,19 +1,16 @@
 <?php
 
 namespace Database\Factories;
-use App\Domains\TaxonomyTerms\Models\TaxonomyTerms;
+use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Auth\Models\User;
 
 
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TaxonomyTermsFactory extends Factory
+class TaxonomyTermFactory extends Factory
 {
-
-
-
-    protected $model = TaxonomyTerms::class;
+    protected $model = TaxonomyTerm::class;
 
     /**
      * Define the model's default state.
