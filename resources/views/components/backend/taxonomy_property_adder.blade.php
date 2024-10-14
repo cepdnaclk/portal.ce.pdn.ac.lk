@@ -1,5 +1,5 @@
 <div x-data="{
-    
+    {{-- properties array from parent component can be directly accessed here --}}
     selectedItem: null,
     editIndex: null,
     isEditing: false,
@@ -11,13 +11,11 @@
     ClearAll() {
         this.properties = [];
         this.selectedItem = null;
-        this.$dispatch('update-properties', this.properties);
     },
     deleteItem() {
         if (this.selectedItem !== null) {
             this.properties.splice(this.selectedItem, 1);
             this.selectedItem = null;
-            this.$dispatch('update-properties', this.properties);
         }
     },
     moveUp() {
@@ -26,7 +24,6 @@
             this.properties[this.selectedItem - 1] = this.properties[this.selectedItem];
             this.properties[this.selectedItem] = temp;
             this.selectedItem -= 1;
-            this.$dispatch('update-properties', this.properties);
         }
     },
     moveDown() {
@@ -35,7 +32,6 @@
             this.properties[this.selectedItem + 1] = this.properties[this.selectedItem];
             this.properties[this.selectedItem] = temp;
             this.selectedItem += 1;
-            this.$dispatch('update-properties', this.properties);
         }
     },
     editItem() {
@@ -48,10 +44,6 @@
         }
     },
     handleSave() {
-        if (!Array.isArray(this.properties)) {
-            this.properties = [];
-        }
-
         const newPropertyData = {
             code: this.newProperty.code.trim(),
             name: this.newProperty.name.trim(),
@@ -71,8 +63,6 @@
             this.properties.push(newPropertyData);
             this.selectedItem = this.properties.length - 1; // Select the newly added item
         }
-        console.log(this.properties);
-        this.$dispatch('update-properties', this.properties);
         bootstrap.Modal.getInstance(document.getElementById('addPropertyItemModal')).hide();
         {{-- nextTick ensures that the modal is hidden before resetting the form --}}
         this.$nextTick(() => {
@@ -88,7 +78,7 @@
     },
 
 }" x-cloak>
-    
+
     <style>
         [x-cloak] {
             display: none !important;

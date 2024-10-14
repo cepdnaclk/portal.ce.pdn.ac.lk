@@ -32,17 +32,14 @@ class TaxonomyController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData =$request->validate([
             'code' => 'required|unique:taxonomies',
             'name' => 'required',
             'description' => 'nullable',
         ]);
     
         try{
-            $taxonomy = new Taxonomy();
-            $taxonomy->code = $request->code;
-            $taxonomy->name = $request->name;
-            $taxonomy->description = $request->description;
+            $taxonomy = new Taxonomy($validatedData);
             $taxonomy->properties = $request->properties;
             $taxonomy->created_by = Auth::user()->id;
             $taxonomy->save();
@@ -61,7 +58,6 @@ class TaxonomyController extends Controller
     public function edit(Taxonomy $taxonomy)
     {
         try {
-
             return view('backend.taxonomy.edit', [
                 'taxonomy' => $taxonomy,
             ]);
@@ -84,16 +80,13 @@ class TaxonomyController extends Controller
         $data = $request->validate([
             'code' => 'required',
             'name' => 'required',
-            'description' => 'nullable',
-            
-            
+            'description' => 'nullable',     
         ]);
     
         try{
             $taxonomy->update($data);
-            $taxonomy->updated_by = Auth::user()->id;
-            if ($request->properties != null) {
-                $taxonomy->properties = $request->properties;}            
+            $taxonomy->properties = $request->properties;
+            $taxonomy->updated_by = Auth::user()->id;        
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
         }catch (\Exception $ex) {

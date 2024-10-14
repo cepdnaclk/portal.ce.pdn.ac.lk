@@ -3,13 +3,7 @@
 @section('title', __('Create Taxonomy'))
 
 @section('content')
-    <div x-data="{
-        properties: [],
-        updateProperties(event) {
-            this.properties = event.detail;
-            $refs.propertiesInput.value = JSON.stringify(this.properties);
-        }
-    }" x-on:update-properties="updateProperties">
+    <div x-data="{ properties: [] }" >
         {!! Form::open([
             'url' => route('dashboard.taxonomy.store'),
             'method' => 'post',
@@ -76,12 +70,10 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" style="text-align: left; text-decoration: none;">Properties</h5>
-                        <x-backend.taxonomy_property_adder></x-backend.taxonomy_property_adder>
-                        {!! Form::hidden('properties', '', ['x-ref'=>'propertiesInput']) !!}
+                        <x-backend.taxonomy_property_adder/>
+                        {!! Form::hidden('properties', '', ['x-model' => 'JSON.stringify(properties)']) !!}
                     </div>
                 </div>
-                
-
             </x-slot>
 
             <x-slot name="footer">

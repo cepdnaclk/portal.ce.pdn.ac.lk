@@ -2,16 +2,8 @@
 
 @section('title', __('Edit Taxonomy'))
 
-<script></script>
 @section('content')
-    <div x-data="{
-        
-        properties: {{$taxonomy->properties}},
-        updateProperties(event) {
-            this.properties = event.detail;
-            $refs.propertiesInput.value = JSON.stringify(this.properties);
-        }
-    }" x-on:update-properties="updateProperties">
+    <div x-data="{ properties: {{$taxonomy->properties}} }">
         {!! Form::model($taxonomy, [
             'url' => route('dashboard.taxonomy.update', $taxonomy->id),
             'method' => 'PUT',
@@ -76,9 +68,8 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" style="text-align: left; text-decoration: none;">Properties</h5>
-                        
                         <x-backend.taxonomy_property_adder/>
-                            {!! Form::hidden('properties', '', ['x-ref'=>'propertiesInput']) !!}
+                        {!! Form::hidden('properties', '', ['x-model' => 'JSON.stringify(properties)']) !!}
                     </div>
                 </div>
             </x-slot>
