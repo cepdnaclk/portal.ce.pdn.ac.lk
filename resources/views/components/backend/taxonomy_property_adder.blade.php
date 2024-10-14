@@ -1,3 +1,6 @@
+@php
+    $propertyTypes = \App\Domains\Taxonomy\Models\Taxonomy::$propertyType;
+@endphp
 <div x-data="{
     {{-- properties array from parent component can be directly accessed here --}}
     selectedItem: null,
@@ -6,8 +9,9 @@
     newProperty: {
         code: '',
         name: '',
-        data_type: 'string',
+        data_type: null,
     },
+    propertyTypes:{{ json_encode($propertyTypes) }},
     ClearAll() {
         this.properties = [];
         this.selectedItem = null;
@@ -73,17 +77,11 @@
         this.newProperty = {
             code: '',
             name: '',
-            data_type: 'string'
+            data_type: null
         };
     },
 
 }" x-cloak>
-
-    <style>
-        [x-cloak] {
-            display: none !important;
-        }
-    </style>
     <div class="d-flex justify-content-between mb-3">
         <button type="button" class="btn btn-primary btn-w-150" data-bs-toggle="modal" data-bs-target="#addPropertyItemModal"
             x-on:click="resetForm(); document.getElementById('addPropertyItemModalLabel').innerHTML = 'Add Property'; isEditing=false">
@@ -120,14 +118,10 @@
                                 <div class="mb-3">
                                     <label for="propertyDatatype" class="form-label">Datatype</label>
                                     <select class="form-select" aria-label="Datatype" x-model="newProperty.data_type">
-                                        <option selected value="string">String</option>
-                                        <option value="integer">Integer Number</option>
-                                        <option value="float">Floating Point Number</option>
-                                        <option value="date">Date</option>
-                                        <option value="datetime">Date Time</option>
-                                        <option value="boolean">Boolean</option>
-                                        <option value="url">URL</option>
-                                        <option value="image">Image</option>
+                                        <option selected>Open this select menu</option>
+                                        <template x-for="(value,key) in propertyTypes" :key="key">
+                                            <option :value="key" x-text="value"></option>
+                                        </template>
                                       </select>
                                 </div>
                             </div>
