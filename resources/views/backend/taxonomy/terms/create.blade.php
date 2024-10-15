@@ -36,7 +36,7 @@
                             <label for="drop1">Taxonomy Term Code*</label>
                         </div>
                         <div class="col-md-12 px-0">
-                            {!! Form::text('tax_term_code', '', ['class' => 'form-control']) !!}
+                            {!! Form::text('code', '', ['class' => 'form-control']) !!}
                         </div>
                     </div>
 
@@ -45,7 +45,7 @@
                             <label for="drop1">Taxonomy Term Name*</label>
                         </div>
                         <div class="col-md-12 px-0">
-                            {!! Form::text('tax_term_name', '', ['class' => 'form-control']) !!}
+                            {!! Form::text('name', '', ['class' => 'form-control']) !!}
                         </div>
                     </div>
                 </div>
@@ -56,50 +56,33 @@
                         <strong>Metadata</strong>
                     </div>
 
-                    <div class="col-12 py-2">
-                        <div class="col ps-0">
-                            <label for="drop1">Country</label>
+                    @foreach(json_decode($taxonomy->properties, true) as $property)
+                        <div class="col-12 py-2">
+                            <div class="col ps-0">
+                                <label >{{ $property['name'] }}</label>
+                            </div>
+                            <div class="col-md-12 px-0">
+                                @switch($property['data_type'])
+                                    @case('string')
+                                        {!! Form::text("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
+                                        @break
+                                    @case('number')
+                                        {!! Form::number("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
+                                        @break
+                                    @case('boolean')
+                                        <div class="form-check">
+                                            {!! Form::checkbox("metadata[{$property['code']}]", 1, null, ['class' => 'form-check-input', 'id' => $property['code']]) !!}
+                                        </div>
+                                        @break
+                                    @case('date')
+                                        {!! Form::date("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
+                                        @break
+                                    @default
+                                        {!! Form::text("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
+                                @endswitch
+                            </div>
                         </div>
-                        <div class="col-md-12 px-0">
-                            {!! Form::text('country', '', ['class' => 'form-control']) !!}
-                        </div>
-                    </div>
-
-                    <div class="col-12 py-2">
-                        <div class="col ps-0">
-                            <label for="drop1">Country Code</label>
-                        </div>
-                        <div class="col-md-12 px-0">
-                            {!! Form::text('country_code', '', ['class' => 'form-control']) !!}
-                        </div>
-                    </div>
-
-                    <div class="col-12 py-2">
-                        <div class="col ps-0">
-                            <label for="drop1">Page</label>
-                        </div>
-                        <div class="col-md-12 px-0">
-                            {!! Form::text('page', '', ['class' => 'form-control']) !!}
-                        </div>
-                    </div>
-
-                    <div class="col-12 py-2">
-                        {!! Form::label('enabled', 'Enabled', ['class' => 'col-ps-0 pb-2 form-check-label']) !!}
-    
-                        <div class="col form-check form-switch mx-2">
-                            <input type="checkbox" id="checkEnable" name="enabled" value="1"
-                                class="form-check-input checkbox-lg" checked />
-                            <label class="form-check-label" for="checkEnable">&nbsp;</label>
-                        </div>
-                    </div>
-
-                    <div class="col-12 py-2">
-                        {!! Form::label('independence_date', 'Independence Date', ['class' => 'col-ps-0 pb-2 col-form-label']) !!}
-                        <div class="col-12 px-0">
-                            {!! Form::datetimeLocal('indepen_day','', ['class' => 'form-control', 'placeholder' => '']) !!}
-                        </div>
-                    </div>
-
+                    @endforeach
             </x-slot>
 
             <x-slot name="footer">
