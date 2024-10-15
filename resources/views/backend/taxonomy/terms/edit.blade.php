@@ -59,15 +59,18 @@
                     @foreach(json_decode($taxonomy->properties, true) as $property)
                         <div class="col-12 py-2">
                             <div class="col ps-0">
-                                <label >{{ $property['name'] }}</label>
+                                <label >{{ $property['name'] }} ({{\App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']]}})</label>
                             </div>
                             <div class="col-md-12 px-0">
                                 @switch($property['data_type'])
                                     @case('string')
                                         {!! Form::text("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
                                         @break
-                                    @case('number')
-                                        {!! Form::number("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
+                                    @case('integer')
+                                        {!! Form::number("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code'], 'step' => '1']) !!}
+                                        @break
+                                    @case('float')
+                                        {!! Form::number("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code'], 'step' => 'any']) !!}
                                         @break
                                     @case('boolean')
                                         <div class="form-check">
@@ -77,13 +80,22 @@
                                     @case('date')
                                         {!! Form::date("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
                                         @break
+                                    @case('datetime')
+                                        {!! Form::datetime("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
+                                        @break
+                                    @case('url')
+                                        {!! Form::url("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
+                                        @break
+                                    @case('image')
+                                        {!! Form::file("metadata[{$property['code']}]", ['class' => 'form-control', 'id' => $property['code']]) !!}
+                                        @break
                                     @default
                                         {!! Form::text("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
                                 @endswitch
                             </div>
                         </div>
                     @endforeach
-
+                </div>
             </x-slot>
 
             <x-slot name="footer">
