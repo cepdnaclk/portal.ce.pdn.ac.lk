@@ -74,6 +74,7 @@ Route::group([], function () {
                 $trail->push(__('Home'), route('dashboard.home'))
                     ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
                     ->push($taxonomy->name, route('dashboard.taxonomy.edit', $taxonomy))
+                    ->push(__('Terms'), route('dashboard.taxonomy.terms.index', $taxonomy))
                     ->push(__('Create Term'));
             });
 
@@ -88,6 +89,7 @@ Route::group([], function () {
                 $trail->push(__('Home'), route('dashboard.home'))
                     ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
                     ->push($taxonomy->name, route('dashboard.taxonomy.edit', $taxonomy))
+                    ->push(__('Terms'), route('dashboard.taxonomy.terms.index', $taxonomy))
                     ->push(__('Edit Term'));
             });
 
@@ -102,6 +104,7 @@ Route::group([], function () {
                 $trail->push(__('Home'), route('dashboard.home'))
                     ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
                     ->push($taxonomy->name, route('dashboard.taxonomy.edit', $taxonomy))
+                    ->push(__('Terms'), route('dashboard.taxonomy.terms.index', $taxonomy))
                     ->push(__('Delete Term'));
             });
 
