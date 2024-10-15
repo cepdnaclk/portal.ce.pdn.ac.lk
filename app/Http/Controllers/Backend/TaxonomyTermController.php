@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
@@ -19,10 +20,13 @@ class TaxonomyTermController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function create(Taxonomy $taxonomy)
+    public function create(TaxonomyTerm $taxonomyTerm, Taxonomy $taxonomy)
     {
         try {
-            return view('backend.taxonomy.terms.create', compact('taxonomy'));
+            $parentTerms = TaxonomyTerm::where('taxonomy_id', $taxonomy->id )->get();
+            $taxonomy_id = Taxonomy::where('id', $taxonomy->id)->get();
+
+            return view('backend.taxonomy.terms.create', compact('taxonomy','parentTerms','taxonomy_id'));
         } catch (\Exception $ex) {
             Log::error('Failed to load taxonomy terms creation page', ['error' => $ex->getMessage()]);    
             return abort(500);
@@ -34,18 +38,73 @@ class TaxonomyTermController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|void
      */
-    public function store(Request $request, Taxonomy $taxonomy)
+    public function store(Request $request, Taxonomy $taxonomy,TaxonomyTerm $taxonomyTerm)
     {
         try {
             $validatedData = $request->validate([
-                'code' => 'required|unique:taxonomy_terms,code',
+                'code' => 'required',
                 'name' => 'required',
-                'metadata' => 'nullable|json',
-                'parent_id' => 'nullable|exists:taxonomy_terms,id'
+                'taxonomy_id' => 'required|exists:taxonomies,id',
+                'parent_id' => 'nullable|exists:taxonomy_terms,id',
+                'metadata' => 'array',
             ]);
+            
+
+            foreach (json_decode($taxonomy->properties, true) as $property) {
+                $metadataKey = "metadata.{$property['code']}";
+    
+                switch ($property['data_type']) {
+                    case 'string':
+                        $request->validate([$metadataKey => 'nullable|string']);
+                        break;
+                    case 'integer':
+                        $request->validate([$metadataKey => 'nullable|integer']);
+                        break;
+                    case 'float':
+                        $request->validate([$metadataKey => 'nullable|numeric']);
+                        break;
+                    case 'boolean':
+                        $request->validate([$metadataKey => 'nullable|boolean']);
+                        break;
+                    case 'date':
+                        $request->validate([$metadataKey => 'nullable|date']);
+                        break;
+                    case 'datetime':
+                        $request->validate([$metadataKey => 'nullable|date']);
+                        break;
+                    case 'url':
+                        $request->validate([$metadataKey => 'nullable|url']);
+                        break;
+                    case 'image':
+
+                        if ($request->hasFile("metadata.{$property['code']}")) {
+                            $imagePath = $this->uploadThumb(null, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
+                            $value = $imagePath;  
+                        } else {
+                            $value = null;  
+                        }
+                        break;
+                    
+                }
+            }
+            
+            $metadataArray = [];
+            
+            foreach (json_decode($taxonomy->properties, true) as $property) {
+                $value = $request->input("metadata.{$property['code']}");
+                
+                if ($property['data_type'] === 'boolean') {
+                    $value = $request->has("metadata.{$property['code']}") ? true : false;
+                }
+                $metadataArray[] = [
+                    'code' => $property['code'],
+                    'value' => $value === '' ? null : $value
+                ];
+            }
 
             $taxonomyTerm = new TaxonomyTerm($validatedData);
-            $taxonomyTerm->taxonomy_id = $taxonomy->id;
+            $taxonomyTerm->metadata = json_encode($metadataArray);
+            $taxonomyTerm->created_by = Auth::user()->id;
             $taxonomyTerm->save();
 
             return redirect()->route('dashboard.taxonomy.terms.index', $taxonomy)

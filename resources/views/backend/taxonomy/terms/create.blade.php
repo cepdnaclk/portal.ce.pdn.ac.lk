@@ -6,6 +6,8 @@
         <x-backend.card>
 
             <x-slot name="body">
+                <form method="POST" action="{{ route('dashboard.taxonomy.terms.store', $taxonomy) }}">
+                    @csrf
 
                 <div class="term py-2 pt-3" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
 
@@ -15,10 +17,13 @@
 
                     <div class="col-12 py-2">
                         <div class="col ps-0">
-                            <label for="drop1">Parent Taxonomy Term</label>
+                            <label for="drop1">Parent Taxonomy Term ( Optional)</label>
                         </div>
-                        <select class="form-select">
-                            <option style="display:none" selected></option>
+                        <select name="parent_id" class="form-select">
+                                <option value="" selected>Select</option>
+                                @foreach($parentTerms as $term)
+                                    <option value="{{ $term->id }}">{{ $term->name }}</option>
+                                @endforeach
                         </select>
                     </div>
 
@@ -26,8 +31,11 @@
                         <div class="col ps-0">
                             <label for="drop1">Taxonomy*</label>
                         </div>
-                        <select class="form-select">
-                            <option style="display:none" selected></option>
+                        <select name="taxonomy_id" class="form-select">
+                            <option value="" selected>Select</option>
+                            @foreach($taxonomy_id as $tax_id)
+                                <option value="{{ $tax_id->id }}">{{ $tax_id->name }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -81,7 +89,7 @@
                                         {!! Form::date("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
                                         @break
                                     @case('datetime')
-                                        {!! Form::datetime("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
+                                        {!! Form::datetimeLocal("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
                                         @break
                                     @case('url')
                                         {!! Form::url("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
