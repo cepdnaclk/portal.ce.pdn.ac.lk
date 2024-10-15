@@ -42,7 +42,7 @@ class TaxonomyTermController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'code' => 'required',
+                'code' => 'required|unique:taxonomy_terms,code',
                 'name' => 'required',
                 'taxonomy_id' => 'required|exists:taxonomies,id',
                 'parent_id' => 'nullable|exists:taxonomy_terms,id',
