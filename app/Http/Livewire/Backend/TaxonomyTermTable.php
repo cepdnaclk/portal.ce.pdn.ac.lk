@@ -2,18 +2,25 @@
 
 namespace App\Http\Livewire\Backend;
 
-use App\Domains\Taxonomy\Models\Taxonomy;
+use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class TaxonomyTable extends DataTableComponent
+class TaxonomyTermTable extends DataTableComponent
 {
     public array $perPageAccepted = [10, 25, 50];
     public bool $perPageAll = true;
 
     public string $defaultSortColumn = 'created_at';
     public string $defaultSortDirection = 'desc';
+
+    public $taxonomy;
+
+    public function mount($taxonomy)
+    {
+        $this->taxonomy = $taxonomy;
+    }
 
     public function columns(): array
     {
@@ -22,6 +29,9 @@ class TaxonomyTable extends DataTableComponent
                 ->searchable()->sortable(),
             Column::make("Name", "name")
                 ->searchable()->sortable(),
+            Column::make("Taxonomy", "taxonomy.name")
+                ->searchable()
+                ->sortable(),
             Column::make("Created by", "created_by")
                 ->sortable(),
             Column::make("Updated by", "updated_by")
@@ -36,13 +46,13 @@ class TaxonomyTable extends DataTableComponent
 
     public function query(): Builder
     {
-        return Taxonomy::query()
+        return TaxonomyTerm::query()
+            ->where('taxonomy_id', $this->taxonomy->id)
             ->with('user');
     }
 
     public function rowView(): string
     {
-        return 'backend.taxonomy.index-table-row';
+        return 'backend.taxonomy.terms.index-table-row'; 
     }
 }
-

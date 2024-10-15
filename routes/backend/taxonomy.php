@@ -59,9 +59,7 @@ Route::group([], function () {
     Route::group(['prefix' => 'taxonomy/{taxonomy}/terms'], function () {
 
         // Index (list terms for a taxonomy)
-        Route::get('/', function(){
-            return view('backend.taxonomy.terms.index');
-        })->name('taxonomy.terms.index')
+        Route::get('/', [TaxonomyTermController::class, 'index'])->name('taxonomy.terms.index')
             ->breadcrumbs(function (Trail $trail, $taxonomy) {
                 $trail->push(__('Home'), route('dashboard.home'))
                     ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
@@ -76,6 +74,7 @@ Route::group([], function () {
                 $trail->push(__('Home'), route('dashboard.home'))
                     ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
                     ->push($taxonomy->name, route('dashboard.taxonomy.edit', $taxonomy))
+                    ->push(__('Terms'), route('dashboard.taxonomy.terms.index', $taxonomy))
                     ->push(__('Create Term'));
             });
 
@@ -90,6 +89,7 @@ Route::group([], function () {
                 $trail->push(__('Home'), route('dashboard.home'))
                     ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
                     ->push($taxonomy->name, route('dashboard.taxonomy.edit', $taxonomy))
+                    ->push(__('Terms'), route('dashboard.taxonomy.terms.index', $taxonomy))
                     ->push(__('Edit Term'));
             });
 
@@ -104,6 +104,7 @@ Route::group([], function () {
                 $trail->push(__('Home'), route('dashboard.home'))
                     ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
                     ->push($taxonomy->name, route('dashboard.taxonomy.edit', $taxonomy))
+                    ->push(__('Terms'), route('dashboard.taxonomy.terms.index', $taxonomy))
                     ->push(__('Delete Term'));
             });
 
