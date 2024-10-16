@@ -40,7 +40,7 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0
       jquery:
-        specifier: ^3.5.1
+        specifier: ^3.7.1
         version: 3.7.1
       laravel-mix:
         specifier: ^6.0.28
