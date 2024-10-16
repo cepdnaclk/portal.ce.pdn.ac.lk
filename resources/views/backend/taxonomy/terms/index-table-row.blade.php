@@ -33,8 +33,15 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    <div class="d-flex px-0 mt-0 mb-0">
+    <div class="d-flex px-0 mt-0 mb-0 justify-content-end">
         <div class="btn-group" role="group" aria-label="">
+            <!-- Filter Button -->
+            @if ($row->parent_id == null)
+                <a href="?filters[taxonomy_term]={{ $row->id }}" class="btn btn-sm btn-primary">
+                    <i class="fa fa-filter" title="Filter"></i>
+                </a>
+            @endif
+
             <!-- Edit Button -->
             <a href="{{ route('dashboard.taxonomy.terms.edit', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}"
                 class="btn btn-sm btn-warning">

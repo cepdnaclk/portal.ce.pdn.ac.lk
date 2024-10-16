@@ -34,10 +34,12 @@
                             <select name="parent_id" class="form-select">
                                 <option value="" selected>Select</option>
                                 @foreach ($parentTerms as $parent)
-                                    <option value="{{ $parent->id }}"
-                                        {{ old('parent_id', $term->parent_id) == $parent->id ? 'selected' : '' }}>
-                                        {{ $parent->name }}
-                                    </option>
+                                    @if ($parent->id != $term->id)
+                                        <option value="{{ $parent->id }}"
+                                            {{ old('parent_id', $term->parent_id) == $parent->id ? 'selected' : '' }}>
+                                            {{ $parent->name }}
+                                        </option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('parent_id')

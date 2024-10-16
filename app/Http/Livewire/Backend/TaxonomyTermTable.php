@@ -6,6 +6,7 @@ use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class TaxonomyTermTable extends DataTableComponent
 {
@@ -46,8 +47,28 @@ class TaxonomyTermTable extends DataTableComponent
     {
         return TaxonomyTerm::query()
             ->where('taxonomy_id', $this->taxonomy->id)
+            ->when($this->getFilter('taxonomy_term'), fn($query, $type) => $query->where('parent_id', $type))
             ->with('user');
     }
+
+    public function filters(): array
+    {
+        $terms = [];
+
+        foreach (
+            TaxonomyTerm::query()
+                ->where('taxonomy_id', $this->taxonomy->id)
+                ->whereNull('parent_id')->get() as $key => $value
+        ) {
+            $terms[$value->id] = $value->name;
+        };
+
+        return [
+            'taxonomy_term' => Filter::make('Taxonomy Term')
+                ->select($terms)
+        ];
+    }
+
 
     public function rowView(): string
     {
