@@ -9,11 +9,11 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ User::find($row->created_by)->name ?? 'N/A' }}
+    {{ $row->user_created->name ?? 'N/A' }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ User::find($row->updated_by)->name ?? 'N/A' }}
+    {{ $row->user_updated->name ?? 'N/A' }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

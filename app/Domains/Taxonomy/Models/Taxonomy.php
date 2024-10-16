@@ -34,7 +34,7 @@ class Taxonomy extends Model
     ];
 
     public static $propertyType = [
-        'string'=>'String',
+        'string' => 'String',
         'integer' => 'Integer Number',
         'float' => 'Floating Point Number',
         'date' => 'Date',
@@ -49,16 +49,21 @@ class Taxonomy extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function user_created()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function user_updated()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     public function terms()
     {
         return $this->hasMany(TaxonomyTerm::class, 'taxonomy_id');
     }
 
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     protected static function newFactory()
     {
         return TaxonomyFactory::new();

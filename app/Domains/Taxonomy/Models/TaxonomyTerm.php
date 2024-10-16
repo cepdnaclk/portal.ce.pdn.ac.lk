@@ -37,6 +37,16 @@ class TaxonomyTerm extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function user_created()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function user_updated()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     public function taxonomy()
     {
         return $this->belongsTo(Taxonomy::class, 'taxonomy_id');
@@ -55,7 +65,7 @@ class TaxonomyTerm extends Model
     public function getMetadata($code)
     {
         $metadata = json_decode($this->metadata, true);
-        
+
         if (is_array($metadata)) {
             foreach ($metadata as $item) {
                 if ($item['code'] === $code) {
@@ -66,11 +76,6 @@ class TaxonomyTerm extends Model
         return null;
     }
 
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     protected static function newFactory()
     {
         return TaxonomyTermFactory::new();

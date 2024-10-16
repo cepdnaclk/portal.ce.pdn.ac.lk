@@ -25,13 +25,11 @@ class TaxonomyTermTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Code", "code")
-                ->searchable()->sortable(),
             Column::make("Name", "name")
                 ->searchable()->sortable(),
-            Column::make("Taxonomy", "taxonomy.name")
-                ->searchable()
-                ->sortable(),
+            Column::make("Code", "code")
+                ->searchable()->sortable(),
+            Column::make("Taxonomy Parent", "parent_id"),
             Column::make("Created by", "created_by")
                 ->sortable(),
             Column::make("Updated by", "updated_by")
@@ -53,6 +51,6 @@ class TaxonomyTermTable extends DataTableComponent
 
     public function rowView(): string
     {
-        return 'backend.taxonomy.terms.index-table-row'; 
+        return 'backend.taxonomy.terms.index-table-row';
     }
 }
