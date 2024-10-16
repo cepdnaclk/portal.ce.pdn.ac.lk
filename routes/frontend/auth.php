@@ -17,6 +17,7 @@ use Tabuna\Breadcrumbs\Trail;
  * Frontend Access Controllers
  * All route names are prefixed with 'frontend.auth'.
  */
+
 Route::group(['as' => 'auth.'], function () {
     Route::group(['middleware' => 'auth'], function () {
         // Authentication
@@ -51,7 +52,7 @@ Route::group(['as' => 'auth.'], function () {
                         Route::get('enable', [TwoFactorAuthenticationController::class, 'create'])
                             ->name('create')
                             ->breadcrumbs(function (Trail $trail) {
-                                $trail->parent('frontend.user.account')
+                                $trail->parent('intranet.user.account')
                                     ->push(__('Enable Two Factor Authentication'), route('frontend.auth.account.2fa.create'));
                             });
                     });
@@ -60,7 +61,7 @@ Route::group(['as' => 'auth.'], function () {
                         Route::get('recovery', [TwoFactorAuthenticationController::class, 'show'])
                             ->name('show')
                             ->breadcrumbs(function (Trail $trail) {
-                                $trail->parent('frontend.user.account')
+                                $trail->parent('intranet.user.account')
                                     ->push(__('Two Factor Recovery Codes'), route('frontend.auth.account.2fa.show'));
                             });
 
@@ -69,7 +70,7 @@ Route::group(['as' => 'auth.'], function () {
                         Route::get('disable', [DisableTwoFactorAuthenticationController::class, 'show'])
                             ->name('disable')
                             ->breadcrumbs(function (Trail $trail) {
-                                $trail->parent('frontend.user.account')
+                                $trail->parent('intranet.user.account')
                                     ->push(__('Disable Two Factor Authentication'), route('frontend.auth.account.2fa.disable'));
                             });
 

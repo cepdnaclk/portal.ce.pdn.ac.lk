@@ -20,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
 use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Traits\HasPermissions;
 
 /**
  * Class User.
@@ -29,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
     use HasApiTokens,
         HasFactory,
         HasRoles,
+        HasPermissions,
         Impersonate,
         MustVerifyEmailTrait,
         Notifiable,
@@ -147,7 +149,7 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
      */
     public function canBeImpersonated(): bool
     {
-        return ! $this->isMasterAdmin();
+        return !$this->isMasterAdmin();
     }
 
     /**

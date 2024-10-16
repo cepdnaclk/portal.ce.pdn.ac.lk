@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Database\Seeders\Traits\TruncateTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
+
 
 /**
  * Class DatabaseSeeder.
@@ -25,8 +27,15 @@ class DatabaseSeeder extends Seeder
             'failed_jobs',
         ]);
 
-        $this->call(AuthSeeder::class);
-        $this->call(AnnouncementSeeder::class);
+        
+        if (App::environment('local', 'testing')) {
+            $this->call(AuthSeeder::class);
+            $this->call(AnnouncementSeeder::class);
+            $this->call(NewsSeeder::class);
+            $this->call(EventSeeder::class);
+            $this->call(SemesterSeeder::class);
+            $this->call(CourseSeeder::class);
+        }
 
         Model::reguard();
     }

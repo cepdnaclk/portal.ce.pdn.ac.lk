@@ -37,7 +37,7 @@ class AnnouncementTest extends TestCase
 
         $this->loginAsAdmin();
 
-        $response = $this->get('admin/dashboard');
+        $response = $this->get('dashboard/home');
 
         $response->assertSee($announcement->message);
     }
@@ -53,7 +53,7 @@ class AnnouncementTest extends TestCase
 
         $this->loginAsAdmin();
 
-        $response = $this->get('admin/dashboard');
+        $response = $this->get('dashboard/home');
 
         $response->assertSee($announcement->message);
     }

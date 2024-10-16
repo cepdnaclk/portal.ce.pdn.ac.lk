@@ -9,7 +9,7 @@ use App\Domains\Auth\Http\Controllers\Backend\User\UserSessionController;
 use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
 use Tabuna\Breadcrumbs\Trail;
-
+use Illuminate\Support\Facades\Route;
 // All route names are prefixed with 'admin.auth'.
 Route::group([
     'prefix' => 'auth',
@@ -21,20 +21,20 @@ Route::group([
         'as' => 'user.',
     ], function () {
         Route::group([
-            'middleware' => 'role:'.config('boilerplate.access.role.admin'),
+            'middleware' => 'role:' . config('boilerplate.access.role.admin'),
         ], function () {
             Route::get('deleted', [DeletedUserController::class, 'index'])
                 ->name('deleted')
                 ->breadcrumbs(function (Trail $trail) {
-                    $trail->parent('admin.auth.user.index')
-                        ->push(__('Deleted Users'), route('admin.auth.user.deleted'));
+                    $trail->parent('dashboard.auth.user.index')
+                        ->push(__('Deleted Users'), route('dashboard.auth.user.deleted'));
                 });
 
             Route::get('create', [UserController::class, 'create'])
                 ->name('create')
                 ->breadcrumbs(function (Trail $trail) {
-                    $trail->parent('admin.auth.user.index')
-                        ->push(__('Create User'), route('admin.auth.user.create'));
+                    $trail->parent('dashboard.auth.user.index')
+                        ->push(__('Create User'), route('dashboard.auth.user.create'));
                 });
 
             Route::post('/', [UserController::class, 'store'])->name('store');
@@ -43,8 +43,8 @@ Route::group([
                 Route::get('edit', [UserController::class, 'edit'])
                     ->name('edit')
                     ->breadcrumbs(function (Trail $trail, User $user) {
-                        $trail->parent('admin.auth.user.show', $user)
-                            ->push(__('Edit'), route('admin.auth.user.edit', $user));
+                        $trail->parent('dashboard.auth.user.show', $user)
+                            ->push(__('Edit'), route('dashboard.auth.user.edit', $user));
                     });
 
                 Route::patch('/', [UserController::class, 'update'])->name('update');
@@ -64,16 +64,16 @@ Route::group([
                 ->name('deactivated')
                 ->middleware('permission:admin.access.user.reactivate')
                 ->breadcrumbs(function (Trail $trail) {
-                    $trail->parent('admin.auth.user.index')
-                        ->push(__('Deactivated Users'), route('admin.auth.user.deactivated'));
+                    $trail->parent('dashboard.auth.user.index')
+                        ->push(__('Deactivated Users'), route('dashboard.auth.user.deactivated'));
                 });
 
             Route::get('/', [UserController::class, 'index'])
                 ->name('index')
                 ->middleware('permission:admin.access.user.list|admin.access.user.deactivate|admin.access.user.clear-session|admin.access.user.impersonate|admin.access.user.change-password')
                 ->breadcrumbs(function (Trail $trail) {
-                    $trail->parent('admin.dashboard')
-                        ->push(__('User Management'), route('admin.auth.user.index'));
+                    $trail->parent('dashboard.home')
+                        ->push(__('User Management'), route('dashboard.auth.user.index'));
                 });
 
             Route::group(['prefix' => '{user}'], function () {
@@ -81,8 +81,8 @@ Route::group([
                     ->name('show')
                     ->middleware('permission:admin.access.user.list')
                     ->breadcrumbs(function (Trail $trail, User $user) {
-                        $trail->parent('admin.auth.user.index')
-                            ->push($user->name, route('admin.auth.user.show', $user));
+                        $trail->parent('dashboard.auth.user.index')
+                            ->push($user->name, route('dashboard.auth.user.show', $user));
                     });
 
                 Route::patch('mark/{status}', [DeactivatedUserController::class, 'update'])
@@ -98,8 +98,8 @@ Route::group([
                     ->name('change-password')
                     ->middleware('permission:admin.access.user.change-password')
                     ->breadcrumbs(function (Trail $trail, User $user) {
-                        $trail->parent('admin.auth.user.show', $user)
-                            ->push(__('Change Password'), route('admin.auth.user.change-password', $user));
+                        $trail->parent('dashboard.auth.user.show', $user)
+                            ->push(__('Change Password'), route('dashboard.auth.user.change-password', $user));
                     });
 
                 Route::patch('password/change', [UserPasswordController::class, 'update'])
@@ -112,20 +112,20 @@ Route::group([
     Route::group([
         'prefix' => 'role',
         'as' => 'role.',
-        'middleware' => 'role:'.config('boilerplate.access.role.admin'),
+        'middleware' => 'role:' . config('boilerplate.access.role.admin'),
     ], function () {
         Route::get('/', [RoleController::class, 'index'])
             ->name('index')
             ->breadcrumbs(function (Trail $trail) {
-                $trail->parent('admin.dashboard')
-                    ->push(__('Role Management'), route('admin.auth.role.index'));
+                $trail->parent('dashboard.home')
+                    ->push(__('Role Management'), route('dashboard.auth.role.index'));
             });
 
         Route::get('create', [RoleController::class, 'create'])
             ->name('create')
             ->breadcrumbs(function (Trail $trail) {
-                $trail->parent('admin.auth.role.index')
-                    ->push(__('Create Role'), route('admin.auth.role.create'));
+                $trail->parent('dashboard.auth.role.index')
+                    ->push(__('Create Role'), route('dashboard.auth.role.create'));
             });
 
         Route::post('/', [RoleController::class, 'store'])->name('store');
@@ -134,8 +134,8 @@ Route::group([
             Route::get('edit', [RoleController::class, 'edit'])
                 ->name('edit')
                 ->breadcrumbs(function (Trail $trail, Role $role) {
-                    $trail->parent('admin.auth.role.index')
-                        ->push(__('Editing :role', ['role' => $role->name]), route('admin.auth.role.edit', $role));
+                    $trail->parent('dashboard.auth.role.index')
+                        ->push(__('Editing :role', ['role' => $role->name]), route('dashboard.auth.role.edit', $role));
                 });
 
             Route::patch('/', [RoleController::class, 'update'])->name('update');

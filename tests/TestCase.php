@@ -48,6 +48,28 @@ abstract class TestCase extends BaseTestCase
         return $admin;
     }
 
+
+    protected function loginAsEditor()
+    {
+        $newsEditorRole = Role::where('name', 'Editor')->first();
+        $user = User::factory()->admin()->create(['name' => 'Test Editor']);
+        $user->assignRole($newsEditorRole->name);
+        $this->actingAs($user);
+
+        return $user;
+    }
+
+    protected function loginAsCourseManager()
+    {
+        $courseManagerRole = Role::where('name', 'Course Manager')->first();
+        $user = User::factory()->user()->create(['name' => 'Test Course Manager']);
+        $user->assignRole($courseManagerRole->name);
+        $this->actingAs($user); 
+
+        return $user;
+    }
+
+
     protected function logout()
     {
         return auth()->logout();

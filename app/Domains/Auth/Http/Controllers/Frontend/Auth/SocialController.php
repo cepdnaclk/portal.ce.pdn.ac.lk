@@ -5,6 +5,9 @@ namespace App\Domains\Auth\Http\Controllers\Frontend\Auth;
 use App\Domains\Auth\Events\User\UserLoggedIn;
 use App\Domains\Auth\Services\UserService;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Validator;
+use App\Rules\ValidateAsInternalEmail;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SocialController.
@@ -30,17 +33,45 @@ class SocialController
      */
     public function callback($provider, UserService $userService)
     {
-        $user = $userService->registerProvider(Socialite::driver($provider)->user(), $provider);
+        try {
+            // Validate for internal user 
+            $info = Socialite::driver($provider)->user();
+            $validator = Validator::make(
+                ['email' => $info->email, 'name' => $info->name],
+                ['email' => ['required', 'email', new ValidateAsInternalEmail()], 'name' => ['required']]
+            );
 
-        if (!$user->isActive()) {
-            auth()->logout();
-            return redirect()->route('frontend.auth.login')->withFlashDanger(__('Your account has been deactivated.'));
+            if ($validator->fails()) {
+                $errorMessage = "";
+                $errors = $validator->errors();
+
+                foreach ($errors->messages() as $key => $messages) {
+                    if (is_array($messages)) {
+                        foreach ($messages as $message) {
+                            $errorMessage .= $message . ' ';
+                        }
+                    } else {
+                        $errorMessage .= $messages . ' ';
+                    }
+                }
+                return redirect()->route('frontend.auth.login')->withFlashDanger(trim($errorMessage));
+            }
+
+            $user = $userService->registerProvider($info, $provider);
+
+            if (!$user->isActive()) {
+                auth()->logout();
+                return redirect()->route('frontend.auth.login')->withFlashDanger(__('Your account has been deactivated.'));
+            }
+
+            auth()->login($user);
+
+            event(new UserLoggedIn($user));
+
+            return redirect()->route(homeRoute());
+        } catch (\Exception $ex) {
+            Log::error('Failed to handle Social Login Callback', ['user' => Socialite::driver($provider)->user(), 'error' => $ex->getMessage()]);
+            return abort(500);
         }
-
-        auth()->login($user);
-
-        event(new UserLoggedIn($user));
-
-        return redirect()->route(homeRoute());
     }
 }

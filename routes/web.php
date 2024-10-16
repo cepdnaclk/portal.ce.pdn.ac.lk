@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LocaleController;
+use Illuminate\Support\Facades\Route;
 
 /*
  * Global Routes
@@ -15,14 +16,19 @@ Route::get('lang/{lang}', [LocaleController::class, 'change'])->name('locale.cha
  * Frontend Routes
  */
 Route::group(['as' => 'frontend.'], function () {
-    includeRouteFiles(__DIR__.'/frontend/');
+    includeRouteFiles(__DIR__ . '/frontend/');
+});
+
+/**
+ * Intranet Routes
+ */
+Route::group(['prefix' => 'intranet', 'as' => 'intranet.', 'middleware' => 'auth'], function () {
+    includeRouteFiles(__DIR__ . '/intranet/');
 });
 
 /*
  * Backend Routes
- *
- * These routes can only be accessed by users with type `admin`
  */
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
-    includeRouteFiles(__DIR__.'/backend/');
+Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function () {
+    includeRouteFiles(__DIR__ . '/backend/');
 });

@@ -25,6 +25,6 @@ class DisableTwoFactorAuthenticationController
     {
         $request->user()->disableTwoFactorAuth();
 
-        return redirect()->route('frontend.user.account', ['#two-factor-authentication'])->withFlashSuccess(__('Two Factor Authentication Successfully Disabled'));
+        return redirect()->route('intranet.user.account', ['#two-factor-authentication'])->withFlashSuccess(__('Two Factor Authentication Successfully Disabled'));
     }
 }
