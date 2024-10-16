@@ -117,6 +117,12 @@ class TaxonomyController extends Controller
     public function destroy(Taxonomy $taxonomy)
     {
         try {
+            $terms = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->get();
+            if ($terms->count() > 0) {
+                return redirect()->route('dashboard.taxonomy.index')
+                    ->withErrors('Can not delete the Taxonomy as it already has associated Taxonomy Terms. Please reassign or delete those first.');
+            }
+
             $taxonomy->delete();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy was deleted !');
         } catch (\Exception $ex) {
