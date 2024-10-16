@@ -55,7 +55,7 @@ class TaxonomyTerm extends Model
     public function getMetadata($code)
     {
         $metadata = json_decode($this->metadata, true);
-        
+
         if (is_array($metadata)) {
             foreach ($metadata as $item) {
                 if ($item['code'] === $code) {
@@ -64,6 +64,15 @@ class TaxonomyTerm extends Model
             }
         }
         return null;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($taxonomyTerm) {
+            $taxonomyTerm->children()->delete();
+        });
     }
 
     /**

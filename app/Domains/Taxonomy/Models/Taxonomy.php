@@ -34,7 +34,7 @@ class Taxonomy extends Model
     ];
 
     public static $propertyType = [
-        'string'=>'String',
+        'string' => 'String',
         'integer' => 'Integer Number',
         'float' => 'Floating Point Number',
         'date' => 'Date',
