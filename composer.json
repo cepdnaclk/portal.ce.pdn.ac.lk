@@ -14,7 +14,7 @@
         "darkghosthunter/laraguard": "^3.0",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "intervention/image": "^2.6",
+        "intervention/image": "^3.8",
         "jamesmills/laravel-timezone": "^1.9",
         "lab404/laravel-impersonate": "^1.6",
         "langleyfoxall/laravel-nist-password-rules": "^6.0",
