@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 
-if (! function_exists('appName')) {
+if (!function_exists('appName')) {
     /**
      * Helper to grab the application name.
      *
@@ -14,7 +14,7 @@ if (! function_exists('appName')) {
     }
 }
 
-if (! function_exists('carbon')) {
+if (!function_exists('carbon')) {
     /**
      * Create a new Carbon instance from a time.
      *
@@ -29,7 +29,7 @@ if (! function_exists('carbon')) {
     }
 }
 
-if (! function_exists('homeRoute')) {
+if (!function_exists('homeRoute')) {
     /**
      * Return the route to the "home" page depending on authentication/authorization status.
      *
@@ -37,16 +37,16 @@ if (! function_exists('homeRoute')) {
      */
     function homeRoute()
     {
-        if (auth()->check()) {
-            if (auth()->user()->isAdmin()) {
-                return 'admin.dashboard';
-            }
+        // if (auth()->check()) {
+        //     if (auth()->user()->isAdmin()) {
+        //         return 'dashboard.home';
+        //     }
 
-            if (auth()->user()->isUser()) {
-                return 'frontend.user.dashboard';
-            }
-        }
+        //     if (auth()->user()->isUser()) {
+        //         return 'intranet.user.index';
+        //     }
+        // }
 
-        return 'frontend.index';
+        return 'dashboard.home';
     }
 }

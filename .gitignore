@@ -24,8 +24,9 @@ Homestead.json
 .phpunit.result.cache
  
 package-lock.json
-composer.lock
 
 /.idea
 _ide_helper.php
 .phpstorm.meta.php
+
+.DS_Store

@@ -1,5 +1,5 @@
 {
-    "name": "rappasoft/laravel-boilerplate",
+    "name": "cepdnaclk/portal-ce-pdn-ac-lk",
     "type": "project",
     "description": "The Laravel Boilerplate Project.",
     "keywords": [
@@ -14,6 +14,7 @@
         "darkghosthunter/laraguard": "^3.0",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "intervention/image": "^2.6",
         "jamesmills/laravel-timezone": "^1.9",
         "lab404/laravel-impersonate": "^1.6",
         "langleyfoxall/laravel-nist-password-rules": "^6.0",
@@ -22,7 +23,9 @@
         "laravel/socialite": "^5.0",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.0",
+        "laravelcollective/html": "^6.4",
         "livewire/livewire": "^2.0",
+        "marvinlabs/laravel-discord-logger": "^1.4",
         "rappasoft/laravel-livewire-tables": "^1.0",
         "rappasoft/lockout": "^3.0",
         "spatie/laravel-activitylog": "^3.14",
@@ -39,7 +42,7 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3",
+        "phpunit/phpunit": "^9.6",
         "roave/security-advisories": "dev-master"
     },
     "autoload": {

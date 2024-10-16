@@ -9,7 +9,7 @@
         </x-slot>
 
         <x-slot name="headerActions">
-            <x-utils.link class="card-header-action" :href="route('admin.auth.user.index')" :text="__('Back')" />
+            <x-utils.link class="card-header-action" :href="route('dashboard.auth.user.index')" :text="__('Back')" />
         </x-slot>
 
         <x-slot name="body">
@@ -57,7 +57,7 @@
                 <tr>
                     <th>@lang('Last Login At')</th>
                     <td>
-                        @if($user->last_login_at)
+                        @if ($user->last_login_at)
                             @displayDate($user->last_login_at)
                         @else
                             @lang('N/A')
@@ -99,7 +99,7 @@
                 <strong>@lang('Account Created'):</strong> @displayDate($user->created_at) ({{ $user->created_at->diffForHumans() }}),
                 <strong>@lang('Last Updated'):</strong> @displayDate($user->updated_at) ({{ $user->updated_at->diffForHumans() }})
 
-                @if($user->trashed())
+                @if ($user->trashed())
                     <strong>@lang('Account Deleted'):</strong> @displayDate($user->deleted_at) ({{ $user->deleted_at->diffForHumans() }})
                 @endif
             </small>

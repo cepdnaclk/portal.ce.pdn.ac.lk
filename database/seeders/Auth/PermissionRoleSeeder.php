@@ -22,24 +22,37 @@ class PermissionRoleSeeder extends Seeder
     {
         $this->disableForeignKeys();
 
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Create Roles
         Role::create([
-            'id' => 1,
             'type' => User::TYPE_ADMIN,
             'name' => 'Administrator',
         ]);
 
-        // Non Grouped Permissions
-        //
+        Role::create([
+            'type' => User::TYPE_USER,
+            'name' => 'Editor',
+        ]);
 
+        Role::create([
+            'type' => User::TYPE_USER,
+            'name' => 'Course Manager',
+        ]);
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Non Grouped Permissions
+
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Grouped permissions
-        // Users category
+
+        // Role: User
         $users = Permission::create([
             'type' => User::TYPE_ADMIN,
             'name' => 'admin.access.user',
             'description' => 'All User Permissions',
         ]);
-
         $users->children()->saveMany([
             new Permission([
                 'type' => User::TYPE_ADMIN,
@@ -78,8 +91,65 @@ class PermissionRoleSeeder extends Seeder
             ]),
         ]);
 
-        // Assign Permissions to other Roles
-        //
+        // Role: Editor
+        $editor = Permission::create([
+            'type' => User::TYPE_USER,
+            'name' => 'user.access.editor',
+            'description' => 'Editor Permissions',
+        ]);
+        $editor->children()->saveMany([
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.editor.news',
+                'description' => 'News Articles',
+            ]),
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.editor.events',
+                'description' => 'Event Articles',
+            ])
+        ]);
+
+        // Role: CourseManager 
+        $courseManager = Permission::create([
+            'type' => User::TYPE_USER,
+            'name' => 'user.access.academic',
+            'description' => 'All Course Manager Permissions',
+        ]);
+
+        $courseManager->children()->saveMany([
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.academic.semesters',
+                'description' => 'Semesters',
+            ]),
+            new Permission([
+                'type' => User::TYPE_USER,
+                'name' => 'user.access.academic.courses',
+                'description' => 'Courses',
+            ]),
+        ]);
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Assign permissions to Roles
+
+        Role::findByName('Administrator')->givePermissionTo([
+            'admin.access.user',
+            'user.access.editor',
+            'user.access.academic'
+        ]);
+
+        Role::findByName('Editor')->givePermissionTo(['user.access.editor']);
+        Role::findByName('Course Manager')->givePermissionTo(['user.access.academic']);
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // Assign Permissions to users 
+
+        // Only for the local testings
+        if (app()->environment(['local', 'testing'])) {
+            User::find(3)->givePermissionTo('user.access.editor.news');
+            User::find(4)->givePermissionTo('user.access.editor.events');
+        };
 
         $this->enableForeignKeys();
     }
