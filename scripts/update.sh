@@ -4,8 +4,8 @@
 composer update
 
 # Update NodeJS dependencies and compile
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 
 # Migrate the DB into latest status
 php artisan migrate
