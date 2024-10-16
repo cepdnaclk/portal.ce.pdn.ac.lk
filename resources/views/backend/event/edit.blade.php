@@ -8,6 +8,9 @@
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
 @endpush
 
+@push('before-scripts')
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+@endpush
 
 @section('content')
     <div>
@@ -36,7 +39,7 @@
                         ]) !!}
                     </div>
                     @error('title')
-                        <strong>{{ $message }}</strong>
+                        <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                 </div>
 
@@ -46,7 +49,7 @@
                     <div class="col-md-3">
                         {!! Form::date('published_at', $event->published_at, ['class' => 'form-control', 'required' => true]) !!}
                         @error('published_at')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -56,41 +59,79 @@
                     {!! Form::label('url', 'URL*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         <div class="d-inline-flex align-items-center flex-nowrap w-100">
-                            <span class="me-2">https://ce.pdn.ac.lk/events/{{ $event->published_at }}-&nbsp;</span>
+                            <span class="me-2"
+                                id="url_hint">https://ce.pdn.ac.lk/events/{{ $event->published_at }}-&nbsp;</span>
                             <span class="flex-grow-1"> {!! Form::text('url', $event->url, ['class' => 'form-control', 'required' => true]) !!}</span>
                         </div>
                         @error('url')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
+
+                <!-- Event Type (Dropdown with Checkboxes) -->
+                <x-backend.dropdown_checkbox 
+                            :selected="$event->event_type ?? []"
+                            :options-map="\App\Domains\Event\Models\Event::eventTypeMap()"/>
 
                 <!-- Description -->
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
-
                     <div class="col-md-10">
-                        <div id="editor-container" style="height: auto;min-height: 200px;">{!! $event->description !!}</div>
-                        <textarea name="description" id="description" style="display:none;" required="true"></textarea>
-                        @error('description')
-                            <strong>{{ $message }}</strong>
-                        @enderror
+                        <div x-data="{ content: '{{ $event->description }}' }" x-init="(() => {
+                            const quill = new Quill($refs.editor, {
+                                theme: 'snow',
+                                modules: {
+                                    toolbar: [
+                                        ['bold', 'italic', 'underline', 'strike'],
+                                        [{ 'header': 1 }, { 'header': 2 }],
+                                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                        [{ 'script': 'sub' }, { 'script': 'super' }],
+                                        [{ 'indent': '-1' }, { 'indent': '+1' }],
+                                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                                        [{ 'color': [] }, { 'background': [] }],
+                                        [{ 'align': [] }],
+                                        ['clean']
+                                    ]
+                                }
+                            });
+                            quill.clipboard.dangerouslyPasteHTML('{{ $event->description }}');
+                            quill.on('text-change', function() {
+                                content = quill.root.innerHTML;
+                            });
+                        })();">
+                            <div x-ref="editor" style="min-height: 200px;"></div>
+                            <textarea name="description" id="description" x-model="content" style="display: none;"></textarea>
+                            <div class="col-md-12">
+                                @error('description')
+                                    <strong>{{ $message }}</strong>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Image -->
-                <div class="form-group row">
-                    {!! Form::label('image', 'Image*', ['class' => 'col-md-2 col-form-label']) !!}
-
+                <div class="form-group row" x-data="{
+                    imagePreview: '{{ $event->thumbURL() }}',
+                    updatePreview(event) {
+                        const file = event.target.files[0];
+                        const reader = new FileReader();
+                        reader.onload = (e) => { this.imagePreview = e.target.result; };
+                        if (file) reader.readAsDataURL(file);
+                    }
+                }">
+                    {!! Form::label('image', 'Image', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         <div>
-                            <img src="{{ $event->thumbURL() }}" alt="Image preview" class="pb-2"
-                                style="max-width: 150px; max-height: 150px;" />
+                            {!! Form::file('image', ['accept' => 'image/*', 'x-on:change' => 'updatePreview($event)']) !!}
+                            @error('image')
+                                <strong class="text-danger">{{ $message }}</strong>
+                            @enderror
                         </div>
-                        {!! Form::file('image', ['accept' => '.jpeg,.png,.jpg,.gif,.svg']) !!}
-                        @error('image')
-                            <strong>{{ $message }}</strong>
-                        @enderror
+                        <img class="mt-3" x-bind:src="imagePreview" alt="Image preview"
+                            style="max-width: 150px; max-height: 150px; object-fit: cover;" />
                     </div>
                 </div>
 
@@ -99,11 +140,12 @@
                     {!! Form::label('enabled', 'Enabled', ['class' => 'col-md-2 form-check-label']) !!}
 
                     <div class="col-md-4 form-check form-switch mx-4">
-                        <input type="checkbox" id="checkEnable" name="enabled" value={{ $event->enable ? 'checked' : '""' }}
-                            class="form-check-input checkbox-lg" {{ $event->enabled == 1 ? 'checked' : '' }} />
-                        <label class="form-check-label" for="checkEnable">Visibility</label>
+                        <input type="checkbox" id="checkEnable" name="enabled"
+                            value={{ $event->enable ? 'checked' : '""' }} class="form-check-input checkbox-lg"
+                            {{ $event->enabled == 1 ? 'checked' : '' }} />
+                        <label class="form-check-label" for="checkEnable">&nbsp;</label>
                         @error('enabled')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -117,7 +159,7 @@
                             'class' => 'form-control',
                         ]) !!}
                         @error('link_url')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -131,7 +173,7 @@
                             'class' => 'form-control',
                         ]) !!}
                         @error('link_caption')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
@@ -145,7 +187,7 @@
                             'required' => true,
                         ]) !!}
                         @error('start_at')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                     <div class="col-md-6">
@@ -161,7 +203,7 @@
                             'class' => 'form-control',
                         ]) !!}
                         @error('end_at')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                     <div class="col-md-6">
@@ -179,16 +221,23 @@
                             'required' => true,
                         ]) !!}
                         @error('location')
-                            <strong>{{ $message }}</strong>
+                            <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 </div>
             </x-slot>
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary float-right', 'id' => 'submit-button']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-right']) !!}
             </x-slot>
 
         </x-backend.card>
         {!! Form::close() !!}
     </div>
+
+    <script>
+        document.getElementById('published_at').addEventListener('change', function() {
+            document.getElementById('url_hint').textContent =
+                `https://www.ce.pdn.ac.lk/events/${this.value.toLowerCase() ?? 'yyyy-mm-dd'}-`;
+        });
+    </script>
 @endsection
