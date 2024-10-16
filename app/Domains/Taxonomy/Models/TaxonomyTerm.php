@@ -52,6 +52,20 @@ class TaxonomyTerm extends Model
         return $this->hasMany(self::class, 'parent_id');
     }
 
+    public function getMetadata($code)
+    {
+        $metadata = json_decode($this->metadata, true);
+        
+        if (is_array($metadata)) {
+            foreach ($metadata as $item) {
+                if ($item['code'] === $code) {
+                    return $item['value'];
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Create a new factory instance for the model.
      *
