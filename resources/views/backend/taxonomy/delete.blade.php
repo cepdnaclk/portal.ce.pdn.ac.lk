@@ -26,7 +26,7 @@
                             </li>
                         @endforeach
                     </ul>
-                    <a href="{{ route('dashboard.semesters.index') }}" class="btn btn-light mr-2">Back</a>
+                    <a href="{{ route('dashboard.taxonomy.index') }}" class="btn btn-light mr-2">Back</a>
                 @else
                     <div class="d-flex">
                         {!! Form::open([
