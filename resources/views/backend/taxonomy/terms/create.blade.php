@@ -1,3 +1,5 @@
+<?php use App\Domains\Taxonomy\Models\TaxonomyTerm; ?>
+
 @extends('backend.layouts.app')
 
 @section('title', __('Create Taxonomy Term'))
@@ -36,13 +38,13 @@
                             </div>
                             <select name="parent_id" class="form-select">
                                 <option value="" selected>Select</option>
-                                @foreach ($parentTerms as $term)
-                                    <option value="{{ $term->id }}">{{ $term->name }}</option>
+                                @foreach ($taxonomy->terms as $sibling)
+                                    <option value="{{ $sibling->id }}">
+                                        {{ TaxonomyTerm::getHierarchicalPath($sibling->id) }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
-
-
 
                         <!-- Taxonomy Term Code -->
                         <div class="col-12 py-2">

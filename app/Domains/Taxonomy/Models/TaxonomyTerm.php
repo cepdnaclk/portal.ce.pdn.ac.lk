@@ -76,6 +76,20 @@ class TaxonomyTerm extends Model
         return null;
     }
 
+    public static function getHierarchicalPath($id)
+    {
+        $term = TaxonomyTerm::find($id);
+        if ($term != null) {
+            if ($term->parent_id != null) {
+                return TaxonomyTerm::getHierarchicalPath($term->parent_id) . " > " . $term->name;
+            } else {
+                return  $term->name;
+            }
+        } else {
+            return '';
+        }
+    }
+
     protected static function newFactory()
     {
         return TaxonomyTermFactory::new();
