@@ -23,3 +23,18 @@ Route::group(['prefix' => 'academic/v1/undergraduate', 'as' => 'api.academic.und
 });
 
 // TODO: Implement postgraduate courses API
+
+
+Route::group(['prefix' => 'taxonomy/v1/', 'as' => 'api.taxonomy.'], function () {
+    Route::get('/{taxonomy_code}', function ($taxonomy_code) {
+        // TODO implement via a Controller
+        return [];
+    })->name('get');
+    Route::get(
+        '/term/{taxonomy_term_code}',
+        function ($taxonomy_term_code) {
+            // TODO implement via a Controller
+            return [];
+        }
+    )->name('term.get');
+});

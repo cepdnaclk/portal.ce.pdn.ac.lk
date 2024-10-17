@@ -16,21 +16,36 @@ class TaxonomyTerm extends Model
     use HasFactory,
         LogsActivity;
 
-
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'code',
         'name',
         'metadata',
         'taxonomy_id',
         'parent_id',
-
     ];
+
+    protected $casts = [
+        'metadata' => 'json',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    public function getFormattedMetadataAttribute()
+    {
+        $response = array();
+        $filteredMetadata = array_filter($this->metadata, function ($value) {
+            return !is_null($value['value']);
+        });
+
+        foreach ($filteredMetadata as $metadata) {
+            $response[$metadata['code']] = $metadata['value'];
+        }
+
+        return $response;
+    }
 
     public function user()
     {
@@ -68,12 +83,47 @@ class TaxonomyTerm extends Model
 
         if (is_array($metadata)) {
             foreach ($metadata as $item) {
-                if ($item['code'] === $code) {
+                if ($item['code'] === $code && $item['value'] != null) {
                     return $item['value'];
                 }
             }
         }
         return null;
+    }
+
+    public static function getByTaxonomy($taxonomyId, $parent = null)
+    {
+
+        if ($parent == null) {
+            $res = TaxonomyTerm::where(function ($query) use ($taxonomyId) {
+                $query->whereNull('parent_id')->whereAnd('parent_id', $taxonomyId);
+            });
+        } else {
+            $res = TaxonomyTerm::where(function ($query) use ($taxonomyId, $parent) {
+                $query->where('parent_id', $parent)->whereAnd('parent_id', $taxonomyId);
+            });
+        }
+
+        $taxonomyTerms = [];
+        foreach ($res->get() as $term) {
+            $termData = $term->to_dict();
+
+            if ($term->children()->count() > 0) {
+                $termData['terms'] = $term->getByTaxonomy($taxonomyId, $term->id);
+            }
+            array_push($taxonomyTerms, $termData);
+        }
+        return $taxonomyTerms;
+    }
+
+    public function to_dict()
+    {
+        $taxonomyTerm = $this->toArray();
+        foreach (['id', 'taxonomy_id', 'parent_id', 'metadata', 'created_at', 'updated_at', 'created_by', 'updated_by'] as $attribute) {
+            unset($taxonomyTerm[$attribute]);
+        }
+        $taxonomyTerm['metadata'] = $this->formatted_metadata;
+        return $taxonomyTerm;
     }
 
     protected static function newFactory()
