@@ -37,6 +37,16 @@ class TaxonomyTerm extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function user_created()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function user_updated()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     public function taxonomy()
     {
         return $this->belongsTo(Taxonomy::class, 'taxonomy_id');

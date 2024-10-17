@@ -1,10 +1,10 @@
 @extends('backend.layouts.app')
 
+@section('title', __('Edit Taxonomy Term'))
+
 @section('content')
     <div>
-
         <x-backend.card>
-
             <x-slot name="body">
                 <form method="POST" action="{{ route('dashboard.taxonomy.terms.update', [$taxonomy, $term]) }}">
                     @csrf
@@ -15,6 +15,17 @@
                             <strong>Term Configurations</strong>
                         </div>
 
+                        <!-- Taxonomy -->
+                        <div class="col-12 py-2">
+                            <div class="col ps-0">
+                                <label for="taxonomy">Taxonomy*</label>
+                            </div>
+                            <div class="col-md-12 px-0">
+                                {!! Form::text('taxonomy_name', $taxonomy->name, ['class' => 'form-control', 'readonly']) !!}
+                                {!! Form::hidden('taxonomy_id', $taxonomy->id, ['class' => 'form-control', 'readonly']) !!}
+                            </div>
+                        </div>
+
                         <!-- Parent Taxonomy Term -->
                         <div class="col-12 py-2">
                             <div class="col ps-0">
@@ -22,26 +33,18 @@
                             </div>
                             <select name="parent_id" class="form-select">
                                 <option value="" selected>Select</option>
-                                @foreach($parentTerms as $parent)
-                                    <option value="{{ $parent->id }}" {{ old('parent_id', $term->parent_id) == $parent->id ? 'selected' : '' }}>
-                                        {{ $parent->name }}
-                                    </option>
+                                @foreach ($parentTerms as $parent)
+                                    @if ($parent->id != $term->id)
+                                        <option value="{{ $parent->id }}"
+                                            {{ old('parent_id', $term->parent_id) == $parent->id ? 'selected' : '' }}>
+                                            {{ $parent->name }}
+                                        </option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('parent_id')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
-                        </div>
-
-                        <!-- Taxonomy -->
-                        <div class="col-12 py-2">
-                            <div class="col ps-0">
-                                <label for="taxonomy">Taxonomy*</label>
-                            </div>
-                            <select name="taxonomy_id" class="form-select" disabled>
-                                <option value="{{ $taxonomy->id }}" selected>{{ $taxonomy->name }}</option>
-                            </select>
-                            <input type="hidden" name="taxonomy_id" value="{{ $taxonomy->id }}">
                         </div>
 
                         <!-- Taxonomy Term Code -->
@@ -77,44 +80,87 @@
                             <strong>Metadata</strong>
                         </div>
 
-                        @foreach(json_decode($taxonomy->properties, true) as $property)
+                        @foreach (json_decode($taxonomy->properties, true) as $property)
                             <div class="col-12 py-2">
                                 <div class="col ps-0">
-                                    <label>{{ $property['name'] }} ({{ \App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']] }})</label>
+                                    <label>{{ $property['name'] }}
+                                        ({{ \App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']] }})
+                                    </label>
                                 </div>
                                 <div class="col-md-12 px-0">
                                     @switch($property['data_type'])
                                         @case('string')
-                                            {!! Form::text("metadata[{$property['code']}]", old("metadata.{$property['code']}", $term->getMetadata($property['code'])), ['class' => 'form-control']) !!}
-                                            @break
+                                            {!! Form::text(
+                                                "metadata[{$property['code']}]",
+                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
+                                                ['class' => 'form-control'],
+                                            ) !!}
+                                        @break
+
                                         @case('integer')
-                                            {!! Form::number("metadata[{$property['code']}]", old("metadata.{$property['code']}", $term->getMetadata($property['code'])), ['class' => 'form-control', 'step' => '1']) !!}
-                                            @break
+                                            {!! Form::number(
+                                                "metadata[{$property['code']}]",
+                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
+                                                ['class' => 'form-control', 'step' => '1'],
+                                            ) !!}
+                                        @break
+
                                         @case('float')
-                                            {!! Form::number("metadata[{$property['code']}]", old("metadata.{$property['code']}", $term->getMetadata($property['code'])), ['class' => 'form-control', 'step' => 'any']) !!}
-                                            @break
+                                            {!! Form::number(
+                                                "metadata[{$property['code']}]",
+                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
+                                                ['class' => 'form-control', 'step' => 'any'],
+                                            ) !!}
+                                        @break
+
                                         @case('boolean')
                                             <div class="form-check">
-                                                {!! Form::checkbox("metadata[{$property['code']}]", 1, old("metadata.{$property['code']}", $term->getMetadata($property['code']) == 1 ? true : false), ['class' => 'form-check-input']) !!}
+                                                {!! Form::checkbox(
+                                                    "metadata[{$property['code']}]",
+                                                    1,
+                                                    old("metadata.{$property['code']}", $term->getMetadata($property['code']) == 1 ? true : false),
+                                                    ['class' => 'form-check-input'],
+                                                ) !!}
                                             </div>
-                                            @break
+                                        @break
+
                                         @case('date')
-                                            {!! Form::date("metadata[{$property['code']}]", old("metadata.{$property['code']}", $term->getMetadata($property['code'])), ['class' => 'form-control']) !!}
-                                            @break
+                                            {!! Form::date(
+                                                "metadata[{$property['code']}]",
+                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
+                                                ['class' => 'form-control'],
+                                            ) !!}
+                                        @break
+
                                         @case('datetime')
-                                            {!! Form::datetimeLocal("metadata[{$property['code']}]", old("metadata.{$property['code']}", $term->getMetadata($property['code'])), ['class' => 'form-control']) !!}
-                                            @break
+                                            {!! Form::datetimeLocal(
+                                                "metadata[{$property['code']}]",
+                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
+                                                ['class' => 'form-control'],
+                                            ) !!}
+                                        @break
+
                                         @case('url')
-                                            {!! Form::url("metadata[{$property['code']}]", old("metadata.{$property['code']}", $term->getMetadata($property['code'])), ['class' => 'form-control']) !!}
-                                            @break
+                                            {!! Form::url(
+                                                "metadata[{$property['code']}]",
+                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
+                                                ['class' => 'form-control'],
+                                            ) !!}
+                                        @break
+
                                         @case('image')
                                             {!! Form::file("metadata[{$property['code']}]", ['class' => 'form-control']) !!}
-                                            @if($term->getMetadata($property['code']))
+                                            @if ($term->getMetadata($property['code']))
                                                 <small>Current: {{ $term->getMetadata($property['code']) }}</small>
                                             @endif
-                                            @break
+                                        @break
+
                                         @default
-                                            {!! Form::text("metadata[{$property['code']}]", old("metadata.{$property['code']}", $term->getMetadata($property['code'])), ['class' => 'form-control']) !!}
+                                            {!! Form::text(
+                                                "metadata[{$property['code']}]",
+                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
+                                                ['class' => 'form-control'],
+                                            ) !!}
                                     @endswitch
                                 </div>
                             </div>
@@ -129,5 +175,4 @@
         </x-backend.card>
 
     </div>
-
 @endsection
