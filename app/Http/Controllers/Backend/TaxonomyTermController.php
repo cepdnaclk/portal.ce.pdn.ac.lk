@@ -23,14 +23,11 @@ class TaxonomyTermController extends Controller
     public function create(TaxonomyTerm $taxonomyTerm, Taxonomy $taxonomy)
     {
         try {
-            $parentTerms = TaxonomyTerm::where('taxonomy_id', $taxonomy->id )->get();
-            $taxonomy_id = Taxonomy::where('id', $taxonomy->id)->get();
-
-            return view('backend.taxonomy.terms.create', compact('taxonomy','parentTerms','taxonomy_id'));
+            return view('backend.taxonomy.terms.create', compact('taxonomy'));
         } catch (\Exception $ex) {
-            Log::error('Failed to load taxonomy terms creation page', ['error' => $ex->getMessage()]);    
+            Log::error('Failed to load taxonomy terms creation page', ['error' => $ex->getMessage()]);
             return abort(500);
-        }     
+        }
     }
     /**
      * Store a newly created resource in storage.
@@ -38,7 +35,7 @@ class TaxonomyTermController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|void
      */
-    public function store(Request $request, Taxonomy $taxonomy,TaxonomyTerm $taxonomyTerm)
+    public function store(Request $request, Taxonomy $taxonomy, TaxonomyTerm $taxonomyTerm)
     {
         try {
             $validatedData = $request->validate([
@@ -48,11 +45,11 @@ class TaxonomyTermController extends Controller
                 'parent_id' => 'nullable|exists:taxonomy_terms,id',
                 'metadata' => 'array',
             ]);
-            
+
 
             foreach (json_decode($taxonomy->properties, true) as $property) {
                 $metadataKey = "metadata.{$property['code']}";
-    
+
                 switch ($property['data_type']) {
                     case 'string':
                         $request->validate([$metadataKey => 'nullable|string']);
@@ -79,20 +76,19 @@ class TaxonomyTermController extends Controller
 
                         if ($request->hasFile("metadata.{$property['code']}")) {
                             $imagePath = $this->uploadThumb(null, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
-                            $value = $imagePath;  
+                            $value = $imagePath;
                         } else {
-                            $value = null;  
+                            $value = null;
                         }
                         break;
-                    
                 }
             }
-            
+
             $metadataArray = [];
-            
+
             foreach (json_decode($taxonomy->properties, true) as $property) {
                 $value = $request->input("metadata.{$property['code']}");
-                
+
                 if ($property['data_type'] === 'boolean') {
                     $value = $request->has("metadata.{$property['code']}") ? true : false;
                 }
@@ -108,9 +104,9 @@ class TaxonomyTermController extends Controller
             $taxonomyTerm->save();
 
             return redirect()->route('dashboard.taxonomy.terms.index', $taxonomy)
-                             ->with('Success', 'Taxonomy term was created successfully!');
+                ->with('Success', 'Taxonomy term was created successfully!');
         } catch (\Exception $ex) {
-            Log::error('Failed to create taxonomy term', ['error' => $ex->getMessage()]);    
+            Log::error('Failed to create taxonomy term', ['error' => $ex->getMessage()]);
             return back()->withInput()->withErrors(['error' => 'Failed to create taxonomy term. Please try again.']);
         }
     }
@@ -123,10 +119,9 @@ class TaxonomyTermController extends Controller
     public function edit(Taxonomy $taxonomy, TaxonomyTerm $term)
     {
         try {
-            $parentTerms = TaxonomyTerm::where('taxonomy_id', $taxonomy->id )->get();
-            return view('backend.taxonomy.terms.edit', compact('taxonomy', 'term', 'parentTerms'));
+            return view('backend.taxonomy.terms.edit', compact('taxonomy', 'term'));
         } catch (\Exception $ex) {
-            Log::error('Failed to load taxonomy term edit page', ['error' => $ex->getMessage()]);    
+            Log::error('Failed to load taxonomy term edit page', ['error' => $ex->getMessage()]);
             return abort(500);
         }
     }
@@ -138,78 +133,78 @@ class TaxonomyTermController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Taxonomy $taxonomy, TaxonomyTerm $term)
-{
-    try {
-        $validatedData = $request->validate([
-            'code' => 'required|unique:taxonomy_terms,code,' . $term->id,
-            'name' => 'required',
-            'parent_id' => 'nullable|exists:taxonomy_terms,id',
-            'metadata' => 'array',
-        ]);
+    {
+        try {
+            $validatedData = $request->validate([
+                'code' => 'required|unique:taxonomy_terms,code,' . $term->id,
+                'name' => 'required',
+                'parent_id' => 'nullable|exists:taxonomy_terms,id',
+                'metadata' => 'array',
+            ]);
 
-        foreach (json_decode($taxonomy->properties, true) as $property) {
-            $metadataKey = "metadata.{$property['code']}";
+            foreach (json_decode($taxonomy->properties, true) as $property) {
+                $metadataKey = "metadata.{$property['code']}";
 
-            switch ($property['data_type']) {
-                case 'string':
-                    $request->validate([$metadataKey => 'nullable|string']);
-                    break;
-                case 'integer':
-                    $request->validate([$metadataKey => 'nullable|integer']);
-                    break;
-                case 'float':
-                    $request->validate([$metadataKey => 'nullable|numeric']);
-                    break;
-                case 'boolean':
-                    $request->validate([$metadataKey => 'nullable|boolean']);
-                    break;
-                case 'date':
-                    $request->validate([$metadataKey => 'nullable|date']);
-                    break;
-                case 'datetime':
-                    $request->validate([$metadataKey => 'nullable|date']);
-                    break;
-                case 'url':
-                    $request->validate([$metadataKey => 'nullable|url']);
-                    break;
-                case 'image':
-                    if ($request->hasFile("metadata.{$property['code']}")) {
-                        $imagePath = $this->uploadThumb($term, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
-                        $value = $imagePath;
-                    } else {
-                        $value = null;
-                    }
-                    break;
-            }
-        }
-
-        $metadataArray = [];
-        foreach (json_decode($taxonomy->properties, true) as $property) {
-            $value = $request->input("metadata.{$property['code']}");
-            
-            if ($property['data_type'] === 'boolean') {
-                $value = $request->has("metadata.{$property['code']}") ? true : false;
+                switch ($property['data_type']) {
+                    case 'string':
+                        $request->validate([$metadataKey => 'nullable|string']);
+                        break;
+                    case 'integer':
+                        $request->validate([$metadataKey => 'nullable|integer']);
+                        break;
+                    case 'float':
+                        $request->validate([$metadataKey => 'nullable|numeric']);
+                        break;
+                    case 'boolean':
+                        $request->validate([$metadataKey => 'nullable|boolean']);
+                        break;
+                    case 'date':
+                        $request->validate([$metadataKey => 'nullable|date']);
+                        break;
+                    case 'datetime':
+                        $request->validate([$metadataKey => 'nullable|date']);
+                        break;
+                    case 'url':
+                        $request->validate([$metadataKey => 'nullable|url']);
+                        break;
+                    case 'image':
+                        if ($request->hasFile("metadata.{$property['code']}")) {
+                            $imagePath = $this->uploadThumb($term, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
+                            $value = $imagePath;
+                        } else {
+                            $value = null;
+                        }
+                        break;
+                }
             }
 
-            $metadataArray[] = [
-                'code' => $property['code'],
-                'value' => $value === '' ? null : $value
-            ];
+            $metadataArray = [];
+            foreach (json_decode($taxonomy->properties, true) as $property) {
+                $value = $request->input("metadata.{$property['code']}");
+
+                if ($property['data_type'] === 'boolean') {
+                    $value = $request->has("metadata.{$property['code']}") ? true : false;
+                }
+
+                $metadataArray[] = [
+                    'code' => $property['code'],
+                    'value' => $value === '' ? null : $value
+                ];
+            }
+
+            $term->update($validatedData);
+            $term->metadata = json_encode($metadataArray);
+            $term->updated_by = Auth::user()->id;
+            $term->save();
+
+            return redirect()->route('dashboard.taxonomy.terms.index', $taxonomy)
+                ->with('Success', 'Taxonomy term was updated successfully!');
+        } catch (\Exception $ex) {
+            Log::error('Failed to update taxonomy term', ['term_id' => $term->id, 'error' => $ex->getMessage()]);
+            return back()->withInput()->withErrors(['error' => 'Failed to update taxonomy term. Please try again.']);
         }
-
-        $term->update($validatedData);
-        $term->metadata = json_encode($metadataArray);
-        $term->updated_by = Auth::user()->id; 
-        $term->save();
-
-        return redirect()->route('dashboard.taxonomy.terms.index', $taxonomy)
-                         ->with('Success', 'Taxonomy term was updated successfully!');
-    } catch (\Exception $ex) {
-        Log::error('Failed to update taxonomy term', ['term_id' => $term->id, 'error' => $ex->getMessage()]);
-        return back()->withInput()->withErrors(['error' => 'Failed to update taxonomy term. Please try again.']);
     }
-}
-     /**
+    /**
      * Confirm to delete the specified resource from storage.
      *
      * @param \App\Domains\TaxonomyTerm\Models\TaxonomyTerm $taxonomyTerm
