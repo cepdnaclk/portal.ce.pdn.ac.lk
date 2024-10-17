@@ -76,6 +76,20 @@ class TaxonomyTerm extends Model
         return null;
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($taxonomyTerm) {
+            $taxonomyTerm->children()->delete();
+        });
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
     protected static function newFactory()
     {
         return TaxonomyTermFactory::new();
