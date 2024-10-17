@@ -96,11 +96,11 @@ class TaxonomyTerm extends Model
 
         if ($parent == null) {
             $res = TaxonomyTerm::where(function ($query) use ($taxonomyId) {
-                $query->whereNull('parent_id')->whereAnd('parent_id', $taxonomyId);
+                $query->whereNull('parent_id')->whereAnd('taxonomy_id', $taxonomyId);
             });
         } else {
             $res = TaxonomyTerm::where(function ($query) use ($taxonomyId, $parent) {
-                $query->where('parent_id', $parent)->whereAnd('parent_id', $taxonomyId);
+                $query->where('parent_id', $parent)->whereAnd('taxonomy_id', $taxonomyId);
             });
         }
 
