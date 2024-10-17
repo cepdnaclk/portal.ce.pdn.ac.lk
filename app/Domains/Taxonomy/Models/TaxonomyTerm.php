@@ -93,15 +93,10 @@ class TaxonomyTerm extends Model
 
     public static function getByTaxonomy($taxonomyId, $parent = null)
     {
-
         if ($parent == null) {
-            $res = TaxonomyTerm::where(function ($query) use ($taxonomyId) {
-                $query->whereNull('parent_id')->whereAnd('taxonomy_id', $taxonomyId);
-            });
+            $res = TaxonomyTerm::where('taxonomy_id', $taxonomyId)->whereNull('parent_id');
         } else {
-            $res = TaxonomyTerm::where(function ($query) use ($taxonomyId, $parent) {
-                $query->where('parent_id', $parent)->whereAnd('taxonomy_id', $taxonomyId);
-            });
+            $res = TaxonomyTerm::where('taxonomy_id', $taxonomyId)->where('parent_id', $parent);
         }
 
         $taxonomyTerms = [];
