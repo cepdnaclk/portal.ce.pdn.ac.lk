@@ -16,6 +16,8 @@ class CreateCourses extends Component
     //for selectors 
     public $academicProgramsList = [];
     public $semestersList = [];
+    public $curriculumList = [];
+
 
     //form inputs
     //1st form step
@@ -46,7 +48,7 @@ class CreateCourses extends Component
         return [
             'academicProgram' => 'required|string',
             'semester' => 'required|string',
-            'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
+            'version' => ['required', Rule::in(array_keys(Course::getVersions()))],
             'type'  => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
             'code' => 'required|string|unique:courses,code',
             'name' => 'required|string|max:255',
@@ -213,12 +215,28 @@ class CreateCourses extends Component
 
     public function updatedAcademicProgram()
     {
+        $this->updateCurriculumList();
         $this->updateSemestersList();
     }
 
     public function updatedVersion()
     {
         $this->updateSemestersList();
+    }
+
+
+    public function updateCurriculumList()
+    {
+        if ($this->academicProgram) {
+            $this->curriculumList = Course::getVersions($this->academicProgram);
+        } else {
+            $this->curriculumList = [];
+        }
+
+        if (!array_key_exists($this->version, $this->curriculumList)) {
+            // Unset if it not belongs to 
+            $this->version  = null;
+        }
     }
 
     public function updateSemestersList()
@@ -230,6 +248,11 @@ class CreateCourses extends Component
                 ->toArray();
         } else {
             $this->semestersList = [];
+        }
+
+        if (count($this->semestersList) == 0 || !array_key_exists($this->semester, $this->semestersList)) {
+            // Unset if it not belongs to 
+            $this->semester = null;
         }
     }
 

@@ -17,6 +17,7 @@ class EditCourses extends Component
     // Selectors
     public $academicProgramsList = [];
     public $semestersList = [];
+    public $curriculumList = [];
 
     // Form inputs
     // 1st form step
@@ -50,7 +51,7 @@ class EditCourses extends Component
         $validationRules = [
             'academicProgram' => 'required|string',
             'semester' => 'required|int',
-            'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
+            'version' => ['required', Rule::in(array_keys(Course::getVersions()))],
             'type' => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
             'code' => 'required|string',
             'name' => 'required|string|max:255',
@@ -138,7 +139,12 @@ class EditCourses extends Component
     public function updated($propertyName)
     {
         $this->canUpdate = false;
-        $this->validateCurrentStep();
+
+        if (!($this->version == null || $this->semester == null)) {
+            // This to allow fillings while either version or semester is null
+            $this->validateCurrentStep();
+        }
+
         if ($this->getErrorBag()->has('marks_allocation.total')) {
             return;
         }
@@ -181,8 +187,12 @@ class EditCourses extends Component
             ];
         })->toArray();
         $this->prerequisites = $course->prerequisites->pluck('id')->toArray();
+
         // Update semesters list based on academic program and version
         $this->updateSemestersList();
+
+        // Update curriculum list based on academic program
+        $this->updateCurriculumList();
     }
 
     public function updatePrerequisites($selectedCourses)
@@ -218,26 +228,33 @@ class EditCourses extends Component
 
     public function update()
     {
-        try {
-
-            $this->validateCurrentStep();
-            $this->updateCourse();
-            return redirect()->route('dashboard.courses.index')->with('Success', 'Course updated successfully.');
-        } catch (\Exception $e) {
-            \Log::error("Error in update method: " . $e->getMessage());
-            session()->flash('error', 'There was an error updating the course: ' . $e->getMessage());
-        }
-        $this->resetForm();
+        $this->validateCurrentStep();
+        $this->updateCourse();
+        return redirect()->route('dashboard.courses.index')->with('Success', 'Course updated successfully.');
     }
 
     public function updatedAcademicProgram()
     {
+        $this->updateCurriculumList();
         $this->updateSemestersList();
     }
 
     public function updatedVersion()
     {
         $this->updateSemestersList();
+    }
+
+    public function updateCurriculumList()
+    {
+        if ($this->academicProgram) {
+            $this->curriculumList = Course::getVersions($this->academicProgram);
+        } else {
+            $this->curriculumList = [];
+        }
+        if (!array_key_exists($this->version, $this->curriculumList)) {
+            // Unset if it not belongs to 
+            $this->version  = '';
+        }
     }
 
     public function updateSemestersList()
@@ -249,6 +266,11 @@ class EditCourses extends Component
                 ->toArray();
         } else {
             $this->semestersList = [];
+        }
+
+        if (count($this->semestersList) == 0 || !array_key_exists($this->semester, $this->semestersList)) {
+            // Unset if it not belongs to 
+            $this->semester = '';
         }
     }
 
