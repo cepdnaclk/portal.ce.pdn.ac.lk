@@ -36,6 +36,8 @@ class Course extends AcademicProgram
         'name',
         'credits',
         'type',
+        'teaching_methods',
+        'faq_page',
         'content',
         'objectives',
         'time_allocation',
