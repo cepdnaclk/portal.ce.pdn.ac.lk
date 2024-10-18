@@ -36,7 +36,7 @@ class TaxonomyTerm extends Model
     public function getFormattedMetadataAttribute()
     {
         $response = array();
-        $filteredMetadata = array_filter($this->metadata, function ($value) {
+        $filteredMetadata = array_filter(json_decode($this->metadata, true), function ($value) {
             return !is_null($value['value']);
         });
 
