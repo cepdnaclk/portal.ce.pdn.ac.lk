@@ -30,6 +30,7 @@ class EditCourses extends Component
     public $time_allocation;
     public $module_time_allocation;
     public $marks_allocation;
+    public $teaching_methods;
 
     // 2nd form step
     public $objectives;
@@ -46,7 +47,6 @@ class EditCourses extends Component
 
     public function rules()
     {
-
         $validationRules = [
             'academicProgram' => 'required|string',
             'semester' => 'required|int',
@@ -55,6 +55,7 @@ class EditCourses extends Component
             'code' => 'required|string',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:18',
+            'teaching_methods' => 'nullable|string',
             'faq_page' => 'nullable|url',
             'content' => 'nullable|string',
             'modules' => 'nullable|array',
@@ -163,6 +164,7 @@ class EditCourses extends Component
         $this->code = $course->code;
         $this->name = $course->name;
         $this->credits = $course->credits;
+        $this->teaching_methods = $course->teaching_methods;
         $this->faq_page = $course->faq_page;
         $this->content = $course->content;
         $this->time_allocation = array_merge(Course::getTimeAllocation(), json_decode($course->time_allocation, true));
@@ -180,7 +182,8 @@ class EditCourses extends Component
                 'time_allocation' => array_merge(Course::getTimeAllocation(), json_decode($module->time_allocation, true))
             ];
         })->toArray();
-        $this->prerequisites = $course->prerequisites->pluck('id')->toArray();
+        $this->prerequisites = $course->prerequisites;
+
         // Update semesters list based on academic program and version
         $this->updateSemestersList();
     }
@@ -219,7 +222,6 @@ class EditCourses extends Component
     public function update()
     {
         try {
-
             $this->validateCurrentStep();
             $this->updateCourse();
             return redirect()->route('dashboard.courses.index')->with('Success', 'Course updated successfully.');
@@ -268,6 +270,7 @@ class EditCourses extends Component
                 'code' => $this->code,
                 'name' => $this->name,
                 'credits' => (int)$this->credits,
+                'teaching_methods' => $this->teaching_methods,
                 'faq_page' => $this->faq_page,
                 'content' => $this->content,
                 'time_allocation' => json_encode($this->time_allocation),
@@ -283,7 +286,7 @@ class EditCourses extends Component
 
             if (!empty($this->modules)) {
                 foreach ($this->modules as $module) {
-                    $createdModule = CourseModule::create([
+                    CourseModule::create([
                         'course_id' => $course->id,
                         'topic' => $module['name'],
                         'description' => $module['description'],
@@ -293,6 +296,7 @@ class EditCourses extends Component
                     ]);
                 }
             }
+
             // Sync prerequisites
             if (!empty($this->prerequisites)) {
                 $course->prerequisites()->sync(collect($this->prerequisites)->pluck('id')->toArray());
@@ -318,6 +322,7 @@ class EditCourses extends Component
         $this->code = '';
         $this->name = '';
         $this->credits = null;
+        $this->teaching_methods = '';
         $this->faq_page = '';
         $this->content = '';
         $this->time_allocation = Course::getTimeAllocation();
