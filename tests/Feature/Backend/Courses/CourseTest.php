@@ -65,7 +65,8 @@ class CourseTest extends TestCase
         $this->loginAsCourseManager();
         $course = Course::factory()->create();
 
-        Livewire::test(\App\Http\Livewire\Backend\CreateCourses::class)
+        Livewire::test(\App\Http\Livewire\Backend\EditCourses::class)
+            ->set('course', $course)
             ->set('academicProgram', $course->academic_program)
             ->set('semester', (string) $course->semester_id)
             ->set('version', (string) $course->version)
