@@ -10,7 +10,9 @@
 
 <x-livewire-tables::table.cell>
     @if ($row->parent_id != null)
-        {{ $row->parent->name }}
+        <a href="?filters[taxonomy_term]={{ $row->parent->id }}" class="text-decoration-none">
+            {{ $row->parent->name }}
+        </a>
     @else
         N/A
     @endif
