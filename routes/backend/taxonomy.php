@@ -35,6 +35,7 @@ Route::group([], function () {
         ->breadcrumbs(function (Trail $trail, $taxonomy) {
             $trail->push(__('Home'), route('dashboard.home'))
                 ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
+                ->push($taxonomy->name)
                 ->push(__('Edit'), route('dashboard.taxonomy.edit', $taxonomy));
         });
 
@@ -48,7 +49,18 @@ Route::group([], function () {
         ->breadcrumbs(function (Trail $trail, $taxonomy) {
             $trail->push(__('Home'), route('dashboard.home'))
                 ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
+                ->push($taxonomy->name)
                 ->push(__('Delete'));
+        });
+
+
+    // View 
+    Route::get('taxonomy/view/{taxonomy}', [TaxonomyController::class, 'view'])
+        ->name('taxonomy.view')->breadcrumbs(function (Trail $trail, $taxonomy) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
+                ->push($taxonomy->name)
+                ->push(__('View'));
         });
 
     // Destroy
