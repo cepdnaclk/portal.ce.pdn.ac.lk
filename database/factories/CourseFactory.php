@@ -36,6 +36,8 @@ class CourseFactory extends Factory
             'name' => $this->faker->sentence(3),
             'credits' => $this->faker->numberBetween(1, 6),
             'type' => $this->faker->randomElement(array_keys(Course::getTypes())),
+            'teaching_methods' => $this->faker->sentence(3),
+            'faq_page' => $this->faker->url,
             'content' => $this->faker->paragraph(),
             'objectives' => json_encode([$this->faker->sentence(), $this->faker->sentence()]),
             'time_allocation' => json_encode(['lectures' => $this->faker->numberBetween(10, 50), 'practicals' => $this->faker->numberBetween(5, 20)]),

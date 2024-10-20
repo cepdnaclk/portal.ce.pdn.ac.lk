@@ -23,10 +23,12 @@
                             <h5 class="card-title">Basics</h5>
                             <div class="basics">
                                 <div class="row" id="row1">
+
+                                    {{-- Academic Program --}}
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
                                             <label for="drop1">
-                                                Academic Program
+                                                Academic Program*
                                             </label>
                                         </div>
                                         <select id="academicProgram" name="academicProgram" class="form-select"
@@ -41,9 +43,11 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    {{-- Curriculum --}}
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label for="dropCurriculum">Curriculum</label>
+                                            <label for="dropCurriculum">Curriculum*</label>
                                         </div>
                                         <select id="dropCurriculum" name="dropCurriculum" class="form-select"
                                             wire:model="version">
@@ -56,9 +60,11 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    {{-- Semester --}}
                                     <div class="col-12 py-2">
                                         <div class="col ps-0">
-                                            <label for="dropSemester">Semester</label>
+                                            <label for="dropSemester">Semester*</label>
                                         </div>
                                         <select id="dropSemester" name="dropSemester" class="form-select"
                                             wire:model="semester">
@@ -71,9 +77,11 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    {{-- Course Code --}}
                                     <div class="col-12 col-sm-3 py-2">
                                         <div class="col ps-0">
-                                            <label>Code</label>
+                                            <label>Code*</label>
                                         </div>
                                         <div class="input-group">
                                             <input type="text" class="form-control" wire:model.lazy = "code">
@@ -82,9 +90,11 @@
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
+
+                                    {{-- Course Name --}}
                                     <div class="col-12 col-sm-9 py-2">
                                         <div class="col ps-0">
-                                            <label>Name</label>
+                                            <label>Name*</label>
                                         </div>
                                         <div class="input-group">
                                             <input type="text" class="form-control" wire:model.lazy = "name">
@@ -96,9 +106,10 @@
                                 </div>
 
                                 <div class="row" id="row2">
+                                    {{-- Course Type --}}
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label for="drop1">Type</label>
+                                            <label for="drop1">Type*</label>
                                         </div>
                                         <select class="form-select" wire:model="type">
                                             <option style="display:none" selected></option>
@@ -110,9 +121,11 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    {{-- Credits --}}
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label>Credits</label>
+                                            <label>Credits*</label>
                                         </div>
                                         <div class="input-group">
                                             <input type="number" class="form-control" wire:model.lazy ="credits">
@@ -121,6 +134,22 @@
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
+
+                                    {{-- Teaching Methods --}}
+                                    <div class="col-12 py-2">
+                                        <div class="col ps-0">
+                                            <label>Teaching Methods</label>
+                                        </div>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                wire:model.lazy = "teaching_methods">
+                                        </div>
+                                        @error('teaching_methods')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    {{-- FAQ Page --}}
                                     <div class="col-12 py-2">
                                         <div class="col ps-0">
                                             <label>FAQ page</label>
@@ -133,6 +162,8 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    {{-- Content --}}
                                     <div class="my-2" id="contentarea">
                                         <label for="contentTextarea">Content</label>
                                         <textarea class="form-control" id="contentTextarea" wire:model.lazy = "content" rows="3"></textarea>
@@ -162,7 +193,6 @@
                                 <hr>
                             </div>
 
-                            {{-- objectives --}}
                             <div class="form-group mt-3">
                                 <div class="form-floating">
                                     {!! Form::textarea('objectives', '', [
@@ -192,7 +222,7 @@
                                 <hr>
                             </div>
 
-                            {{-- ILO --}}
+                            {{-- ILOs --}}
                             @foreach ($ilos as $key => $value)
                                 <div class="mt-5">
                                     @livewire('backend.item-adder', ['type' => $key, 'items' => $ilos[$key]], key("ilos-$key-adder"))
@@ -208,9 +238,15 @@
                         <div class="card-body">
                             <h5 class="card-title">Modules & References</h5>
 
-                            <x-backend.course_module></x-backend.course_module>
-                            <br>
-                            @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
+                            {{-- Modules --}}
+                            <div class="pb-5">
+                                <x-backend.course_module></x-backend.course_module>
+                            </div>
+
+                            {{-- References --}}
+                            <div class="pb-5">
+                                @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
+                            </div>
                         </div>
                     </div>
                 </div>

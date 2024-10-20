@@ -33,6 +33,7 @@ class CreateCourses extends Component
     public $time_allocation;
     public $module_time_allocation;
     public $marks_allocation;
+    public $teaching_methods;
 
     //2nd form step
     public $objectives;
@@ -53,6 +54,7 @@ class CreateCourses extends Component
             'code' => 'required|string|unique:courses,code',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:18',
+            'teaching_methods' => 'nullable|string',
             'faq_page' => 'nullable|url',
             'content' => 'nullable|string',
             'time_allocation.lecture' => 'nullable|integer|min:0',
@@ -105,6 +107,7 @@ class CreateCourses extends Component
                     'code' => 'required|string|unique:courses,code',
                     'name' => 'required|string|max:255',
                     'credits' => 'required|integer|min:1|max:18',
+                    'teaching_methods' => 'nullable|string',
                     'faq_page' => 'nullable|url',
                     'content' => 'nullable|string',
                 ];
@@ -269,6 +272,7 @@ class CreateCourses extends Component
                 'code' => $this->code,
                 'name' => $this->name,
                 'credits' => (int)$this->credits,
+                'teaching_methods' => $this->teaching_methods,
                 'faq_page' => $this->faq_page,
                 'content' => $this->content,
                 'time_allocation' => json_encode($this->time_allocation),
@@ -319,6 +323,7 @@ class CreateCourses extends Component
         $this->code = '';
         $this->name = '';
         $this->credits = 0;
+        $this->teaching_methods = '';
         $this->faq_page = '';
         $this->content = '';
         $this->time_allocation = Course::getTimeAllocation();
