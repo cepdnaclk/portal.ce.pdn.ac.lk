@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
+use App\Domains\Taxonomy\Models\TaxonomyTerm;
 
 class TaxonomyController extends Controller
 {
@@ -115,7 +116,8 @@ class TaxonomyController extends Controller
      */
     public function delete(Taxonomy $taxonomy)
     {
-        return view('backend.taxonomy.delete', compact('taxonomy'));
+        $terms = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->get();
+        return view('backend.taxonomy.delete', compact('taxonomy', 'terms'));
     }
 
 
@@ -128,6 +130,12 @@ class TaxonomyController extends Controller
     public function destroy(Taxonomy $taxonomy)
     {
         try {
+            $terms = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->get();
+            if ($terms->count() > 0) {
+                return redirect()->route('dashboard.taxonomy.index')
+                    ->withErrors('Can not delete the Taxonomy as it already has associated Taxonomy Terms. Please reassign or delete those first.');
+            }
+
             $taxonomy->delete();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy was deleted !');
         } catch (\Exception $ex) {

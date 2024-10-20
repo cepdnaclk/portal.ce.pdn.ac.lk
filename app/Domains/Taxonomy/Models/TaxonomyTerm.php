@@ -91,6 +91,15 @@ class TaxonomyTerm extends Model
         return null;
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($taxonomyTerm) {
+            $taxonomyTerm->children()->delete();
+        });
+    }
+
     public static function getHierarchicalPath($id)
     {
         $term = TaxonomyTerm::find($id);
