@@ -35,6 +35,8 @@ class DatabaseSeeder extends Seeder
             $this->call(EventSeeder::class);
             $this->call(SemesterSeeder::class);
             $this->call(CourseSeeder::class);
+            $this->call(TaxonomySeeder::class);
+            $this->call(TaxonomyTermSeeder::class);
         }
 
         Model::reguard();
