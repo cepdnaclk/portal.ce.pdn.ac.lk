@@ -25,6 +25,19 @@ class TaxonomyController extends Controller
             return abort(500);
         }
     }
+
+    /**
+     * Preview the resource .
+     *
+     * @param \App\Domains\Taxonomy\Models\Taxonomy $taxonomy
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function view(Taxonomy $taxonomy)
+    {
+        $taxonomyData = $taxonomy->to_dict();
+        return view('backend.taxonomy.view', compact('taxonomyData'));
+    }
+
     /**
      * Store a newly created resource in storage.
      *
