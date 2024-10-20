@@ -1,3 +1,5 @@
+<?php use App\Domains\Taxonomy\Models\TaxonomyTerm; ?>
+
 @extends('backend.layouts.app')
 
 @section('title', __('Edit Taxonomy Term'))
@@ -33,11 +35,11 @@
                             </div>
                             <select name="parent_id" class="form-select">
                                 <option value="" selected>Select</option>
-                                @foreach ($parentTerms as $parent)
-                                    @if ($parent->id != $term->id)
-                                        <option value="{{ $parent->id }}"
-                                            {{ old('parent_id', $term->parent_id) == $parent->id ? 'selected' : '' }}>
-                                            {{ $parent->name }}
+                                @foreach ($term->taxonomy->terms as $sibling)
+                                    @if ($sibling->id != $term->id)
+                                        <option value="{{ $sibling->id }}"
+                                            {{ old('parent_id', $sibling->parent_id) == $sibling->id ? 'selected' : '' }}>
+                                            {{ TaxonomyTerm::getHierarchicalPath($sibling->id) }}
                                         </option>
                                     @endif
                                 @endforeach

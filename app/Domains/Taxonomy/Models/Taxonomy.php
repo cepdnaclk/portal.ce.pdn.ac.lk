@@ -63,7 +63,9 @@ class Taxonomy extends Model
 
     public function terms()
     {
-        return $this->hasMany(TaxonomyTerm::class, 'taxonomy_id');
+        return $this->hasMany(TaxonomyTerm::class, 'taxonomy_id')
+            ->orderBy('parent_id', 'asc')
+            ->orderBy('code', 'asc');
     }
 
     public function to_dict()
