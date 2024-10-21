@@ -4,8 +4,7 @@ Internal and Public web service provider of the Department of Computer Engineeri
 
 ## Team of Developers
 
-
-To be updated
+- [https://portal.ce.pdn.ac.lk/contributors](https://portal.ce.pdn.ac.lk/contributors)
 
 ## Useful Commands and Instructions
 
@@ -135,6 +134,6 @@ Thanks to all the contributors who have helped with this project!
 
 <a href="https://portal.ce.pdn.ac.lk/contributors">
   https://portal.ce.pdn.ac.lk/contributors
-  <br/>
+  <br/><br/>
   <img src="https://contrib.rocks/image?repo=cepdnaclk/portal.ce.pdn.ac.lk" />
 </a>
