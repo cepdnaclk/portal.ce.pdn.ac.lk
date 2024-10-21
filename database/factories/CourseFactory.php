@@ -25,11 +25,14 @@ class CourseFactory extends Factory
      */
     public function definition()
     {
+        $academicProgram = $this->faker->randomElement(array_keys(Course::getAcademicPrograms()));
         return [
             'code' => $this->faker->unique()->regexify('[A-Z]{4}[0-9]{4}'),
             'semester_id' => $this->faker->numberBetween(1, 8),
-            'academic_program' => $this->faker->randomElement(array_keys(Course::getAcademicPrograms())),
-            'version' => $this->faker->randomElement([1, 2]),
+            'academic_program' => $academicProgram,
+            'version' => $this->faker->randomElement(
+                array_keys(Course::getVersions($academicProgram))
+            ),
             'name' => $this->faker->sentence(3),
             'credits' => $this->faker->numberBetween(1, 6),
             'type' => $this->faker->randomElement(array_keys(Course::getTypes())),
