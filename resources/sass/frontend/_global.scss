@@ -10,3 +10,16 @@
 @import '~@fortawesome/fontawesome-free/scss/regular';
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/brands';
+
+.profile-title {
+    font-size: 1em !important;
+}
+
+.profile-text {
+    font-size: 1em !important;
+}
+
+.project-card-title {
+    /* text-transform: capitalize; */
+    font-size: 10pt;
+}

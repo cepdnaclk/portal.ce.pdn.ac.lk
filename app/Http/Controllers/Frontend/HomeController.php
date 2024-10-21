@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Services\DepartmentDataService;
+
 /**
  * Class HomeController.
  */
@@ -28,6 +30,19 @@ class HomeController
      */
     public function contributors()
     {
-        return view('frontend.pages.contributors');
+        $projects = [
+            // '/projects/v1/co225/E20/e20-co225-Computer-Engineering-Portal',
+        ];
+
+        $data = [];
+        $api = new DepartmentDataService();
+
+        foreach ($projects as  $key => $url) {
+            $projectData = collect($api->getProjectData($url));
+            array_push($data, $projectData);
+        }
+
+        // dd($data);
+        return view('frontend.pages.contributors', compact('data'));
     }
 }
