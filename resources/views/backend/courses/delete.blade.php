@@ -13,6 +13,20 @@
                 <p>Are you sure you want to delete
                     <strong><i>"{{ $course->name }}"</i></strong> ?
                 </p>
+
+                @if ($course->prerequisiteFor()->exists())
+                    <div class="alert alert-warning">
+                        <strong>Warning:</strong>
+                        This course is a prerequisite for the following
+                        course{{ $course->prerequisiteFor->count() == 1 ? '' : 's' }}:
+                        <ul>
+                            @foreach ($course->prerequisiteFor as $dependentCourse)
+                                <li>{{ $dependentCourse->name }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <div class="d-flex">
                     {!! Form::open([
                         'url' => route('dashboard.courses.destroy', compact('course')),

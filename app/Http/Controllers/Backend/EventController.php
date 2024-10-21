@@ -40,6 +40,7 @@ class EventController extends Controller
         $data = request()->validate([
             'title' => 'string|required',
             'url' => ['required', 'unique:events'],
+            'event_type' => 'required|array',
             'published_at' => 'required|date_format:Y-m-d',
             'description' => 'string|required',
             'enabled' => 'nullable',
@@ -55,6 +56,7 @@ class EventController extends Controller
         }
 
         try {
+
             $event = new Event($data);
             $event->enabled = ($request->enabled != null);
             $event->url =  urlencode(str_replace(" ", "-", $request->url));
@@ -75,12 +77,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        try {
-            return view('backend.event.edit', compact('event'));
-        } catch (\Exception $ex) {
-            Log::error('Failed to edit event', ['error' => $ex->getMessage()]);
-            return abort(500);
-        };
+        return view('backend.event.edit', compact('event'));
     }
 
     /**
@@ -95,8 +92,8 @@ class EventController extends Controller
 
         $data = request()->validate([
             'title' => ['required'],
-            'url' =>
-            ['required', Rule::unique('events')->ignore($event->id)],
+            'url' => ['required', Rule::unique('events')->ignore($event->id)],
+            'event_type' => 'required|array',
             'published_at' => 'required|date_format:Y-m-d',
             'description' => 'string|required',
             'enabled' => 'nullable',
@@ -116,6 +113,7 @@ class EventController extends Controller
 
         try {
             $event->update($data);
+
             $event->enabled = ($request->enabled != null);
             $event->url =  urlencode(str_replace(" ", "-", $request->url));
             $event->created_by = Auth::user()->id;
