@@ -5,19 +5,29 @@ namespace App\Http\Controllers\API;
 use App\Domains\Event\Models\Event;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class EventApiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $perPage = 20;
-            $event = Event::where('enabled', 1)->orderBy('start_at', 'desc')->paginate($perPage);
+            $query = Event::where('enabled', 1)->orderBy('start_at', 'desc');
+            $event_type_filter = $request->event_type;
 
-            return EventResource::collection($event);
+            if (in_array($event_type_filter, Event::eventTypeMap()) && $request->has('event_type')) {
+                $eventTypeId = array_search($request->event_type, Event::eventTypeMap());
+
+                // Note: This is not the best way, but easiest way to filter JSON content 
+                $query = $query->where('event_type', 'LIKE', "%\"$eventTypeId\"%");
+            }
+
+            $events = $query->paginate(20);
+
+            return EventResource::collection($events);
         } catch (\Exception $e) {
-            Log::error('Error in EventApiController@index', ['error' => $e->getMessage()]);
+            Log::error('Error in EventApiController@index', $e);
             return response()->json(['message' => 'An error occurred while fetching events'], 500);
         }
     }
