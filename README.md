@@ -134,6 +134,7 @@ sudo sh ./scripts/deploy-prod.sh
 Thanks to all the contributors who have helped with this project!
 
 <a href="https://portal.ce.pdn.ac.lk/contributors">
+  https://portal.ce.pdn.ac.lk/contributors
   <img src="https://contrib.rocks/image?repo=cepdnaclk/portal.ce.pdn.ac.lk" />
 </a>
 
