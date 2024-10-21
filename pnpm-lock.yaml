@@ -16,8 +16,8 @@ importers:
         specifier: ^3.0.0
         version: 3.4.0(@popperjs/core@2.11.8)(perfect-scrollbar@1.5.5)
       '@coreui/icons':
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^3.0.1
+        version: 3.0.1
       '@fortawesome/fontawesome-free':
         specifier: ^5.12.1
         version: 5.15.4
@@ -681,8 +681,8 @@ packages:
       '@popperjs/core': ^2.5.4
       perfect-scrollbar: ^1.5.0
 
-  '@coreui/icons@1.0.1':
-    resolution: {integrity: sha512-DAlvdHRC+HHecdy52vskbNzNKEpu6wHDvSlsHGrwOqNxQl1YLhGEtqAW4sKpyVE3GgysNCywUWZGFlLp8I3LgA==}
+  '@coreui/icons@3.0.1':
+    resolution: {integrity: sha512-u9UKEcRMyY9pa4jUoLij8pAR03g5g6TLWV33/Mx2ix8sffyi0eO4fLV8DSTQljDCw938zt7KYog5cVKEAJUxxg==}
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -4268,7 +4268,7 @@ snapshots:
       '@popperjs/core': 2.11.8
       perfect-scrollbar: 1.5.5
 
-  '@coreui/icons@1.0.1': {}
+  '@coreui/icons@3.0.1': {}
 
   '@discoveryjs/json-ext@0.5.7': {}
 
