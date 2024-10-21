@@ -14,13 +14,17 @@ class EventApiController extends Controller
     {
         try {
             $query = Event::where('enabled', 1)->orderBy('start_at', 'desc');
-            $event_type_filter = $request->event_type;
 
-            if (in_array($event_type_filter, Event::eventTypeMap()) && $request->has('event_type')) {
-                $eventTypeId = array_search($request->event_type, Event::eventTypeMap());
+            if ($request->has('event_type')) {
 
-                // Note: This is not the best way, but easiest way to filter JSON content 
-                $query = $query->where('event_type', 'LIKE', "%\"$eventTypeId\"%");
+                if (in_array($request->event_type, Event::eventTypeMap())) {
+                    $eventTypeId = array_search($request->event_type, Event::eventTypeMap());
+
+                    // Note: This is not the best way, but easiest way to filter JSON content 
+                    $query = $query->where('event_type', 'LIKE', "%\"$eventTypeId\"%");
+                } else {
+                    return  EventResource::collection([]);
+                }
             }
 
             $events = $query->paginate(20);
