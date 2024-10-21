@@ -140,6 +140,10 @@
             <div class="links">
                 <a href="https://github.com/cepdnaclk/portal.ce.pdn.ac.lk" target="_blank"><i class="fab fa-github"></i>
                     GitHub</a>
+                <a href="{{ route('frontend.pages.terms') }}"><i class="fa fa-list"></i>
+                    Terms & Conditions</a>
+                <a href="{{ route('frontend.pages.contributors') }}"><i class="fa fa-user"></i>
+                    Contributors</a>
             </div>
         </div>
     </div>
