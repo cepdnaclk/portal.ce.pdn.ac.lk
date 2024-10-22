@@ -124,7 +124,12 @@ class Course extends AcademicProgram
 
     public function version()
     {
-        return $this->getVersions()[$this->version];
+        $versions = $this->getVersions();
+        if ($this->version != null && array_key_exists($this->version, $versions)) {
+            return $versions[$this->version];
+        } else {
+            return "Unknown";
+        }
     }
 
     public function modules()

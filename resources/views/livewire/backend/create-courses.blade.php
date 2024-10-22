@@ -29,9 +29,12 @@
                                         <div class="col ps-0">
                                             <label for="drop1">
                                                 Academic Program*
-                                            </label>
+                                                <label for="dropAcademicProgram">
+                                                    Academic Program
+                                                </label>
                                         </div>
-                                        <select class="form-select" wire:model="academicProgram">
+                                        <select id="dropAcademicProgram" name="dropAcademicProgram" class="form-select"
+                                            wire:model="academicProgram">
                                             <option style="display:none" selected></option>
                                             @foreach ($academicProgramsList as $academicProgramId => $academicProgramTitle)
                                                 <option value="{{ $academicProgramId }}">{{ $academicProgramTitle }}
@@ -46,11 +49,12 @@
                                     {{-- Curriculum --}}
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label for="drop1">Curriculum*</label>
+                                            <label for="dropCurriculum">Curriculum*</label>
                                         </div>
-                                        <select class="form-select" wire:model="version">
+                                        <select id="dropCurriculum" name="dropCurriculum" class="form-select"
+                                            wire:model="version">
                                             <option style="display:none" selected></option>
-                                            @foreach (App\Domains\AcademicProgram\Course\Models\Course::getVersions() as $key => $value)
+                                            @foreach ($curriculumList as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
@@ -64,7 +68,8 @@
                                         <div class="col ps-0">
                                             <label for="drop1">Semester*</label>
                                         </div>
-                                        <select class="form-select" wire:model="semester">
+                                        <select id="dropSemester" name="dropSemester" class="form-select"
+                                            wire:model="semester">
                                             <option style="display:none" selected></option>
                                             @foreach ($semestersList as $semesterId => $semesterTitle)
                                                 <option value="{{ $semesterId }}">{{ $semesterTitle }}</option>
@@ -105,9 +110,9 @@
                                     {{-- Course Type --}}
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label for="drop1">Type*</label>
+                                            <label for="dropType">Type*</label>
                                         </div>
-                                        <select class="form-select" wire:model="type">
+                                        <select id="dropType" name="dropType" class="form-select" wire:model="type">
                                             <option style="display:none" selected></option>
                                             @foreach (App\Domains\AcademicProgram\Course\Models\Course::getTypes() as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
@@ -124,7 +129,7 @@
                                             <label>Credits*</label>
                                         </div>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" wire:model.lazy ="credits">
+                                            <input type="number" class="form-control" wire:model.lazy ="credits">
                                         </div>
                                         @error('credits')
                                             <span class="text-danger">{{ $message }}</span>
