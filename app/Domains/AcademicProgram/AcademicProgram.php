@@ -17,13 +17,30 @@ class AcademicProgram extends Model
         ];
     }
 
-    public static function getVersions(): array
+    public static function getVersions($academicProgram = null): array
     {
         // TODO integrate with Taxonomies 
-        return [
-            1 => 'Current Curriculum',
-            2 => 'Curriculum - Effective from E22'
+        $academicPrograms = [
+            'undergraduate' => [
+                1 => 'Current Curriculum',
+                2 => 'Curriculum - Effective from E22'
+            ],
+            'postgraduate' => [
+                3 => 'Current Curriculum - PG',
+            ]
         ];
+
+        if ($academicProgram == null) {
+            $allAcademicPrograms = [];
+            foreach ($academicPrograms as $programs) {
+                foreach ($programs as $key => $value) $allAcademicPrograms[$key] = $value;
+            }
+            return $allAcademicPrograms;
+        } else if (array_key_exists($academicProgram, $academicPrograms)) {
+            return $academicPrograms[$academicProgram];
+        } else {
+            return [];
+        }
     }
 
     public static function getTypes(): array
