@@ -28,6 +28,7 @@ class SemesterTable extends DataTableComponent
             Column::make("Description", "description")
                 ->searchable(),
             Column::make("URL", "url")
+                ->sortable()
                 ->searchable(),
             Column::make("Updated by", "created_by")
                 ->sortable(),
