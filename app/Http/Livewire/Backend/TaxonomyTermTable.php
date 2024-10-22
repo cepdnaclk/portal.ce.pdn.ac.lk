@@ -47,8 +47,8 @@ class TaxonomyTermTable extends DataTableComponent
     {
         return TaxonomyTerm::query()
             ->where('taxonomy_id', $this->taxonomy->id)
-            ->when($this->getFilter('taxonomy_term'), fn($query, $type) => $query->where('parent_id', $type))
-            ->with('user');
+            ->when($this->getFilter('taxonomy_term'), fn($query, $type) => $query->where('parent_id', $type)->orWhere('id', $type))
+            ->with('user')->orderBy('parent_id');
     }
 
     public function filters(): array

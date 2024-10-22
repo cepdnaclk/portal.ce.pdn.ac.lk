@@ -23,9 +23,6 @@ class Taxonomy extends Model
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'code',
         'name',
@@ -42,6 +39,11 @@ class Taxonomy extends Model
         'boolean' => 'Boolean',
         'url' => 'URL',
         'image' => 'Image'
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function user()
@@ -61,7 +63,20 @@ class Taxonomy extends Model
 
     public function terms()
     {
-        return $this->hasMany(TaxonomyTerm::class, 'taxonomy_id');
+        return $this->hasMany(TaxonomyTerm::class, 'taxonomy_id')
+            ->orderBy('parent_id', 'asc')
+            ->orderBy('code', 'asc');
+    }
+
+    public function to_dict()
+    {
+        $taxonomy = $this->toArray();
+        foreach (['properties', 'created_at', 'updated_at', 'created_by', 'updated_by'] as $attribute) {
+            unset($taxonomy[$attribute]);
+        }
+        $taxonomy['properties'] = json_decode($this->properties);
+        $taxonomy['terms'] = TaxonomyTerm::getByTaxonomy($this->id);
+        return $taxonomy;
     }
 
     protected static function newFactory()

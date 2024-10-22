@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
+use App\Domains\Taxonomy\Models\TaxonomyTerm;
 
 class TaxonomyController extends Controller
 {
@@ -17,13 +18,26 @@ class TaxonomyController extends Controller
      */
     public function create()
     {
-        try{
+        try {
             return view('backend.taxonomy.create');
-        }catch (\Exception $ex) {
-            Log::error('Failed to load taxonomy creation page', ['error' => $ex->getMessage()]);    
+        } catch (\Exception $ex) {
+            Log::error('Failed to load taxonomy creation page', ['error' => $ex->getMessage()]);
             return abort(500);
-        }    
+        }
     }
+
+    /**
+     * Preview the resource .
+     *
+     * @param \App\Domains\Taxonomy\Models\Taxonomy $taxonomy
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function view(Taxonomy $taxonomy)
+    {
+        $taxonomyData = $taxonomy->to_dict();
+        return view('backend.taxonomy.view', compact('taxonomyData'));
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -32,19 +46,19 @@ class TaxonomyController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData =$request->validate([
+        $validatedData = $request->validate([
             'code' => 'required|unique:taxonomies',
             'name' => 'required',
             'description' => 'nullable',
         ]);
-    
-        try{
+
+        try {
             $taxonomy = new Taxonomy($validatedData);
             $taxonomy->properties = $request->properties;
             $taxonomy->created_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy created successfully');
-        }catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             Log::error('Failed to create taxonomy', ['error' => $ex->getMessage()]);
             return abort(500);
         }
@@ -66,7 +80,7 @@ class TaxonomyController extends Controller
             return abort(500);
         }
     }
-    
+
 
     /**
      * Update the specified resource in storage.
@@ -80,22 +94,21 @@ class TaxonomyController extends Controller
         $data = $request->validate([
             'code' => 'required',
             'name' => 'required',
-            'description' => 'nullable',     
+            'description' => 'nullable',
         ]);
-    
-        try{
+
+        try {
             $taxonomy->update($data);
             $taxonomy->properties = $request->properties;
-            $taxonomy->updated_by = Auth::user()->id;        
+            $taxonomy->updated_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
-        }catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             Log::error('Failed to update taxonomy', ['error' => $ex->getMessage()]);
             return abort(500);
         }
-
     }
-     /**
+    /**
      * Confirm to delete the specified resource from storage.
      *
      * @param \App\Domains\Taxonomy\Models\Taxonomy $taxonomy
@@ -103,7 +116,8 @@ class TaxonomyController extends Controller
      */
     public function delete(Taxonomy $taxonomy)
     {
-        return view('backend.taxonomy.delete', compact('taxonomy'));
+        $terms = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->get();
+        return view('backend.taxonomy.delete', compact('taxonomy', 'terms'));
     }
 
 
@@ -116,6 +130,12 @@ class TaxonomyController extends Controller
     public function destroy(Taxonomy $taxonomy)
     {
         try {
+            $terms = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->get();
+            if ($terms->count() > 0) {
+                return redirect()->route('dashboard.taxonomy.index')
+                    ->withErrors('Can not delete the Taxonomy as it already has associated Taxonomy Terms. Please reassign or delete those first.');
+            }
+
             $taxonomy->delete();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy was deleted !');
         } catch (\Exception $ex) {
@@ -124,4 +144,3 @@ class TaxonomyController extends Controller
         }
     }
 }
-
