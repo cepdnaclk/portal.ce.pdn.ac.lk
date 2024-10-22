@@ -31,7 +31,7 @@ class HomeController
     public function contributors()
     {
         $projects = [
-            // '/projects/v1/co225/E20/e20-co225-Computer-Engineering-Portal',
+            '/projects/v1/co225/E20/Computer-Engineering-Portal/',
         ];
 
         $data = [];
@@ -42,7 +42,6 @@ class HomeController
             array_push($data, $projectData);
         }
 
-        // dd($data);
         return view('frontend.pages.contributors', compact('data'));
     }
 }
