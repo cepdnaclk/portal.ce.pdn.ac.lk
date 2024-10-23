@@ -63,7 +63,7 @@
             display: none !important;
         }
     </style>
-    <h5>{{ ucfirst($type) }}</h5>
+    <h5>{{ ucfirst($title) }}</h5>
     <div class="d-flex justify-content-between mb-3">
         <button type="button" class="btn btn-primary  btn-w-150" data-bs-toggle="modal"
             data-bs-target="#add{{ $type }}ItemModal"
@@ -111,12 +111,12 @@
 
                     <div class="d-flex flex-column flex-md-row align-items-md-end ms-auto">
                         <div x-show="selectedItem === index" class="btn-group" role="group" aria-label="Item actions">
-                            <button type="button" x-show="items.length > 1" :disabled="index === 0" class="btn btn-sm btn-secondary me-1 me-md-2 rounded"
-                                @click.stop="moveUp()">
+                            <button type="button" x-show="items.length > 1" :disabled="index === 0"
+                                class="btn btn-sm btn-secondary me-1 me-md-2 rounded" @click.stop="moveUp()">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
-                            <button type="button" x-show="items.length > 1" :disabled="index === items.length - 1" class="btn btn-sm btn-secondary me-1 me-md-2 rounded"
-                                @click.stop="moveDown()">
+                            <button type="button" x-show="items.length > 1" :disabled="index === items.length - 1"
+                                class="btn btn-sm btn-secondary me-1 me-md-2 rounded" @click.stop="moveDown()">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <button type="button" class="btn btn-sm btn-warning me-1 me-md-2 rounded"

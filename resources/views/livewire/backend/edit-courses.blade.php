@@ -224,8 +224,8 @@
 
                             {{-- ILOs --}}
                             @foreach ($ilos as $key => $value)
-                                <div class="mt-5">
-                                    @livewire('backend.item-adder', ['type' => $key, 'items' => $ilos[$key]], key("ilos-$key-adder"))
+                                <div class="mt-3">
+                                    @livewire('backend.item-adder', ['type' => $key, 'title' => $key, 'items' => $ilos[$key]], key("ilos-$key-adder"))
                                 </div>
                             @endforeach
 
@@ -245,7 +245,7 @@
 
                             {{-- References --}}
                             <div class="pb-5">
-                                @livewire('backend.item-adder', ['type' => 'references', 'items' => $references], key('references-adder'))
+                                @livewire('backend.item-adder', ['type' => 'references', 'title' => 'References / Recommended Reading', 'items' => $references], key('references-adder'))
                             </div>
                         </div>
                     </div>
