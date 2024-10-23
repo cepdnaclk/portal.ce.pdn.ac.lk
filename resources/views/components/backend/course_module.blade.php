@@ -95,7 +95,7 @@
             display: none !important;
         }
     </style>
-    <h5>Modules</h5>
+    <h5>Modules / Course Content</h5>
     <div class="d-flex justify-content-between mb-3">
         <button type="button" class="btn btn-primary btn-w-150" data-bs-toggle="modal" data-bs-target="#addModuleItemModal"
             @click="resetForm(); document.getElementById('addModuleItemModalLabel').innerHTML = 'Add Module'; isEditing=false">
@@ -120,10 +120,12 @@
                             style="font-weight: normal;"></span>
                         <div x-show="selectedItem === index" class="btn-group" role="group" aria-label="Item actions"
                             @click.stop>
-                            <button type="button" x-show="modules.length > 1" :disabled="index === 0" class="btn btn-sm btn-secondary rounded me-2" @click.stop="moveUp()">
+                            <button type="button" x-show="modules.length > 1" :disabled="index === 0"
+                                class="btn btn-sm btn-secondary rounded me-2" @click.stop="moveUp()">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
-                            <button type="button" x-show="modules.length > 1" :disabled="index === modules.length - 1" class="btn btn-sm btn-secondary rounded me-2" @click.stop="moveDown()">
+                            <button type="button" x-show="modules.length > 1" :disabled="index === modules.length - 1"
+                                class="btn btn-sm btn-secondary rounded me-2" @click.stop="moveDown()">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <button type="button" class="btn btn-sm btn-warning rounded me-2" @click.stop="editItem()">

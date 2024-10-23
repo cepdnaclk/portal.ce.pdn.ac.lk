@@ -23,7 +23,7 @@
                                 <i class="fas fa-chevron-right"></i>
                             </li>
                         @empty
-                            <li class="list-group-item text-muted font-italic">No available courses</li>
+                            <li class="list-group-item h6 text-muted font-italic">No available courses</li>
                         @endforelse
                     </ul>
 
@@ -51,7 +51,7 @@
                                 <i class="fas fa-chevron-left"></i>
                             </li>
                         @empty
-                            <li class="list-group-item text-muted font-italic">No selected prerequisites</li>
+                            <li class="list-group-item h6 text-muted font-italic">No selected prerequisites</li>
                         @endforelse
                     </ul>
                 </div>

@@ -203,19 +203,19 @@
                                         'style' => 'height: 200px;',
                                         'wire:model.lazy' => 'objectives',
                                     ]) !!}
-                                    <label for="floatingTextarea">Objectives</label>
+                                    <label for="floatingTextarea">Aims/Objectives</label>
                                     @error('objectives')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
 
-                            <div class="h4 font-weight-bold mt-3">
+                            {{-- Prerequisites --}}
+                            <div class="h4 font-weight-bold mt-5">
                                 Prerequisites:
                                 <hr>
+                                @livewire('backend.prerequisite-selector', ['courseId' => $course->id, 'academic_program' => $academicProgram, 'version' => $version, 'semester' => $semester])
                             </div>
-                            @livewire('backend.prerequisite-selector', ['courseId' => $course->id, 'academic_program' => $academicProgram, 'version' => $version, 'semester' => $semester])
-
 
                             <div class="h4 font-weight-bold mt-5">
                                 ILOs:
