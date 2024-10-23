@@ -33,8 +33,10 @@ class AppServiceProvider extends ServiceProvider
         ini_set('max_execution_time', 120);
 
         // Support enum column migration for Event::event_type
-        Schema::getConnection()->getDoctrineConnection()
-            ->getDatabasePlatform()
-            ->registerDoctrineTypeMapping('enum', 'string');
+        if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+            Schema::getConnection()->getDoctrineConnection()
+                ->getDatabasePlatform()
+                ->registerDoctrineTypeMapping('enum', 'string');
+        }
     }
 }
