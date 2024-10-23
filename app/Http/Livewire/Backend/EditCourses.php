@@ -188,9 +188,9 @@ class EditCourses extends Component
                 'time_allocation' => array_merge(Course::getTimeAllocation(), json_decode($module->time_allocation, true))
             ];
         })->toArray();
-        $this->prerequisites = $course->prerequisites;
 
-        $this->prerequisites = $course->prerequisites->pluck('id')->toArray();
+        // Update the prerequisites list 
+        $this->prerequisites = $course->prerequisites;
 
         // Update semesters list based on academic program and version
         $this->updateSemestersList();

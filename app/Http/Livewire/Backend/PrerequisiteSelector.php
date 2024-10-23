@@ -47,7 +47,7 @@ class PrerequisiteSelector extends Component
     {
         $this->courseId = $courseId;
 
-        if ($this->courseId) {
+        if ($this->courseId != null) {
             // Fetch existing prerequisites from the database
             $course = Course::with('prerequisites')->find($this->courseId);
 
