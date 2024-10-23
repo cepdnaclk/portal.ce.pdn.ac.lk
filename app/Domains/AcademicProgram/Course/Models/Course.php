@@ -80,8 +80,9 @@ class Course extends AcademicProgram
         // TODO Get the list from Taxonomies
         return [
             'practicals' => null,
-            'tutorials' => null,
             'quizzes' => null,
+            'assignments' => null,
+            'tutorials' => null,
             'projects' => null,
             'participation' => null,
             'mid_exam' => null,
