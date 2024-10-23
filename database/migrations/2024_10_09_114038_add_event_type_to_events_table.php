@@ -14,7 +14,7 @@ class AddEventTypeToEventsTable extends Migration
     public function up()
     {
         Schema::table('events', function (Blueprint $table) {
-            $table->json('event_type')->nullable()->default(null);
+            $table->json('event_type')->nullable();
         });
     }
 

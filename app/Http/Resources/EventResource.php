@@ -18,9 +18,14 @@ class EventResource extends JsonResource
     public function toArray($request)
     {
         $eventTypeList = Event::eventTypeMap();
-        $eventTypes = array_map(function ($id) use ($eventTypeList) {
-            return isset($eventTypeList[$id]) ? $eventTypeList[$id] : null;
-        }, $this->event_type);
+
+        if ($this->event_type != null) {
+            $eventTypes = array_map(function ($id) use ($eventTypeList) {
+                return isset($eventTypeList[$id]) ? $eventTypeList[$id] : null;
+            }, $this->event_type);
+        } else {
+            $eventTypes = [];
+        }
 
         return [
             'id' => $this->id,
