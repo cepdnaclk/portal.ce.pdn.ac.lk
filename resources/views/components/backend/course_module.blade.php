@@ -120,11 +120,10 @@
                             style="font-weight: normal;"></span>
                         <div x-show="selectedItem === index" class="btn-group" role="group" aria-label="Item actions"
                             @click.stop>
-                            <button type="button" class="btn btn-sm btn-secondary rounded me-2" @click.stop="moveUp()">
+                            <button type="button" x-show="modules.length > 1" :disabled="index === 0" class="btn btn-sm btn-secondary rounded me-2" @click.stop="moveUp()">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
-                            <button type="button" class="btn btn-sm btn-secondary rounded me-2"
-                                @click.stop="moveDown()">
+                            <button type="button" x-show="modules.length > 1" :disabled="index === modules.length - 1" class="btn btn-sm btn-secondary rounded me-2" @click.stop="moveDown()">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <button type="button" class="btn btn-sm btn-warning rounded me-2" @click.stop="editItem()">

@@ -16,6 +16,8 @@ class CreateCourses extends Component
     //for selectors 
     public $academicProgramsList = [];
     public $semestersList = [];
+    public $curriculumList = [];
+
 
     //form inputs
     //1st form step
@@ -31,6 +33,7 @@ class CreateCourses extends Component
     public $time_allocation;
     public $module_time_allocation;
     public $marks_allocation;
+    public $teaching_methods;
 
     //2nd form step
     public $objectives;
@@ -46,11 +49,12 @@ class CreateCourses extends Component
         return [
             'academicProgram' => 'required|string',
             'semester' => 'required|string',
-            'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
+            'version' => ['required', Rule::in(array_keys(Course::getVersions()))],
             'type'  => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
             'code' => 'required|string|unique:courses,code',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:18',
+            'teaching_methods' => 'nullable|string',
             'faq_page' => 'nullable|url',
             'content' => 'nullable|string',
             'time_allocation.lecture' => 'nullable|integer|min:0',
@@ -103,6 +107,7 @@ class CreateCourses extends Component
                     'code' => 'required|string|unique:courses,code',
                     'name' => 'required|string|max:255',
                     'credits' => 'required|integer|min:1|max:18',
+                    'teaching_methods' => 'nullable|string',
                     'faq_page' => 'nullable|url',
                     'content' => 'nullable|string',
                 ];
@@ -213,12 +218,28 @@ class CreateCourses extends Component
 
     public function updatedAcademicProgram()
     {
+        $this->updateCurriculumList();
         $this->updateSemestersList();
     }
 
     public function updatedVersion()
     {
         $this->updateSemestersList();
+    }
+
+
+    public function updateCurriculumList()
+    {
+        if ($this->academicProgram) {
+            $this->curriculumList = Course::getVersions($this->academicProgram);
+        } else {
+            $this->curriculumList = [];
+        }
+
+        if (!array_key_exists($this->version, $this->curriculumList)) {
+            // Unset if it not belongs to 
+            $this->version  = null;
+        }
     }
 
     public function updateSemestersList()
@@ -230,6 +251,11 @@ class CreateCourses extends Component
                 ->toArray();
         } else {
             $this->semestersList = [];
+        }
+
+        if (count($this->semestersList) == 0 || !array_key_exists($this->semester, $this->semestersList)) {
+            // Unset if it not belongs to 
+            $this->semester = null;
         }
     }
 
@@ -246,6 +272,7 @@ class CreateCourses extends Component
                 'code' => $this->code,
                 'name' => $this->name,
                 'credits' => (int)$this->credits,
+                'teaching_methods' => $this->teaching_methods,
                 'faq_page' => $this->faq_page,
                 'content' => $this->content,
                 'time_allocation' => json_encode($this->time_allocation),
@@ -296,6 +323,7 @@ class CreateCourses extends Component
         $this->code = '';
         $this->name = '';
         $this->credits = 0;
+        $this->teaching_methods = '';
         $this->faq_page = '';
         $this->content = '';
         $this->time_allocation = Course::getTimeAllocation();

@@ -55,8 +55,9 @@
 
                 <!-- Version -->
                 <div class="form-group row">
-                    {!! Form::label('version', 'Version*', ['class' => 'col-md-2 col-form-label']) !!}
+                    {!! Form::label('version', 'Curriculum*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
+                        {{-- TODO make this depends from the Academic Program --}}
                         {!! Form::select('version', \App\Domains\AcademicProgram\Semester\Models\Semester::getVersions(), null, [
                             'class' => 'form-select',
                             'placeholder' => 'Select Version',

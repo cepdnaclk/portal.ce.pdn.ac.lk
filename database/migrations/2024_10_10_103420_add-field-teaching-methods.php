@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEventTypeToEventsTable extends Migration
+class AddFieldTeachingMethods extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddEventTypeToEventsTable extends Migration
      */
     public function up()
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->json('event_type')->nullable();
+        Schema::table('courses', function (Blueprint $table) {
+            $table->text('teaching_methods')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddEventTypeToEventsTable extends Migration
      */
     public function down()
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->dropColumn('event_type');
+        Schema::table('courses', function (Blueprint $table) {
+            $table->dropColumn('teaching_methods');
         });
     }
 }
