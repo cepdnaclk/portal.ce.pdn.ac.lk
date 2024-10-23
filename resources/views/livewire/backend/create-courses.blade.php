@@ -216,8 +216,8 @@
                     <div class="h4 font-weight-bold mt-5">
                         Prerequisites:
                         <hr>
-                        @livewire('backend.prerequisite-selector', ['academic_program' => $academicProgram, 'version' => $version, 'semester' => $semester])
                     </div>
+                    @livewire('backend.prerequisite-selector', ['academic_program' => $academicProgram, 'version' => $version, 'semester' => $semester])
 
                     <div class="h4 font-weight-bold mt-5">
                         ILOs:
