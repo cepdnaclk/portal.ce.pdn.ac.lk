@@ -34,7 +34,7 @@ php artisan view:cache
 # echo "Running: Setting permissions"
 # sudo chown -R www-data:www-data ./
 # sudo find ./ -type f -exec chmod 751 {} \;
-# sudo find ./ -type f -exec chmod 740 {} \
+# sudo find ./ -type f -exec chmod 740 {} \;
 
 echo "Running: Restarting the queue"
 php artisan queue:restart
