@@ -43,9 +43,11 @@ class PrerequisiteSelector extends Component
         $this->emit('prerequisitesUpdated', $this->selectedCourses);
     }
 
-    public function mount($courseId = null)
+    public function mount($courseId = null, $prerequisites = null)
     {
         $this->courseId = $courseId;
+        $this->selectedCourses = $prerequisites;
+
 
         if ($this->courseId != null) {
             // Fetch existing prerequisites from the database
