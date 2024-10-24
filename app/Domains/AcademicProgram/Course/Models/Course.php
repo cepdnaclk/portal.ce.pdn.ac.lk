@@ -3,12 +3,13 @@
 namespace App\Domains\AcademicProgram\Course\Models;
 
 use App\Domains\Auth\Models\User;
-use App\Domains\AcademicProgram\AcademicProgram;
-use App\Domains\AcademicProgram\Course\Models\Traits\Scope\CourseScope;
-use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Database\Factories\CourseFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Domains\AcademicProgram\AcademicProgram;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Domains\AcademicProgram\Semester\Models\Semester;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Domains\AcademicProgram\Course\Models\Traits\Scope\CourseScope;
 
 /**
  * Class Course.
@@ -35,6 +36,8 @@ class Course extends AcademicProgram
         'name',
         'credits',
         'type',
+        'teaching_methods',
+        'faq_page',
         'content',
         'objectives',
         'time_allocation',
@@ -77,8 +80,9 @@ class Course extends AcademicProgram
         // TODO Get the list from Taxonomies
         return [
             'practicals' => null,
-            'tutorials' => null,
             'quizzes' => null,
+            'assignments' => null,
+            'tutorials' => null,
             'projects' => null,
             'participation' => null,
             'mid_exam' => null,
@@ -121,12 +125,33 @@ class Course extends AcademicProgram
 
     public function version()
     {
-        return $this->getVersions()[$this->version];
+        $versions = $this->getVersions();
+        if ($this->version != null && array_key_exists($this->version, $versions)) {
+            return $versions[$this->version];
+        } else {
+            return "Unknown";
+        }
     }
 
     public function modules()
     {
         return $this->hasMany(CourseModule::class);
+    }
+
+    /**
+     * Get the prerequisites for the course.
+     */
+    public function prerequisites(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'course_prerequisites', 'course_id', 'prerequisite_id');
+    }
+
+    /**
+     * Get the courses where this course is a prerequisite.
+     */
+    public function prerequisiteFor(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'course_prerequisites', 'prerequisite_id', 'course_id');
     }
 
     protected static function newFactory()

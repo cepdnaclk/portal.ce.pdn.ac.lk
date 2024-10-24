@@ -31,5 +31,12 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         Schema::defaultStringLength(191);
         ini_set('max_execution_time', 120);
+
+        // Support enum column migration for Event::event_type
+        if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+            Schema::getConnection()->getDoctrineConnection()
+                ->getDatabasePlatform()
+                ->registerDoctrineTypeMapping('enum', 'string');
+        }
     }
 }

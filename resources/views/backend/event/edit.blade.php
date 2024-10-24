@@ -69,6 +69,11 @@
                     </div>
                 </div>
 
+                <!-- Event Type (Dropdown with Checkboxes) -->
+                <x-backend.dropdown_checkbox 
+                            :selected="$event->event_type ?? []"
+                            :options-map="\App\Domains\Event\Models\Event::eventTypeMap()"/>
+
                 <!-- Description -->
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}

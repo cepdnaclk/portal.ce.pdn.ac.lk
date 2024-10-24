@@ -46,6 +46,20 @@ class DepartmentDataService
         return in_array($userEmail, $emails);
     }
 
+
+    public function getProjectData($url)
+    {
+
+        $project = Cache::remember(
+            "project_$url",
+            config('constants.department_data.cache_duration'),
+            function () use ($url) {
+                return  $this->getData($url);
+            }
+        );
+        return $project;
+    }
+
     private function getData($endpoint)
     {
         $url = config('constants.department_data.base_url') . $endpoint;
