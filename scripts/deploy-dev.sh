@@ -9,10 +9,10 @@ git fetch origin
 sudo git pull
 
 echo "Running: composer update in dev-mode"
-composer update
+composer update --no-interaction
 
 echo "Running: composer install in dev-mode"
-composer install
+composer install --no-interaction
 
 echo "Running: pnpm install"
 pnpm install
