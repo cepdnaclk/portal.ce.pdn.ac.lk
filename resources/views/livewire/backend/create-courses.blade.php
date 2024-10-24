@@ -27,11 +27,9 @@
                                     {{-- Academic Program --}}
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label for="drop1">
+                                            <label for="dropAcademicProgram">
                                                 Academic Program*
-                                                <label for="dropAcademicProgram">
-                                                    Academic Program
-                                                </label>
+                                            </label>
                                         </div>
                                         <select id="dropAcademicProgram" name="dropAcademicProgram" class="form-select"
                                             wire:model="academicProgram">
@@ -215,7 +213,7 @@
                         Prerequisites:
                         <hr>
                     </div>
-                    @livewire('backend.prerequisite-selector', ['academic_program' => $academicProgram, 'version' => $version, 'semester' => $semester])
+                    @livewire('backend.prerequisite-selector', ['academic_program' => $academicProgram, 'version' => $version, 'semester' => $semester,'prerequisites' => $prerequisites])
                     <div class="h4 font-weight-bold">
                         ILOs:
                         <hr>
