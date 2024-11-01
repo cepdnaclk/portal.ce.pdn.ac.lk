@@ -20,7 +20,7 @@
         "langleyfoxall/laravel-nist-password-rules": "^6.0",
         "laravel/framework": "^8.54",
         "laravel/sanctum": "^2.11",
-        "laravel/socialite": "^5.0",
+        "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.4",
