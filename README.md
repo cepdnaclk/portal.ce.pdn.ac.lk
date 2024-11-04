@@ -1,3 +1,8 @@
+[![Laravel CI](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml/badge.svg)](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml) ![GitHub Release](https://img.shields.io/github/v/release/cepdnaclk/portal.ce.pdn.ac.lk)
+
+
+
+
 # portal.ce.pdn.ac.lk
 
 Internal and Public web service provider of the Department of Computer Engineering
