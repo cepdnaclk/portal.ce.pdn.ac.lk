@@ -12,6 +12,7 @@
         "php": "^7.4|^8.0",
         "arcanedev/log-viewer": "8.x",
         "darkghosthunter/laraguard": "^3.0",
+        "doctrine/dbal": "*",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.6",
