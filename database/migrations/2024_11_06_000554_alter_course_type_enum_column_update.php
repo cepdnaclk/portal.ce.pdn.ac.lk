@@ -12,13 +12,11 @@ class AlterCourseTypeEnumColumnUpdate extends Migration
      */
     public function up()
     {
-        // // Update the enum field with new types 
-        // Schema::table('courses', function (Blueprint $table) {
-        //     $table->enum('type', array_keys(Course::getTypes()))->change();
-        // });
-
-        $enumValues = "'" . implode("', '", array_keys(Course::getTypes())) . "'";
-        DB::statement("ALTER TABLE courses MODIFY COLUMN type ENUM($enumValues)");
+        // Update the enum field with new types 
+        if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+            $enumValues = "'" . implode("', '", array_keys(Course::getTypes())) . "'";
+            DB::statement("ALTER TABLE courses MODIFY COLUMN type ENUM($enumValues)");
+        }
     }
 
     /**
