@@ -82,7 +82,7 @@ class CreateCourses extends Component
             'semester.required' => 'Please select a semester.',
             'version.required' => 'Please provide a curriculum.',
             'type.required' => 'Please select a course type.',
-            'type.in' => 'The course type must be Core, GE, or TE.',
+            'type.in' => 'The course type must be Foundation, Core, GE, or TE.',
             'code.required' => 'Please provide a course code.',
             'code.unique' => 'This course code is already in use.',
             'name.required' => 'Please provide a course name.',
