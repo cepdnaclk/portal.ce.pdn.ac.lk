@@ -62,7 +62,7 @@ class EventsTable extends DataTableComponent
                     $query->where('event_type', 'LIKE', "%\"$eventType\"%");
                 }
             )
-            ->orderBy('published_at', 'desc');
+            ->orderBy('created_at', 'desc');
     }
     public function toggleEnable($eventId)
     {
