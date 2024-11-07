@@ -9,8 +9,8 @@ git fetch origin
 sudo git pull
 
 echo "Running: composer install in prod-mode"
-composer install --optimize-autoloader --no-dev
-composer dump-autoload
+composer install --optimize-autoloader --no-dev --no-interaction
+composer dump-autoload --no-interaction
 
 echo "Running: pnpm install"
 pnpm install
