@@ -17,7 +17,7 @@
                                     {{ $course->code }}
                                     <small class="ms-2">
                                         {{ $course->name }} |
-                                        Semester: {{ $course->semester_id }} | {{ $course->type }}
+                                        {{ $course->semester->title }} | {{ $course->type }}
                                     </small>
                                 </div>
                                 <i class="fas fa-chevron-right"></i>
