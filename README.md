@@ -1,11 +1,15 @@
+[![Laravel CI](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml/badge.svg)](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml) ![GitHub Release](https://img.shields.io/github/v/release/cepdnaclk/portal.ce.pdn.ac.lk)
+
+
+
+
 # portal.ce.pdn.ac.lk
 
 Internal and Public web service provider of the Department of Computer Engineering
 
 ## Team of Developers
 
-
-To be updated
+- [https://portal.ce.pdn.ac.lk/contributors](https://portal.ce.pdn.ac.lk/contributors)
 
 ## Useful Commands and Instructions
 
@@ -133,6 +137,8 @@ sudo sh ./scripts/deploy-prod.sh
 
 Thanks to all the contributors who have helped with this project!
 
-<a href="https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/graphs/contributors">
+<a href="https://portal.ce.pdn.ac.lk/contributors">
+  https://portal.ce.pdn.ac.lk/contributors
+  <br/><br/>
   <img src="https://contrib.rocks/image?repo=cepdnaclk/portal.ce.pdn.ac.lk" />
 </a>

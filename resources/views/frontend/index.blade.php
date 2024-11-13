@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ appName() }}</title>
     <meta name="description" content="@yield('meta_description', appName())">
-    <meta name="author" content="@yield('meta_author', 'Anthony Rappa')">
+    <meta name="author" content="@yield('meta_author', 'Department of Computer Engineering, UoP')">
+    <link rel="icon" href="{{ asset('favicon.png') }}">
     @yield('meta')
 
     @stack('before-styles')
@@ -140,6 +141,10 @@
             <div class="links">
                 <a href="https://github.com/cepdnaclk/portal.ce.pdn.ac.lk" target="_blank"><i class="fab fa-github"></i>
                     GitHub</a>
+                <a href="{{ route('frontend.pages.terms') }}"><i class="fa fa-list"></i>
+                    Terms & Conditions</a>
+                <a href="{{ route('frontend.pages.contributors') }}"><i class="fa fa-user"></i>
+                    Contributors</a>
             </div>
         </div>
     </div>

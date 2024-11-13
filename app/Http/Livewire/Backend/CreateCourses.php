@@ -16,6 +16,8 @@ class CreateCourses extends Component
     //for selectors 
     public $academicProgramsList = [];
     public $semestersList = [];
+    public $curriculumList = [];
+
 
     //form inputs
     //1st form step
@@ -31,9 +33,11 @@ class CreateCourses extends Component
     public $time_allocation;
     public $module_time_allocation;
     public $marks_allocation;
+    public $teaching_methods;
 
     //2nd form step
     public $objectives;
+    public $prerequisites = [];
     public $ilos = [];
 
     //3rd form step
@@ -45,11 +49,12 @@ class CreateCourses extends Component
         return [
             'academicProgram' => 'required|string',
             'semester' => 'required|string',
-            'version' => ['required', 'string', Rule::in(array_keys(Course::getVersions()))],
+            'version' => ['required', Rule::in(array_keys(Course::getVersions()))],
             'type'  => ['required', 'string', Rule::in(array_keys(Course::getTypes()))],
             'code' => 'required|string|unique:courses,code',
             'name' => 'required|string|max:255',
             'credits' => 'required|integer|min:1|max:18',
+            'teaching_methods' => 'nullable|string',
             'faq_page' => 'nullable|url',
             'content' => 'nullable|string',
             'time_allocation.lecture' => 'nullable|integer|min:0',
@@ -77,7 +82,7 @@ class CreateCourses extends Component
             'semester.required' => 'Please select a semester.',
             'version.required' => 'Please provide a curriculum.',
             'type.required' => 'Please select a course type.',
-            'type.in' => 'The course type must be Core, GE, or TE.',
+            'type.in' => 'The course type must be Foundation, Core, GE, or TE.',
             'code.required' => 'Please provide a course code.',
             'code.unique' => 'This course code is already in use.',
             'name.required' => 'Please provide a course name.',
@@ -102,6 +107,7 @@ class CreateCourses extends Component
                     'code' => 'required|string|unique:courses,code',
                     'name' => 'required|string|max:255',
                     'credits' => 'required|integer|min:1|max:18',
+                    'teaching_methods' => 'nullable|string',
                     'faq_page' => 'nullable|url',
                     'content' => 'nullable|string',
                 ];
@@ -158,7 +164,7 @@ class CreateCourses extends Component
         $this->validateOnly($propertyName);
     }
 
-    protected $listeners = ['itemsUpdated' => 'updateItems'];
+    protected $listeners = ['itemsUpdated' => 'updateItems', 'prerequisitesUpdated' => 'updatePrerequisites'];
 
     public function mount()
     {
@@ -167,6 +173,11 @@ class CreateCourses extends Component
         $this->marks_allocation = Course::getMarksAllocation();
         $this->module_time_allocation = Course::getTimeAllocation();
         $this->ilos =  Course::getILOTemplate();
+    }
+
+    public function updatePrerequisites($selectedCourses)
+    {
+        $this->prerequisites = $selectedCourses;
     }
 
     public function updateItems($type, $newItems)
@@ -207,12 +218,28 @@ class CreateCourses extends Component
 
     public function updatedAcademicProgram()
     {
+        $this->updateCurriculumList();
         $this->updateSemestersList();
     }
 
     public function updatedVersion()
     {
         $this->updateSemestersList();
+    }
+
+
+    public function updateCurriculumList()
+    {
+        if ($this->academicProgram) {
+            $this->curriculumList = Course::getVersions($this->academicProgram);
+        } else {
+            $this->curriculumList = [];
+        }
+
+        if (!array_key_exists($this->version, $this->curriculumList)) {
+            // Unset if it not belongs to 
+            $this->version  = null;
+        }
     }
 
     public function updateSemestersList()
@@ -224,6 +251,11 @@ class CreateCourses extends Component
                 ->toArray();
         } else {
             $this->semestersList = [];
+        }
+
+        if (count($this->semestersList) == 0 || !array_key_exists($this->semester, $this->semestersList)) {
+            // Unset if it not belongs to 
+            $this->semester = null;
         }
     }
 
@@ -240,6 +272,7 @@ class CreateCourses extends Component
                 'code' => $this->code,
                 'name' => $this->name,
                 'credits' => (int)$this->credits,
+                'teaching_methods' => $this->teaching_methods,
                 'faq_page' => $this->faq_page,
                 'content' => $this->content,
                 'time_allocation' => json_encode($this->time_allocation),
@@ -251,9 +284,7 @@ class CreateCourses extends Component
                 'updated_by' => auth()->id()
             ]);
 
-            if (empty($this->modules)) {
-                \Log::warning("No modules to create");
-            } else {
+            if (!empty($this->modules)) {
                 foreach ($this->modules as $module) {
                     CourseModule::create([
                         'course_id' => $course->id,
@@ -264,6 +295,13 @@ class CreateCourses extends Component
                         'updated_by' => auth()->id(),
                     ]);
                 }
+            }
+            // Sync prerequisites
+            if (!empty($this->prerequisites)) {
+                $course->prerequisites()->sync(collect($this->prerequisites)->pluck('id')->toArray());
+            } else {
+                // If no prerequisites, detach all
+                $course->prerequisites()->detach();
             }
 
             \DB::commit();
@@ -285,6 +323,7 @@ class CreateCourses extends Component
         $this->code = '';
         $this->name = '';
         $this->credits = 0;
+        $this->teaching_methods = '';
         $this->faq_page = '';
         $this->content = '';
         $this->time_allocation = Course::getTimeAllocation();

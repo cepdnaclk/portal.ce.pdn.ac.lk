@@ -45,8 +45,8 @@ class CourseTable extends DataTableComponent
     {
         return Course::query()
             ->when($this->getFilter('academic_program'), fn($query, $type) => $query->where('academic_program', $type))
-            ->when($this->getFilter('semester_id'), fn($query, $type) => $query->where('semester_id', $type))
-            ->when($this->getFilter('version'), fn($query, $version) => $query->where('version', $version));;
+            ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type))
+            ->when($this->getFilter('version'), fn($query, $version) => $query->where('version', $version));
     }
 
     public function filters(): array

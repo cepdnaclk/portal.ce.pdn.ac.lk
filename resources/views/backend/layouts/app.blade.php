@@ -8,7 +8,7 @@
     <title>{{ appName() }} | @yield('title')</title>
     <meta name="description" content="@yield('meta_description', appName())">
     <meta name="author" content="@yield('meta_author', 'cepdnaclk')">
-    <link rel="icon" href="/assets/img/favicon.png">
+    <link rel="icon" href="{{ asset('favicon.png') }}">
     @yield('meta')
 
     @stack('before-styles')

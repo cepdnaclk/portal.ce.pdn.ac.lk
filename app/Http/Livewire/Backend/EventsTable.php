@@ -54,7 +54,15 @@ class EventsTable extends DataTableComponent
                 } elseif ($enabled === 0) {
                     $query->where('enabled', false);
                 }
-            })->orderBy('published_at', 'desc');
+            })
+            ->when(
+                $this->getFilter('event_type') !== null,
+                function ($query) {
+                    $eventType = $this->getFilter('event_type');
+                    $query->where('event_type', 'LIKE', "%\"$eventType\"%");
+                }
+            )
+            ->orderBy('created_at', 'desc');
     }
     public function toggleEnable($eventId)
     {
@@ -78,6 +86,8 @@ class EventsTable extends DataTableComponent
                     1 => 'Upcoming',
                     0 => 'Past',
                 ]),
+            'event_type' => Filter::make("Event Type")
+                ->select(array_merge(['' => 'Any'], Event::eventTypeMap()))
         ];
     }
 
