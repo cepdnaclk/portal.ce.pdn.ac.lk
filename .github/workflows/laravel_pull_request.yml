@@ -10,6 +10,9 @@ on:
 jobs:
     laravel-tests:
         runs-on: ubuntu-latest
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
 
         steps:
             - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
@@ -20,8 +23,16 @@ jobs:
             - name: Copy .env
               run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
+            - name: Remove existing composer.lock
+              run: rm ./composer.lock
+
             - name: Install Dependencies
               run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+            - name: Create Database
+              run: |
+                  mkdir -p database
+                  touch database/database.sqlite
 
             - name: Generate key
               run: php artisan key:generate

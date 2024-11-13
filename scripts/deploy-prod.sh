@@ -9,8 +9,8 @@ git fetch origin
 sudo git pull
 
 echo "Running: composer install in prod-mode"
-composer install --optimize-autoloader --no-dev
-composer dump-autoload
+composer install --optimize-autoloader --no-dev --no-interaction
+composer dump-autoload --no-interaction
 
 echo "Running: pnpm install"
 pnpm install
@@ -34,11 +34,11 @@ php artisan view:cache
 echo "Running: Setting permissions"
 sudo chown -R www-data:www-data ./
 
-# Set directory permissions to 755 (rwxr-xr-x)
-sudo find ./ -type d -exec chmod 755 {} \;
+# Set directory permissions to 755 (rwxr-x--x)
+sudo find ./ -type d -exec chmod 751 {} \;
 
-# Set file permissions to 644 (rw-r--r--)
-sudo find ./ -type f -exec chmod 644 {} \;
+# Set file permissions to 644 (rwxr-----)
+sudo find ./ -type f -exec chmod 740 {} \;
 
 # Ensure storage and cache directories are writable
 sudo chmod -R 775 ./storage/*
