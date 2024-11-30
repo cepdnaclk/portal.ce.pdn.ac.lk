@@ -40,10 +40,13 @@ class TaxonomyApiController extends Controller
             $result = TaxonomyTerm::where('code', $term_code)->first();
 
             if ($result) {
+                $data = TaxonomyTermResource::collection([$result])->resolve()[0];
+                $data['taxonomy'] = $result->taxonomy->code; // Add the taxonomy code at the top-level term 
+
                 return response()->json(
                     [
                         'status' => 'success',
-                        'data' => TaxonomyTermResource::collection([$result])->resolve()[0]
+                        'data' => $data
                     ]
                 );
             } else {

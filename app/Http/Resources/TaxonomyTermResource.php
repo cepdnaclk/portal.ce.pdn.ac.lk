@@ -21,7 +21,6 @@ class TaxonomyTermResource extends JsonResource
         return [
             'code' => $this->code,
             'name' => $this->name,
-            'taxonomy' => $this->taxonomy->code,
             'terms' => $this->when(
                 sizeof($this->children) > 0,
                 TaxonomyTermResource::collection($this->children)
