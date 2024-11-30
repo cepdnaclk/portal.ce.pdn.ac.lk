@@ -3,15 +3,37 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TaxonomyListResource;
 use App\Http\Resources\TaxonomyResource;
 use App\Http\Resources\TaxonomyTermResource;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TaxonomyApiController extends Controller
 {
+
+    public function index()
+    {
+        try {
+            $result = Taxonomy::all();
+
+            if ($result) {
+                return response()->json(
+                    [
+                        'status' => 'success',
+                        'data' => TaxonomyListResource::collection($result)
+                    ]
+                );
+            } else {
+                return response()->json(['status' => 'error', 'message' => 'No Taxonomies found'], 404);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error in TaxonomyApiController@index', ['error' => $e->getMessage()]);
+            return response()->json(['status' => 'error', 'message' => 'An error occurred while fetching taxonomy index'], 500);
+        }
+    }
+
     public function get_taxonomy($taxonomy_code)
     {
         try {
@@ -54,7 +76,7 @@ class TaxonomyApiController extends Controller
             }
         } catch (\Exception $e) {
             Log::error('Error in TaxonomyApiController@get_term', ['error' => $e->getMessage()]);
-            return response()->json(['status' => 'error', 'message' => 'An error occurred while fetching a taxonomy'], 500);
+            return response()->json(['status' => 'error', 'message' => 'An error occurred while fetching a taxonomy term'], 500);
         }
     }
 }

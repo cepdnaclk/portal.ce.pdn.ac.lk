@@ -27,6 +27,7 @@ Route::group(['prefix' => 'academic/v1/undergraduate', 'as' => 'api.academic.und
 
 
 Route::group(['prefix' => 'taxonomy/v1/', 'as' => 'api.taxonomy.'], function () {
+    Route::get('/', [TaxonomyApiController::class, 'index'])->name('index');
     Route::get('/{taxonomy_code}', [TaxonomyApiController::class, 'get_taxonomy'])->name('get');
     Route::get(
         'term/{term_code}',
