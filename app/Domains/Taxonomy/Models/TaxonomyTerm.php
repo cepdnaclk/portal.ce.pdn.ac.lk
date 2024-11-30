@@ -80,10 +80,8 @@ class TaxonomyTerm extends Model
 
     public function getMetadata($code)
     {
-        $metadata = json_decode($this->metadata, true);
-
-        if (is_array($metadata)) {
-            foreach ($metadata as $item) {
+        if (is_array($this->metadata)) {
+            foreach ($this->metadata as $item) {
                 if ($item['code'] === $code && $item['value'] != null) {
                     return $item['value'];
                 }

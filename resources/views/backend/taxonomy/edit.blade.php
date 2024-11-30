@@ -3,7 +3,7 @@
 @section('title', __('Edit Taxonomy'))
 
 @section('content')
-    <div x-data="{ properties: {{ $taxonomy->properties }}, is_editable: {{ $taxonomy->terms()->count() > 0 ? '0' : '1' }} }">
+    <div x-data="{ properties: {{ json_encode($taxonomy->properties) }}, is_editable: {{ $taxonomy->terms()->count() > 0 ? '0' : '1' }} }">
         {!! Form::model($taxonomy, [
             'url' => route('dashboard.taxonomy.update', $taxonomy->id),
             'method' => 'PUT',
