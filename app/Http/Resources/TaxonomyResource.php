@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Domains\Auth\Models\User;
+// use App\Domains\Auth\Models\User;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Http\Resources\TaxonomyTermResource;
 use Illuminate\Http\Resources\Json\JsonResource;
