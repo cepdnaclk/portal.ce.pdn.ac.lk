@@ -36,7 +36,7 @@ class TaxonomyTerm extends Model
     public function getFormattedMetadataAttribute()
     {
         $response = array();
-        $filteredMetadata = array_filter(json_decode($this->metadata, true), function ($value) {
+        $filteredMetadata = array_filter($this->metadata, function ($value) {
             return !is_null($value['value']);
         });
 
@@ -74,7 +74,8 @@ class TaxonomyTerm extends Model
 
     public function children()
     {
-        return $this->hasMany(self::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id')
+            ->orderBy('code', 'asc');;
     }
 
     public function getMetadata($code)
