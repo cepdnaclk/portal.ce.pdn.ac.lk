@@ -47,7 +47,7 @@ class TaxonomyTermController extends Controller
             ]);
 
 
-            foreach (json_decode($taxonomy->properties, true) as $property) {
+            foreach ($taxonomy->properties as $property) {
                 $metadataKey = "metadata.{$property['code']}";
 
                 switch ($property['data_type']) {
@@ -86,7 +86,7 @@ class TaxonomyTermController extends Controller
 
             $metadataArray = [];
 
-            foreach (json_decode($taxonomy->properties, true) as $property) {
+            foreach ($taxonomy->properties as $property) {
                 $value = $request->input("metadata.{$property['code']}");
 
                 if ($property['data_type'] === 'boolean') {
@@ -99,7 +99,7 @@ class TaxonomyTermController extends Controller
             }
 
             $taxonomyTerm = new TaxonomyTerm($validatedData);
-            $taxonomyTerm->metadata = json_encode($metadataArray);
+            $taxonomyTerm->metadata = $metadataArray;
             $taxonomyTerm->created_by = Auth::user()->id;
             $taxonomyTerm->save();
 
@@ -142,7 +142,7 @@ class TaxonomyTermController extends Controller
                 'metadata' => 'array',
             ]);
 
-            foreach (json_decode($taxonomy->properties, true) as $property) {
+            foreach ($taxonomy->properties as $property) {
                 $metadataKey = "metadata.{$property['code']}";
 
                 switch ($property['data_type']) {
@@ -179,7 +179,7 @@ class TaxonomyTermController extends Controller
             }
 
             $metadataArray = [];
-            foreach (json_decode($taxonomy->properties, true) as $property) {
+            foreach ($taxonomy->properties as $property) {
                 $value = $request->input("metadata.{$property['code']}");
 
                 if ($property['data_type'] === 'boolean') {
@@ -193,7 +193,7 @@ class TaxonomyTermController extends Controller
             }
 
             $term->update($validatedData);
-            $term->metadata = json_encode($metadataArray);
+            $term->metadata = $metadataArray;
             $term->updated_by = Auth::user()->id;
             $term->save();
 

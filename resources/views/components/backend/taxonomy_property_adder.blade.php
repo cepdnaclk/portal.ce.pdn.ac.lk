@@ -54,24 +54,28 @@
                 data_type: this.newProperty.data_type
             };
 
-            if (this.isEditing && this.editIndex !== null) {
-                if (this.editIndex >= 0 && this.editIndex < this.properties.length) {
-                    this.properties[this.editIndex] = newPropertyData;
-                    this.selectedItem = this.editIndex; // Select the edited item
+            if (newPropertyData.code != '' && newPropertyData.name != '' && newPropertyData.data_type !== '') {
+                if (this.isEditing && this.editIndex !== null) {
+                    if (this.editIndex >= 0 && this.editIndex < this.properties.length) {
+                        this.properties[this.editIndex] = newPropertyData;
+                        this.selectedItem = this.editIndex; // Select the edited item
+                    } else {
+                        console.error('Invalid editIndex:', this.editIndex);
+                    }
+                    this.editIndex = null;
+                    this.isEditing = false;
                 } else {
-                    console.error('Invalid editIndex:', this.editIndex);
+                    this.properties.push(newPropertyData);
+                    this.selectedItem = this.properties.length - 1; // Select the newly added item
                 }
-                this.editIndex = null;
-                this.isEditing = false;
+                bootstrap.Modal.getInstance(document.getElementById('addPropertyItemModal')).hide();
+                {{-- nextTick ensures that the modal is hidden before resetting the form --}}
+                this.$nextTick(() => {
+                    this.resetForm();
+                });
             } else {
-                this.properties.push(newPropertyData);
-                this.selectedItem = this.properties.length - 1; // Select the newly added item
+                // TODO Give a warning 
             }
-            bootstrap.Modal.getInstance(document.getElementById('addPropertyItemModal')).hide();
-            {{-- nextTick ensures that the modal is hidden before resetting the form --}}
-            this.$nextTick(() => {
-                this.resetForm();
-            });
         },
         resetForm() {
             this.newProperty = {
@@ -120,9 +124,9 @@
                                         x-model="newProperty.name" />
                                 </div>
                                 <div class="mb-3">
-                                    <label for="propertyDatatype" class="form-label">Datatype</label>
+                                    <label for="propertyDatatype" class="form-label">Datatype*</label>
                                     <select class="form-select" aria-label="Datatype" x-model="newProperty.data_type">
-                                        <option selected>Open this select menu</option>
+                                        <option value='' selected>Open this select menu</option>
                                         <template x-for="(value,key) in propertyTypes" :key="key">
                                             <option :value="key" x-text="value"></option>
                                         </template>
