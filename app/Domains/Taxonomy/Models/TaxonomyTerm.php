@@ -36,14 +36,15 @@ class TaxonomyTerm extends Model
     public function getFormattedMetadataAttribute()
     {
         $response = array();
-        $filteredMetadata = array_filter(json_decode($this->metadata, true), function ($value) {
-            return !is_null($value['value']);
-        });
+        if (is_array($this->metadata)) {
+            $filteredMetadata = array_filter($this->metadata, function ($value) {
+                return !is_null($value['value']);
+            });
 
-        foreach ($filteredMetadata as $metadata) {
-            $response[$metadata['code']] = $metadata['value'];
+            foreach ($filteredMetadata as $metadata) {
+                $response[$metadata['code']] = $metadata['value'];
+            }
         }
-
         return $response;
     }
 
@@ -74,15 +75,14 @@ class TaxonomyTerm extends Model
 
     public function children()
     {
-        return $this->hasMany(self::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id')
+            ->orderBy('code', 'asc');;
     }
 
     public function getMetadata($code)
     {
-        $metadata = json_decode($this->metadata, true);
-
-        if (is_array($metadata)) {
-            foreach ($metadata as $item) {
+        if (is_array($this->metadata)) {
+            foreach ($this->metadata as $item) {
                 if ($item['code'] === $code && $item['value'] != null) {
                     return $item['value'];
                 }

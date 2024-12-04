@@ -14,9 +14,9 @@
             </a>
         </p>
 
-        <h4>Response: </h4>
+        <h4>Terms: </h4>
         <pre class="p-3 border rounded">
-{{ json_encode($taxonomyData, JSON_PRETTY_PRINT) }}
+{{ json_encode($taxonomyData['terms'], JSON_PRETTY_PRINT) }}
         </pre>
     </div>
 

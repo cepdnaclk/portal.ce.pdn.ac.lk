@@ -34,11 +34,11 @@
                                 <label for="parent_term">Parent Taxonomy Term (Optional)</label>
                             </div>
                             <select name="parent_id" class="form-select">
-                                <option value="" selected>Select</option>
+                                <option value="">Select</option>
                                 @foreach ($term->taxonomy->terms as $sibling)
                                     @if ($sibling->id != $term->id)
                                         <option value="{{ $sibling->id }}"
-                                            {{ old('parent_id', $sibling->parent_id) == $sibling->id ? 'selected' : '' }}>
+                                            {{ old('parent_id', $term->parent_id) == $sibling->id ? 'selected' : '' }}>
                                             {{ TaxonomyTerm::getHierarchicalPath($sibling->id) }}
                                         </option>
                                     @endif
@@ -82,7 +82,7 @@
                             <strong>Metadata</strong>
                         </div>
 
-                        @foreach (json_decode($taxonomy->properties, true) as $property)
+                        @foreach ($taxonomy->properties as $property)
                             <div class="col-12 py-2">
                                 <div class="col ps-0">
                                     <label>{{ $property['name'] }}

@@ -74,7 +74,7 @@
                             <strong>Metadata</strong>
                         </div>
 
-                        @foreach (json_decode($taxonomy->properties, true) as $property)
+                        @foreach ($taxonomy->properties as $property)
                             <div class="col-12 py-2">
                                 <div class="col ps-0">
                                     <label>{{ $property['name'] }}

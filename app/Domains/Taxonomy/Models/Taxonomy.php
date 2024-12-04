@@ -15,8 +15,7 @@ use App\Domains\Taxonomy\Models\Traits\Scope\TaxonomyScope;
  */
 class Taxonomy extends Model
 {
-    use TaxonomyScope,
-        HasFactory,
+    use HasFactory,
         LogsActivity;
 
 
@@ -43,6 +42,7 @@ class Taxonomy extends Model
     ];
 
     protected $casts = [
+        'properties' => 'json',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -69,13 +69,20 @@ class Taxonomy extends Model
             ->orderBy('code', 'asc');
     }
 
+    public function first_child_terms()
+    {
+        return $this->hasMany(TaxonomyTerm::class, 'taxonomy_id')
+            ->whereNull('parent_id')
+            ->orderBy('code', 'asc');
+    }
+
     public function to_dict()
     {
         $taxonomy = $this->toArray();
         foreach (['properties', 'created_at', 'updated_at', 'created_by', 'updated_by'] as $attribute) {
             unset($taxonomy[$attribute]);
         }
-        $taxonomy['properties'] = json_decode($this->properties);
+        $taxonomy['properties'] = $this->properties;
         $taxonomy['terms'] = TaxonomyTerm::getByTaxonomy($this->id);
         return $taxonomy;
     }

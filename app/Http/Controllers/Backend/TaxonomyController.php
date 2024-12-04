@@ -92,14 +92,15 @@ class TaxonomyController extends Controller
     public function update(Request $request, Taxonomy $taxonomy)
     {
         $data = $request->validate([
-            'code' => 'required',
-            'name' => 'required',
+            'code' => 'string|required',
+            'name' => 'string|required',
             'description' => 'nullable',
+            'properties' => 'string'
         ]);
 
         try {
             $taxonomy->update($data);
-            $taxonomy->properties = $request->properties;
+            $taxonomy->properties = json_decode($request->properties);
             $taxonomy->updated_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
