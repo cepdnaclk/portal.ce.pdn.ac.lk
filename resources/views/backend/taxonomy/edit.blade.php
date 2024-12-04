@@ -88,11 +88,11 @@
                                 </svg>
 
                                 <div>
-                                    <b>Edit</b> and <b>Delete</b> options not available since already have <a
-                                        href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}">taxonomy terms</a>.
-                                    Please remove all of them to enable the
-                                    Edit and
-                                    Delete options.
+                                    {{-- <b>Edit</b> and <b>Delete</b> options not available since already have <a href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}">taxonomy terms</a>. Please remove all of them to enable the Edit and Delete options. --}}
+
+                                    <b>Edit</b> and <b>Delete</b> options must be carefully used to avoid data issues with
+                                    existing <a href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}">taxonomy
+                                        terms</a>.
                                 </div>
                             </div>
                         </div>
