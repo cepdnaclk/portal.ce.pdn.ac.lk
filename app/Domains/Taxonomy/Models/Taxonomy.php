@@ -38,7 +38,8 @@ class Taxonomy extends Model
         'datetime' => 'Date Time',
         'boolean' => 'Boolean',
         'url' => 'URL',
-        'image' => 'Image'
+        // 'image' => 'Image'
+        // 'pdf' => 'PDF File'
     ];
 
     protected $casts = [
