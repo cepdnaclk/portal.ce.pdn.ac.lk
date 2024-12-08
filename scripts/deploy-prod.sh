@@ -34,10 +34,10 @@ php artisan view:cache
 echo "Running: Setting permissions"
 sudo chown -R www-data:www-data ./
 
-# Set directory permissions to 755 (rwxr-x--x)
+# Set directory permissions to 751 (rwxr-x--x)
 sudo find ./ -type d -exec chmod 751 {} \;
 
-# Set file permissions to 644 (rwxr-----)
+# Set file permissions to 740 (rwxr-----)
 sudo find ./ -type f -exec chmod 740 {} \;
 
 # Ensure storage and cache directories are writable

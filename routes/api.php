@@ -4,6 +4,7 @@ use App\Http\Controllers\API\NewsApiController;
 use App\Http\Controllers\API\EventApiController;
 use App\Http\Controllers\API\CourseApiController;
 use App\Http\Controllers\API\SemesterApiController;
+use App\Http\Controllers\API\TaxonomyApiController;
 
 Route::group(['prefix' => 'news/v1', 'as' => 'api.news.'], function () {
     Route::get('/', [NewsApiController::class, 'index']);
@@ -23,3 +24,13 @@ Route::group(['prefix' => 'academic/v1/undergraduate', 'as' => 'api.academic.und
 });
 
 // TODO: Implement postgraduate courses API
+
+
+Route::group(['prefix' => 'taxonomy/v1/', 'as' => 'api.taxonomy.'], function () {
+    Route::get('/', [TaxonomyApiController::class, 'index'])->name('index');
+    Route::get('/{taxonomy_code}', [TaxonomyApiController::class, 'get_taxonomy'])->name('get');
+    Route::get(
+        'term/{term_code}',
+        [TaxonomyApiController::class, 'get_term']
+    )->name('term.get');
+});

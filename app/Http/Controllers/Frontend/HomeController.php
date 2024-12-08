@@ -32,6 +32,7 @@ class HomeController
     {
         $projects = [
             '/projects/v1/co225/E20/Computer-Engineering-Portal/',
+            '/projects/v1/co227/E20/Computer-Engineering-Portal/',
         ];
 
         $data = [];

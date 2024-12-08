@@ -10,7 +10,7 @@
                     <x-frontend.card>
                         <x-slot name="body">
 
-                            <h3>Project {{ $key + 1 }} {{ $project['title'] }}</h3>
+                            <h3>Project #{{ $key + 1 }} {{ $project['title'] }}</h3>
                             <p>{{ $project['description'] }}</p>
 
                             <ul>
