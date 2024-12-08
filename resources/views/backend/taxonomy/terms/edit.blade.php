@@ -20,7 +20,7 @@
                         <!-- Taxonomy -->
                         <div class="col-12 py-2">
                             <div class="col ps-0">
-                                <label for="taxonomy">Taxonomy*</label>
+                                <label for="taxonomy">Taxonomy</label>
                             </div>
                             <div class="col-md-12 px-0">
                                 {!! Form::text('taxonomy_name', $taxonomy->name, ['class' => 'form-control', 'readonly']) !!}
