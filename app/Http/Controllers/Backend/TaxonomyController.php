@@ -54,7 +54,7 @@ class TaxonomyController extends Controller
 
         try {
             $taxonomy = new Taxonomy($validatedData);
-            $taxonomy->properties = $request->properties;
+            $taxonomy->properties = json_decode($request->properties);
             $taxonomy->created_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy created successfully');
