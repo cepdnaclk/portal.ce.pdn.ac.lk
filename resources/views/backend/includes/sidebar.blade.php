@@ -127,6 +127,22 @@
                 </ul>
             </li>
         @endif
+
+        {{-- Taxonomies --}}
+        @if ($logged_in_user->hasAllAccess())
+            <li
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.taxonomy.*'), 'c-open c-show') }}">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-sitemap"
+                    class="c-sidebar-nav-dropdown-toggle" :text="__('Taxonomies')"></x-utils.link>
+
+                <ul class="c-sidebar-nav-dropdown-items">
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.taxonomy.index')" class="c-sidebar-nav-link" :text="__('Manage')"
+                            :active="activeClass(Route::is('dashboard.taxonomy.*'), 'c-active')"></x-utils.link>
+                    </li>
+                </ul>
+            </li>
+        @endif
     </ul>
 
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent"
