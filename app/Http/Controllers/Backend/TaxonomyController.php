@@ -107,7 +107,7 @@ class TaxonomyController extends Controller
                 $taxonomy->updated_by = Auth::user()->id;
                 $taxonomy->save();
             }else{
-                return redirect()->route('dashboard.taxonomy.index')->withErrors('Can not update the Taxonomy as it already has associated Taxonomy Terms. Please reassign or delete those first.');
+                return redirect()->route('dashboard.taxonomy.index')->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             }
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
         } catch (\Exception $ex) {
