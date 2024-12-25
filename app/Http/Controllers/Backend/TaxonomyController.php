@@ -99,15 +99,42 @@ class TaxonomyController extends Controller
         ]);
 
         try {
-            $taxonomy->update($data);
-            $taxonomy->properties = json_decode($request->properties);
-            $taxonomy->updated_by = Auth::user()->id;
-            $taxonomy->save();
+            $originalProperties = json_decode($taxonomy->properties);
+            $updatedProperties = json_decode($request->properties);
+            if ($this->validateProperties($originalProperties, $updatedProperties)) {
+                $taxonomy->update($data);
+                $taxonomy->properties = $request->properties;
+                $taxonomy->updated_by = Auth::user()->id;
+                $taxonomy->save();
+            }else{
+                return redirect()->route('dashboard.taxonomy.index')->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
+            }
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
         } catch (\Exception $ex) {
             Log::error('Failed to update taxonomy', ['error' => $ex->getMessage()]);
             return abort(500);
         }
+    }
+    private function validateProperties(array $original, array $updated): bool
+    {
+        // Ensure existing items are not modified
+        foreach ($original as $index => $originalItem) {
+            if (!isset($updated[$index])) {
+                return false; // Missing an existing property
+            }
+
+            $updatedItem = $updated[$index];
+            if (
+                $originalItem->code !== $updatedItem->code || 
+                $originalItem->name !== $updatedItem->name || 
+                $originalItem->data_type !== $updatedItem->data_type
+            ) {
+                return false; // An existing property was altered
+            }
+        }
+
+        // Allow additional properties
+        return count($updated) >= count($original);
     }
     /**
      * Confirm to delete the specified resource from storage.
