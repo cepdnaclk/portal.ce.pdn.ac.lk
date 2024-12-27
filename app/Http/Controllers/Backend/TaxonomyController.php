@@ -99,16 +99,17 @@ class TaxonomyController extends Controller
             'properties' => 'string'
         ]);
         try {
-            $originalProperties = json_decode($taxonomy->properties);
+            $originalProperties = json_decode(json_encode($taxonomy->properties));
             $updatedProperties = json_decode($request->properties);
-            if ($this->validateProperties($originalProperties, $updatedProperties)) {
-                $taxonomy->update($data);
-                $taxonomy->properties = $request->properties;
-                $taxonomy->updated_by = Auth::user()->id;
-                $taxonomy->save();
-            }else{
-                return redirect()->route('dashboard.taxonomy.index')->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
+            if ($taxonomy->terms->count() > 0 && !$this->validateProperties($originalProperties, $updatedProperties)) {
+                return redirect()
+                    ->route('dashboard.taxonomy.index')
+                    ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             }
+            $taxonomy->update($data);
+            $taxonomy->properties = $updatedProperties;
+            $taxonomy->updated_by = Auth::user()->id;
+            $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
         } catch (\Exception $ex) {
             Log::error('Failed to update taxonomy', ['error' => $ex->getMessage()]);
@@ -129,6 +130,7 @@ class TaxonomyController extends Controller
                 $originalItem->name !== $updatedItem->name || 
                 $originalItem->data_type !== $updatedItem->data_type
             ) {
+                dd($originalItem->code,$updatedItem->code);
                 return false; // An existing property was altered
             }
         }
