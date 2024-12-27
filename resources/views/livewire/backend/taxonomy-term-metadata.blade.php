@@ -6,7 +6,10 @@
     </div>
     <div class="col-md-12 px-0">
         @php
-            $value = $term->getMetadata($property['code']);
+            $value = null;
+            if (!empty($property['code']) && $term) {
+                $value = $term->getMetadata($property['code']);
+            }  
         @endphp
 
         @switch($property['data_type'])
