@@ -3,7 +3,7 @@
 @section('title', __('Edit Taxonomy'))
 
 @section('content')
-    <div x-data="{ properties: {{ json_encode($taxonomy->properties) }}, is_editable: {{ $taxonomy->terms()->count() > 0 ? '0' : '1' }} }">
+    <div x-data="{ properties: {{ $taxonomy->properties}}, is_editable: {{ $taxonomy->terms()->count() > 0 ? '0' : '1' }} }">
         {!! Form::model($taxonomy, [
             'url' => route('dashboard.taxonomy.update', $taxonomy->id),
             'method' => 'PUT',
@@ -88,11 +88,7 @@
                                 </svg>
 
                                 <div>
-                                    {{-- <b>Edit</b> and <b>Delete</b> options not available since already have <a href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}">taxonomy terms</a>. Please remove all of them to enable the Edit and Delete options. --}}
-
-                                    <b>Edit</b> and <b>Delete</b> options must be carefully used to avoid data issues with
-                                    existing <a href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}">taxonomy
-                                        terms</a>.
+                                    <b>Edit</b> and <b>Delete</b> options not available since already have <a href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}">taxonomy terms</a>.<br> Please remove all of them to enable the <b>Edit</b> and <b>Delete</b> options.
                                 </div>
                             </div>
                         </div>
