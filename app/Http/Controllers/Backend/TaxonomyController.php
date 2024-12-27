@@ -50,6 +50,7 @@ class TaxonomyController extends Controller
             'code' => 'required|unique:taxonomies',
             'name' => 'required',
             'description' => 'nullable',
+            'properties' => 'string'
         ]);
 
         try {
@@ -97,7 +98,6 @@ class TaxonomyController extends Controller
             'description' => 'nullable',
             'properties' => 'string'
         ]);
-
         try {
             $taxonomy->update($data);
             $taxonomy->properties = json_decode($request->properties);

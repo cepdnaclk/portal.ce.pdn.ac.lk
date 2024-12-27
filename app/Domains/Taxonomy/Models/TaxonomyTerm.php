@@ -33,6 +33,17 @@ class TaxonomyTerm extends Model
         'updated_at' => 'datetime',
     ];
 
+    // Custom mutator for saving metadata
+    public function setMetadataAttribute($value)
+    {
+        $this->attributes['metadata'] = json_encode($value, JSON_UNESCAPED_SLASHES);
+    }
+
+    // public function getMetadataAttribute($value)
+    // {
+    //     return json_decode($value, true);
+    // }
+
     public function getFormattedMetadataAttribute()
     {
         $response = array();
