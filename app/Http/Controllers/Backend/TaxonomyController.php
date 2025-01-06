@@ -118,25 +118,30 @@ class TaxonomyController extends Controller
     }
     private function validateProperties(array $original, array $updated): bool
     {
-        // Ensure existing items are not modified
-        foreach ($original as $index => $originalItem) {
-            if (!isset($updated[$index])) {
-                return false; // Missing an existing property
-            }
+        // $originalMap = [];
+        // $updatedMap = [];
+        // foreach ($original as $item)  $originalMap[$item->code] = $item;
+        // foreach ($updated as $item) $updatedMap[$item->code] = $item;
 
-            $updatedItem = $updated[$index];
-            if (
-                $originalItem->code !== $updatedItem->code || 
-                $originalItem->name !== $updatedItem->name || 
-                $originalItem->data_type !== $updatedItem->data_type
-            ) {
-                dd($originalItem->code,$updatedItem->code);
-                return false; // An existing property was altered
-            }
-        }
+        // // Ensure existing items are not modified
+        // foreach ($originalMap as $code => $originalItem) {
+        //     if (!isset($updatedMap[$code])) {
+        //         // TODO Let allow to delete if not used in any term
+        //         return false; // Missing an existing property
+        //     }
 
-        // Allow additional properties
-        return count($updated) >= count($original);
+        //     $updatedItem = $updatedMap[$code];
+        //     if (
+        //         $originalItem->data_type !== $updatedItem->data_type
+        //     ) {
+        //         // An existing property data type was altered
+        //         // TODO Let allow to delete if not used in any term
+        //         return false;
+        //     }
+        // }
+
+        // Allow changes for now
+        return true;
     }
     /**
      * Confirm to delete the specified resource from storage.
