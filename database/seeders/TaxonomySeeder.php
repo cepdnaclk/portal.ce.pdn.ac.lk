@@ -39,7 +39,7 @@ class TaxonomySeeder extends Seeder
                 'code' => $taxonomy['code'],
                 'name' => $taxonomy['name'],
                 'description' => $taxonomy['description'],
-                'properties' => json_encode($taxonomy['properties']),
+                'properties' => $taxonomy['properties'],
                 'created_by' => 1,
                 'updated_by' => 1
             ]);

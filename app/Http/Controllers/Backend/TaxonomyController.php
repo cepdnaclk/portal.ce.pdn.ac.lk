@@ -50,6 +50,7 @@ class TaxonomyController extends Controller
             'code' => 'required|unique:taxonomies',
             'name' => 'required',
             'description' => 'nullable',
+            'properties' => 'string'
         ]);
 
         try {
@@ -97,18 +98,18 @@ class TaxonomyController extends Controller
             'description' => 'nullable',
             'properties' => 'string'
         ]);
-
         try {
-            $originalProperties = json_decode($taxonomy->properties);
+            $originalProperties = json_decode(json_encode($taxonomy->properties));
             $updatedProperties = json_decode($request->properties);
-            if ($this->validateProperties($originalProperties, $updatedProperties)) {
-                $taxonomy->update($data);
-                $taxonomy->properties = $request->properties;
-                $taxonomy->updated_by = Auth::user()->id;
-                $taxonomy->save();
-            }else{
-                return redirect()->route('dashboard.taxonomy.index')->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
+            if ($taxonomy->terms->count() > 0 && !$this->validateProperties($originalProperties, $updatedProperties)) {
+                return redirect()
+                    ->route('dashboard.taxonomy.index')
+                    ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             }
+            $taxonomy->update($data);
+            $taxonomy->properties = $updatedProperties;
+            $taxonomy->updated_by = Auth::user()->id;
+            $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
         } catch (\Exception $ex) {
             Log::error('Failed to update taxonomy', ['error' => $ex->getMessage()]);
@@ -117,24 +118,30 @@ class TaxonomyController extends Controller
     }
     private function validateProperties(array $original, array $updated): bool
     {
-        // Ensure existing items are not modified
-        foreach ($original as $index => $originalItem) {
-            if (!isset($updated[$index])) {
-                return false; // Missing an existing property
-            }
+        // $originalMap = [];
+        // $updatedMap = [];
+        // foreach ($original as $item)  $originalMap[$item->code] = $item;
+        // foreach ($updated as $item) $updatedMap[$item->code] = $item;
 
-            $updatedItem = $updated[$index];
-            if (
-                $originalItem->code !== $updatedItem->code || 
-                $originalItem->name !== $updatedItem->name || 
-                $originalItem->data_type !== $updatedItem->data_type
-            ) {
-                return false; // An existing property was altered
-            }
-        }
+        // // Ensure existing items are not modified
+        // foreach ($originalMap as $code => $originalItem) {
+        //     if (!isset($updatedMap[$code])) {
+        //         // TODO Let allow to delete if not used in any term
+        //         return false; // Missing an existing property
+        //     }
 
-        // Allow additional properties
-        return count($updated) >= count($original);
+        //     $updatedItem = $updatedMap[$code];
+        //     if (
+        //         $originalItem->data_type !== $updatedItem->data_type
+        //     ) {
+        //         // An existing property data type was altered
+        //         // TODO Let allow to delete if not used in any term
+        //         return false;
+        //     }
+        // }
+
+        // Allow changes for now
+        return true;
     }
     /**
      * Confirm to delete the specified resource from storage.
