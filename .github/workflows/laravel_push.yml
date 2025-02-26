@@ -36,4 +36,10 @@ jobs:
                   
             - name: Execute tests (Unit and Feature tests) via PHPUnit
               run: |
-                  php artisan test -p --colors --debug
+                  php artisan test -p --colors --debug --coverage-clover=coverage.xml
+
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                
