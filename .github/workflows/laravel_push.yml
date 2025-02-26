@@ -8,7 +8,6 @@ jobs:
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
-          CODECOV_TOKEN: ${{ secrets.CODECOV_ORG_TOKEN }}
 
         steps:
             - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
@@ -41,4 +40,6 @@ jobs:
 
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
                 
