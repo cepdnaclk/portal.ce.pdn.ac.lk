@@ -164,18 +164,21 @@
                     <div class="d-flex flex-column flex-md-row align-items-md-end ms-auto">
                         <div x-show="selectedItem === index" class="btn-group" role="group" aria-label="Item actions">
                             <button type="button" class="btn btn-sm btn-secondary me-1 me-md-2 rounded"
-                                @click.stop="moveUp()">
+                                @click.stop="moveUp()"
+                                x-show="properties.length > 1">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
                             <button type="button" class="btn btn-sm btn-secondary me-1 me-md-2 rounded"
-                                @click.stop="moveDown()">
+                                @click.stop="moveDown()"
+                                x-show="properties.length > 1">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <button type="button" class="btn btn-sm btn-warning me-1 me-md-2 rounded"
-                                @click.stop="editItem()">
+                                @click.stop="editItem()"
+                                :disabled="is_editable === 0">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
-                            <button type="button" class="btn btn-sm btn-danger rounded" @click.stop="deleteItem()">
+                            <button type="button" class="btn btn-sm btn-danger rounded" @click.stop="deleteItem()" :disabled="is_editable === 0">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>

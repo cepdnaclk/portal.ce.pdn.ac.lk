@@ -47,6 +47,12 @@ class Taxonomy extends Model
         'updated_at' => 'datetime',
     ];
 
+    //mutator for saving properties
+    public function setPropertiesAttribute($value)
+    {
+        $this->attributes['properties'] = json_encode($value, JSON_UNESCAPED_SLASHES);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by');

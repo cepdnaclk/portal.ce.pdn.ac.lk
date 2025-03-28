@@ -1,7 +1,4 @@
-[![Laravel CI](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml/badge.svg)](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml) ![GitHub Release](https://img.shields.io/github/v/release/cepdnaclk/portal.ce.pdn.ac.lk)
-
-
-
+[![Laravel CI](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml/badge.svg)](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml) ![GitHub Release](https://img.shields.io/github/v/release/cepdnaclk/portal.ce.pdn.ac.lk) [![codecov](https://codecov.io/gh/cepdnaclk/portal.ce.pdn.ac.lk/graph/badge.svg?token=T039QAP0FR)](https://codecov.io/gh/cepdnaclk/portal.ce.pdn.ac.lk)
 
 # portal.ce.pdn.ac.lk
 
@@ -115,7 +112,8 @@ php artisan test
 Can be found under `./scripts.` folder. In the production environment, scripts need to be run with `sudo` from the base directory to work correctly.
 
 Ex:
-```bash 
+
+```bash
 sudo sh ./scripts/deploy-prod.sh
 ```
 
@@ -131,7 +129,6 @@ sudo sh ./scripts/deploy-prod.sh
 | POST   | /photos/               | store   | photos.store   |
 | PUT    | /photos/{photo}        | update  | photos.update  |
 | DELETE | /photos/{photo}        | destroy | photos.destroy |
-
 
 ## Contributors
 

@@ -178,7 +178,7 @@ class TaxonomyTermSeeder extends Seeder
                 'name' => $term['name'],
                 'taxonomy_id' => $taxonomyId,
                 'parent_id' => $parentId,
-                'metadata' => json_encode($term['metadata']),
+                'metadata' => $term['metadata'],
                 'created_by' => 1,
                 'updated_by' => 1
             ]);
@@ -190,7 +190,7 @@ class TaxonomyTermSeeder extends Seeder
                         'name' => $child['name'],
                         'taxonomy_id' => $taxonomyId,
                         'parent_id' => $createdTerm->id,
-                        'metadata' => json_encode($child['metadata']),
+                        'metadata' => $child['metadata'],
                         'created_by' => 1,
                         'updated_by' => 1
                     ]);
