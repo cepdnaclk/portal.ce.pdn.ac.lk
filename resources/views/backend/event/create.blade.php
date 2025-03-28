@@ -2,16 +2,6 @@
 
 @section('title', __('Create Event'))
 
-@push('after-styles')
-    <!-- Include Quill library -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-@endpush
-
-@push('before-scripts')
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-@endpush
-
 @section('content')
     <div>
         {!! Form::open([
@@ -66,42 +56,17 @@
                 </div>
 
                 <!-- Event Type (Dropdown with Checkboxes) -->
-                <x-backend.dropdown_checkbox :options-map="\App\Domains\Event\Models\Event::eventTypeMap()"/>
-                
+                <x-backend.dropdown_checkbox :options-map="\App\Domains\Event\Models\Event::eventTypeMap()" />
+
                 <!-- Description -->
                 <div class="form-group row">
                     {!! Form::label('description', 'Description*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        <div x-data="{ content: '' }" x-init="(() => {
-                            const quill = new Quill($refs.editor, {
-                                theme: 'snow',
-                                modules: {
-                                    toolbar: [
-                                        ['bold', 'italic', 'underline', 'strike'],
-                                        [{ 'header': 1 }, { 'header': 2 }],
-                                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                        [{ 'script': 'sub' }, { 'script': 'super' }],
-                                        [{ 'indent': '-1' }, { 'indent': '+1' }],
-                                        [{ 'size': ['small', false, 'large', 'huge'] }],
-                                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                                        [{ 'color': [] }, { 'background': [] }],
-                                        [{ 'align': [] }],
-                                        ['clean']
-                                    ]
-                                }
-                            });
-                        
-                            quill.on('text-change', function() {
-                                content = quill.root.innerHTML;
-                            });
-                        })();">
-                            <div x-ref="editor" style="min-height: 200px;"></div>
-                            <textarea name="description" id="description" x-model="content" style="display: none;"></textarea>
-                            <div class="col-md-12">
-                                @error('description')
-                                    <strong class="text-danger">{{ $message }}</strong>
-                                @enderror
-                            </div>
+                        <livewire:backend.richtext-editor-component name="description" value="" />
+                        <div class="col-md-12">
+                            @error('description')
+                                <strong class="text-danger">{{ $message }}</strong>
+                            @enderror
                         </div>
                     </div>
                 </div>

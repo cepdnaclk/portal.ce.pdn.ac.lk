@@ -116,7 +116,6 @@ class EventController extends Controller
 
             $event->enabled = ($request->enabled != null);
             $event->url =  urlencode(str_replace(" ", "-", $request->url));
-            $event->created_by = Auth::user()->id;
             $event->save();
 
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was updated !');
