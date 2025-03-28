@@ -39,7 +39,7 @@ class EventResource extends JsonResource
             'location' => $this->location,
             'link_url' => $this->link_url,
             'link_caption' => $this->link_caption,
-            'posted_at' => $this->created_at,
+            'published_at' => $this->published_at,
             'updated_at' => $this->updated_at,
 
         ];
