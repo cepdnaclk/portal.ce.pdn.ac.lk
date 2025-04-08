@@ -136,7 +136,8 @@ class PermissionRoleSeeder extends Seeder
         Role::findByName('Administrator')->givePermissionTo([
             'admin.access.user',
             'user.access.editor',
-            'user.access.academic'
+            'user.access.academic',
+            'user.taxonomy'
         ]);
 
         Role::findByName('Editor')->givePermissionTo(['user.access.editor']);
