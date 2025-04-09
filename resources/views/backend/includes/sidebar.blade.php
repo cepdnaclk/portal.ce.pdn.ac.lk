@@ -81,7 +81,7 @@
         {{-- News and Events --}}
         @if (
             $logged_in_user->hasPermissionTo('user.access.editor.news') ||
-                $logged_in_user->hasPermissionTo('user.access.editor.event'))
+                $logged_in_user->hasPermissionTo('user.access.editor.events'))
             <li
                 class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.news.*') || Route::is('dashboard.event.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon cil-newspaper"
@@ -129,20 +129,36 @@
         @endif
 
         {{-- Taxonomies --}}
-        @if ($logged_in_user->hasAllAccess())
-            <li
-                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.taxonomy.*'), 'c-open c-show') }}">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-sitemap"
-                    class="c-sidebar-nav-dropdown-toggle" :text="__('Taxonomies')"></x-utils.link>
+        <li class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.taxonomy'), 'c-open c-show') }}">
+            <x-utils.link href="#" icon="c-sidebar-nav-icon cil-sitemap" class="c-sidebar-nav-dropdown-toggle"
+                :text="__('Taxonomies')"></x-utils.link>
 
-                <ul class="c-sidebar-nav-dropdown-items">
+            <ul class="c-sidebar-nav-dropdown-items">
+                {{-- Taxonomy Data --}}
+                @if ($logged_in_user->hasAnyPermission(['user.taxonomy.data.editor', 'user.taxonomy.data.viewer']))
                     <li class="c-sidebar-nav-item">
-                        <x-utils.link :href="route('dashboard.taxonomy.index')" class="c-sidebar-nav-link" :text="__('Manage')"
+                        <x-utils.link :href="route('dashboard.taxonomy.index')" class="c-sidebar-nav-link" :text="__('Data')"
                             :active="activeClass(Route::is('dashboard.taxonomy.*'), 'c-active')"></x-utils.link>
                     </li>
-                </ul>
-            </li>
-        @endif
+                @endif
+
+                {{-- Taxonomy Data --}}
+                @if ($logged_in_user->hasAnyPermission(['user.taxonomy.file.editor', 'user.taxonomy.file.viewer']))
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.taxonomy.files.index')" class="c-sidebar-nav-link" :text="__('Files')"
+                            :active="activeClass(Route::is('dashboard.taxonomy.*'), 'c-active')"></x-utils.link>
+                    </li>
+                @endif
+
+                {{-- Taxonomy Page --}}
+                @if ($logged_in_user->hasAnyPermission(['user.taxonomy.page.editor', 'user.taxonomy.page.viewer']))
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link :href="route('dashboard.taxonomy.pages.index')" class="c-sidebar-nav-link" :text="__('Pages')"
+                            :active="activeClass(Route::is('dashboard.taxonomy.*'), 'c-active')"></x-utils.link>
+                    </li>
+                @endif
+            </ul>
+        </li>
     </ul>
 
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent"
