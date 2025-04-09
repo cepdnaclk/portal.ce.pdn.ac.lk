@@ -105,6 +105,8 @@ php artisan tinker
 // Run the unit tests
 php artisan test
 
+// Populate the DB with a specific Seeder class
+php artisan db:seed --class=<path-to-the-seeder-class>
 ```
 
 #### Maintenance Scripts

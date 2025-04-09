@@ -42,9 +42,13 @@ class AuthSeeder extends Seeder
         ]);
 
         $this->call(UserSeeder::class);
-        $this->call(TaxonomyRoleSeeder::class);
         $this->call(PermissionRoleSeeder::class);
         $this->call(UserRoleSeeder::class);
+
+        // Individual Permission Seeders
+        $this->call(TaxonomyRoleSeeder::class);
+
+
         $this->enableForeignKeys();
     }
 }

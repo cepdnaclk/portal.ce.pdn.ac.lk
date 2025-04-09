@@ -110,7 +110,7 @@ class PermissionRoleSeeder extends Seeder
             ])
         ]);
 
-        // Role: CourseManager 
+        // Role: CourseManager
         $courseManager = Permission::create([
             'type' => User::TYPE_USER,
             'name' => 'user.access.academic',
@@ -137,14 +137,13 @@ class PermissionRoleSeeder extends Seeder
             'admin.access.user',
             'user.access.editor',
             'user.access.academic',
-            'user.taxonomy'
         ]);
 
         Role::findByName('Editor')->givePermissionTo(['user.access.editor']);
         Role::findByName('Course Manager')->givePermissionTo(['user.access.academic']);
 
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        // Assign Permissions to users 
+        // Assign Permissions to users
 
         // Only for the local testings
         if (app()->environment(['local', 'testing'])) {
