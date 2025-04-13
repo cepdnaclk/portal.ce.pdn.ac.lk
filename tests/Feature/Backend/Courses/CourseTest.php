@@ -32,50 +32,50 @@ class CourseTest extends TestCase
     /** @test */
     public function a_course_can_be_created_via_livewire()
     {
-    $this->loginAsCourseManager();
+        $this->loginAsCourseManager();
 
-    $semester = Semester::factory()->create([
-        'academic_program' => 'undergraduate',
-        'version' => '1',
-    ]);
+        $semester = Semester::factory()->create([
+            'academic_program' => 'undergraduate',
+            'version' => '1',
+        ]);
 
-    Livewire::test(\App\Http\Livewire\Backend\CreateCourses::class)
-    
-        ->set('academicProgram', 'undergraduate')
-        ->set('version', '1')
-        ->set('semester', (string) $semester->id)
-        ->set('type', 'Core')
-        ->set('code', 'CL101')
-        ->set('name', 'Introduction to Computer Science')
-        ->set('credits', 3)
-        ->set('content', 'Basic concepts of computer science.')
-        ->set('teaching_methods', 'Lecture and practical')
-        ->set('time_allocation', ['lecture' => 3, 'tutorial' => 1, 'practical' => 1])
-        ->set('marks_allocation', ['practicals' => 20, 'mid_exam' => 30, 'end_exam' => 50])
-        ->call('next')
-        ->assertHasNoErrors()
+        Livewire::test(\App\Http\Livewire\Backend\CreateCourses::class)
 
-        ->set('objectives', 'Learn the basics of computer science')
-        ->set('ilos', [
-            'knowledge' => ['Understand basic algorithms'],
-            'skills' => ['Implement basic programs']
-        ])
-        ->call('next')
-        ->assertHasNoErrors()
+            ->set('academicProgram', 'undergraduate')
+            ->set('version', '1')
+            ->set('semester', (string) $semester->id)
+            ->set('type', 'Core')
+            ->set('code', 'CL101')
+            ->set('name', 'Introduction to Computer Science')
+            ->set('credits', 3)
+            ->set('content', 'Basic concepts of computer science.')
+            ->set('teaching_methods', 'Lecture and practical')
+            ->set('time_allocation', ['lecture' => 3, 'tutorial' => 1, 'practical' => 1])
+            ->set('marks_allocation', ['practicals' => 20, 'mid_exam' => 30, 'end_exam' => 50])
+            ->call('next')
+            ->assertHasNoErrors()
 
-        ->set('references', ['Introduction to Algorithms'])
-        ->set('modules', [
-            [
-                'name' => 'Module 1',
-                'description' => 'Introduction to programming',
-                'time_allocation' => ['lectures' => 2, 'tutorials' => 1, 'practicals' => 1]
-            ]
-        ])
-        ->call('submit')
-        ->assertHasNoErrors();
+            ->set('objectives', 'Learn the basics of computer science')
+            ->set('ilos', [
+                'knowledge' => ['Understand basic algorithms'],
+                'skills' => ['Implement basic programs']
+            ])
+            ->call('next')
+            ->assertHasNoErrors()
+
+            ->set('references', ['Introduction to Algorithms'])
+            ->set('modules', [
+                [
+                    'name' => 'Module 1',
+                    'description' => 'Introduction to programming',
+                    'time_allocation' => ['lectures' => 2, 'tutorials' => 1, 'practicals' => 1]
+                ]
+            ])
+            ->call('submit')
+            ->assertHasNoErrors();
 
         $this->assertDatabaseHas('courses', [
-            'code' => 'CL101',  
+            'code' => 'CL101',
             'name' => 'Introduction to Computer Science',
             'credits' => 3,
             'type' => 'Core',
@@ -200,5 +200,47 @@ class CourseTest extends TestCase
             ->set('credits', '')
             ->call('submit')
             ->assertHasErrors(['academicProgram', 'semester', 'version', 'type', 'code', 'name', 'credits']);
+    }
+
+
+    // Course Resource
+    /** @test */
+    public function test_course_resource_transforms_data_correctly()
+    {
+        // Create users for created_by and updated_by
+        $creator = User::factory()->create();
+        $updater = User::factory()->create();
+
+        // Create a course
+        $course = \App\Models\Course::factory()->create([
+            'created_by' => $creator->id,
+            'updated_by' => $updater->id,
+        ]);
+
+        // Create the resource
+        $resource = new CourseResource($course);
+
+        // Transform the resource into an array
+        $data = $resource->toArray(request());
+
+        // Assert the transformed data
+        $this->assertEquals($course->id, $data['id']);
+        $this->assertEquals($course->code, $data['code']);
+        $this->assertEquals($course->name, $data['name']);
+        $this->assertEquals($course->content, $data['description']);
+        $this->assertEquals($course->credits, $data['credits']);
+        $this->assertEquals($course->type, $data['type']);
+        $this->assertEquals($course->semester_id, $data['semester_id']);
+        $this->assertEquals($course->academic_program, $data['academic_program']);
+        $this->assertEquals($course->version, $data['version']);
+        $this->assertEquals($course->objectives, $data['objectives']);
+        $this->assertEquals($course->time_allocation, $data['time_allocation']);
+        $this->assertEquals($course->marks_allocation, $data['marks_allocation']);
+        $this->assertEquals($course->ilos, $data['ilos']);
+        $this->assertEquals($course->references, $data['references']);
+        $this->assertEquals($creator->name, $data['created_by']);
+        $this->assertEquals($updater->name, $data['updated_by']);
+        $this->assertEquals($course->created_at, $data['created_at']);
+        $this->assertEquals($course->updated_at, $data['updated_at']);
     }
 }
