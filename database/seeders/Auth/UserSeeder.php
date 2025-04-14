@@ -67,6 +67,15 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
+
+            User::create([
+                'type' => User::TYPE_USER,
+                'name' => 'TaxonomyManager',
+                'email' => env('SEED_TAXONOMY_MANAGER_EMAIL', 'taxonomy_manager@portal.ce.pdn.ac.lk'),
+                'password' => env('SEED_TAXONOMY_MANAGER_PASSWORD', 'taxonomy_manager'),
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
         }
 
         $this->enableForeignKeys();

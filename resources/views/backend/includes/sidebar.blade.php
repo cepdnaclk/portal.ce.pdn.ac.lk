@@ -142,7 +142,7 @@
                     </li>
                 @endif
 
-                {{-- Taxonomy Data --}}
+                {{-- Taxonomy File --}}
                 @if ($logged_in_user->hasAnyPermission(['user.taxonomy.file.editor', 'user.taxonomy.file.viewer']))
                     <li class="c-sidebar-nav-item">
                         <x-utils.link :href="route('dashboard.taxonomy.files.index')" class="c-sidebar-nav-link" :text="__('Files')"
