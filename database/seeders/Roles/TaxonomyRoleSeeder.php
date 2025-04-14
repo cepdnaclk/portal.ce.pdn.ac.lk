@@ -84,6 +84,22 @@ class TaxonomyRoleSeeder extends Seeder
             'user.taxonomy'
         ]);
 
+        // Only for the local and testings
+        if (app()->environment(['local', 'testing'])) {
+            $taxonomyEditorUser = User::firstOrCreate([
+                'type' => User::TYPE_USER,
+                'name' => 'Taxonomy Editor',
+                'email' => env('SEED_USER_EMAIL', 'taxonomy-editor@portal.ce.pdn.ac.lk'),
+                'password' => env('SEED_USER_PASSWORD', 'taxonomy-editor'),
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
+
+            $taxonomyEditorUser->givePermissionTo([
+                'user.taxonomy'
+            ]);
+        }
+
         $this->enableForeignKeys();
     }
 }
