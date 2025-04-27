@@ -11,6 +11,7 @@ use Illuminate\Database\Seeder;
 class TaxonomyRoleSeeder extends Seeder
 {
     use DisableForeignKeys;
+
     /**
      * Run the database seeds.
      *
@@ -19,18 +20,26 @@ class TaxonomyRoleSeeder extends Seeder
     public function run()
     {
         $this->disableForeignKeys();
-        $taxonomyManagerRole = Role::firstOrCreate([
-            'type' => User::TYPE_USER,
-            'name' => 'Taxonomy Manager',
-        ]);
 
-        $taxonomyManagers = Permission::firstOrCreate([
-            'type' => User::TYPE_USER,
-            'name' => 'user.taxonomy',
-            'description' => 'Taxonomy Permission',
-        ]);
+        $taxonomyManagerRole = Role::updateOrCreate(
+            [
+                'type' => User::TYPE_USER,
+                'name' => 'Taxonomy Manager',
+            ],
+            []
+        );
 
+        $taxonomyPermission = Permission::updateOrCreate(
+            [
+                'type' => User::TYPE_USER,
+                'name' => 'user.taxonomy',
+            ],
+            [
+                'description' => 'Taxonomy Permission',
+            ]
+        );
 
+        // Define child permissions under 'user.taxonomy'
         $permissions = [
             [
                 'name' => 'user.taxonomy.data',
@@ -47,26 +56,36 @@ class TaxonomyRoleSeeder extends Seeder
         ];
 
         foreach ($permissions as $permissionData) {
-            $taxonomyType = Permission::firstOrCreate([
-                'type' => User::TYPE_USER,
-                'name' => $permissionData['name'],
-                'description' => $permissionData['description'] . " Permission",
-            ]);
+            // Create or update main permission
+            $taxonomyType = Permission::updateOrCreate(
+                [
+                    'type' => User::TYPE_USER,
+                    'name' => $permissionData['name'],
+                ],
+                [
+                    'description' => $permissionData['description'] . " Permission",
+                ]
+            );
 
-            $taxonomyManagers->children()->save($taxonomyType);
+            // Link as child of 'user.taxonomy'
+            $taxonomyPermission->children()->save($taxonomyType);
 
             $taxonomyType->children()->saveMany([
-                Permission::firstOrCreate(
-                    ['name' => $permissionData['name'] . ".editor"],
+                Permission::updateOrCreate(
                     [
                         'type' => User::TYPE_USER,
+                        'name' => $permissionData['name'] . '.editor',
+                    ],
+                    [
                         'description' => $permissionData['description'] . " Editor",
                     ]
                 ),
-                Permission::firstOrCreate(
-                    ['name' => $permissionData['name'] . ".viewer"],
+                Permission::updateOrCreate(
                     [
                         'type' => User::TYPE_USER,
+                        'name' => $permissionData['name'] . '.viewer',
+                    ],
+                    [
                         'description' => $permissionData['description'] . " Viewer",
                         'sort' => 2,
                     ]
@@ -74,29 +93,33 @@ class TaxonomyRoleSeeder extends Seeder
             ]);
         }
 
-        // Admins will get all permissions by default
+        // Assign basic taxonomy permission to Administrator role
         Role::findByName('Administrator')->givePermissionTo([
-            'user.taxonomy'
+            'user.taxonomy',
         ]);
 
-        // Taxonomy Manager will get all permissions to taxonomy module
+        // Assign basic taxonomy permission to Taxonomy Manager role
         $taxonomyManagerRole->givePermissionTo([
-            'user.taxonomy'
+            'user.taxonomy',
         ]);
 
-        // Only for the local and testings
+        // Only for local and testing environments
         if (app()->environment(['local', 'testing'])) {
-            $taxonomyEditorUser = User::firstOrCreate([
-                'type' => User::TYPE_USER,
-                'name' => 'Taxonomy Editor',
-                'email' => env('SEED_USER_EMAIL', 'taxonomy-editor@portal.ce.pdn.ac.lk'),
-                'password' => env('SEED_USER_PASSWORD', 'taxonomy-editor'),
-                'email_verified_at' => now(),
-                'active' => true,
-            ]);
+            $taxonomyEditorUser = User::updateOrCreate(
+                [
+                    'email' => env('SEED_USER_EMAIL', 'taxonomy-editor@portal.ce.pdn.ac.lk'),
+                ],
+                [
+                    'type' => User::TYPE_USER,
+                    'name' => 'Taxonomy Editor',
+                    'password' => bcrypt(env('SEED_USER_PASSWORD', 'password')),
+                    'email_verified_at' => now(),
+                    'active' => true,
+                ]
+            );
 
             $taxonomyEditorUser->givePermissionTo([
-                'user.taxonomy'
+                'user.taxonomy',
             ]);
         }
 
