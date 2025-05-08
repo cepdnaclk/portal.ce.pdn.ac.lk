@@ -28,6 +28,7 @@ class UserRoleSeeder extends Seeder
             User::find(2)->assignRole('Course Manager');
 
             User::find(5)->assignRole('Course Manager');
+            User::find(6)->assignRole('Taxonomy Manager');
         }
 
         $this->enableForeignKeys();

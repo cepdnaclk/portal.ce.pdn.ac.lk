@@ -38,15 +38,19 @@
                 <i class="fa fa-eye" title="View"></i>
             </a>
 
-            <!-- Edit Button -->
-            <a href="{{ route('dashboard.taxonomy.edit', $row) }}" class="btn btn-sm btn-warning">
-                <i class="fa fa-pencil" title="Edit"></i>
-            </a>
+            @if ($logged_in_user->hasPermissionTo('user.taxonomy.data.editor'))
+                <!-- Edit Button -->
+                <a href="{{ route('dashboard.taxonomy.edit', $row) }}" class="btn btn-sm btn-warning">
+                    <i class="fa fa-pencil" title="Edit"></i>
+                </a>
 
-            <!-- Delete Button -->
-            <a href="{{ route('dashboard.taxonomy.delete', $row) }}" class="btn btn-sm btn-danger">
-                <i class="fa fa-trash" title="Delete"></i>
-            </a>
+                <!-- Delete Button -->
+                <a href="{{ route('dashboard.taxonomy.delete', $row) }}" class="btn btn-sm btn-danger">
+                    <i class="fa fa-trash" title="Delete"></i>
+                </a>
+            @endif
+
+
 
         </div>
     </div>

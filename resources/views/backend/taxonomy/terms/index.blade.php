@@ -10,8 +10,10 @@
             </x-slot>
 
             <x-slot name="headerActions">
-                <x-utils.link icon="c-icon cil-plus" class="card-header-action"  :href="route('dashboard.taxonomy.terms.create', $taxonomy)" :text="__('Create Term')">
-                </x-utils.link>
+                @if ($logged_in_user->hasPermissionTo('user.taxonomy.data.editor'))
+                    <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.taxonomy.terms.create', $taxonomy)" :text="__('Create Term')">
+                    </x-utils.link>
+                @endif
             </x-slot>
 
             <x-slot name="body">
@@ -24,7 +26,7 @@
                     </div>
                 @endif
 
-                <livewire:backend.taxonomy-term-table :taxonomy="$taxonomy"/>
+                <livewire:backend.taxonomy-term-table :taxonomy="$taxonomy" />
             </x-slot>
         </x-backend.card>
     </div>
