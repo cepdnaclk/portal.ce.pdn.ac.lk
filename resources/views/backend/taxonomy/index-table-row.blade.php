@@ -38,7 +38,7 @@
                 <i class="fa fa-eye" title="View"></i>
             </a>
 
-            @if ($logged_in_user->hasPermissionTo('user.taxonomy.data.editor'))
+            @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
                 <!-- Edit Button -->
                 <a href="{{ route('dashboard.taxonomy.edit', $row) }}" class="btn btn-sm btn-warning">
                     <i class="fa fa-pencil" title="Edit"></i>
