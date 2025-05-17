@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             'failed_jobs',
         ]);
 
-        
+
         if (App::environment('local', 'testing')) {
             $this->call(AuthSeeder::class);
             $this->call(AnnouncementSeeder::class);
@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             $this->call(CourseSeeder::class);
             $this->call(TaxonomySeeder::class);
             $this->call(TaxonomyTermSeeder::class);
+            $this->call(TaxonomyFileSeeder::class);
         }
 
         Model::reguard();

@@ -129,7 +129,7 @@
         @endif
 
         {{-- Taxonomies --}}
-        <li class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.taxonomy'), 'c-open c-show') }}">
+        <li class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.taxonomy*'), 'c-open c-show') }}">
             <x-utils.link href="#" icon="c-sidebar-nav-icon cil-sitemap" class="c-sidebar-nav-dropdown-toggle"
                 :text="__('Taxonomies')"></x-utils.link>
 
@@ -145,7 +145,7 @@
                 {{-- Taxonomy File --}}
                 @if ($logged_in_user->hasAnyPermission(['user.taxonomy.file.editor', 'user.taxonomy.file.viewer']))
                     <li class="c-sidebar-nav-item">
-                        <x-utils.link :href="route('dashboard.taxonomy.files.index')" class="c-sidebar-nav-link" :text="__('Files')"
+                        <x-utils.link :href="route('dashboard.taxonomy-files.index')" class="c-sidebar-nav-link" :text="__('Files')"
                             :active="activeClass(Route::is('dashboard.taxonomy.*'), 'c-active')"></x-utils.link>
                     </li>
                 @endif
