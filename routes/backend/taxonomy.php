@@ -156,9 +156,6 @@ Route::group(['middleware' => ['permission:user.taxonomy.file.editor|user.taxono
                 ->push(__('View'));
         });
 
-    // Download
-    Route::get('taxonomy-files/download/{file_name}', [TaxonomyFileController::class, 'download'])
-        ->name('taxonomy-files.download');
 
     // Only Editors have access to these functionalities
     Route::group(['middleware' => ['permission:user.taxonomy.data.editor']], function () {

@@ -51,8 +51,8 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12 d-flex align-items-center">
-                                <a href="{{ route('dashboard.taxonomy-files.download', $taxonomyFile->file_name) }}"
-                                    target="_blank" class="btn btn-outline-secondary btn-sm me-3" style="min-width: 150px;">
+                                <a href="{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}" target="_blank"
+                                    class="btn btn-outline-secondary btn-sm me-3" style="min-width: 150px;">
                                     <i class="fa fa-download me-2"></i> {{ $taxonomyFile->getFileNameWithExtension() }}
                                 </a>
                             </div>

@@ -33,7 +33,7 @@
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
         {{-- Download --}}
-        <a href="{{ route('dashboard.taxonomy-files.download', $row->file_name) }}" class="btn btn-sm btn-secondary me-3"
+        <a href="{{ route('download.taxonomy-files', $row->file_name) }}" class="btn btn-sm btn-secondary me-3"
             target="_blank">
             <i class="fa fa-download" title="{{ __('Download') }}"></i>
         </a>

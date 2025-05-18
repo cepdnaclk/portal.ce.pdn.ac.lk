@@ -13,11 +13,11 @@
         <!-- Download button -->
 
         <p>
-            <span id="download-link">{{ route('dashboard.taxonomy-files.download', $taxonomyFile->file_name) }}</span>
+            <span id="download-link">{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}</span>
         </p>
         <p>
-            <a class="btn btn-sm btn-outline-primary"
-                href="{{ route('dashboard.taxonomy-files.download', $taxonomyFile->file_name) }}" target="_blank">
+            <a class="btn btn-sm btn-outline-primary" href="{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}"
+                target="_blank">
                 <i class="fa fa-download"></i> Download
             </a>
 
@@ -38,7 +38,7 @@
         @if ($showPreview)
             <div class="mt-4 pb-4">
                 <h5>Preview</h5>
-                <img src="{{ route('dashboard.taxonomy-files.download', $taxonomyFile->file_name) }}" alt="Image Preview"
+                <img src="{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}" alt="Image Preview"
                     class="img-fluid img-thumbnail" style="max-width: 100%; height: auto; max-height: 240px;">
             </div>
         @endif
