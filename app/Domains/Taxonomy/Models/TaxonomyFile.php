@@ -29,13 +29,18 @@ class TaxonomyFile extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static array $supportedExtensions = [
-        'pdf',
+    public static array $supportedImageTypes = [
         'jpg',
         'jpeg',
         'png',
         'webp'
     ];
+    public static array $supportedExtensions;
+
+    public function __construct()
+    {
+        self::$supportedExtensions = array_merge(['pdf'], self::$supportedImageTypes);
+    }
 
     public function getFileNameWithExtension(): string
     {

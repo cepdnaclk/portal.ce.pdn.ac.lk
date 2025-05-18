@@ -35,7 +35,7 @@
             </script>
         </p>
 
-        @if (in_array($taxonomyFile->getFileExtension(), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']))
+        @if ($showPreview)
             <div class="mt-4 pb-4">
                 <h5>Preview</h5>
                 <img src="{{ route('dashboard.taxonomy-files.download', $taxonomyFile->file_name) }}" alt="Image Preview"

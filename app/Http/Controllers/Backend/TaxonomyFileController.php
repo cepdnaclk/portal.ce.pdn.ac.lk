@@ -69,7 +69,8 @@ class TaxonomyFileController extends Controller
 
     public function view(TaxonomyFile $taxonomyFile)
     {
-        return view('backend.taxonomy_file.view', compact('taxonomyFile'));
+        $showPreview = in_array($taxonomyFile->getFileExtension(), TaxonomyFile::$supportedImageTypes);
+        return view('backend.taxonomy_file.view', compact('taxonomyFile', 'showPreview'));
     }
 
     public function download($fileName)
@@ -155,7 +156,8 @@ class TaxonomyFileController extends Controller
 
     public function delete(TaxonomyFile $taxonomyFile)
     {
-        return view('backend.taxonomy_file.delete', compact('taxonomyFile'));
+        $showPreview = in_array($taxonomyFile->getFileExtension(), TaxonomyFile::$supportedImageTypes);
+        return view('backend.taxonomy_file.delete', compact('taxonomyFile', 'showPreview'));
     }
 
     public function destroy(TaxonomyFile $taxonomyFile)
