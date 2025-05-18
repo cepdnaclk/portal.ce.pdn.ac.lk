@@ -52,15 +52,17 @@
                         <div class="form-group row">
                             <div class="col-md-12 d-flex align-items-center">
                                 <a href="{{ route('dashboard.taxonomy-files.download', $taxonomyFile->file_name) }}"
-                                    target="_blank" class="btn btn-outline-secondary btn-sm me-3">
-                                    <i class="fa fa-download"></i> {{ $taxonomyFile->getFileNameWithExtension() }}
+                                    target="_blank" class="btn btn-outline-secondary btn-sm me-3" style="min-width: 150px;">
+                                    <i class="fa fa-download me-2"></i> {{ $taxonomyFile->getFileNameWithExtension() }}
                                 </a>
                             </div>
                         </div>
 
                         <!-- Replace File -->
                         <div class="row mt-3">
-                            {!! Form::label('file', 'Replace File* (10 MB max)', ['class' => 'col-form-label']) !!}
+                            {!! Form::label('file', "New File* (10 MB max, supports $supportedExtensions only)", [
+                                'class' => 'col-form-label',
+                            ]) !!}
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12">

@@ -45,7 +45,9 @@
 
                         {{-- File --}}
                         <div class="row">
-                            {!! Form::label('file', 'File* (10 MB max)', ['class' => 'col-form-label']) !!}
+                            {!! Form::label('file', "File* (10 MB max, supports $supportedExtensions only)", [
+                                'class' => 'col-form-label',
+                            ]) !!}
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12">

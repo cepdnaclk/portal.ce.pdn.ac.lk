@@ -23,12 +23,20 @@ class TaxonomyFile extends Model
         'taxonomy_id',
     ];
 
-
     protected $casts = [
         'metadata' => 'json',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public static array $supportedExtensions = [
+        'pdf',
+        'jpg',
+        'jpeg',
+        'png',
+        'webp'
+    ];
+
     public function getFileNameWithExtension(): string
     {
         return pathinfo($this->file_path, PATHINFO_BASENAME);

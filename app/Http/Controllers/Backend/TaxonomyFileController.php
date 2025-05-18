@@ -17,7 +17,8 @@ class TaxonomyFileController extends Controller
     {
         try {
             $taxonomies = Taxonomy::select('id', 'name')->orderBy('name')->get();
-            return view('backend.taxonomy_file.create', compact('taxonomies'));
+            $supportedExtensions = implode(', ', TaxonomyFile::$supportedExtensions);
+            return view('backend.taxonomy_file.create', compact('taxonomies', 'supportedExtensions'));
         } catch (\Throwable $ex) {
             Log::error('Failed to load taxonomy-file creation page', [
                 'error' => $ex->getMessage(),
@@ -28,8 +29,9 @@ class TaxonomyFileController extends Controller
 
     public function store(Request $request)
     {
+        $supportedExtensions = TaxonomyFile::$supportedExtensions;
         $validated = $request->validate([
-            'file'         => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'file'         => 'nullable|file|mimes:' . implode(',', $supportedExtensions) . '|max:10240',
             'file_name'    => 'string|max:255|unique:taxonomy_files,file_name',
             'taxonomy_id'  => 'nullable|exists:taxonomies,id',
         ]);
@@ -90,8 +92,9 @@ class TaxonomyFileController extends Controller
     {
         try {
             $taxonomies = Taxonomy::select('id', 'name')->get();
+            $supportedExtensions = implode(', ', TaxonomyFile::$supportedExtensions);
 
-            return view('backend.taxonomy_file.edit', compact('taxonomyFile', 'taxonomies'));
+            return view('backend.taxonomy_file.edit', compact('taxonomyFile', 'taxonomies', 'supportedExtensions'));
         } catch (\Throwable $ex) {
             Log::error('Failed to load taxonomy-file edit page', [
                 'file_id' => $taxonomyFile->id,
@@ -104,8 +107,9 @@ class TaxonomyFileController extends Controller
 
     public function update(Request $request, TaxonomyFile $taxonomyFile)
     {
+        $supportedExtensions = TaxonomyFile::$supportedExtensions;
         $validated = $request->validate([
-            'file'         => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'file'         => 'nullable|file|mimes:' . implode(',', $supportedExtensions) . '|max:10240',
             'file_name'    => 'required|string|max:255|unique:taxonomy_files,file_name,' . $taxonomyFile->id,
             'taxonomy_id'  => 'nullable|exists:taxonomies,id',
         ]);
