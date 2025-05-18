@@ -21,20 +21,20 @@ class TaxonomyFileTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make(__('File Name'), 'file_name')
+            Column::make('File Name (Slug)', 'file_name')
                 ->searchable()
                 ->sortable(),
 
-            Column::make(__('Taxonomy'), 'taxonomy.name'),
+            Column::make('Taxonomy', 'taxonomy.name'),
             Column::make("Created by", "created_by")
                 ->sortable(),
             Column::make("Updated by", "updated_by")
                 ->sortable(),
-            Column::make(__('Created at'), 'created_at')
+            Column::make('Created at', 'created_at')
                 ->sortable(),
-            Column::make(__('Updated at'), 'updated_at')
+            Column::make('Updated at', 'updated_at')
                 ->sortable(),
-            Column::make(__('Actions')),
+            Column::make('Actions'),
         ];
     }
 

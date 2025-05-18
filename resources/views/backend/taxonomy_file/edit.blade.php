@@ -27,26 +27,40 @@
                     <div class="card-body">
                         <h5 class="card-title" style="text-align: left; text-decoration: none;">Basic Configurations</h5>
 
-                        <!-- Existing File -->
+                        <!-- Taxonomy Name -->
                         <div class="row">
-                            {!! Form::label('current_file', __('Current File'), ['class' => 'col-form-label']) !!}
+                            {!! Form::label('file_name', 'File Name*', ['class' => 'col-form-label']) !!}
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                {!! Form::text('file_name', null, [
+                                    'class' => 'form-control',
+                                    'required' => true,
+                                    'placeholder' => 'Enter the preferred file name to be displayed',
+                                ]) !!}
+                                @error('file_name')
+                                    <strong class="text-danger">{{ $message }}</strong>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Current File -->
+                        <div class="row">
+                            {!! Form::label('current_file', 'Current File', ['class' => 'col-form-label']) !!}
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12 d-flex align-items-center">
-                                <a href="{{ route('dashboard.taxonomy-files.download', $taxonomyFile) }}" target="_blank"
-                                    class="btn btn-outline-secondary btn-sm me-3">
-                                    <i class="fa fa-download"></i> {{ $taxonomyFile->file_name }}
+                                <a href="{{ route('dashboard.taxonomy-files.download', $taxonomyFile->file_name) }}"
+                                    target="_blank" class="btn btn-outline-secondary btn-sm me-3">
+                                    <i class="fa fa-download"></i> {{ $taxonomyFile->getFileNameWithExtension() }}
                                 </a>
-
-                                <span class="text-muted">
-                                    ({{ number_format($taxonomyFile->size / 1024, 1) }} KB)
-                                </span>
                             </div>
                         </div>
 
                         <!-- Replace File -->
                         <div class="row mt-3">
-                            {!! Form::label('file', __('Replace File'), ['class' => 'col-form-label']) !!}
+                            {!! Form::label('file', 'Replace File* (10 MB max)', ['class' => 'col-form-label']) !!}
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12">
@@ -60,7 +74,8 @@
                         <!-- Taxonomy Selector -->
                         @isset($taxonomies)
                             <div class="row">
-                                {!! Form::label('taxonomy_id', __('Associate with Taxonomy'), ['class' => 'col-form-label']) !!}
+                                {!! Form::label('taxonomy_id', 'Related Taxonomy (Optional)', ['class' => 'col-form-label']) !!}
+                                <a href="{}"></a>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-12">
@@ -76,35 +91,6 @@
                                 </div>
                             </div>
                         @endisset
-                    </div>
-                </div>
-
-                {{-- ───────────── Metadata ───────────── --}}
-                {{-- TODO Use taxonomy property like UOI --}}
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" style="text-align: left; text-decoration: none;">Metadata</h5>
-
-                        <div class="row">
-                            {!! Form::label('metadata', __('Metadata JSON'), ['class' => 'col-form-label']) !!}
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                {!! Form::textarea(
-                                    'metadata',
-                                    json_encode($taxonomyFile->metadata, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
-                                    [
-                                        'class' => 'form-control',
-                                        'style' => 'overflow:hidden;height: 120px;',
-                                        'oninput' => "this.style.height='120px';this.style.height=this.scrollHeight+'px';",
-                                    ],
-                                ) !!}
-                                @error('metadata')
-                                    <strong class="text-danger">{{ $message }}</strong>
-                                @enderror
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </x-slot>

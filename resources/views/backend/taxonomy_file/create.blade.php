@@ -23,11 +23,29 @@
             <x-slot name="body">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title" style="text-align: left; text-decoration: none;">Basic Configurations</h5>
+                        <h5 class="card-title" style="text-align: left; text-decoration: none;">Basic</h5>
+
+                        <!-- Taxonomy Name -->
+                        <div class="row">
+                            {!! Form::label('file_name', 'File Name*', ['class' => 'col-form-label']) !!}
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                {!! Form::text('file_name', '', [
+                                    'class' => 'form-control',
+                                    'required' => true,
+                                    'placeholder' => 'Enter the preferred file name to be displayed',
+                                ]) !!}
+                                @error('file_name')
+                                    <strong class="text-danger">{{ $message }}</strong>
+                                @enderror
+                            </div>
+                        </div>
 
                         {{-- File --}}
                         <div class="row">
-                            {!! Form::label('file', __('File*'), ['class' => 'col-form-label']) !!}
+                            {!! Form::label('file', 'File* (10 MB max)', ['class' => 'col-form-label']) !!}
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12">
@@ -41,7 +59,7 @@
                         {{-- Taxonomy selector --}}
                         @isset($taxonomies)
                             <div class="row">
-                                {!! Form::label('taxonomy_id', __('Associate with Taxonomy'), ['class' => 'col-form-label']) !!}
+                                {!! Form::label('taxonomy_id', 'Related Taxonomy (optional)', ['class' => 'col-form-label']) !!}
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-12">
@@ -54,31 +72,6 @@
                                 </div>
                             </div>
                         @endisset
-                    </div>
-                </div>
-
-                {{-- ───────────── Metadata ───────────── --}}
-                {{-- TODO Use taxonomy property like UOI --}}
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" style="text-align: left; text-decoration: none;">Metadata</h5>
-
-                        <div class="row">
-                            {!! Form::label('metadata', __('Metadata JSON'), ['class' => 'col-form-label']) !!}
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                {!! Form::textarea('metadata', '', [
-                                    'class' => 'form-control',
-                                    'style' => 'overflow:hidden;height: 100px;',
-                                    'placeholder' => __('e.g. [{"description":"Annual report","year":2025}]'),
-                                    'oninput' => "this.style.height='100px';this.style.height=this.scrollHeight+'px';",
-                                ]) !!}
-                                @error('metadata')
-                                    <strong class="text-danger">{{ $message }}</strong>
-                                @enderror
-                            </div>
-                        </div>
                     </div>
                 </div>
             </x-slot>

@@ -6,20 +6,13 @@
     <div>
         <x-backend.card>
             <x-slot name="header">
-                {{ __('Taxonomy File : Delete') }} | {{ $taxonomyFile->id }}
+                Taxonomy File : Delete | {{ $taxonomyFile->id }}
             </x-slot>
 
             <x-slot name="body">
                 <p>
-                    {{ __('Are you sure you want to delete') }}
+                    Are you sure you want to delete
                     <strong><i>"{{ $taxonomyFile->file_name }}"</i></strong>?
-                </p>
-
-                <p class="mb-3">
-                    <span class="text-muted">{{ __('Taxonomy:') }}</span>
-                    {{ $taxonomyFile->taxonomy?->name ?? '—' }} &nbsp;|&nbsp;
-                    <span class="text-muted">{{ __('Size:') }}</span>
-                    {{ number_format($taxonomyFile->size / 1024, 1) }} KB
                 </p>
 
                 <div class="d-flex">
@@ -29,10 +22,10 @@
                         'class' => 'container p-0',
                     ]) !!}
                     <a href="{{ route('dashboard.taxonomy-files.index') }}" class="btn btn-light mr-2">
-                        {{ __('Back') }}
+                        Back
                     </a>
 
-                    {!! Form::submit(__('Delete'), ['class' => 'btn btn-danger']) !!}
+                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
                     {!! Form::close() !!}
                 </div>
             </x-slot>

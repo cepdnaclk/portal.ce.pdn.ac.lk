@@ -29,23 +29,27 @@ class TaxonomyFileController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'file'         => 'required|file|mimes:pdf,jpg,jpeg,png|max:20480',
-            'file_name'    => 'nullable|string|max:255',
+            'file'         => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'file_name'    => 'string|max:255|unique:taxonomy_files,file_name',
             'taxonomy_id'  => 'nullable|exists:taxonomies,id',
-            'metadata'     => 'nullable|json',
         ]);
 
         try {
-            $uploaded    = $request->file('file');
-            $relativePath = $uploaded->store('taxonomy_files', 'public');
+            $uploaded = $request->file('file');
+            $originalExtension = $uploaded->getClientOriginalExtension();
+            $fileNameWithExtension = $validated['file_name'] . '.' . $originalExtension;
+            $relativePath = $uploaded->storeAs('taxonomy_files', $fileNameWithExtension, 'public');
+
+            // Update metadata
+            $fileSize = $uploaded->getSize();
 
             $taxonomyFile = new TaxonomyFile([
-                'file_name'   => $validated['file_name'] ?? $uploaded->getClientOriginalName(),
+                'file_name'   => $validated['file_name'],
                 'file_path'   => $relativePath,
                 'taxonomy_id' => $validated['taxonomy_id'] ?? null,
-                'metadata'    => $validated['metadata'] ? json_decode($validated['metadata'], true) : [],
             ]);
 
+            $taxonomyFile->metadata = ['file_size' => $fileSize];
             $taxonomyFile->created_by = Auth::user()->id;
             $taxonomyFile->save();
 
@@ -66,13 +70,21 @@ class TaxonomyFileController extends Controller
         return view('backend.taxonomy_file.view', compact('taxonomyFile'));
     }
 
-    public function download(TaxonomyFile $taxonomyFile)
+    public function download($fileName)
     {
-        return Storage::disk('public')->download(
-            $taxonomyFile->file_path,
-            $taxonomyFile->file_name
-        );
+        $taxonomyFile = TaxonomyFile::where('file_name', $fileName)->first();
+
+        if (!$taxonomyFile) {
+            return abort(404, 'File not found.');
+        }
+
+        if (!Storage::disk('public')->exists($taxonomyFile->file_path)) {
+            return abort(404, 'File not found.');
+        }
+
+        return Storage::disk('public')->download($taxonomyFile->file_path);
     }
+
 
     public function edit(TaxonomyFile $taxonomyFile)
     {
@@ -93,9 +105,9 @@ class TaxonomyFileController extends Controller
     public function update(Request $request, TaxonomyFile $taxonomyFile)
     {
         $validated = $request->validate([
-            'file'         => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:20480',
+            'file'         => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'file_name'    => 'required|string|max:255|unique:taxonomy_files,file_name,' . $taxonomyFile->id,
             'taxonomy_id'  => 'nullable|exists:taxonomies,id',
-            'metadata'     => 'nullable|json',
         ]);
 
         try {
@@ -103,16 +115,25 @@ class TaxonomyFileController extends Controller
                 Storage::disk('public')->delete($taxonomyFile->file_path);
 
                 $uploaded = $request->file('file');
-                $taxonomyFile->file_name = $uploaded->getClientOriginalName();
+                $taxonomyFile->file_name = $validated['file_name'];
                 $taxonomyFile->file_path = $uploaded->store('taxonomy_files', 'public');
+
+                // Update metadata
+                $fileSize = $uploaded->getSize();
+                $metadata = $taxonomyFile->metadata ?? [];
+                $metadata['file_size'] = $fileSize;
+                $taxonomyFile->metadata = $metadata;
             }
 
-            $taxonomyFile->taxonomy_id = $validated['taxonomy_id'] ?? null;
-            $taxonomyFile->metadata = $validated['metadata']
-                ? json_decode($validated['metadata'], true)
-                : $taxonomyFile->metadata;
+            if ($taxonomyFile->file_name !== $validated['file_name']) {
+                // Rename the saved file, if the file name is updated
+                $newFilePath = 'taxonomy_files/' . $validated['file_name'] . '.' . pathinfo($taxonomyFile->file_path, PATHINFO_EXTENSION);
+                Storage::disk('public')->move($taxonomyFile->file_path, $newFilePath);
+                $taxonomyFile->file_path = $newFilePath;
+                $taxonomyFile->file_name = $validated['file_name'];
+            }
 
-            $taxonomyFile->updated_by = Auth::user()->id;;
+            $taxonomyFile->updated_by = Auth::user()->id;
             $taxonomyFile->save();
 
             return redirect()
