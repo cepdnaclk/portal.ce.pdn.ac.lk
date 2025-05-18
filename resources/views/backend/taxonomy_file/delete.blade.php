@@ -15,6 +15,14 @@
                     <strong><i>"{{ $taxonomyFile->file_name }}"</i></strong>?
                 </p>
 
+                @if (in_array($taxonomyFile->getFileExtension(), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']))
+                    <div class="mt-4 pb-4">
+                        <img src="{{ route('dashboard.taxonomy-files.download', $taxonomyFile->file_name) }}"
+                            alt="Image Preview" class="img-fluid img-thumbnail"
+                            style="max-width: 100%; height: auto; max-height: 240px;">
+                    </div>
+                @endif
+
                 <div class="d-flex">
                     {!! Form::open([
                         'url' => route('dashboard.taxonomy-files.destroy', $taxonomyFile),

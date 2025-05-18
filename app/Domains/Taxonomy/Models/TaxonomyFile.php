@@ -47,6 +47,11 @@ class TaxonomyFile extends Model
         $this->attributes['file_name'] = $finalName;
     }
 
+    public function getFileExtension(): string
+    {
+        return pathinfo($this->file_path, PATHINFO_EXTENSION);
+    }
+
     public function getFileSize(): string
     {
         $fileSize = $this->metadata['file_size'] ?? null;
