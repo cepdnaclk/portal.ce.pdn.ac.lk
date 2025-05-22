@@ -109,6 +109,8 @@ php artisan test
 
 // Populate the DB with a specific Seeder class
 php artisan db:seed --class=<path-to-the-seeder-class>
+
+// Ex: php artisan db:seed --class=Database\\Seeders\\Roles\\AcademicRoleSeeder
 ```
 
 #### Maintenance Scripts

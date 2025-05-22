@@ -10,7 +10,7 @@
             </x-slot>
 
             <x-slot name="headerActions">
-                @if ($logged_in_user->hasPermissionTo('user.taxonomy.data.editor'))
+                @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
                     <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.taxonomy.terms.create', $taxonomy)" :text="__('Create Term')">
                     </x-utils.link>
 
