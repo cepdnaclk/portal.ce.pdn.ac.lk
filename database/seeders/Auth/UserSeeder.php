@@ -40,42 +40,6 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
-
-            User::create([
-                'type' => User::TYPE_USER,
-                'name' => 'News Editor',
-                'email' => env('SEED_NEWS_EDITOR_EMAIL', 'user+news.editor@portal.ce.pdn.ac.lk'),
-                'password' => env('SEED_NEWS_EDITOR_PASSWORD', 'news'),
-                'email_verified_at' => now(),
-                'active' => true,
-            ]);
-
-            User::create([
-                'type' => User::TYPE_USER,
-                'name' => 'Event Editor',
-                'email' => env('SEED_EVENT_EDITOR_EMAIL', 'user+events.editor@portal.ce.pdn.ac.lk'),
-                'password' => env('SEED_EVENT_EDITOR_PASSWORD', 'events'),
-                'email_verified_at' => now(),
-                'active' => true,
-            ]);
-
-            User::create([
-                'type' => User::TYPE_USER,
-                'name' => 'CourseManager',
-                'email' => env('SEED_COURSE_MANAGER_EMAIL', 'course_manager@portal.ce.pdn.ac.lk'),
-                'password' => env('SEED_COURSE_MANAGER_PASSWORD', 'course_manager'),
-                'email_verified_at' => now(),
-                'active' => true,
-            ]);
-
-            User::create([
-                'type' => User::TYPE_USER,
-                'name' => 'TaxonomyManager',
-                'email' => env('SEED_TAXONOMY_MANAGER_EMAIL', 'taxonomy_manager@portal.ce.pdn.ac.lk'),
-                'password' => env('SEED_TAXONOMY_MANAGER_PASSWORD', 'taxonomy_manager'),
-                'email_verified_at' => now(),
-                'active' => true,
-            ]);
         }
 
         $this->enableForeignKeys();

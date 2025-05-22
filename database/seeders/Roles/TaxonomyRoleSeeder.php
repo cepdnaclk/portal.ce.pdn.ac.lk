@@ -19,30 +19,26 @@ class TaxonomyRoleSeeder extends Seeder
     public function run()
     {
         $this->disableForeignKeys();
-        $taxonomyManagerRole = Role::firstOrCreate([
-            'type' => User::TYPE_USER,
-            'name' => 'Taxonomy Manager',
-        ]);
 
+        // Create Permissions -------------------------------------
         $taxonomyManagers = Permission::firstOrCreate([
             'type' => User::TYPE_USER,
-            'name' => 'user.taxonomy',
-            'description' => 'Taxonomy Permission',
+            'name' => 'user.access.taxonomy',
+            'description' => 'All Taxonomy Permission',
         ]);
-
 
         $permissions = [
             [
-                'name' => 'user.taxonomy.data',
-                'description' => 'Taxonomy Data',
+                'name' => 'user.access.taxonomy.data',
+                'description' => 'Manage Taxonomy Data',
             ],
             [
-                'name' => 'user.taxonomy.file',
-                'description' => 'Taxonomy File',
+                'name' => 'user.access.taxonomy.file',
+                'description' => 'Manage Taxonomy Files',
             ],
             [
-                'name' => 'user.taxonomy.page',
-                'description' => 'Taxonomy Page',
+                'name' => 'user.access.taxonomy.page',
+                'description' => 'Manage Taxonomy Pages',
             ],
         ];
 
@@ -57,47 +53,57 @@ class TaxonomyRoleSeeder extends Seeder
 
             $taxonomyType->children()->saveMany([
                 Permission::firstOrCreate(
-                    ['name' => $permissionData['name'] . ".editor"],
                     [
                         'type' => User::TYPE_USER,
+                        'name' => $permissionData['name'] . ".editor",
                         'description' => $permissionData['description'] . " Editor",
                     ]
                 ),
                 Permission::firstOrCreate(
-                    ['name' => $permissionData['name'] . ".viewer"],
                     [
                         'type' => User::TYPE_USER,
+                        'name' => $permissionData['name'] . ".viewer",
                         'description' => $permissionData['description'] . " Viewer",
-                        'sort' => 2,
                     ]
                 ),
             ]);
         }
 
+
+        // Create Roles -------------------------------------------
+        $taxonomyManagerRole = Role::firstOrCreate([
+            'type' => User::TYPE_USER,
+            'name' => 'Taxonomy Manager',
+        ]);
+
+
+
+        // Assign Permissions into Roles --------------------------
+
         // Admins will get all permissions by default
         Role::findByName('Administrator')->givePermissionTo([
-            'user.taxonomy'
+            'user.access.taxonomy'
         ]);
 
         // Taxonomy Manager will get all permissions to taxonomy module
         $taxonomyManagerRole->givePermissionTo([
-            'user.taxonomy'
+            'user.access.taxonomy'
         ]);
 
-        // Only for the local and testings
+
+        // Assign Roles into Users --------------------------------
         if (app()->environment(['local', 'testing'])) {
+            // Only for the local and testings
             $taxonomyEditorUser = User::firstOrCreate([
                 'type' => User::TYPE_USER,
-                'name' => 'Taxonomy Editor',
-                'email' => env('SEED_USER_EMAIL', 'taxonomy-editor@portal.ce.pdn.ac.lk'),
-                'password' => env('SEED_USER_PASSWORD', 'taxonomy-editor'),
+                'name' => 'Taxonomy Manager User',
+                'email' => env('SEED_USER_EMAIL', 'taxonomy.manager@portal.ce.pdn.ac.lk'),
+                'password' => env('SEED_USER_PASSWORD', 'taxonomy-manager'),
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
 
-            $taxonomyEditorUser->givePermissionTo([
-                'user.taxonomy'
-            ]);
+            $taxonomyEditorUser->assignRole('Taxonomy Manager');
         }
 
         $this->enableForeignKeys();

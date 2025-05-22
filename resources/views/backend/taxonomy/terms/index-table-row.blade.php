@@ -44,7 +44,7 @@
                 </a>
             @endif
 
-            @if ($logged_in_user->hasPermissionTo('user.taxonomy.data.editor'))
+            @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
                 <!-- Edit Button -->
                 <a href="{{ route('dashboard.taxonomy.terms.edit', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}"
                     class="btn btn-sm btn-warning">

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 
 // Taxonomy Data
-Route::group(['middleware' => ['permission:user.taxonomy.data.editor|user.taxonomy.data.viewer']], function () {
+Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user.access.taxonomy.data.viewer']], function () {
     // Index
     Route::get('taxonomy', function () {
         return view('backend.taxonomy.index');
@@ -28,7 +28,7 @@ Route::group(['middleware' => ['permission:user.taxonomy.data.editor|user.taxono
         });
 
     // Only Editors have access to these functionalities
-    Route::group(['middleware' => ['permission:user.taxonomy.data.editor']], function () {
+    Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor']], function () {
 
         // Create
         Route::get('taxonomy/create', [TaxonomyController::class, 'create'])
@@ -84,7 +84,7 @@ Route::group(['middleware' => ['permission:user.taxonomy.data.editor|user.taxono
             });
 
         // Only Editors have access to these functionalities
-        Route::group(['middleware' => ['permission:user.taxonomy.data.editor']], function () {
+        Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor']], function () {
             // Create (show form for creating a new term)
             Route::get('/create', [TaxonomyTermController::class, 'create'])
                 ->name('taxonomy.terms.create')
@@ -134,7 +134,7 @@ Route::group(['middleware' => ['permission:user.taxonomy.data.editor|user.taxono
 });
 
 // Taxonomy Files
-Route::group(['middleware' => ['permission:user.taxonomy.file.editor|user.taxonomy.file.viewer']], function () {
+Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']], function () {
     // Index
     Route::get('taxonomy-files', function () {
         return response()->make('Taxonomy Files not implemented yet.', 200);
@@ -146,7 +146,7 @@ Route::group(['middleware' => ['permission:user.taxonomy.file.editor|user.taxono
 });
 
 // Taxonomy Pages
-Route::group(['middleware' => ['permission:user.taxonomy.page.editor|user.taxonomy.page.viewer']], function () {
+Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor|user.access.taxonomy.page.viewer']], function () {
     // Index
     Route::get('taxonomy-pages', function () {
         return response()->make('Taxonomy Pages not implemented yet.', 200);
