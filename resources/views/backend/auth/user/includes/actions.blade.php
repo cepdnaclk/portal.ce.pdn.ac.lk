@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center flex-row gap-1" role="group" aria-label="">
+<div class="d-flex align-items-center flex-row gap-1" role="group" aria-label="User Management Actions">
     @if ($user->trashed() && $logged_in_user->hasAllAccess())
         <x-utils.form-button :action="route('dashboard.auth.user.restore', $user)" method="patch" button-class="btn btn-info btn-sm" icon="fas fa-sync-alt"
             name="confirm-item">
