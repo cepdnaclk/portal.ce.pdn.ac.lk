@@ -149,13 +149,13 @@
                         </li>
                     @endif
 
-                    {{-- Taxonomy File --}}
+                    {{-- Taxonomy File
                     @if ($logged_in_user->hasAnyPermission(['user.access.taxonomy.file.editor', 'user.access.taxonomy.file.viewer']))
                         <li class="c-sidebar-nav-item">
                             <x-utils.link :href="route('dashboard.taxonomy.files.index')" class="c-sidebar-nav-link" :text="__('Files')"
                                 :active="activeClass(Route::is('dashboard.taxonomy.*'), 'c-active')"></x-utils.link>
                         </li>
-                    @endif
+                    @endif --}}
 
                     {{-- TODO Taxonomy Page
                     @if ($logged_in_user->hasAnyPermission(['user.access.taxonomy.page.editor', 'user.access.taxonomy.page.viewer']))
