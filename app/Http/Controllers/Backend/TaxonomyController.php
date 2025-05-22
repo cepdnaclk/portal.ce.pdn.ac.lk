@@ -50,6 +50,7 @@ class TaxonomyController extends Controller
             'code' => 'required|unique:taxonomies',
             'name' => 'required',
             'description' => 'nullable',
+            'properties' => 'string'
         ]);
 
         try {
@@ -97,10 +98,16 @@ class TaxonomyController extends Controller
             'description' => 'nullable',
             'properties' => 'string'
         ]);
-
         try {
+            $originalProperties = json_decode(json_encode($taxonomy->properties));
+            $updatedProperties = json_decode($request->properties);
+            if ($taxonomy->terms->count() > 0 && !$this->validateProperties($originalProperties, $updatedProperties)) {
+                return redirect()
+                    ->route('dashboard.taxonomy.index')
+                    ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
+            }
             $taxonomy->update($data);
-            $taxonomy->properties = json_decode($request->properties);
+            $taxonomy->properties = $updatedProperties;
             $taxonomy->updated_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
@@ -108,6 +115,33 @@ class TaxonomyController extends Controller
             Log::error('Failed to update taxonomy', ['error' => $ex->getMessage()]);
             return abort(500);
         }
+    }
+    private function validateProperties(array $original, array $updated): bool
+    {
+        // $originalMap = [];
+        // $updatedMap = [];
+        // foreach ($original as $item)  $originalMap[$item->code] = $item;
+        // foreach ($updated as $item) $updatedMap[$item->code] = $item;
+
+        // // Ensure existing items are not modified
+        // foreach ($originalMap as $code => $originalItem) {
+        //     if (!isset($updatedMap[$code])) {
+        //         // TODO Let allow to delete if not used in any term
+        //         return false; // Missing an existing property
+        //     }
+
+        //     $updatedItem = $updatedMap[$code];
+        //     if (
+        //         $originalItem->data_type !== $updatedItem->data_type
+        //     ) {
+        //         // An existing property data type was altered
+        //         // TODO Let allow to delete if not used in any term
+        //         return false;
+        //     }
+        // }
+
+        // Allow changes for now
+        return true;
     }
     /**
      * Confirm to delete the specified resource from storage.

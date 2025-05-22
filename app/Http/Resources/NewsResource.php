@@ -20,11 +20,13 @@ class NewsResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'url' => $this->url,
             'author' => User::find($this->created_by)->name,
             'image' =>  URL::to($this->thumbURL()),
             'link_url' => $this->link_url,
             'link_caption' => $this->link_caption,
-            'posted_at' => $this->created_at,
+            'published_at' => $this->published_at,
+            'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 
         ];

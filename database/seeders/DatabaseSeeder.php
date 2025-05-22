@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Roles\AcademicRoleSeeder;
+use Database\Seeders\Roles\EditorRoleSeeder;
+use Database\Seeders\Roles\TaxonomyRoleSeeder;
 use Database\Seeders\Traits\TruncateTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
@@ -27,8 +30,9 @@ class DatabaseSeeder extends Seeder
             'failed_jobs',
         ]);
 
-        
+
         if (App::environment('local', 'testing')) {
+            // Test data seeders
             $this->call(AuthSeeder::class);
             $this->call(AnnouncementSeeder::class);
             $this->call(NewsSeeder::class);
@@ -38,6 +42,11 @@ class DatabaseSeeder extends Seeder
             $this->call(TaxonomySeeder::class);
             $this->call(TaxonomyTermSeeder::class);
         }
+
+        // User permission seeders
+        $this->call(EditorRoleSeeder::class);
+        $this->call(AcademicRoleSeeder::class);
+        $this->call(TaxonomyRoleSeeder::class);
 
         Model::reguard();
     }
