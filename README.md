@@ -78,6 +78,8 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
+php artisan optimize:clear
+
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
@@ -105,6 +107,10 @@ php artisan tinker
 // Run the unit tests
 php artisan test
 
+// Populate the DB with a specific Seeder class
+php artisan db:seed --class=<path-to-the-seeder-class>
+
+// Ex: php artisan db:seed --class=Database\\Seeders\\Roles\\AcademicRoleSeeder
 ```
 
 #### Maintenance Scripts
