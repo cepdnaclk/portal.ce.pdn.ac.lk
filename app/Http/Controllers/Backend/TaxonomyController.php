@@ -99,7 +99,7 @@ class TaxonomyController extends Controller
             'properties' => 'string'
         ]);
         try {
-            $originalProperties = json_decode(json_encode($taxonomy->properties));
+            $originalProperties = $taxonomy->properties;
             $updatedProperties = json_decode($request->properties);
             if ($taxonomy->terms->count() > 0 && !$this->validateProperties($originalProperties, $updatedProperties)) {
                 return redirect()
