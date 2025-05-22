@@ -73,8 +73,8 @@ class AcademicRoleSeeder extends Seeder
             $courseManagerUser = User::firstOrCreate([
                 'type' => User::TYPE_USER,
                 'name' => 'Course Manager User',
-                'email' => env('SEED_USER_EMAIL', 'course.manager@portal.ce.pdn.ac.lk'),
-                'password' => env('SEED_USER_PASSWORD', 'course.manager'),
+                'email' => env('SEED_COURSE_MANAGER_EMAIL', 'course.manager@portal.ce.pdn.ac.lk'),
+                'password' => env('SEED_COURSE_MANAGER_PASSWORD', 'course.manager'),
                 'email_verified_at' => now(),
                 'active' => true,
             ]);

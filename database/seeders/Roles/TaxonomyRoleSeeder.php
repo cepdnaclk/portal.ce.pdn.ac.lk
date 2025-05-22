@@ -97,8 +97,8 @@ class TaxonomyRoleSeeder extends Seeder
             $taxonomyEditorUser = User::firstOrCreate([
                 'type' => User::TYPE_USER,
                 'name' => 'Taxonomy Manager User',
-                'email' => env('SEED_USER_EMAIL', 'taxonomy.manager@portal.ce.pdn.ac.lk'),
-                'password' => env('SEED_USER_PASSWORD', 'taxonomy-manager'),
+                'email' => env('SEED_TAXONOMY_MANAGER_EMAIL', 'taxonomy.manager@portal.ce.pdn.ac.lk'),
+                'password' => env('SEED_TAXONOMY_MANAGER_PASSWORD', 'taxonomy-manager'),
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
