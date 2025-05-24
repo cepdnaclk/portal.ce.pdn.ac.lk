@@ -26,7 +26,7 @@ class Taxonomy extends Model
         'code',
         'name',
         'description',
-        'properties',
+        'properties'
     ];
 
     public static $propertyType = [
@@ -65,7 +65,7 @@ class Taxonomy extends Model
 
     public function user_updated()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function terms()
