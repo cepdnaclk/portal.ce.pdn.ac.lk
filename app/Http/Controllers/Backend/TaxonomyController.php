@@ -101,11 +101,13 @@ class TaxonomyController extends Controller
         try {
             $originalProperties = $taxonomy->properties;
             $updatedProperties = json_decode($request->properties);
-            if ($taxonomy->terms->count() > 0 && !$this->validateProperties($originalProperties, $updatedProperties)) {
-                return redirect()
-                    ->route('dashboard.taxonomy.index')
-                    ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
-            }
+
+            // TODO Come up with a better approach
+            // if ($taxonomy->terms->count() > 0 && !$this->validateProperties($originalProperties, $updatedProperties)) {
+            //     return redirect()
+            //         ->route('dashboard.taxonomy.index')
+            //         ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
+            // }
             $taxonomy->update($data);
             $taxonomy->properties = $updatedProperties;
             $taxonomy->updated_by = Auth::user()->id;
@@ -116,31 +118,31 @@ class TaxonomyController extends Controller
             return abort(500);
         }
     }
+
+    // TODO use different approach for this
     private function validateProperties(array $original, array $updated): bool
     {
-        // $originalMap = [];
-        // $updatedMap = [];
-        // foreach ($original as $item)  $originalMap[$item->code] = $item;
-        // foreach ($updated as $item) $updatedMap[$item->code] = $item;
+        $originalMap = [];
+        $updatedMap = [];
+        foreach ($original as $item)  $originalMap[$item->code] = $item;
+        foreach ($updated as $item) $updatedMap[$item->code] = $item;
 
-        // // Ensure existing items are not modified
-        // foreach ($originalMap as $code => $originalItem) {
-        //     if (!isset($updatedMap[$code])) {
-        //         // TODO Let allow to delete if not used in any term
-        //         return false; // Missing an existing property
-        //     }
+        // Ensure existing items are not modified
+        foreach ($originalMap as $code => $originalItem) {
+            if (!isset($updatedMap[$code])) {
+                // TODO Let allow to delete if not used in any term
+                return false; // Missing an existing property
+            }
 
-        //     $updatedItem = $updatedMap[$code];
-        //     if (
-        //         $originalItem->data_type !== $updatedItem->data_type
-        //     ) {
-        //         // An existing property data type was altered
-        //         // TODO Let allow to delete if not used in any term
-        //         return false;
-        //     }
-        // }
-
-        // Allow changes for now
+            $updatedItem = $updatedMap[$code];
+            if (
+                $originalItem->data_type !== $updatedItem->data_type
+            ) {
+                // An existing property data type was altered
+                // TODO Let allow to delete if not used in any term
+                return false;
+            }
+        }
         return true;
     }
     /**

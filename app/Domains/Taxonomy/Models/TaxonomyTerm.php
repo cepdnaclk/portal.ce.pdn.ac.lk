@@ -24,7 +24,7 @@ class TaxonomyTerm extends Model
         'name',
         'metadata',
         'taxonomy_id',
-        'parent_id',
+        'parent_id'
     ];
 
     protected $casts = [
@@ -65,7 +65,7 @@ class TaxonomyTerm extends Model
 
     public function user_updated()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function taxonomy()
