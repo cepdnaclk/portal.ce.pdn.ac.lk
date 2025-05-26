@@ -31,14 +31,14 @@ class Taxonomy extends Model
 
     public static $propertyType = [
         'string' => 'String',
+        'email' => 'Email',
         'integer' => 'Integer Number',
         'float' => 'Floating Point Number',
         'date' => 'Date',
         'datetime' => 'Date Time',
         'boolean' => 'Boolean',
         'url' => 'URL',
-        // 'image' => 'Image'
-        // 'pdf' => 'PDF File'
+        'file' => 'File'
     ];
 
     protected $casts = [
@@ -73,6 +73,13 @@ class Taxonomy extends Model
         return $this->hasMany(TaxonomyTerm::class, 'taxonomy_id')
             ->orderBy('parent_id', 'asc')
             ->orderBy('code', 'asc');
+    }
+
+    public function files()
+    {
+        return $this->hasMany(TaxonomyFile::class, 'taxonomy_id')
+            ->orderBy('file_name', 'asc')
+            ->pluck('id', 'file_name');
     }
 
     public function first_child_terms()
