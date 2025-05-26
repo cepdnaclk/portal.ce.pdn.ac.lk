@@ -21,10 +21,7 @@ class TaxonomyTermMetadata extends Component
             $this->metadata = $this->term->metadata ?? [];
         }
         if ($taxonomy) {
-            $this->taxonomy_files = [
-                ['id' => '11', 'file_name' => 'AA'],
-                ['id' => '12', 'file_name' => 'BB']
-            ];
+            $this->taxonomy_files = array_merge(['' => 'Select a file'], $taxonomy->files()->toArray());
         }
     }
 

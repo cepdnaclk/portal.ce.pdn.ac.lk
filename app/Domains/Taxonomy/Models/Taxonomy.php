@@ -68,6 +68,19 @@ class Taxonomy extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    public function get_properties()
+    {
+        $result = [];
+        foreach ($this->properties as $property) {
+            if (isset($property['code']) && isset($property['name']) && isset($property['data_type'])) {
+                $result[$property['code']] = [
+                    'name' => $property['name'],
+                    'data_type' => $property['data_type'],
+                ];
+            }
+        }
+        return $result;
+    }
     public function terms()
     {
         return $this->hasMany(TaxonomyTerm::class, 'taxonomy_id')
@@ -79,7 +92,7 @@ class Taxonomy extends Model
     {
         return $this->hasMany(TaxonomyFile::class, 'taxonomy_id')
             ->orderBy('file_name', 'asc')
-            ->pluck('id', 'file_name');
+            ->pluck('file_name', 'id');
     }
 
     public function first_child_terms()
@@ -96,7 +109,7 @@ class Taxonomy extends Model
             unset($taxonomy[$attribute]);
         }
         $taxonomy['properties'] = $this->properties;
-        $taxonomy['terms'] = TaxonomyTerm::getByTaxonomy($this->id);
+        $taxonomy['terms'] = TaxonomyTerm::getByTaxonomy($this);
         return $taxonomy;
     }
 

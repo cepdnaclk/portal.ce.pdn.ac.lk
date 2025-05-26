@@ -66,7 +66,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12">
-                                {!! Form::file('file', ['class' => 'form-control']) !!}
+                                {!! Form::file('file', ['class' => 'form-control', 'required' => true]) !!}
                                 @error('file')
                                     <strong class="text-danger">{{ $message }}</strong>
                                 @enderror

@@ -46,7 +46,7 @@
                 <i class="fa fa-eye" title="{{ __('View') }}"></i>
             </a>
 
-            @if ($logged_in_user->hasPermissionTo('user.taxonomy.files.editor'))
+            @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.file.editor'))
                 {{-- Edit --}}
                 <a href="{{ route('dashboard.taxonomy-files.edit', $row) }}" class="btn btn-sm btn-warning">
                     <i class="fa fa-pencil" title="{{ __('Edit') }}"></i>

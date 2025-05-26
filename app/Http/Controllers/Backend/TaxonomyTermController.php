@@ -75,15 +75,6 @@ class TaxonomyTermController extends Controller
                     case 'url':
                         $request->validate([$metadataKey => 'nullable|url']);
                         break;
-                    // case 'image':
-
-                    //     if ($request->hasFile("metadata.{$property['code']}")) {
-                    //         $imagePath = $this->uploadThumb(null, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
-                    //         $value = $imagePath;
-                    //     } else {
-                    //         $value = null;
-                    //     }
-                    //     break;
                     case 'file':
                         $request->validate([$metadataKey => 'nullable|exists:taxonomy_files,id']);
                         break;

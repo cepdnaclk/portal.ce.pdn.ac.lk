@@ -35,12 +35,13 @@ class TaxonomyFile extends Model
         'png',
         'webp'
     ];
-    public static array $supportedExtensions;
-
-    public function __construct()
-    {
-        self::$supportedExtensions = array_merge(['pdf'], self::$supportedImageTypes);
-    }
+    public static array $supportedExtensions = [
+        'pdf',
+        'jpg',
+        'jpeg',
+        'png',
+        'webp'
+    ];
 
     public function getFileNameWithExtension(): string
     {

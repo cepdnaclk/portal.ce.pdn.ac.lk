@@ -41,6 +41,6 @@ Route::group(
     function () {
         Route::get('taxonomy/{file_name}', [TaxonomyFileController::class, 'download'])
             ->name('taxonomy-files')
-            ->withoutMiddleware(['permission:user.taxonomy.file.editor|user.taxonomy.file.viewer']);
+            ->withoutMiddleware(['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']);
     }
 );

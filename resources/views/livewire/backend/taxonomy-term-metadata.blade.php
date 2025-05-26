@@ -84,19 +84,13 @@
                 @if (empty($taxonomy_files))
                     <p><i>No files available for selection. </i></p>
                 @else
-                    @php
-                        $fileOptions = ['' => 'Select an option'];
-                        foreach ($taxonomy_files as $file) {
-                            $fileOptions[$file['id']] = $file['file_name'];
-                        }
-                    @endphp
                     {!! Form::select(
-                        "metadata[{$property['code']}_dropdown]",
-                        $fileOptions,
-                        old("metadata.{$property['code']}_dropdown"),
+                        "metadata[{$property['code']}]",
+                        $taxonomy_files,
+                        $value ?? old("metadata.{$property['code']}"),
                         [
                             'class' => 'form-control mt-2',
-                            'id' => $property['code'] . '_dropdown',
+                            'id' => $property['code'],
                         ],
                     ) !!}
                 @endif
