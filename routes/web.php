@@ -39,7 +39,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'au
 Route::group(
     ['prefix' => 'download', 'as' => 'download.'],
     function () {
-        Route::get('taxonomy/{file_name}', [TaxonomyFileController::class, 'download'])
+        Route::get('taxonomy/{file_name}.{extension}', [TaxonomyFileController::class, 'download'])
             ->name('taxonomy-files')
             ->withoutMiddleware(['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']);
     }

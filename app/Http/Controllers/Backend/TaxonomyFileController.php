@@ -73,8 +73,11 @@ class TaxonomyFileController extends Controller
         return view('backend.taxonomy_file.view', compact('taxonomyFile', 'showPreview'));
     }
 
-    public function download($fileName)
+    public function download($fileNameWithExtension)
     {
+        // Remove extension from file name for lookup
+        $fileName = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
+
         $taxonomyFile = TaxonomyFile::where('file_name', $fileName)->first();
 
         if (!$taxonomyFile) {

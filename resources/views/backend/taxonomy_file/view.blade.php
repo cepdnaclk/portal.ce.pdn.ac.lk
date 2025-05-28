@@ -13,10 +13,18 @@
         <!-- Download button -->
 
         <p>
-            <span id="download-link">{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}</span>
+            <span
+                id="download-link">{{ route('download.taxonomy-files', [
+                    'file_name' => $taxonomyFile->file_name,
+                    'extension' => $taxonomyFile->getFileExtension(),
+                ]) }}</span>
         </p>
         <p>
-            <a class="btn btn-sm btn-outline-primary" href="{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}"
+            <a class="btn btn-sm btn-outline-primary"
+                href="{{ route('download.taxonomy-files', [
+                    'file_name' => $taxonomyFile->file_name,
+                    'extension' => $taxonomyFile->getFileExtension(),
+                ]) }}"
                 target="_blank">
                 <i class="fa fa-download"></i> Download
             </a>
@@ -38,8 +46,12 @@
         @if ($showPreview)
             <div class="mt-4 pb-4">
                 <h5>Preview</h5>
-                <img src="{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}" alt="Image Preview"
-                    class="img-fluid img-thumbnail" style="max-width: 100%; height: auto; max-height: 240px;">
+                <img src="{{ route('download.taxonomy-files', [
+                    'file_name' => $taxonomyFile->file_name,
+                    'extension' => $taxonomyFile->getFileExtension(),
+                ]) }}"
+                    alt="Image Preview" class="img-fluid img-thumbnail"
+                    style="max-width: 100%; height: auto; max-height: 240px;">
             </div>
         @endif
 
