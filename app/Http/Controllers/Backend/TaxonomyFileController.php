@@ -124,21 +124,17 @@ class TaxonomyFileController extends Controller
 
                 $uploaded = $request->file('file');
                 $taxonomyFile->file_name = $validated['file_name'];
-                $taxonomyFile->file_path = $uploaded->store('taxonomy_files', 'public');
+
+                // Save new file in the storage
+                $originalExtension = $uploaded->getClientOriginalExtension();
+                $fileNameWithExtension = $validated['file_name'] . '.' . $originalExtension;
+                $taxonomyFile->file_path = $uploaded->storeAs('taxonomy_files', $fileNameWithExtension, 'public');
 
                 // Update metadata
                 $fileSize = $uploaded->getSize();
                 $metadata = $taxonomyFile->metadata ?? [];
                 $metadata['file_size'] = $fileSize;
                 $taxonomyFile->metadata = $metadata;
-            }
-
-            if ($taxonomyFile->file_name !== $validated['file_name']) {
-                // Rename the saved file, if the file name is updated
-                $newFilePath = 'taxonomy_files/' . $validated['file_name'] . '.' . pathinfo($taxonomyFile->file_path, PATHINFO_EXTENSION);
-                Storage::disk('public')->move($taxonomyFile->file_path, $newFilePath);
-                $taxonomyFile->file_path = $newFilePath;
-                $taxonomyFile->file_name = $validated['file_name'];
             }
 
             $taxonomyFile->updated_by = Auth::user()->id;

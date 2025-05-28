@@ -90,7 +90,7 @@ class TaxonomyFile extends Model
 
     public function user_updated()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function taxonomy()
