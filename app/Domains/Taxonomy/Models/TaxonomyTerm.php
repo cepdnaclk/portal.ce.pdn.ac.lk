@@ -46,15 +46,22 @@ class TaxonomyTerm extends Model
                 return !is_null($value['value']);
             });
 
-            $properties = $this->taxonomy->get_properties();
+            $cacheKey = 'taxonomy_properties_' . $this->taxonomy_id;
+            $properties = cache()->remember($cacheKey, 300, function () {
+                return $this->taxonomy->get_properties();
+            });
+
             foreach ($filteredMetadata as $metadata) {
                 $taxonomyCode = $properties[$metadata['code']]['data_type'];
                 $metadataValue = $metadata['value'];
 
                 if ($metadataValue) {
                     if ($taxonomyCode == 'file') {
-                        // Inject the full URL for 'file' type metadata
-                        $taxonomyFile = TaxonomyFile::find($metadataValue);
+                        // Cache file lookup by file ID
+                        $fileCacheKey = 'taxonomy_' . $this->taxonomy_id . '_file_' . $metadataValue;
+                        $taxonomyFile = cache()->remember($fileCacheKey, 300, function () use ($metadataValue) {
+                            return TaxonomyFile::find($metadataValue);
+                        });
                         if ($taxonomyFile) {
                             $response[$metadata['code']] = route(
                                 'download.taxonomy-files',
@@ -62,7 +69,6 @@ class TaxonomyTerm extends Model
                             );
                         }
                     } elseif ($taxonomyCode == 'datetime') {
-                        // Convert to ISO 8601 format if not null
                         $response[$metadata['code']] = $metadataValue ? date(DATE_ATOM, strtotime($metadataValue)) : null;
                     } else {
                         $response[$metadata['code']] = $metadataValue;
