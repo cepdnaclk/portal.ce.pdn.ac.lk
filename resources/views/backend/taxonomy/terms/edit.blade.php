@@ -6,6 +6,8 @@
 
 @section('content')
     <div>
+        <livewire:backend.taxonomy.expandable-taxonomy-info :taxonomy="$taxonomy" />
+
         <x-backend.card>
             <x-slot name="body">
                 <form method="POST" action="{{ route('dashboard.taxonomy.terms.update', [$taxonomy, $term]) }}">

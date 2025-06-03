@@ -6,6 +6,7 @@
 
 @section('content')
     <div>
+        <livewire:backend.taxonomy.expandable-taxonomy-info :taxonomy="$taxonomy" />
 
         <x-backend.card>
 
