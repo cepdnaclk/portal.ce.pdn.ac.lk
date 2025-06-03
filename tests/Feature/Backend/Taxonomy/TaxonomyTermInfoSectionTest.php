@@ -5,12 +5,10 @@ namespace Tests\Feature\Backend\Taxonomy;
 use App\Domains\Auth\Models\User;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
-use App\Http\Livewire\Backend\Taxonomy\ExpandableTaxonomyInfo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase as ProjectTestCase;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\TestCase;
 
-class TaxonomyTermInfoSectionTest extends ProjectTestCase
+class TaxonomyTermInfoSectionTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -19,9 +17,10 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase
 
     public function setUp(): void
     {
-        BaseTestCase::setUp();
+        parent::setUp();
 
-        // Manually create and save the taxonomy
+        $this->adminUser = User::factory()->admin()->create();
+
         $this->taxonomy = new Taxonomy([
             'name' => 'Test Taxonomy With Description',
             'code' => 'test-taxonomy-desc-' . uniqid(),
@@ -38,33 +37,18 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase
     /** @test */
     public function info_section_appears_on_taxonomy_term_create_page()
     {
+        $this->loginAsAdmin();
         $response = $this->get(route('dashboard.taxonomy.terms.create', $this->taxonomy));
 
         $response->assertOk();
-        $response->assertSeeLivewire('backend.taxonomy.expandable-taxonomy-info');
-        $response->assertSee(__('Show Taxonomy Information'));
-        $response->assertDontSee($this->taxonomy->description);
+        $response->assertSeeLivewire('backend.expandable-info-card');
+        $response->assertSee(__('Info'));
     }
-
-    // /** @test */
-    // public function info_section_can_be_expanded_on_create_page()
-    // {
-    //      // This test uses Livewire testing utilities directly on the page response
-    //     $this->get(route('dashboard.taxonomy.terms.create', $this->taxonomy))
-    //         ->assertOk()
-    //         ->assertSeeLivewire('backend.taxonomy.expandable-taxonomy-info')
-    //         ->livewire('backend.taxonomy.expandable-taxonomy-info')
-    //         ->call('toggleInfo')
-    //         ->assertSee($this->taxonomy->description)
-    //         ->assertSee(__('Hide Taxonomy Information'));
-    // }
 
     /** @test */
     public function info_section_appears_on_taxonomy_term_edit_page()
     {
-        if (!$this->adminUser) {
-            $this->markTestSkipped('Admin user not found, cannot run this test.');
-        }
+        $this->loginAsAdmin();
         $term = new TaxonomyTerm([
             'taxonomy_id' => $this->taxonomy->id,
             'name' => 'Test Term',
@@ -74,46 +58,18 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase
             'metadata' => []
         ]);
         $term->save();
-
         $response = $this->get(route('dashboard.taxonomy.terms.edit', ['taxonomy' => $this->taxonomy, 'term' => $term]));
 
         $response->assertOk();
-        $response->assertSeeLivewire('backend.taxonomy.expandable-taxonomy-info');
-        $response->assertSee(__('Show Taxonomy Information'));
-        $response->assertDontSee($this->taxonomy->description);
+        $response->assertSeeLivewire('backend.expandable-info-card');
+        $response->assertSee(__('Info'));
     }
 
-    // /** @test */
-    // public function info_section_can_be_expanded_on_edit_page()
-    // {
-    //     if (!$this->adminUser) {
-    //         $this->markTestSkipped('Admin user not found, cannot run this test.');
-    //     }
-    //     $term = new TaxonomyTerm([
-    //         'taxonomy_id' => $this->taxonomy->id,
-    //         'name' => 'Test Term Expand',
-    //         'code' => 'test-term-expand-'.uniqid(),
-    //         'created_by' => $this->adminUser->id,
-    //         'updated_by' => $this->adminUser->id,
-    //         'metadata' => []
-    //     ]);
-    //     $term->save();
-
-    //     $this->get(route('dashboard.taxonomy.terms.edit', ['taxonomy' => $this->taxonomy, 'term' => $term]))
-    //         ->assertOk()
-    //         ->assertSeeLivewire('backend.taxonomy.expandable-taxonomy-info')
-    //         ->livewire('backend.taxonomy.expandable-taxonomy-info')
-    //         ->call('toggleInfo')
-    //         ->assertSee($this->taxonomy->description)
-    //         ->assertSee(__('Hide Taxonomy Information'));
-    // }
 
     /** @test */
     public function info_section_is_not_present_if_taxonomy_has_no_description_on_create_page()
     {
-        if (!$this->adminUser) {
-            $this->markTestSkipped('Admin user not found, cannot run this test.');
-        }
+        $this->loginAsAdmin();
         $taxonomyWithoutDescription = new Taxonomy([
             'name' => 'No Desc Taxonomy',
             'code' => 'no-desc-tax-' . uniqid(),
@@ -125,18 +81,15 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase
         $taxonomyWithoutDescription->save();
 
         $response = $this->get(route('dashboard.taxonomy.terms.create', $taxonomyWithoutDescription));
-
         $response->assertOk();
-        $response->assertSeeLivewire('backend.taxonomy.expandable-taxonomy-info');
-        $response->assertDontSee(__('Show Taxonomy Information'));
+        $response->assertDontSeeLivewire('backend.expandable-info-card');;
+        $response->assertDontSee(__('Info'));
     }
 
     /** @test */
     public function info_section_is_not_present_if_taxonomy_has_no_description_on_edit_page()
     {
-        if (!$this->adminUser) {
-            $this->markTestSkipped('Admin user not found, cannot run this test.');
-        }
+        $this->loginAsAdmin();
         $taxonomyWithoutDescription = new Taxonomy([
             'name' => 'No Desc Taxonomy Edit',
             'code' => 'no-desc-tax-edit-' . uniqid(),
@@ -160,7 +113,7 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase
         $response = $this->get(route('dashboard.taxonomy.terms.edit', ['taxonomy' => $taxonomyWithoutDescription, 'term' => $term]));
 
         $response->assertOk();
-        $response->assertSeeLivewire('backend.taxonomy.expandable-taxonomy-info');
-        $response->assertDontSee(__('Show Taxonomy Information'));
+        $response->assertDontSeeLivewire('backend.expandable-info-card');;
+        $response->assertDontSee(__('Info'));
     }
 }

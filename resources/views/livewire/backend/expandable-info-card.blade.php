@@ -7,7 +7,7 @@
         </button>
     </div>
 
-    <div class="collapse mt-2" id="info-card">
+    <div class="collapse mt-2 {{ $isExpanded ? 'show' : '' }}" id="info-card">
         <x-backend.card name="info-card">
             <x-slot name="header">
                 {{ $title }}
@@ -15,7 +15,7 @@
 
             <x-slot name="body">
                 <div class="card-body">
-                    <p class="card-text">{{ $description }}</p>
+                    <p class="card-text">{!! $description !!}</p>
                 </div>
             </x-slot>
         </x-backend.card>
