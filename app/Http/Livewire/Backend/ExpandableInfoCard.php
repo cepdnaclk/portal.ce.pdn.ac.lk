@@ -4,6 +4,15 @@ namespace App\Http\Livewire\Backend;
 
 use Livewire\Component;
 
+/**
+ * Class ExpandableInfoCard
+ *
+ * This Livewire component represents an expandable information card
+ * used in the backend of the application. It provides functionality
+ * to display and manage expandable content dynamically.
+ *
+ * @package App\Http\Livewire\Backend
+ */
 class ExpandableInfoCard extends Component
 {
     public string $title;
