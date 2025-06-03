@@ -66,8 +66,30 @@ class TaxonomyTerm extends Model
                             );
                         }
                     } elseif ($taxonomyCode == 'datetime') {
-                        // Convert to ISO 8601 format if not null
-                        $response[$metadata['code']] = $metadataValue ? date(DATE_ATOM, strtotime($metadataValue)) : null;
+                        $timestamp = false;
+                        $datetimeCacheKey = 'taxonomy_' . $this->taxonomy_id . '_datetime_' . $metadataValue;
+
+                        // Check if the formatted datetime is already cached
+                        $formattedDatetime = cache()->remember($datetimeCacheKey, 300, function () use ($metadataValue, &$timestamp) {
+                            // Explicitly treat numeric strings as Unix timestamps
+                            if (is_numeric($metadataValue)) {
+                                $timestamp = (int)$metadataValue;
+                            } else {
+                                $timestamp = strtotime($metadataValue);
+                            }
+
+                            // Ensure timestamp is valid (not false from strtotime failure, and non-negative)
+                            if ($timestamp !== false && $timestamp >= 0) {
+                                return date(DATE_ATOM, $timestamp);
+                            }
+
+                            return null;
+                        });
+
+                        // Add to response if the formatted datetime is not null
+                        if (!is_null($formattedDatetime)) {
+                            $response[$metadata['code']] = $formattedDatetime;
+                        }
                     } else {
                         $response[$metadata['code']] = $metadataValue;
                     }
