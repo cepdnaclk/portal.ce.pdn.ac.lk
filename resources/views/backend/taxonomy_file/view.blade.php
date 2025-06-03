@@ -11,25 +11,12 @@
         </h3>
 
         <!-- Download button -->
-
-        <p>
-            <<<<<<< HEAD <span id="download-link">{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}</span>
-        </p>
-        <p>
-            <a class="btn btn-sm btn-outline-primary"
-                href="{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}"=======<span
-                id="download-link">{{ route('download.taxonomy-files', [
-                    'file_name' => $taxonomyFile->file_name,
-                    'extension' => $taxonomyFile->getFileExtension(),
-                ]) }}</span>
-        </p>
         <p>
             <a class="btn btn-sm btn-outline-primary"
                 href="{{ route('download.taxonomy-files', [
                     'file_name' => $taxonomyFile->file_name,
                     'extension' => $taxonomyFile->getFileExtension(),
-                ]) }}">>>>>>>
-                origin/release-3.2.0
+                ]) }}"
                 target="_blank">
                 <i class="fa fa-download"></i> Download
             </a>
