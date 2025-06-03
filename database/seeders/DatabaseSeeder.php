@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
             $this->call(CourseSeeder::class);
             $this->call(TaxonomySeeder::class);
             $this->call(TaxonomyTermSeeder::class);
+            $this->call(TaxonomyFileSeeder::class);
         }
 
         $this->call(EditorRoleSeeder::class);

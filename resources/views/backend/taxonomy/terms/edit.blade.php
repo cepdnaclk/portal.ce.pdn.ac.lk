@@ -85,7 +85,8 @@
                         </div>
 
                         @foreach ($taxonomy->properties as $property)
-                            <livewire:backend.taxonomy-term-metadata :property="$property" :term="$term" />
+                            <livewire:backend.taxonomy-term-metadata :property="$property" :term="$term"
+                                :taxonomy="$taxonomy" />
                         @endforeach
                     </div>
             </x-slot>

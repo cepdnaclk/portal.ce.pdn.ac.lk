@@ -46,8 +46,34 @@ class TaxonomyTerm extends Model
                 return !is_null($value['value']);
             });
 
+            $cacheKey = 'taxonomy_properties_' . $this->taxonomy_id;
+            $properties = cache()->remember($cacheKey, 300, function () {
+                return $this->taxonomy->get_properties();
+            });
+
             foreach ($filteredMetadata as $metadata) {
-                $response[$metadata['code']] = $metadata['value'];
+                $taxonomyCode = $properties[$metadata['code']]['data_type'];
+                $metadataValue = $metadata['value'];
+
+                if ($metadataValue) {
+                    if ($taxonomyCode == 'file') {
+                        // Cache file lookup by file ID
+                        $fileCacheKey = 'taxonomy_' . $this->taxonomy_id . '_file_' . $metadataValue;
+                        $taxonomyFile = cache()->remember($fileCacheKey, 300, function () use ($metadataValue) {
+                            return TaxonomyFile::find($metadataValue);
+                        });
+                        if ($taxonomyFile) {
+                            $response[$metadata['code']] = route(
+                                'download.taxonomy-files',
+                                ['file_name' => $taxonomyFile->file_name, 'extension' => $taxonomyFile->getFileExtension()]
+                            );
+                        }
+                    } elseif ($taxonomyCode == 'datetime') {
+                        $response[$metadata['code']] = $metadataValue ? date(DATE_ATOM, strtotime($metadataValue)) : null;
+                    } else {
+                        $response[$metadata['code']] = $metadataValue;
+                    }
+                }
             }
         }
         return $response;
@@ -119,12 +145,12 @@ class TaxonomyTerm extends Model
         }
     }
 
-    public static function getByTaxonomy($taxonomyId, $parent = null)
+    public static function getByTaxonomy($taxonomy, $parent = null)
     {
         if ($parent == null) {
-            $res = TaxonomyTerm::where('taxonomy_id', $taxonomyId)->whereNull('parent_id');
+            $res = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->whereNull('parent_id');
         } else {
-            $res = TaxonomyTerm::where('taxonomy_id', $taxonomyId)->where('parent_id', $parent);
+            $res = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->where('parent_id', $parent);
         }
 
         $taxonomyTerms = [];
@@ -132,7 +158,7 @@ class TaxonomyTerm extends Model
             $termData = $term->to_dict();
 
             if ($term->children()->count() > 0) {
-                $termData['terms'] = $term->getByTaxonomy($taxonomyId, $term->id);
+                $termData['terms'] = $term->getByTaxonomy($taxonomy, $term->id);
             }
             array_push($taxonomyTerms, $termData);
         }
