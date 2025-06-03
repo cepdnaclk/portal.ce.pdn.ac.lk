@@ -2,11 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
-use App\Models\User;
+
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\UploadedFile;
+use App\Domains\Taxonomy\Models\Taxonomy;
+use App\Models\User;
 
 class TaxonomyFileFactory extends Factory
 {

@@ -56,7 +56,10 @@ class TaxonomyTerm extends Model
                         // Inject the full URL for 'file' type metadata
                         $taxonomyFile = TaxonomyFile::find($metadataValue);
                         if ($taxonomyFile) {
-                            $response[$metadata['code']] = route('download.taxonomy-files', $taxonomyFile->file_name);
+                            $response[$metadata['code']] = route(
+                                'download.taxonomy-files',
+                                ['file_name' => $taxonomyFile->file_name, 'extension' => $taxonomyFile->getFileExtension()]
+                            );
                         }
                     } elseif ($taxonomyCode == 'datetime') {
                         // Convert to ISO 8601 format if not null

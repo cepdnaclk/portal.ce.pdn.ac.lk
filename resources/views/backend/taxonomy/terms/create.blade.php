@@ -6,6 +6,9 @@
 
 @section('content')
     <div>
+        @if ($taxonomy && $taxonomy->description)
+            <livewire:backend.expandable-info-card :title="'Taxonomy: ' . $taxonomy->name" :description="$taxonomy->description" />
+        @endif
 
         <x-backend.card>
 

@@ -17,8 +17,12 @@
 
                 @if ($showPreview)
                     <div class="mt-4 pb-4">
-                        <img src="{{ route('download.taxonomy-files', $taxonomyFile->file_name) }}" alt="Image Preview"
-                            class="img-fluid img-thumbnail" style="max-width: 100%; height: auto; max-height: 240px;">
+                        <img src="{{ route('download.taxonomy-files', [
+                            'file_name' => $taxonomyFile->file_name,
+                            'extension' => $taxonomyFile->getFileExtension(),
+                        ]) }}"
+                            alt="Image Preview" class="img-fluid img-thumbnail"
+                            style="max-width: 100%; height: auto; max-height: 240px;">
                     </div>
                 @endif
 

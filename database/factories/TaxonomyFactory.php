@@ -27,7 +27,7 @@ class TaxonomyFactory extends Factory
         return [
             'code' => $this->faker->unique()->lexify('????'),
             'name' => $this->faker->word,
-            'description' => $this->faker->sentence, 
+            'description' => $this->faker->sentence,
             'properties' => json_encode([
                 [
                     'code' => 'country_name',
@@ -44,8 +44,8 @@ class TaxonomyFactory extends Factory
                     'name' => 'Visibility',
                     'data_type' => 'boolean'
                 ]
-            ]),   
-            'created_by' => 1, 
+            ]),
+            'created_by' => 1,
             'updated_by' => 1,
             'created_at' => now(),
             'updated_at' => now(),
