@@ -7,69 +7,32 @@ use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Http\Livewire\Backend\Taxonomy\ExpandableTaxonomyInfo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase as ProjectTestCase; // Alias our project's TestCase
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase; // Import Laravel's base TestCase
+use Tests\TestCase as ProjectTestCase;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-class TaxonomyTermInfoSectionTest extends ProjectTestCase // Still extends our project's TestCase
+class TaxonomyTermInfoSectionTest extends ProjectTestCase
 {
-    use RefreshDatabase; // Keep this to ensure migrations are run by the trait if not by parent
+    use RefreshDatabase;
 
     protected ?User $adminUser;
     protected Taxonomy $taxonomy;
 
     public function setUp(): void
     {
-        // Call Laravel's base setUp to create application and setup traits
         BaseTestCase::setUp();
-        
-        // RefreshDatabase trait should run migrations now.
-        // If not, uncomment the next line:
-        // $this->artisan('migrate:fresh');
-
-        // Disable specific middleware that might interfere in tests
-        $this->withoutMiddleware(\App\Domains\Auth\Http\Middleware\RequirePassword::class);
-        $this->withoutMiddleware(\App\Domains\Auth\Http\Middleware\TwoFactorAuthenticationStatus::class);
-
-        // Now, seed necessary roles and permissions
-        $this->artisan('db:seed', ['--class' => \Database\Seeders\Auth\PermissionRoleSeeder::class]);
-        $this->artisan('db:seed', ['--class' => \Database\Seeders\Roles\TaxonomyRoleSeeder::class]);
-        $this->artisan('db:seed', ['--class' => \Database\Seeders\Roles\EditorRoleSeeder::class]); // For 'Editor' role
-
-        // Manually create the Admin user (ID 1) - UserSeeder might also do this if called by a global seeder
-        // but we ensure it here for this test's context.
-        User::updateOrCreate(
-            ['id' => 1],
-            [
-                'type' => User::TYPE_ADMIN,
-                'name' => 'Test Super Admin',
-                'email' => 'admin@example.com',
-                'password' => bcrypt('password'), // Ensure bcrypt is available or use Hash::make
-                'email_verified_at' => now(),
-                'active' => true,
-            ]
-        );
-        $this->adminUser = User::find(1);
-        
-        // Assign necessary roles. 'Administrator' role should have taxonomy permissions.
-        if ($this->adminUser) {
-            $this->adminUser->assignRole('Administrator');
-            // $this->adminUser->assignRole('Taxonomy Manager'); // If Administrator doesn't cover everything
-            $this->actingAs($this->adminUser);
-        } else {
-            throw new \Exception('Failed to create and retrieve Admin user for testing.');
-        }
 
         // Manually create and save the taxonomy
         $this->taxonomy = new Taxonomy([
-            // 'id' will be auto-assigned by Eloquent
             'name' => 'Test Taxonomy With Description',
-            'code' => 'test-taxonomy-desc-'.uniqid(),
+            'code' => 'test-taxonomy-desc-' . uniqid(),
             'description' => 'This is the parent taxonomy description.',
             'properties' => [],
             'created_by' => $this->adminUser->id,
             'updated_by' => $this->adminUser->id,
         ]);
         $this->taxonomy->save();
+
+        $this->actingAs($user = User::factory()->admin()->create());
     }
 
     /** @test */
@@ -79,8 +42,8 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase // Still extends our p
 
         $response->assertOk();
         $response->assertSeeLivewire('backend.taxonomy.expandable-taxonomy-info');
-        $response->assertSee(__('Show Taxonomy Information')); // Initial button text
-        $response->assertDontSee($this->taxonomy->description); // Description initially hidden
+        $response->assertSee(__('Show Taxonomy Information'));
+        $response->assertDontSee($this->taxonomy->description);
     }
 
     // /** @test */
@@ -105,7 +68,7 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase // Still extends our p
         $term = new TaxonomyTerm([
             'taxonomy_id' => $this->taxonomy->id,
             'name' => 'Test Term',
-            'code' => 'test-term-'.uniqid(),
+            'code' => 'test-term-' . uniqid(),
             'created_by' => $this->adminUser->id,
             'updated_by' => $this->adminUser->id,
             'metadata' => []
@@ -153,7 +116,7 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase // Still extends our p
         }
         $taxonomyWithoutDescription = new Taxonomy([
             'name' => 'No Desc Taxonomy',
-            'code' => 'no-desc-tax-'.uniqid(),
+            'code' => 'no-desc-tax-' . uniqid(),
             'description' => null,
             'properties' => [],
             'created_by' => $this->adminUser->id,
@@ -176,7 +139,7 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase // Still extends our p
         }
         $taxonomyWithoutDescription = new Taxonomy([
             'name' => 'No Desc Taxonomy Edit',
-            'code' => 'no-desc-tax-edit-'.uniqid(),
+            'code' => 'no-desc-tax-edit-' . uniqid(),
             'description' => null,
             'properties' => [],
             'created_by' => $this->adminUser->id,
@@ -187,7 +150,7 @@ class TaxonomyTermInfoSectionTest extends ProjectTestCase // Still extends our p
         $term = new TaxonomyTerm([
             'taxonomy_id' => $taxonomyWithoutDescription->id,
             'name' => 'Test Term No Desc',
-            'code' => 'test-term-no-desc-'.uniqid(),
+            'code' => 'test-term-no-desc-' . uniqid(),
             'created_by' => $this->adminUser->id,
             'updated_by' => $this->adminUser->id,
             'metadata' => []

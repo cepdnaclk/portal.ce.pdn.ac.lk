@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Domains\Taxonomy\Models\Taxonomy;
-use App\Domains\Auth\Models\User; // Added for created_by/updated_by if User::factory() was intended, but original used 1
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -46,8 +45,8 @@ class TaxonomyFactory extends Factory
                     'data_type' => 'boolean'
                 ]
             ]),
-            'created_by' => 1, // Reverted to original
-            'updated_by' => 1, // Reverted to original
+            'created_by' => 1,
+            'updated_by' => 1,
             'created_at' => now(),
             'updated_at' => now(),
         ];
