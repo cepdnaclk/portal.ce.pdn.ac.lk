@@ -5,12 +5,8 @@ namespace Tests\Unit\Domains\Taxonomy\Models;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
-use Database\Factories\TaxonomyFactory; // Added
-use Database\Factories\TaxonomyFileFactory; // Added
-use Database\Factories\TaxonomyTermFactory; // Added
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class TaxonomyTermTest extends TestCase
@@ -21,7 +17,6 @@ class TaxonomyTermTest extends TestCase
     {
         parent::setUp();
 
-        // The route() helper function uses app('url')->route(...) which is an UrlGenerator.
         $urlGeneratorMock = \Mockery::mock(\Illuminate\Routing\UrlGenerator::class);
         $urlGeneratorMock
             ->shouldReceive('route')
@@ -191,9 +186,9 @@ class TaxonomyTermTest extends TestCase
             'taxonomy_id' => $taxonomy->id,
             'metadata' => [
                 ['code' => 'project_lead', 'value' => 'Alice Wonderland'],
-                ['code' => 'project_document', 'value' => null], // This should be filtered
-                ['code' => 'start_date', 'value' => null],       // This should be filtered
-                ['code' => 'notes', 'value' => null],            // This should be filtered
+                ['code' => 'project_document', 'value' => null],
+                ['code' => 'start_date', 'value' => null],
+                ['code' => 'notes', 'value' => null],
                 ['code' => 'active_task_id', 'value' => 123],
             ]
         ]);
@@ -285,10 +280,10 @@ class TaxonomyTermTest extends TestCase
         $this->assertArrayHasKey('document_file', $formattedMetadata);
         // The TaxonomyFile model's file_name setter slugs the name and ensures extension.
         // getFileExtension() gets extension from file_path.
-       // Given file_name = 'test-document' and file_path = 'uploads/test-document.pdf',
-       // the extension should be 'pdf'.
-       // The route mock concatenates these as file_name + '.' + extension.
-       $expectedUrl = 'http://localhost/download/taxonomy-files/test-document.pdf';
+        // Given file_name = 'test-document' and file_path = 'uploads/test-document.pdf',
+        // the extension should be 'pdf'.
+        // The route mock concatenates these as file_name + '.' + extension.
+        $expectedUrl = 'http://localhost/download/taxonomy-files/test-document.pdf';
         $this->assertEquals($expectedUrl, $formattedMetadata['document_file']);
     }
 
