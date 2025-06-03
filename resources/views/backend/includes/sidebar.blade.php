@@ -3,7 +3,7 @@
     <ul class="c-sidebar-nav">
         <li class="c-sidebar-nav-item">
             <x-utils.link class="c-sidebar-nav-link" :href="route('dashboard.home')" :active="activeClass(Route::is('dashboard.home'), 'c-active')"
-                icon="c-sidebar-nav-icon cil-speedometer" :text="__('Dashboard')" />
+                icon="c-sidebar-nav-icon fa fa-tachometer" :text="__('Dashboard')" />
         </li>
 
         @if (
@@ -18,7 +18,7 @@
 
             <li
                 class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.auth.user.*') || Route::is('dashboard.auth.role.*'), 'c-open c-show') }}">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-user" class="c-sidebar-nav-dropdown-toggle"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-user" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Access')" />
 
                 <ul class="c-sidebar-nav-dropdown-items">
@@ -48,7 +48,7 @@
 
         @if ($logged_in_user->hasAllAccess())
             <li class="c-sidebar-nav-dropdown">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-list" class="c-sidebar-nav-dropdown-toggle"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-list" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Logs')" />
 
                 <ul class="c-sidebar-nav-dropdown-items">
@@ -66,7 +66,7 @@
         @if ($logged_in_user->hasAllAccess())
             <li
                 class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.announcements.*'), 'c-open c-show') }}">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-bullhorn"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-bullhorn"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Announcements')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
@@ -82,7 +82,7 @@
         @if ($logged_in_user->hasAnyPermission(['user.access.editor.news', 'user.access.editor.events']))
             <li
                 class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.news.*') || Route::is('dashboard.event.*'), 'c-open c-show') }}">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-newspaper"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-newspaper-o"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Content Management')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
@@ -108,7 +108,7 @@
         @if ($logged_in_user->hasAnyPermission(['user.access.academic.semester', 'user.access.academic.course']))
             <li
                 class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.semesters.*') || Route::is('dashboard.courses.*'), 'c-open c-show') }}">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-book" class="c-sidebar-nav-dropdown-toggle"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-book" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Academic Program')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
@@ -137,7 +137,7 @@
                 'user.access.taxonomy.page.viewer',
             ]))
             <li class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.taxonomy'), 'c-open c-show') }}">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon cil-sitemap" class="c-sidebar-nav-dropdown-toggle"
+                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-sitemap" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Taxonomies')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
