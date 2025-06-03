@@ -53,8 +53,12 @@ class TaxonomyTerm extends Model
 
                 if ($metadataValue) {
                     if ($taxonomyCode == 'file') {
-                        // Inject the full URL for 'file' type metadata
-                        $taxonomyFile = TaxonomyFile::find($metadataValue);
+                        // Cache file lookup by file ID
+                        $fileCacheKey = 'taxonomy_' . $this->taxonomy_id . '_file_' . $metadataValue;
+                        $taxonomyFile = cache()->remember($fileCacheKey, 300, function () use ($metadataValue) {
+                            return TaxonomyFile::find($metadataValue);
+                        });
+
                         if ($taxonomyFile) {
                             $response[$metadata['code']] = route(
                                 'download.taxonomy-files',
