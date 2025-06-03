@@ -74,7 +74,7 @@
                             <strong>Metadata</strong>
                         </div>
                         @foreach ($taxonomy->properties as $property)
-                            <livewire:backend.taxonomy-term-metadata :property="$property" />
+                            <livewire:backend.taxonomy-term-metadata :property="$property" :taxonomy="$taxonomy" />
                         @endforeach
                     </div>
             </x-slot>
