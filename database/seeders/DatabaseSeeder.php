@@ -29,9 +29,9 @@ class DatabaseSeeder extends Seeder
             'failed_jobs',
         ]);
 
+        $this->call(AuthSeeder::class);
 
         if (App::environment('local', 'testing')) {
-            $this->call(AuthSeeder::class);
             $this->call(AnnouncementSeeder::class);
             $this->call(NewsSeeder::class);
             $this->call(EventSeeder::class);
