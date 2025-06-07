@@ -46,11 +46,7 @@ class TaxonomyTerm extends Model
                 return !is_null($value['value']);
             });
 
-            $cacheKey = 'taxonomy_properties_' . $this->taxonomy_id;
-            $properties = cache()->remember($cacheKey, 300, function () {
-                return $this->taxonomy->get_properties();
-            });
-
+            $properties = $this->taxonomy->get_properties();
             foreach ($filteredMetadata as $metadata) {
                 $taxonomyCode = $properties[$metadata['code']]['data_type'];
                 $metadataValue = $metadata['value'];
@@ -62,6 +58,7 @@ class TaxonomyTerm extends Model
                         $taxonomyFile = cache()->remember($fileCacheKey, 300, function () use ($metadataValue) {
                             return TaxonomyFile::find($metadataValue);
                         });
+
                         if ($taxonomyFile) {
                             $response[$metadata['code']] = route(
                                 'download.taxonomy-files',
@@ -69,7 +66,30 @@ class TaxonomyTerm extends Model
                             );
                         }
                     } elseif ($taxonomyCode == 'datetime') {
-                        $response[$metadata['code']] = $metadataValue ? date(DATE_ATOM, strtotime($metadataValue)) : null;
+                        $timestamp = false;
+                        $datetimeCacheKey = 'taxonomy_' . $this->taxonomy_id . '_datetime_' . $metadataValue;
+
+                        // Check if the formatted datetime is already cached
+                        $formattedDatetime = cache()->remember($datetimeCacheKey, 300, function () use ($metadataValue, &$timestamp) {
+                            // Explicitly treat numeric strings as Unix timestamps
+                            if (is_numeric($metadataValue)) {
+                                $timestamp = (int)$metadataValue;
+                            } else {
+                                $timestamp = strtotime($metadataValue);
+                            }
+
+                            // Ensure timestamp is valid (not false from strtotime failure, and non-negative)
+                            if ($timestamp !== false && $timestamp >= 0) {
+                                return date(DATE_ATOM, $timestamp);
+                            }
+
+                            return null;
+                        });
+
+                        // Add to response if the formatted datetime is not null
+                        if (!is_null($formattedDatetime)) {
+                            $response[$metadata['code']] = $formattedDatetime;
+                        }
                     } else {
                         $response[$metadata['code']] = $metadataValue;
                     }

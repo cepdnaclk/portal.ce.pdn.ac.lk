@@ -11,14 +11,6 @@
         </h3>
 
         <!-- Download button -->
-
-        <p>
-            <span
-                id="download-link">{{ route('download.taxonomy-files', [
-                    'file_name' => $taxonomyFile->file_name,
-                    'extension' => $taxonomyFile->getFileExtension(),
-                ]) }}</span>
-        </p>
         <p>
             <a class="btn btn-sm btn-outline-primary"
                 href="{{ route('download.taxonomy-files', [
