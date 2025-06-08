@@ -39,8 +39,11 @@ class CourseApiControllerTest extends TestCase
                         'references',
                         'modules',
                         'semester_id',
-                        'version',
-                        'academic_program',
+                        'academic_program' => [
+                            'category',
+                            'version',
+                            'curriculum_name'
+                        ],
                     ]
                 ],
                 'links' => [
@@ -72,7 +75,9 @@ class CourseApiControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.version', 1);
+            ->assertJsonPath('data.0.academic_program.category', 'Undergraduate')
+            ->assertJsonPath('data.0.academic_program.version', 1)
+            ->assertJsonPath('data.0.academic_program.curriculum_name', Course::getVersions('undergraduate')[1]);
     }
 
     /** @test */
@@ -106,12 +111,8 @@ class CourseApiControllerTest extends TestCase
     /** @test */
     public function test_course_api_handles_errors_gracefully()
     {
-        // The following line was causing issues as the simplified test does not trigger an error.
-        // Log::shouldReceive('error')->once();
-
         // Ensure User exists for consistency, though this specific test path might not hit DB much.
         User::factory()->create();
-
         $response = $this->getJson('/api/academic/v1/undergraduate/courses?invalid_column_name=some_value');
 
         // The controller currently doesn't validate unknown parameters and will proceed, likely returning 200.

@@ -29,8 +29,11 @@ class SemesterApiControllerTest extends TestCase
                         'title',
                         'description',
                         'url',
-                        'version',
-                        'academic_program',
+                        'academic_program' => [
+                            'category',
+                            'version',
+                            'curriculum_name'
+                        ],
                         'courses_count',
                     ]
                 ],
@@ -63,7 +66,9 @@ class SemesterApiControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.version', 1); // Expect integer for version
+            ->assertJsonPath('data.0.academic_program.category', 'Undergraduate')
+            ->assertJsonPath('data.0.academic_program.version', 1)
+            ->assertJsonPath('data.0.academic_program.curriculum_name', Semester::getVersions('undergraduate')[1]);
     }
 
     /** @test */
