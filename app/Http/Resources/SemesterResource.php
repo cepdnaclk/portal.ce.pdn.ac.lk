@@ -22,6 +22,7 @@ class SemesterResource extends JsonResource
             'academic_program' => $this->academic_program,
             'description' => $this->description,
             'url' => $this->url,
+            'courses_count' => $this->when(isset($this->courses_count), $this->courses_count),
             'created_by' => User::find($this->created_by)?->name,
             'updated_by' => User::find($this->updated_by)?->name,
             'created_at' => $this->created_at,

@@ -54,6 +54,11 @@ class Semester extends AcademicProgram
         return $this->getAcademicPrograms()[$this->academic_program];
     }
 
+    public function courses()
+    {
+        return $this->hasMany(\App\Domains\AcademicProgram\Course\Models\Course::class);
+    }
+
     protected static function newFactory()
     {
         return SemesterFactory::new();
