@@ -139,7 +139,7 @@ class NewsController extends Controller
     {
         try {
 
-            $this->deleteThumb($news->thumb);
+            $this->deleteThumb($news->thumbURL());
             $news->delete();
             return redirect()->route('dashboard.news.index')->with('Success', 'News was deleted !');
         } catch (\Exception $ex) {
