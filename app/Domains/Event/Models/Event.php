@@ -10,7 +10,7 @@ use App\Domains\Event\Models\Traits\Scope\EventScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class News.
+ * Class Event.
  */
 class Event extends Model
 {
