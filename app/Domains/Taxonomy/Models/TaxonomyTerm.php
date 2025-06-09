@@ -46,54 +46,8 @@ class TaxonomyTerm extends Model
                 return !is_null($value['value']);
             });
 
-            $properties = $this->taxonomy->get_properties();
             foreach ($filteredMetadata as $metadata) {
-                $taxonomyCode = $properties[$metadata['code']]['data_type'];
-                $metadataValue = $metadata['value'];
-
-                if ($metadataValue) {
-                    if ($taxonomyCode == 'file') {
-                        // Cache file lookup by file ID
-                        $fileCacheKey = 'taxonomy_' . $this->taxonomy_id . '_file_' . $metadataValue;
-                        $taxonomyFile = cache()->remember($fileCacheKey, 300, function () use ($metadataValue) {
-                            return TaxonomyFile::find($metadataValue);
-                        });
-
-                        if ($taxonomyFile) {
-                            $response[$metadata['code']] = route(
-                                'download.taxonomy-files',
-                                ['file_name' => $taxonomyFile->file_name, 'extension' => $taxonomyFile->getFileExtension()]
-                            );
-                        }
-                    } elseif ($taxonomyCode == 'datetime') {
-                        $timestamp = false;
-                        $datetimeCacheKey = 'taxonomy_' . $this->taxonomy_id . '_datetime_' . $metadataValue;
-
-                        // Check if the formatted datetime is already cached
-                        $formattedDatetime = cache()->remember($datetimeCacheKey, 300, function () use ($metadataValue, &$timestamp) {
-                            // Explicitly treat numeric strings as Unix timestamps
-                            if (is_numeric($metadataValue)) {
-                                $timestamp = (int)$metadataValue;
-                            } else {
-                                $timestamp = strtotime($metadataValue);
-                            }
-
-                            // Ensure timestamp is valid (not false from strtotime failure, and non-negative)
-                            if ($timestamp !== false && $timestamp >= 0) {
-                                return date(DATE_ATOM, $timestamp);
-                            }
-
-                            return null;
-                        });
-
-                        // Add to response if the formatted datetime is not null
-                        if (!is_null($formattedDatetime)) {
-                            $response[$metadata['code']] = $formattedDatetime;
-                        }
-                    } else {
-                        $response[$metadata['code']] = $metadataValue;
-                    }
-                }
+                $response[$metadata['code']] = $metadata['value'];
             }
         }
         return $response;
@@ -165,12 +119,12 @@ class TaxonomyTerm extends Model
         }
     }
 
-    public static function getByTaxonomy($taxonomy, $parent = null)
+    public static function getByTaxonomy($taxonomyId, $parent = null)
     {
         if ($parent == null) {
-            $res = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->whereNull('parent_id');
+            $res = TaxonomyTerm::where('taxonomy_id', $taxonomyId)->whereNull('parent_id');
         } else {
-            $res = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->where('parent_id', $parent);
+            $res = TaxonomyTerm::where('taxonomy_id', $taxonomyId)->where('parent_id', $parent);
         }
 
         $taxonomyTerms = [];
@@ -178,7 +132,7 @@ class TaxonomyTerm extends Model
             $termData = $term->to_dict();
 
             if ($term->children()->count() > 0) {
-                $termData['terms'] = $term->getByTaxonomy($taxonomy, $term->id);
+                $termData['terms'] = $term->getByTaxonomy($taxonomyId, $term->id);
             }
             array_push($taxonomyTerms, $termData);
         }

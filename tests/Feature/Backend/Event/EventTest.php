@@ -5,7 +5,6 @@ namespace Tests\Feature\Backend\Event;
 use App\Domains\Auth\Models\User;
 use App\Domains\Event\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 /**
@@ -46,7 +45,7 @@ class EventTest extends TestCase
             'title' => 'test event',
             'description' => 'Nostrum qui qui ut deserunt dolores quaerat. Est quos sed ea quo placeat maxime. Sequi temporibus alias atque assumenda facere modi deleniti. Recusandae autem quia officia iste laudantium veritatis aut.',
             'event_type' => ['0', '1'],
-            'image' => UploadedFile::fake()->image('sample.jpg'),
+            'image' => 'sample-image.jpg',
             'created_by' => $user->id,
             'link_url' => 'http://runolfsdottir.biz/quia-provident-ut-ipsa-atque-et',
             'link_caption' => 'fugiat accusantium sit',
@@ -75,7 +74,7 @@ class EventTest extends TestCase
             'description' => 'This is an updated event description.',
             'event_type' => ['0', '2'],
 
-            'image' => UploadedFile::fake()->image('sample.jpg'),
+            'image' => 'sample-image.jpg',
             'created_by' => $user->id,
             'link_url' => 'http://example.com',
             'link_caption' => 'eaque excepturi velit',

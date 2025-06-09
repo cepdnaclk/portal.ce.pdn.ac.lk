@@ -64,7 +64,7 @@ abstract class TestCase extends BaseTestCase
         $courseManagerRole = Role::where('name', 'Course Manager')->first();
         $user = User::factory()->user()->create(['name' => 'Test Course Manager']);
         $user->assignRole($courseManagerRole->name);
-        $this->actingAs($user);
+        $this->actingAs($user); 
 
         return $user;
     }

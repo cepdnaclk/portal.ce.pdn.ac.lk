@@ -6,10 +6,6 @@
 
 @section('content')
     <div>
-        @if ($taxonomy && $taxonomy->description)
-            <livewire:backend.expandable-info-card :title="'Taxonomy: ' . $taxonomy->name" :description="$taxonomy->description" />
-        @endif
-
         <x-backend.card>
             <x-slot name="body">
                 <form method="POST" action="{{ route('dashboard.taxonomy.terms.update', [$taxonomy, $term]) }}">
@@ -87,8 +83,7 @@
                         </div>
 
                         @foreach ($taxonomy->properties as $property)
-                            <livewire:backend.taxonomy-term-metadata :property="$property" :term="$term"
-                                :taxonomy="$taxonomy" />
+                            <livewire:backend.taxonomy-term-metadata :property="$property" :term="$term" />
                         @endforeach
                     </div>
             </x-slot>

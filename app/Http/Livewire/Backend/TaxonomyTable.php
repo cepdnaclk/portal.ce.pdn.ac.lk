@@ -9,8 +9,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxonomyTable extends DataTableComponent
 {
-    public array $perPageAccepted = [10, 25, 50, 100];
-    public int $perPage = 25;
+    public array $perPageAccepted = [10, 25, 50];
     public bool $perPageAll = true;
 
     public string $defaultSortColumn = 'created_at';
@@ -46,3 +45,4 @@ class TaxonomyTable extends DataTableComponent
         return 'backend.taxonomy.index-table-row';
     }
 }
+
