@@ -68,8 +68,8 @@ class CourseApiControllerTest extends TestCase
     public function test_course_api_filters_by_curriculum()
     {
         User::factory()->create(); // Create a user first
-        Course::factory()->create(['version' => '1', 'academic_program' => 'Undergraduate']);
-        Course::factory()->create(['version' => '2', 'academic_program' => 'Undergraduate']);
+        Course::factory()->create(['version' => 1, 'academic_program' => 'Undergraduate']);
+        Course::factory()->create(['version' => 2, 'academic_program' => 'Undergraduate']);
 
         $response = $this->getJson('/api/academic/v1/undergraduate/courses?curriculum=1');
 
@@ -91,7 +91,7 @@ class CourseApiControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.semester_id', 1);
+            ->assertJsonPath('data.0.semester_id', '1');
     }
 
     /** @test */
