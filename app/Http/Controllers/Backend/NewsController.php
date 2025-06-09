@@ -138,7 +138,6 @@ class NewsController extends Controller
     public function destroy(News $news)
     {
         try {
-
             $this->deleteThumb($news->thumbURL());
             $news->delete();
             return redirect()->route('dashboard.news.index')->with('Success', 'News was deleted !');
