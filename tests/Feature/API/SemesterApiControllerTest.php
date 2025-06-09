@@ -5,7 +5,6 @@ namespace Tests\Feature\API;
 use App\Domains\AcademicProgram\Semester\Models\Semester;
 use App\Domains\Auth\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Log; // Add this line
 use Tests\TestCase;
 
 class SemesterApiControllerTest extends TestCase
