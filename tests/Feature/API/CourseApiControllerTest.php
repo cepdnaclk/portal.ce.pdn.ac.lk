@@ -76,7 +76,7 @@ class CourseApiControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.academic_program.category', 'Undergraduate')
-            ->assertJsonPath('data.0.academic_program.version', 1)
+            ->assertJsonPath('data.0.academic_program.version', '1')
             ->assertJsonPath('data.0.academic_program.curriculum_name', Course::getVersions('undergraduate')[1]);
     }
 
