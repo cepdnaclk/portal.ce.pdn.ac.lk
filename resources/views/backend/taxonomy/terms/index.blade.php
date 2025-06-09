@@ -13,9 +13,6 @@
                 @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
                     <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.taxonomy.terms.create', $taxonomy)" :text="__('Create Term')">
                     </x-utils.link>
-
-                    <x-utils.link icon="c-icon cil-pencil" class="card-header-action" :href="route('dashboard.taxonomy.edit', $taxonomy)" :text="__('Edit Taxonomy')">
-                    </x-utils.link>
                 @endif
             </x-slot>
 

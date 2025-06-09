@@ -6,9 +6,6 @@
 
 @section('content')
     <div>
-        @if ($taxonomy && $taxonomy->description)
-            <livewire:backend.expandable-info-card :title="'Taxonomy: ' . $taxonomy->name" :description="$taxonomy->description" />
-        @endif
 
         <x-backend.card>
 
@@ -77,7 +74,7 @@
                             <strong>Metadata</strong>
                         </div>
                         @foreach ($taxonomy->properties as $property)
-                            <livewire:backend.taxonomy-term-metadata :property="$property" :taxonomy="$taxonomy" />
+                            <livewire:backend.taxonomy-term-metadata :property="$property" />
                         @endforeach
                     </div>
             </x-slot>

@@ -2,7 +2,6 @@
 
 use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\TaxonomyController;
-use App\Http\Controllers\Backend\TaxonomyFileController;
 use App\Http\Controllers\Backend\TaxonomyTermController;
 use Illuminate\Support\Facades\Route;
 
@@ -138,68 +137,12 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user
 Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']], function () {
     // Index
     Route::get('taxonomy-files', function () {
-        return view('backend.taxonomy_file.index');
-    })
-        ->name('taxonomy-files.index')
+        return response()->make('Taxonomy Files not implemented yet.', 200);
+    })->name('taxonomy.files.index')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('Taxonomy Files'), route('dashboard.taxonomy-files.index'));
+                ->push(__('Taxonomy Files'), route('dashboard.taxonomy.file.index'));
         });
-
-    // View
-    Route::get('taxonomy-files/view/{taxonomyFile}', [TaxonomyFileController::class, 'view'])
-        ->name('taxonomy-files.view')
-        ->breadcrumbs(function (Trail $trail, $taxonomyFile) {
-            $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('Taxonomy Files'), route('dashboard.taxonomy-files.index'))
-                ->push($taxonomyFile->file_name)
-                ->push(__('View'));
-        });
-
-
-    // Only Editors have access to these functionalities
-    Route::group(['middleware' => ['permission:user.taxonomy.data.editor']], function () {
-        // Create form
-        Route::get('taxonomy-files/create', [TaxonomyFileController::class, 'create'])
-            ->name('taxonomy-files.create')
-            ->breadcrumbs(function (Trail $trail) {
-                $trail->push(__('Home'), route('dashboard.home'))
-                    ->push(__('Taxonomy Files'), route('dashboard.taxonomy-files.index'))
-                    ->push(__('Upload'));
-            });
-
-        // Store (POST)
-        Route::post('taxonomy-files', [TaxonomyFileController::class, 'store'])
-            ->name('taxonomy-files.store');
-
-        // Edit form
-        Route::get('taxonomy-files/edit/{taxonomyFile}', [TaxonomyFileController::class, 'edit'])
-            ->name('taxonomy-files.edit')
-            ->breadcrumbs(function (Trail $trail, $taxonomyFile) {
-                $trail->push(__('Home'), route('dashboard.home'))
-                    ->push(__('Taxonomy Files'), route('dashboard.taxonomy-files.index'))
-                    ->push($taxonomyFile->file_name)
-                    ->push(__('Edit'), route('dashboard.taxonomy-files.edit', $taxonomyFile));
-            });
-
-        // Update (PUT / PATCH)
-        Route::put('taxonomy-files/{taxonomyFile}', [TaxonomyFileController::class, 'update'])
-            ->name('taxonomy-files.update');
-
-        // Delete confirmation
-        Route::get('taxonomy-files/delete/{taxonomyFile}', [TaxonomyFileController::class, 'delete'])
-            ->name('taxonomy-files.delete')
-            ->breadcrumbs(function (Trail $trail, $taxonomyFile) {
-                $trail->push(__('Home'), route('dashboard.home'))
-                    ->push(__('Taxonomy Files'), route('dashboard.taxonomy-files.index'))
-                    ->push($taxonomyFile->file_name)
-                    ->push(__('Delete'));
-            });
-
-        // Destroy (DELETE)
-        Route::delete('taxonomy-files/{taxonomyFile}', [TaxonomyFileController::class, 'destroy'])
-            ->name('taxonomy-files.destroy');
-    });
 });
 
 // Taxonomy Pages

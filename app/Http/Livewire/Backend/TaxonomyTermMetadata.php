@@ -9,9 +9,8 @@ class TaxonomyTermMetadata extends Component
     public $property;
     public $metadata = []; // Holds the pre-filled metadata for edit
     public $term; // Holds the term object for edit
-    public $taxonomy_files = [];
 
-    public function mount($property, $term = null, $taxonomy = null)
+    public function mount($property, $term = null)
     {
         $this->property = $property;
         $this->term = $term;
@@ -19,9 +18,6 @@ class TaxonomyTermMetadata extends Component
         // Populate metadata if $term is provided (Edit mode)
         if ($this->term) {
             $this->metadata = $this->term->metadata ?? [];
-        }
-        if ($taxonomy) {
-            $this->taxonomy_files = array_merge(['' => 'Select a file'], $taxonomy->files()->toArray());
         }
     }
 

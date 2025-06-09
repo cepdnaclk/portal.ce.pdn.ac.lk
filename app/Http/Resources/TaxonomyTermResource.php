@@ -17,6 +17,7 @@ class TaxonomyTermResource extends JsonResource
     {
         $metadata = $this->getFormattedMetadataAttribute();
 
+
         return [
             'code' => $this->code,
             'name' => $this->name,
