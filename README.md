@@ -123,7 +123,7 @@ Ex:
 sudo sh ./scripts/deploy-prod.sh
 ```
 
-#### Resource Routes - Standardard Pattern
+#### Resource Routes - Standard Pattern
 
 | Verb   | URI                    | Action  | Route Name     |
 | :----- | :--------------------- | :------ | :------------- |
