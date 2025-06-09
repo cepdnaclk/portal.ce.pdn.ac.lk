@@ -5,6 +5,7 @@ namespace Tests\Feature\Backend\News;
 use App\Domains\News\Models\News;
 use App\Domains\Auth\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class NewsTest extends TestCase
@@ -40,7 +41,7 @@ class NewsTest extends TestCase
         $response = $this->post('/dashboard/news/', [
             'title' => 'test News',
             'description' => 'This is a sample news description.',
-            'image' => 'sample-image.jpg',
+            'image' => UploadedFile::fake()->image('sample.jpg'),
             'link_url' => 'http://example.com',
             'link_caption' => 'Example Link',
             'url' => 'https://ce.pdn.ac.lk/news/2004-10-10',
@@ -63,7 +64,7 @@ class NewsTest extends TestCase
         $updateData = [
             'title' => 'Updated News',
             'description' => 'This is an updated news description.',
-            'image' => 'https:\/\/via.placeholder.com\/640x480.png\/000055?text=quia',
+            'image' => UploadedFile::fake()->image('sample.jpg'),
             'link_url' => 'http://example.com',
             'link_caption' => 'eaque excepturi velit',
             'url' => 'https://ce.pdn.ac.lk/news/2004-11-11',
