@@ -18,7 +18,7 @@ class AnnouncementTest extends TestCase
     public function an_admin_can_access_the_list_announcements_page()
     {
         $this->loginAsAdmin();
-        $this->get('/dashboard/announcements/')->assertOk();
+        $this->get('/dashboard/announcements')->assertOk();
     }
 
     /** @test */

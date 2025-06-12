@@ -46,13 +46,16 @@ class TaxonomyTermController extends Controller
                 'metadata' => 'array',
             ]);
 
-
             foreach ($taxonomy->properties as $property) {
                 $metadataKey = "metadata.{$property['code']}";
+
 
                 switch ($property['data_type']) {
                     case 'string':
                         $request->validate([$metadataKey => 'nullable|string']);
+                        break;
+                    case 'email':
+                        $request->validate([$metadataKey => 'nullable|email']);
                         break;
                     case 'integer':
                         $request->validate([$metadataKey => 'nullable|integer']);
@@ -72,14 +75,8 @@ class TaxonomyTermController extends Controller
                     case 'url':
                         $request->validate([$metadataKey => 'nullable|url']);
                         break;
-                    case 'image':
-
-                        if ($request->hasFile("metadata.{$property['code']}")) {
-                            $imagePath = $this->uploadThumb(null, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
-                            $value = $imagePath;
-                        } else {
-                            $value = null;
-                        }
+                    case 'file':
+                        $request->validate([$metadataKey => 'nullable|exists:taxonomy_files,id']);
                         break;
                 }
             }
@@ -149,6 +146,9 @@ class TaxonomyTermController extends Controller
                     case 'string':
                         $request->validate([$metadataKey => 'nullable|string']);
                         break;
+                    case 'email':
+                        $request->validate([$metadataKey => 'nullable|email']);
+                        break;
                     case 'integer':
                         $request->validate([$metadataKey => 'nullable|integer']);
                         break;
@@ -174,6 +174,9 @@ class TaxonomyTermController extends Controller
                         } else {
                             $value = null;
                         }
+                        break;
+                    case 'file':
+                        $request->validate([$metadataKey => 'nullable|exists:taxonomy_files,id']);
                         break;
                 }
             }

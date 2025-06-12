@@ -1,93 +1,146 @@
-<div class="col-12 py-2">
+<div class="col-12 pb-2">
     <div class="col ps-0">
-        <label>{{ $property['name'] }}
+        <label>
+            {{ $property['name'] }}
             ({{ \App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']] }})
+            @if ($property['data_type'] == 'file' && $logged_in_user->hasPermissionTo('user.access.taxonomy.file.editor'))
+                <a class="ms-2" target="_blank" href="{{ route('dashboard.taxonomy-files.create') }}">
+                    <i class="fa fa-plus"></i>
+                </a>
+            @endif
         </label>
     </div>
-    <div class="col-md-12 px-0">
+    <div class="col-md-12 px-0 pb-2">
         @php
             $value = null;
             if (!empty($property['code']) && $term) {
                 $value = $term->getMetadata($property['code']);
-            }  
+            }
         @endphp
 
         @switch($property['data_type'])
             @case('string')
-                {!! Form::text(
-                    "metadata[{$property['code']}]",
-                    old("metadata.{$property['code']}", $value),
-                    ['class' => 'form-control', 'id' => $property['code']]
-                ) !!}
+                {!! Form::text("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
+                    'class' => 'form-control',
+                    'id' => $property['code'],
+                ]) !!}
+            @break
+
+            @case('email')
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa fa-envelope"></i>
+                    </span>
+                    {!! Form::email("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
+                        'class' => 'form-control',
+                        'id' => $property['code'],
+                    ]) !!}
+                </div>
             @break
 
             @case('integer')
-                {!! Form::number(
-                    "metadata[{$property['code']}]",
-                    old("metadata.{$property['code']}", $value),
-                    ['class' => 'form-control', 'id' => $property['code'], 'step' => '1']
-                ) !!}
+                <div class="input-group">
+                    <span class="input-group-text">#</span>
+                    {!! Form::number("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
+                        'class' => 'form-control',
+                        'id' => $property['code'],
+                        'step' => '1',
+                    ]) !!}
+                </div>
             @break
 
             @case('float')
-                {!! Form::number(
-                    "metadata[{$property['code']}]",
-                    old("metadata.{$property['code']}", $value),
-                    ['class' => 'form-control', 'id' => $property['code'], 'step' => 'any']
-                ) !!}
+                <div class="input-group">
+                    <span class="input-group-text">#.#</span>
+                    {!! Form::number("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
+                        'class' => 'form-control',
+                        'id' => $property['code'],
+                        'step' => 'any',
+                    ]) !!}
+                </div>
             @break
 
             @case('boolean')
                 <div class="form-check">
-                    {!! Form::checkbox(
-                        "metadata[{$property['code']}]",
-                        1,
-                        old("metadata.{$property['code']}", $value == 1),
-                        ['class' => 'form-check-input', 'id' => $property['code']]
-                    ) !!}
+                    {!! Form::checkbox("metadata[{$property['code']}]", 1, old("metadata.{$property['code']}", $value == 1), [
+                        'class' => 'form-check-input ms-2',
+                        'id' => $property['code'],
+                        'style' => 'width: 1.15em; height: 1.15em;',
+                    ]) !!}
                 </div>
             @break
 
             @case('date')
-                {!! Form::date(
-                    "metadata[{$property['code']}]",
-                    old("metadata.{$property['code']}", $value),
-                    ['class' => 'form-control', 'id' => $property['code']]
-                ) !!}
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    {!! Form::date("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
+                        'class' => 'form-control',
+                        'id' => $property['code'],
+                    ]) !!}
+                </div>
             @break
 
             @case('datetime')
-                {!! Form::datetimeLocal(
-                    "metadata[{$property['code']}]",
-                    old("metadata.{$property['code']}", $value),
-                    ['class' => 'form-control', 'id' => $property['code']]
-                ) !!}
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa fa-clock"></i>
+                    </span>
+                    {!! Form::datetimeLocal("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
+                        'class' => 'form-control',
+                        'id' => $property['code'],
+                    ]) !!}
+                </div>
             @break
 
             @case('url')
-                {!! Form::url(
-                    "metadata[{$property['code']}]",
-                    old("metadata.{$property['code']}", $value),
-                    ['class' => 'form-control', 'id' => $property['code']]
-                ) !!}
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa fa-link"></i>
+                    </span>
+                    {!! Form::url("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
+                        'class' => 'form-control',
+                        'id' => $property['code'],
+                        'placeholder' => 'Enter a valid URL',
+                    ]) !!}
+                </div>
             @break
 
             @case('image')
-                {!! Form::file(
-                    "metadata[{$property['code']}]",
-                    ['class' => 'form-control', 'id' => $property['code']]
-                ) !!}
+                {!! Form::file("metadata[{$property['code']}]", ['class' => 'form-control', 'id' => $property['code']]) !!}
                 @if ($value)
                     <small>Current: {{ $value }}</small>
                 @endif
             @break
 
+            @case('file')
+                @if (empty($taxonomy_files))
+                    <p><i>No files available for selection. </i></p>
+                @else
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa fa-file"></i>
+                        </span>
+                        {!! Form::select(
+                            "metadata[{$property['code']}]",
+                            $taxonomy_files,
+                            $value ?? old("metadata.{$property['code']}"),
+                            [
+                                'class' => 'form-select',
+                                'id' => $property['code'],
+                            ],
+                        ) !!}
+                    </div>
+                @endif
+            @break
+
             @default
-                {!! Form::text(
-                    "metadata[{$property['code']}]",
-                    old("metadata.{$property['code']}", $value),
-                    ['class' => 'form-control', 'id' => $property['code']]
-                ) !!}
+                {!! Form::text("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
+                    'class' => 'form-control',
+                    'id' => $property['code'],
+                ]) !!}
         @endswitch
     </div>
+
 </div>
