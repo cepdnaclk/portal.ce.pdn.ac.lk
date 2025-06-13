@@ -1,0 +1,9 @@
+.git
+node_modules
+vendor
+storage/*.key
+storage/*.log
+.env
+.pnpm-store
+.gitignore
+docker-compose.yml

@@ -68,6 +68,12 @@ php artisan serve --host=0.0.0.0 --port=8000
 pnpm run watch
 ```
 
+#### Serve with Docker Compose
+
+```bash
+docker-compose up --build
+```
+
 #### Cache and optimization
 
 ```bash
