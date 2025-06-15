@@ -46,40 +46,7 @@ class TaxonomyTermController extends Controller
                 'metadata' => 'array',
             ]);
 
-            foreach ($taxonomy->properties as $property) {
-                $metadataKey = "metadata.{$property['code']}";
-
-
-                switch ($property['data_type']) {
-                    case 'string':
-                        $request->validate([$metadataKey => 'nullable|string']);
-                        break;
-                    case 'email':
-                        $request->validate([$metadataKey => 'nullable|email']);
-                        break;
-                    case 'integer':
-                        $request->validate([$metadataKey => 'nullable|integer']);
-                        break;
-                    case 'float':
-                        $request->validate([$metadataKey => 'nullable|numeric']);
-                        break;
-                    case 'boolean':
-                        $request->validate([$metadataKey => 'nullable|boolean']);
-                        break;
-                    case 'date':
-                        $request->validate([$metadataKey => 'nullable|date']);
-                        break;
-                    case 'datetime':
-                        $request->validate([$metadataKey => 'nullable|date']);
-                        break;
-                    case 'url':
-                        $request->validate([$metadataKey => 'nullable|url']);
-                        break;
-                    case 'file':
-                        $request->validate([$metadataKey => 'nullable|exists:taxonomy_files,id']);
-                        break;
-                }
-            }
+            $this->validateMetadata($request, $taxonomy);
 
             $metadataArray = [];
 
@@ -131,81 +98,41 @@ class TaxonomyTermController extends Controller
      */
     public function update(Request $request, Taxonomy $taxonomy, TaxonomyTerm $term)
     {
-        try {
-            $validatedData = $request->validate([
-                'code' => 'required|unique:taxonomy_terms,code,' . $term->id,
-                'name' => 'required',
-                'parent_id' => 'nullable|exists:taxonomy_terms,id',
-                'metadata' => 'array',
-            ]);
+        // try {
+        $validatedData = $request->validate([
+            'code' => 'required|unique:taxonomy_terms,code,' . $term->id,
+            'name' => 'required',
+            'parent_id' => 'nullable|exists:taxonomy_terms,id',
+            'metadata' => 'array',
+        ]);
 
-            foreach ($taxonomy->properties as $property) {
-                $metadataKey = "metadata.{$property['code']}";
+        $this->validateMetadata($request, $taxonomy);
 
-                switch ($property['data_type']) {
-                    case 'string':
-                        $request->validate([$metadataKey => 'nullable|string']);
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                    case 'email':
-                        $request->validate([$metadataKey => 'nullable|email']);
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                    case 'integer':
-                        $request->validate([$metadataKey => 'nullable|integer']);
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                    case 'float':
-                        $request->validate([$metadataKey => 'nullable|numeric']);
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                    case 'boolean':
-                        $request->validate([$metadataKey => 'nullable|boolean']);
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                    case 'date':
-                        $request->validate([$metadataKey => 'nullable|date']);
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                    case 'datetime':
-                        $request->validate([$metadataKey => 'nullable|date']);
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                    case 'url':
-                        $request->validate([$metadataKey => 'nullable|url']);
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                    case 'image':
-                        if ($request->hasFile("metadata.{$property['code']}")) {
-                            $imagePath = $this->uploadThumb($term, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
-                            $value = $imagePath;
-                        } else {
-                            $value = null;
-                        }
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                    case 'file':
-                        $request->validate([$metadataKey => 'nullable|exists:taxonomy_files,id']);
-                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
-                }
+        $metadataArray = [];
+        foreach ($taxonomy->properties as $property) {
+            $value = $request->input("metadata.{$property['code']}");
+
+            if ($property['data_type'] === 'boolean') {
+                $value = $request->has("metadata.{$property['code']}") ? true : false;
             }
 
-            $metadataArray = [];
-            foreach ($taxonomy->properties as $property) {
-                $value = $request->input("metadata.{$property['code']}");
-
-                if ($property['data_type'] === 'boolean') {
-                    $value = $request->has("metadata.{$property['code']}") ? true : false;
-                }
-
-                $metadataArray[] = [
-                    'code' => $property['code'],
-                    'value' => $value === '' ? null : $value
-                ];
-            }
-
-            $term->update($validatedData);
-            $term->metadata = $metadataArray;
-            $term->updated_by = Auth::user()->id;
-            $term->save();
-
-            return redirect()->route('dashboard.taxonomy.terms.index', $taxonomy)
-                ->with('Success', 'Taxonomy term was updated successfully!');
-        } catch (\Exception $ex) {
-            Log::error('Failed to update taxonomy term', ['term_id' => $term->id, 'error' => $ex->getMessage()]);
-            return back()->withInput()->withErrors(['error' => 'Failed to update taxonomy term. Please try again.']);
+            $metadataArray[] = [
+                'code' => $property['code'],
+                'value' => $value === '' ? null : $value
+            ];
         }
+
+        $term->update($validatedData);
+        $term->metadata = $metadataArray;
+        $term->updated_by = Auth::user()->id;
+        $term->save();
+
+        return redirect()->route('dashboard.taxonomy.terms.index', $taxonomy)
+            ->with('Success', 'Taxonomy term was updated successfully!');
+        // } catch (\Exception $ex) {
+        //     Log::error('Failed to update taxonomy term', ['term_id' => $term->id, 'error' => $ex->getMessage()]);
+        //     return back()->withInput()->withErrors(['error' => 'Failed to update taxonomy term. Please try again.']);
+        // }
     }
     /**
      * Confirm to delete the specified resource from storage.
@@ -216,6 +143,56 @@ class TaxonomyTermController extends Controller
     public function delete(Taxonomy $taxonomy, TaxonomyTerm $term)
     {
         return view('backend.taxonomy.terms.delete', compact('taxonomy', 'term'));
+    }
+
+
+    public function validateMetadata($request, Taxonomy $taxonomy)
+    {
+        foreach ($taxonomy->properties as $property) {
+            $metadataKey = "metadata.{$property['code']}";
+
+            // dd($request);
+            switch ($property['data_type']) {
+                case 'string':
+                    // dd($request, [$metadataKey => 'nullable|string']);
+                    // dd($request->validate([$metadataKey => 'nullable|string']));
+                    $request->validate([$metadataKey => 'nullable|string']);
+                    // throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
+                    break;
+                case 'email':
+                    $request->validate([$metadataKey => 'nullable|email']);
+                    // throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
+                    break;
+                case 'integer':
+                    $request->validate([$metadataKey => 'nullable|integer']);
+                    // throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
+                    break;
+                case 'float':
+                    $request->validate([$metadataKey => 'nullable|numeric']);
+                    // throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
+                    break;
+                case 'boolean':
+                    $request->validate([$metadataKey => 'nullable|boolean']);
+                    // throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
+                    break;
+                case 'date':
+                    $request->validate([$metadataKey => 'nullable|date']);
+                    // throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
+                    break;
+                case 'datetime':
+                    $request->validate([$metadataKey => 'nullable|date']);
+                    // throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
+                    break;
+                case 'url':
+                    $request->validate([$metadataKey => 'nullable|url']);
+                    // throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
+                    break;
+                case 'file':
+                    $request->validate([$metadataKey => 'nullable|exists:taxonomy_files,id']);
+                    // throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
+                    break;
+            }
+        }
     }
 
     /**
