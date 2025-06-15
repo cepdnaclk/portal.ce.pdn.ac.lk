@@ -19,7 +19,7 @@ class AcademicProgram extends Model
 
     public static function getVersions($academicProgram = null): array
     {
-        // TODO integrate with Taxonomies 
+        // TODO integrate with Taxonomies
         $academicPrograms = [
             'undergraduate' => [
                 1 => 'Current Curriculum',
@@ -36,11 +36,16 @@ class AcademicProgram extends Model
                 foreach ($programs as $key => $value) $allAcademicPrograms[$key] = $value;
             }
             return $allAcademicPrograms;
-        } else if (array_key_exists($academicProgram, $academicPrograms)) {
-            return $academicPrograms[$academicProgram];
+        } else if (array_key_exists(strtolower($academicProgram), $academicPrograms)) {
+            return $academicPrograms[strtolower($academicProgram)];
         } else {
             return [];
         }
+    }
+
+    public function curriculum()
+    {
+        return $this::getVersions($this->academic_program)[$this->version] ?? null;
     }
 
     public static function getTypes(): array

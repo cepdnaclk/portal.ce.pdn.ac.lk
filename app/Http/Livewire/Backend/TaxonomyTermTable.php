@@ -10,11 +10,12 @@ use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class TaxonomyTermTable extends DataTableComponent
 {
-    public array $perPageAccepted = [10, 25, 50];
+    public array $perPageAccepted = [10, 25, 50, 100];
+    public int $perPage = 100;
     public bool $perPageAll = true;
 
-    public string $defaultSortColumn = 'created_at';
-    public string $defaultSortDirection = 'desc';
+    public string $defaultSortColumn = 'code';
+    public string $defaultSortDirection = 'asc';
 
     public $taxonomy;
 

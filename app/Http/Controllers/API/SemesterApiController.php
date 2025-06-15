@@ -13,7 +13,7 @@ class SemesterApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Semester::where('academic_program', 'Undergraduate');
+            $query = Semester::withCount('courses')->where('academic_program', 'Undergraduate');
 
             if ($request->has('curriculum')) {
                 $query->where('version', $request->curriculum);

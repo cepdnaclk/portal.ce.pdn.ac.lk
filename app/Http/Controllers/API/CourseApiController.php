@@ -13,7 +13,7 @@ class CourseApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Course::where('academic_program', 'Undergraduate');
+            $query = Course::with('modules')->where('academic_program', 'Undergraduate');
 
             if ($request->has('curriculum')) {
                 $query->where('version', $request->curriculum);
