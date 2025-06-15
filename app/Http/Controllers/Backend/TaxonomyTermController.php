@@ -145,28 +145,28 @@ class TaxonomyTermController extends Controller
                 switch ($property['data_type']) {
                     case 'string':
                         $request->validate([$metadataKey => 'nullable|string']);
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                     case 'email':
                         $request->validate([$metadataKey => 'nullable|email']);
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                     case 'integer':
                         $request->validate([$metadataKey => 'nullable|integer']);
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                     case 'float':
                         $request->validate([$metadataKey => 'nullable|numeric']);
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                     case 'boolean':
                         $request->validate([$metadataKey => 'nullable|boolean']);
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                     case 'date':
                         $request->validate([$metadataKey => 'nullable|date']);
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                     case 'datetime':
                         $request->validate([$metadataKey => 'nullable|date']);
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                     case 'url':
                         $request->validate([$metadataKey => 'nullable|url']);
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                     case 'image':
                         if ($request->hasFile("metadata.{$property['code']}")) {
                             $imagePath = $this->uploadThumb($term, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
@@ -174,10 +174,10 @@ class TaxonomyTermController extends Controller
                         } else {
                             $value = null;
                         }
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                     case 'file':
                         $request->validate([$metadataKey => 'nullable|exists:taxonomy_files,id']);
-                        throw new \InvalidArgumentException("Invalid data type for property {$property['code']}");
+                        throw new \InvalidArgumentException("Invalid data type for property '{$property['code']}'");
                 }
             }
 
