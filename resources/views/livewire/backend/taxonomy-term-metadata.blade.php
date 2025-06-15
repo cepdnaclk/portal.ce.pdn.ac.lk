@@ -107,13 +107,6 @@
                 </div>
             @break
 
-            @case('image')
-                {!! Form::file("metadata[{$property['code']}]", ['class' => 'form-control', 'id' => $property['code']]) !!}
-                @if ($value)
-                    <small>Current: {{ $value }}</small>
-                @endif
-            @break
-
             @case('file')
                 @if (empty($taxonomy_files))
                     <p><i>No files available for selection. </i></p>
@@ -122,15 +115,10 @@
                         <span class="input-group-text">
                             <i class="fa fa-file"></i>
                         </span>
-                        {!! Form::select(
-                            "metadata[{$property['code']}]",
-                            $taxonomy_files,
-                            $value ?? old("metadata.{$property['code']}"),
-                            [
-                                'class' => 'form-select',
-                                'id' => $property['code'],
-                            ],
-                        ) !!}
+                        {!! Form::select("metadata[{$property['code']}]", $taxonomy_files, old("metadata.{$property['code']}", $value), [
+                            'class' => 'form-select',
+                            'id' => $property['code'],
+                        ]) !!}
                     </div>
                 @endif
             @break

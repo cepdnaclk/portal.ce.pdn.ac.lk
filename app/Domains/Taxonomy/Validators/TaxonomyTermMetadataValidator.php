@@ -40,7 +40,7 @@ class TaxonomyTermMetadataValidator
             case 'url':
                 return 'nullable|url';
             case 'file':
-                return 'nullable|exists:taxonomy_files,id';
+                return 'nullable|integer|exists:taxonomy_files,id';
             default:
                 return 'nullable';
         }

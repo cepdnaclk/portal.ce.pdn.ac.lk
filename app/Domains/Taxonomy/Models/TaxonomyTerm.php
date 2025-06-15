@@ -48,19 +48,20 @@ class TaxonomyTerm extends Model
 
             $properties = $this->taxonomy->get_properties();
             foreach ($filteredMetadata as $metadata) {
-                $taxonomyCode = $properties[$metadata['code']]['data_type'];
+                $code = $metadata['code'];
+                $taxonomyCode = $properties[$code]['data_type'];
                 $metadataValue = $metadata['value'];
 
-                if ($metadataValue) {
+                if ($metadataValue != null && $metadataValue !== '') {
                     if ($taxonomyCode == 'file') {
                         // Cache file lookup by file ID
-                        $fileCacheKey = 'taxonomy_' . $this->taxonomy_id . '_file_' . $metadataValue;
+                        $fileCacheKey = 'taxonomy_' . (int)$this->taxonomy_id . '_file_' . (int)$metadataValue;
                         $taxonomyFile = cache()->remember($fileCacheKey, 300, function () use ($metadataValue) {
                             return TaxonomyFile::find($metadataValue);
                         });
 
                         if ($taxonomyFile) {
-                            $response[$metadata['code']] = route(
+                            $response[$code] = route(
                                 'download.taxonomy-files',
                                 ['file_name' => $taxonomyFile->file_name, 'extension' => $taxonomyFile->getFileExtension()]
                             );
@@ -88,10 +89,10 @@ class TaxonomyTerm extends Model
 
                         // Add to response if the formatted datetime is not null
                         if (!is_null($formattedDatetime)) {
-                            $response[$metadata['code']] = $formattedDatetime;
+                            $response[$code] = $formattedDatetime;
                         }
                     } else {
-                        $response[$metadata['code']] = $metadataValue;
+                        $response[$code] = $metadataValue;
                     }
                 }
             }

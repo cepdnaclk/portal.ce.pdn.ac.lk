@@ -58,6 +58,7 @@ class TaxonomyTermController extends Controller
                 if ($property['data_type'] === 'boolean') {
                     $value = $request->has("metadata.{$property['code']}") ? true : false;
                 }
+
                 $metadataArray[] = [
                     'code' => $property['code'],
                     'value' => $value === '' ? null : $value

@@ -21,7 +21,11 @@ class TaxonomyTermMetadata extends Component
             $this->metadata = $this->term->metadata ?? [];
         }
         if ($taxonomy) {
-            $this->taxonomy_files = array_merge(['' => 'Select a file'], $taxonomy->files()->toArray());
+            $this->taxonomy_files = ['' => 'Select a file'];
+
+            foreach ($taxonomy->files()->toArray() as $key => $file_name) {
+                $this->taxonomy_files[$key] = $file_name;
+            }
         }
     }
 
