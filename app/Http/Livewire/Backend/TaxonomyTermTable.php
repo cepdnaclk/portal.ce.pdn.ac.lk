@@ -14,8 +14,8 @@ class TaxonomyTermTable extends DataTableComponent
     public int $perPage = 100;
     public bool $perPageAll = true;
 
-    public string $defaultSortColumn = 'created_at';
-    public string $defaultSortDirection = 'desc';
+    public string $defaultSortColumn = 'code';
+    public string $defaultSortDirection = 'asc';
 
     public $taxonomy;
 
