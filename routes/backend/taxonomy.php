@@ -206,10 +206,11 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user
 Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor|user.access.taxonomy.page.viewer']], function () {
     // Index
     Route::get('taxonomy-pages', function () {
-        return response()->make('Taxonomy Pages not implemented yet.', 200);
-    })->name('taxonomy.pages.index')
+        return view('backend.taxonomy_pages.index');
+    })
+        ->name('taxonomy-pages.index')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
-                ->push(__('Taxonomy pages'), route('dashboard.taxonomy.page.index'));
+                ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'));
         });
 });
