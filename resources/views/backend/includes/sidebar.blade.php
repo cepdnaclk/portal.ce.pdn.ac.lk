@@ -137,8 +137,8 @@
                 'user.access.taxonomy.page.viewer',
             ]))
             <li class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.taxonomy'), 'c-open c-show') }}">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-sitemap" class="c-sidebar-nav-dropdown-toggle"
-                    :text="__('Taxonomies')"></x-utils.link>
+                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-sitemap"
+                    class="c-sidebar-nav-dropdown-toggle" :text="__('Taxonomies')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
                     {{-- Taxonomy Data --}}
@@ -157,13 +157,13 @@
                         </li>
                     @endif
 
-                    {{-- TODO Taxonomy Page
+                    {{-- Taxonomy Page --}}
                     @if ($logged_in_user->hasAnyPermission(['user.access.taxonomy.page.editor', 'user.access.taxonomy.page.viewer']))
                         <li class="c-sidebar-nav-item">
-                            <x-utils.link :href="route('dashboard.taxonomy.pages.index')" class="c-sidebar-nav-link" :text="__('Pages')"
+                            <x-utils.link :href="route('dashboard.taxonomy-pages.index')" class="c-sidebar-nav-link" :text="__('Pages')"
                                 :active="activeClass(Route::is('dashboard.taxonomy.*'), 'c-active')"></x-utils.link>
                         </li>
-                    @endif --}}
+                    @endif
                 </ul>
             </li>
         @endif
