@@ -11,7 +11,6 @@
         @endif
 
         <x-backend.card>
-
             <x-slot name="body">
                 <form method="POST" action="{{ route('dashboard.taxonomy.terms.store', $taxonomy) }}">
                     @csrf
