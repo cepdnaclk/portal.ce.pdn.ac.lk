@@ -1,4 +1,4 @@
-[![Laravel CI](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml/badge.svg)](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_push.yml) ![GitHub Release](https://img.shields.io/github/v/release/cepdnaclk/portal.ce.pdn.ac.lk) [![codecov](https://codecov.io/gh/cepdnaclk/portal.ce.pdn.ac.lk/graph/badge.svg?token=T039QAP0FR)](https://codecov.io/gh/cepdnaclk/portal.ce.pdn.ac.lk)
+[![Laravel CI](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_ci.yml/badge.svg)](https://github.com/cepdnaclk/portal.ce.pdn.ac.lk/actions/workflows/laravel_ci.yml) ![GitHub Release](https://img.shields.io/github/v/release/cepdnaclk/portal.ce.pdn.ac.lk) [![codecov](https://codecov.io/gh/cepdnaclk/portal.ce.pdn.ac.lk/graph/badge.svg?token=T039QAP0FR)](https://codecov.io/gh/cepdnaclk/portal.ce.pdn.ac.lk)
 
 # portal.ce.pdn.ac.lk
 
@@ -123,7 +123,7 @@ Ex:
 sudo sh ./scripts/deploy-prod.sh
 ```
 
-#### Resource Routes - Standardard Pattern
+#### Resource Routes - Standard Pattern
 
 | Verb   | URI                    | Action  | Route Name     |
 | :----- | :--------------------- | :------ | :------------- |

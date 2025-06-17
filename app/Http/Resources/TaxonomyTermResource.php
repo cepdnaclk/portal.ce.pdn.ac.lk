@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-// use App\Domains\Auth\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TaxonomyTermResource extends JsonResource
@@ -16,7 +15,6 @@ class TaxonomyTermResource extends JsonResource
     public function toArray($request)
     {
         $metadata = $this->getFormattedMetadataAttribute();
-
 
         return [
             'code' => $this->code,

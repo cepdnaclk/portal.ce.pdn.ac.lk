@@ -6,9 +6,11 @@
 
 @section('content')
     <div>
+        @if ($taxonomy && $taxonomy->description)
+            <livewire:backend.expandable-info-card :title="'Taxonomy: ' . $taxonomy->name" :description="$taxonomy->description" />
+        @endif
 
         <x-backend.card>
-
             <x-slot name="body">
                 <form method="POST" action="{{ route('dashboard.taxonomy.terms.store', $taxonomy) }}">
                     @csrf
@@ -69,12 +71,18 @@
 
                     <!-- Metadata Section -->
                     <div class="metadata py-3 mt-5 mb-3" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
-
                         <div class="col-12 pb-3">
                             <strong>Metadata</strong>
                         </div>
+
+                        @if (empty($taxonomy->properties))
+                            <div class="col-12">
+                                <p class="text-muted">No metadata properties available for this taxonomy.</p>
+                            </div>
+                        @endif
+
                         @foreach ($taxonomy->properties as $property)
-                            <livewire:backend.taxonomy-term-metadata :property="$property" />
+                            <livewire:backend.taxonomy-term-metadata :property="$property" :taxonomy="$taxonomy" />
                         @endforeach
                     </div>
             </x-slot>

@@ -108,6 +108,7 @@ class TaxonomyController extends Controller
             //         ->route('dashboard.taxonomy.index')
             //         ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             // }
+
             $taxonomy->update($data);
             $taxonomy->properties = $updatedProperties;
             $taxonomy->updated_by = Auth::user()->id;
