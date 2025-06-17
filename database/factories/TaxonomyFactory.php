@@ -45,6 +45,7 @@ class TaxonomyFactory extends Factory
                     'data_type' => 'boolean'
                 ]
             ],
+            'visibility' => true,
             'created_by' => 1,
             'updated_by' => 1,
             'created_at' => now(),
