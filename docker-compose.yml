@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
+    env_file:
+      - .env
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: portal
+      MYSQL_USER: portal
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+volumes:
+  db_data:
