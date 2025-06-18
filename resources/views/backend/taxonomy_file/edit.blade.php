@@ -63,13 +63,13 @@
 
                         <!-- Replace File -->
                         <div class="row mt-3">
-                            {!! Form::label('file', "New File* (10 MB max, supports $supportedExtensions only)", [
+                            {!! Form::label('file', "New File (10 MB max, supports $supportedExtensions only)", [
                                 'class' => 'col-form-label',
                             ]) !!}
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12">
-                                {!! Form::file('file', ['class' => 'form-control', 'required' => true]) !!}
+                                {!! Form::file('file', ['class' => 'form-control', 'required' => false]) !!}
                                 @error('file')
                                     <strong class="text-danger">{{ $message }}</strong>
                                 @enderror

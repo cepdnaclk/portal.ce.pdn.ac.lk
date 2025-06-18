@@ -142,8 +142,21 @@ class TaxonomyFileController extends Controller
                 $metadata = $taxonomyFile->metadata ?? [];
                 $metadata['file_size'] = $fileSize;
                 $taxonomyFile->metadata = $metadata;
+            } else if ($taxonomyFile->file_name !== $validated['file_name']) {
+                // Rename the file if no new file is uploaded
+                $originalExtension = pathinfo($taxonomyFile->file_path, PATHINFO_EXTENSION);
+                $fileNameWithExtension = $validated['file_name'] . '.' . $originalExtension;
+
+                // Update the file path in storage
+                $newFilePath = 'taxonomy_files/' . $fileNameWithExtension;
+                Storage::disk('public')->move($taxonomyFile->file_path, $newFilePath);
+
+                $taxonomyFile->file_name = $validated['file_name'];
+                $taxonomyFile->file_path = $newFilePath;
             }
 
+            $taxonomyFile->file_name = $validated['file_name'];
+            $taxonomyFile->taxonomy_id =  $validated['taxonomy_id'] ?? null;
             $taxonomyFile->updated_by = Auth::user()->id;
             $taxonomyFile->save();
 
