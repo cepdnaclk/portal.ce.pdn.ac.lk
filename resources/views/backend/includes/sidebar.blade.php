@@ -136,7 +136,7 @@
                 'user.access.taxonomy.page.editor',
                 'user.access.taxonomy.page.viewer',
             ]))
-            <li class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.taxonomy'), 'c-open c-show') }}">
+            <li class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.taxonomy*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-sitemap"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Taxonomies')"></x-utils.link>
 
@@ -153,7 +153,7 @@
                     @if ($logged_in_user->hasAnyPermission(['user.access.taxonomy.file.editor', 'user.access.taxonomy.file.viewer']))
                         <li class="c-sidebar-nav-item">
                             <x-utils.link :href="route('dashboard.taxonomy-files.index')" class="c-sidebar-nav-link" :text="__('Files')"
-                                :active="activeClass(Route::is('dashboard.taxonomy.*'), 'c-active')"></x-utils.link>
+                                :active="activeClass(Route::is('dashboard.taxonomy-files.*'), 'c-active')"></x-utils.link>
                         </li>
                     @endif
 
@@ -161,7 +161,7 @@
                     @if ($logged_in_user->hasAnyPermission(['user.access.taxonomy.page.editor', 'user.access.taxonomy.page.viewer']))
                         <li class="c-sidebar-nav-item">
                             <x-utils.link :href="route('dashboard.taxonomy-pages.index')" class="c-sidebar-nav-link" :text="__('Pages')"
-                                :active="activeClass(Route::is('dashboard.taxonomy.*'), 'c-active')"></x-utils.link>
+                                :active="activeClass(Route::is('dashboard.taxonomy-pages.*'), 'c-active')"></x-utils.link>
                         </li>
                     @endif
                 </ul>
