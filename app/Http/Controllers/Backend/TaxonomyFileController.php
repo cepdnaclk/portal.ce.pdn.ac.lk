@@ -38,12 +38,19 @@ class TaxonomyFileController extends Controller
 
         try {
             $uploaded = $request->file('file');
-            $originalExtension = $uploaded->getClientOriginalExtension();
-            $fileNameWithExtension = $validated['file_name'] . '.' . $originalExtension;
-            $relativePath = $uploaded->storeAs('taxonomy_files', $fileNameWithExtension, 'public');
 
-            // Update metadata
-            $fileSize = $uploaded->getSize();
+            if ($uploaded) {
+                $originalExtension = $uploaded->getClientOriginalExtension();
+                $fileNameWithExtension = $validated['file_name'] . '.' . $originalExtension;
+                $relativePath = $uploaded->storeAs('taxonomy_files', $fileNameWithExtension, 'public');
+
+                // Update metadata
+                $fileSize = $uploaded->getSize();
+            } else {
+                return redirect()
+                    ->route('dashboard.taxonomy-files.create')
+                    ->withErrors(['file' => 'No file was uploaded.']);
+            }
 
             $taxonomyFile = new TaxonomyFile([
                 'file_name'   => $validated['file_name'],

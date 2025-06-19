@@ -1,11 +1,11 @@
-name: Laravel CI/CD
+name: Laravel CI
 
 on:
+    push:
+        branches: ['main', 'dev', 'production']
+
     pull_request:
-        branches:
-            - main
-            - dev
-            - production
+        branches: ['main', 'dev', 'production']
 
 jobs:
     laravel-tests:
@@ -47,8 +47,5 @@ jobs:
                   touch database/database.sqlite
 
             - name: Execute tests (Unit and Feature tests) via PHPUnit
-              env:
-                  DB_CONNECTION: sqlite
-                  DB_DATABASE: database/database.sqlite
               run: |
                   php artisan test --colors --debug

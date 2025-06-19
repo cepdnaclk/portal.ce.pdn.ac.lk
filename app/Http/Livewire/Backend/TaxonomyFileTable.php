@@ -41,6 +41,7 @@ class TaxonomyFileTable extends DataTableComponent
     public function query(): Builder
     {
         return ModelsTaxonomyFile::query()
+            ->with('taxonomy')
             ->when($this->getFilter('taxonomy_id'), fn($query, $type) => $query->where('taxonomy_id', $type));
     }
 

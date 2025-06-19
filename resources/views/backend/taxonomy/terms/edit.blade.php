@@ -86,6 +86,12 @@
                             <strong>Metadata</strong>
                         </div>
 
+                        @if (empty($taxonomy->properties))
+                            <div class="col-12">
+                                <p class="text-muted">No metadata properties available for this taxonomy.</p>
+                            </div>
+                        @endif
+
                         @foreach ($taxonomy->properties as $property)
                             <livewire:backend.taxonomy-term-metadata :property="$property" :term="$term"
                                 :taxonomy="$taxonomy" />

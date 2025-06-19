@@ -49,6 +49,12 @@ class TaxonomyTerm extends Model
             $properties = $this->taxonomy->get_properties();
             foreach ($filteredMetadata as $metadata) {
                 $code = $metadata['code'];
+
+                if (!array_key_exists($code, $properties)) {
+                    // If property is deleted, skip it from the response
+                    continue;
+                }
+
                 $taxonomyCode = $properties[$code]['data_type'];
                 $metadataValue = $metadata['value'];
 
