@@ -98,39 +98,40 @@ class TaxonomyTermController extends Controller
      */
     public function update(Request $request, Taxonomy $taxonomy, TaxonomyTerm $term)
     {
-        $validatedData = $request->validate([
-            'code' => 'required|unique:taxonomy_terms,code,' . $term->id,
-            'name' => 'required',
-            'parent_id' => 'nullable|exists:taxonomy_terms,id',
-            'metadata' => 'array',
-            `visibility` => 'boolean',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'code' => 'required|unique:taxonomy_terms,code,' . $term->id,
+                'name' => 'required',
+                'parent_id' => 'nullable|exists:taxonomy_terms,id',
+                'metadata' => 'array',
+                'visibility' => 'boolean',
+            ]);
 
-        $metadataArray = [];
-        foreach ($taxonomy->properties as $property) {
-            $value = $request->input("metadata.{$property['code']}");
+            $metadataArray = [];
+            foreach ($taxonomy->properties as $property) {
+                $value = $request->input("metadata.{$property['code']}");
 
-            if ($property['data_type'] === 'boolean') {
-                $value = $request->has("metadata.{$property['code']}") ? true : false;
+                if ($property['data_type'] === 'boolean') {
+                    $value = $request->has("metadata.{$property['code']}") ? true : false;
+                }
+
+                $metadataArray[] = [
+                    'code' => $property['code'],
+                    'value' => $value === '' ? null : $value
+                ];
             }
 
-            $metadataArray[] = [
-                'code' => $property['code'],
-                'value' => $value === '' ? null : $value
-            ];
+            $term->update($validatedData);
+            $term->metadata = $metadataArray;
+            $term->updated_by = Auth::user()->id;
+            $term->save();
+
+            return redirect()->route('dashboard.taxonomy.terms.index', $taxonomy)
+                ->with('Success', 'Taxonomy term was updated successfully!');
+        } catch (\Exception $ex) {
+            Log::error('Failed to update taxonomy term', ['term_id' => $term->id, 'error' => $ex->getMessage()]);
+            return back()->withInput()->withErrors(['error' => 'Failed to update taxonomy term. Please try again.']);
         }
-
-        $term->update($validatedData);
-        $term->metadata = $metadataArray;
-        $term->updated_by = Auth::user()->id;
-        $term->save();
-
-        return redirect()->route('dashboard.taxonomy.terms.index', $taxonomy)
-            ->with('Success', 'Taxonomy term was updated successfully!');
-        // } catch (\Exception $ex) {
-        //     Log::error('Failed to update taxonomy term', ['term_id' => $term->id, 'error' => $ex->getMessage()]);
-        //     return back()->withInput()->withErrors(['error' => 'Failed to update taxonomy term. Please try again.']);
-        // }
     }
     /**
      * Confirm to delete the specified resource from storage.
