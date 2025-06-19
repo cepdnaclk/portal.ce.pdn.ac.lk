@@ -67,6 +67,15 @@
                             </div>
                         </div>
                     </div>
+ 
+                        <!-- Visibility -->
+                        <div class="form-group row mt-3">
+                            <label for="visibility" class="col-md-2 col-form-label">Visible to public</label>
+                            <div class="col-md-2 form-check form-switch mx-4">
+                                <input type="checkbox" id="visibility" name="visibility" class="form-check-input checkbox-lg" {{ $taxonomy->visibility ? 'checked' : '' }}>
+                                <label class="form-check-label" for="visibility">&nbsp;</label>
+                            </div>
+                        </div>
                 </div>
 
                 <div class="card">

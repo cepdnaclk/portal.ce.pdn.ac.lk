@@ -16,7 +16,7 @@ class TaxonomyApiController extends Controller
     public function index()
     {
         try {
-            $result = Taxonomy::all();
+            $result = Taxonomy::where('visibility', true)->get();
 
             if ($result) {
                 return response()->json(
@@ -37,7 +37,9 @@ class TaxonomyApiController extends Controller
     public function get_taxonomy($taxonomy_code)
     {
         try {
-            $result = Taxonomy::where('code', $taxonomy_code)->first();
+            $result = Taxonomy::where('code', $taxonomy_code)
+                ->where('visibility', true)
+                ->first();
 
             if ($result) {
                 return response()->json(

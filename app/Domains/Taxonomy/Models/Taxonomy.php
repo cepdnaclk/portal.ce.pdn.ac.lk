@@ -26,7 +26,8 @@ class Taxonomy extends Model
         'code',
         'name',
         'description',
-        'properties'
+        'properties',
+        'visibility'
     ];
 
     public static $propertyType = [
@@ -43,6 +44,7 @@ class Taxonomy extends Model
 
     protected $casts = [
         'properties' => 'json',
+        'visibility' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
