@@ -44,6 +44,11 @@
                 </a>
             @endif
 
+            <!-- History Button -->
+            <a href="{{ route('dashboard.taxonomy.terms.history', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}" class="btn btn-sm btn-info">
+                <i class="fa fa-clock-o" title="History"></i>
+            </a>
+
             @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
                 <!-- Edit Button -->
                 <a href="{{ route('dashboard.taxonomy.terms.edit', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}"
