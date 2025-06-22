@@ -51,7 +51,7 @@ class TaxonomyController extends Controller
             'name' => 'required',
             'description' => 'nullable',
             'properties' => 'string',
-            'visibility' => 'nullable'
+            'visibility' => 'nullable|integer'
         ]);
 
         try {
@@ -99,7 +99,7 @@ class TaxonomyController extends Controller
             'name' => 'string|required',
             'description' => 'nullable',
             'properties' => 'string',
-            'visibility' => 'nullable'
+            'visibility' => 'nullable|integer'
         ]);
         try {
             $originalProperties = $taxonomy->properties;
@@ -111,7 +111,6 @@ class TaxonomyController extends Controller
             //         ->route('dashboard.taxonomy.index')
             //         ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             // }
-
             $taxonomy->update($data);
             $taxonomy->properties = $updatedProperties;
             $taxonomy->visibility = ($request->visibility !== null);

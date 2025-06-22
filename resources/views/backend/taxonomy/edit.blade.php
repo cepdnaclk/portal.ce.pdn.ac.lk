@@ -66,16 +66,21 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
- 
-                        <!-- Visibility -->
-                        <div class="form-group row mt-3">
-                            <label for="visibility" class="col-md-2 col-form-label">Visible to public</label>
-                            <div class="col-md-2 form-check form-switch mx-4">
-                                <input type="checkbox" id="visibility" name="visibility" class="form-check-input checkbox-lg" {{ $taxonomy->visibility ? 'checked' : '' }}>
-                                <label class="form-check-label" for="visibility">&nbsp;</label>
+
+                        {{-- Visibility --}}
+                        <div class="form-group row">
+                            {!! Form::label('visibility', 'Visibility', ['class' => 'col-md-2 form-check-label']) !!}
+                            <div class="col-md-4 form-check form-switch mx-4">
+                                <input type="checkbox" id="checkVisible" name="visibility" value="1"
+                                    class="form-check-input checkbox-lg"
+                                    {{ $taxonomy->visibility == 1 ? 'checked' : '' }} />
+                                <label class="form-check-label" for="checkVisible">&nbsp;</label>
+                                @error('visibility')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
+                    </div>
                 </div>
 
                 <div class="card">
