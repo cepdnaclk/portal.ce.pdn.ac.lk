@@ -23,39 +23,68 @@
                         <tbody>
                             @forelse ($activities as $activity)
                                 <tr>
-                                    <td>{{ $activity->created_at }}</td>
-                                    <td>{{ $activity->causer->name ?? 'System' }}</td>
+                                    <td>{{ $activity['created_at'] }}</td>
+                                    <td>{{ $activity['causer']['name'] ?? 'System' }}</td>
                                     <td>
                                         @php
-                                            $subject = $activity->subject;
+                                            $subject = $activity['subject'];
                                             $subjectName =
-                                                $subject?->name ??
-                                                ($subject?->file_name ?? '#' . $activity->subject_id);
+                                                $subject['name'] ??
+                                                ($subject['file_name'] ?? '#' . $activity['subject_id']);
                                         @endphp
-                                        {{ class_basename($activity->subject_type) }}: {{ $subjectName }}
+                                        {{ class_basename($activity['subject_type']) }}: {{ $subjectName }}
                                     </td>
-                                    <td>{{ $activity->description }}</td>
+                                    <td>{{ $activity['description'] }}</td>
                                     <td>
-                                        @if ($activity->properties['attributes'] ?? false)
+                                        @if ($activity['properties']['attributes'] ?? false)
                                             <ul class="mb-0 list-unstyled">
-                                                @foreach ($activity->properties['attributes'] as $field => $new)
-                                                    @php $old = $activity->properties['old'][$field] ?? null; @endphp
+                                                @foreach ($activity['properties']['attributes'] as $field => $new)
+                                                    @php $old = $activity['properties']['old'][$field] ?? null; @endphp
                                                     <li>
                                                         <strong>{{ $field }}</strong>:
-                                                        @if (is_bool($old))
-                                                            {{ $old ? 1 : 0 }}
-                                                        @elseif (is_array($old))
-                                                            {{ json_encode($old) }}
+                                                        @if (is_bool($old) && is_bool($new))
+                                                            {{-- If boolean values  --}}
+                                                            {{ $old ? 1 : 0 }} &rarr; {{ $new ? 1 : 0 }}
+                                                        @elseif (is_array($old) || is_array($new))
+                                                            {{-- if arrays  --}}
+                                                            <div class="container">
+                                                                <div>
+                                                                    @if (is_array($old))
+                                                                        <ul class="mb-0 list-unstyled">
+                                                                            @foreach ($old as $key => $value)
+                                                                                @if ($value !== '...')
+                                                                                    <li>
+                                                                                        {{ is_array($value) ? json_encode($value) : $value }}
+                                                                                    </li>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    @else
+                                                                        {{ $old }}
+                                                                    @endif
+                                                                </div>
+                                                                <div>
+                                                                    &rarr;
+                                                                </div>
+                                                                <div>
+                                                                    @if (is_array($new))
+                                                                        <ul class="mb-0 list-unstyled">
+                                                                            @foreach ($new as $key => $value)
+                                                                                @if ($value !== '...')
+                                                                                    <li>
+                                                                                        {{ is_array($value) ? json_encode($value) : $value }}
+                                                                                    </li>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    @else
+                                                                        {{ $new }}
+                                                                    @endif
+                                                                </div>
+                                                            </div>
                                                         @else
-                                                            {{ $old }}
-                                                        @endif
-                                                        &rarr;
-                                                        @if (is_bool($new))
-                                                            {{ $new ? 1 : 0 }}
-                                                        @elseif (is_array($new))
-                                                            {{ json_encode($new) }}
-                                                        @else
-                                                            {{ $new }}
+                                                            {{-- otherwise  --}}
+                                                            {{ $old }} &rarr; {{ $new }}
                                                         @endif
                                                     </li>
                                                 @endforeach

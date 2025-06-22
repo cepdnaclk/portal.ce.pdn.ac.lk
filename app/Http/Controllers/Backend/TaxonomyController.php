@@ -188,6 +188,40 @@ class TaxonomyController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+        // Convert activities collection to array
+        $activities = $activities->toArray();
+
+        // TODO implement a better way to visualize the diff
+        // Highlight changes for JSON/list attributes in activity log
+        foreach ($activities as &$activity) {
+            if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+                // For each activity,
+                foreach ($activity['properties']['attributes'] as $key => $newValue) {
+                    //  For each attribute
+                    $oldValue = $activity['properties']['old'][$key] ?? null;
+
+                    // If value is an array, compare and keep only show only the diff
+                    if (is_array($newValue) && is_array($oldValue)) {
+                        if (json_encode($newValue) == json_encode($oldValue)) {
+                            $activity['properties']['old'][$key] = "...";
+                            $activity['properties']['attributes'][$key] = "...";
+                        } else {
+                            // Iterate through each key in the new value
+                            foreach ($newValue as $subKey => $subValue) {
+                                // If the sub-value is different from the old value, highlight it
+                                if (array_key_exists($subKey, $oldValue)) {
+                                    if (json_encode($oldValue[$subKey]) == json_encode($subValue)) {
+                                        $activity['properties']['old'][$key][$subKey] = "...";
+                                        $activity['properties']['attributes'][$key][$subKey] = "...";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return view('backend.taxonomy.history', [
             'taxonomy'   => $taxonomy,
             'activities' => $activities,
