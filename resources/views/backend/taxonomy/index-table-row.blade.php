@@ -25,6 +25,17 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    @if ($row->visibility)
+        <a target="_blank" href="{{ route('api.taxonomy.get', ['taxonomy_code' => $row->code]) }}">
+            /{{ $row->code }}
+        </a>
+    @else
+        <span>-</span>
+    @endif
+
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
         <!-- Manage Button -->
         <a href="{{ route('dashboard.taxonomy.terms.index', $row) }}" class="btn btn-sm btn-secondary me-3">

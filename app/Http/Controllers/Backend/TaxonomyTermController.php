@@ -44,7 +44,6 @@ class TaxonomyTermController extends Controller
                 'taxonomy_id' => 'required|exists:taxonomies,id',
                 'parent_id' => 'nullable|exists:taxonomy_terms,id',
                 'metadata' => 'array',
-                `visibility` => 'boolean',
             ]);
 
             $metadataArray = [];
@@ -104,7 +103,6 @@ class TaxonomyTermController extends Controller
                 'name' => 'required',
                 'parent_id' => 'nullable|exists:taxonomy_terms,id',
                 'metadata' => 'array',
-                'visibility' => 'boolean',
             ]);
 
             $metadataArray = [];
@@ -115,7 +113,7 @@ class TaxonomyTermController extends Controller
                     $value = $request->has("metadata.{$property['code']}") ? true : false;
                 }
 
-                $metadataArray[] = [
+                $metadataArray[] =  [
                     'code' => $property['code'],
                     'value' => $value === '' ? null : $value
                 ];

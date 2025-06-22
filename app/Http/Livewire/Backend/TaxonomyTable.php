@@ -32,6 +32,7 @@ class TaxonomyTable extends DataTableComponent
                 ->sortable(),
             Column::make("Updated at", "updated_at")
                 ->sortable(),
+            Column::make("API"),
             Column::make("Actions")
         ];
     }
@@ -40,10 +41,11 @@ class TaxonomyTable extends DataTableComponent
     {
         return Taxonomy::query()
             ->when($this->getFilter('visibility'), function ($query, $visible) {
+                // dd($visible);
                 if ($visible === 1 || $visible === '1') {
                     $query->where('visibility', true);
-                } elseif ($visible === 0 || $visible === '0') {
-                    $query->where('visibility', false);
+                } elseif ($visible === 2 || $visible === '2') {
+                    $query->where('visibility', 0);
                 }
             })
             ->with('user');
@@ -56,7 +58,7 @@ class TaxonomyTable extends DataTableComponent
                 ->select([
                     '' => 'Any',
                     1 => 'Visible',
-                    0 => 'Hidden',
+                    2 => 'Hidden',
                 ]),
         ];
     }
