@@ -174,7 +174,7 @@ class TaxonomyController extends Controller
                     ->whereIn('subject_id', $fileIds);
             });
         })
-        ->with('causer')
+        ->with(['causer', 'subject'])
         ->orderByDesc('created_at')
         ->get();
 
