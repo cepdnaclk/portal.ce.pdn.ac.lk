@@ -41,7 +41,6 @@ class TaxonomyTable extends DataTableComponent
     {
         return Taxonomy::query()
             ->when($this->getFilter('visibility'), function ($query, $visible) {
-                // dd($visible);
                 if ($visible === 1 || $visible === '1') {
                     $query->where('visibility', true);
                 } elseif ($visible === 2 || $visible === '2') {
