@@ -94,6 +94,17 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user
                     ->push(__('Terms'), route('dashboard.taxonomy.terms.index', $taxonomy));
             });
 
+        // History
+        Route::get('/history/{term}', [TaxonomyTermController::class, 'history'])
+            ->name('taxonomy.terms.history')
+            ->breadcrumbs(function (Trail $trail, $taxonomy, $term) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
+                    ->push($taxonomy->name, route('dashboard.taxonomy.terms.index', $taxonomy))
+                    ->push($term->name)
+                    ->push(__('History'));
+            });
+
         // Only Editors have access to these functionalities
         Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor']], function () {
             // Create (show form for creating a new term)
