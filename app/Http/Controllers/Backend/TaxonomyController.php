@@ -50,12 +50,14 @@ class TaxonomyController extends Controller
             'code' => 'required|unique:taxonomies',
             'name' => 'required',
             'description' => 'nullable',
-            'properties' => 'string'
+            'properties' => 'string',
+            'visibility' => 'nullable|integer'
         ]);
 
         try {
             $taxonomy = new Taxonomy($validatedData);
             $taxonomy->properties = json_decode($request->properties);
+            $taxonomy->visibility = ($request->visibility !== null);
             $taxonomy->created_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy created successfully');
@@ -96,7 +98,8 @@ class TaxonomyController extends Controller
             'code' => 'string|required',
             'name' => 'string|required',
             'description' => 'nullable',
-            'properties' => 'string'
+            'properties' => 'string',
+            'visibility' => 'nullable|integer'
         ]);
         try {
             $originalProperties = $taxonomy->properties;
@@ -108,9 +111,9 @@ class TaxonomyController extends Controller
             //         ->route('dashboard.taxonomy.index')
             //         ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             // }
-
             $taxonomy->update($data);
             $taxonomy->properties = $updatedProperties;
+            $taxonomy->visibility = ($request->visibility !== null);
             $taxonomy->updated_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');

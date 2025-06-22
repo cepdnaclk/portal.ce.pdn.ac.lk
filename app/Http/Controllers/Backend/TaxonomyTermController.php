@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
-use App\Domains\Taxonomy\Validators\TaxonomyTermMetadataValidator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -46,9 +45,6 @@ class TaxonomyTermController extends Controller
                 'parent_id' => 'nullable|exists:taxonomy_terms,id',
                 'metadata' => 'array',
             ]);
-
-            app(TaxonomyTermMetadataValidator::class)
-                ->validate($request->input('metadata', []), $taxonomy);
 
             $metadataArray = [];
 
@@ -109,9 +105,6 @@ class TaxonomyTermController extends Controller
                 'metadata' => 'array',
             ]);
 
-            app(TaxonomyTermMetadataValidator::class)
-                ->validate($request->input('metadata', []), $taxonomy);
-
             $metadataArray = [];
             foreach ($taxonomy->properties as $property) {
                 $value = $request->input("metadata.{$property['code']}");
@@ -120,7 +113,7 @@ class TaxonomyTermController extends Controller
                     $value = $request->has("metadata.{$property['code']}") ? true : false;
                 }
 
-                $metadataArray[] = [
+                $metadataArray[] =  [
                     'code' => $property['code'],
                     'value' => $value === '' ? null : $value
                 ];
