@@ -75,6 +75,10 @@
                                     class="form-check-input checkbox-lg"
                                     {{ $taxonomy->visibility == 1 ? 'checked' : '' }} />
                                 <label class="form-check-label" for="checkVisible">&nbsp;</label>
+                                <span class="ms-5 text-muted">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                    Available as an API for public use
+                                </span>
                                 @error('visibility')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
