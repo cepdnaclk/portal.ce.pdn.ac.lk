@@ -165,18 +165,18 @@ class TaxonomyController extends Controller
                 $q->where('subject_type', Taxonomy::class)
                     ->where('subject_id', $taxonomy->id);
             })
-            ->orWhere(function ($q) use ($termIds) {
-                $q->where('subject_type', TaxonomyTerm::class)
-                    ->whereIn('subject_id', $termIds);
-            })
-            ->orWhere(function ($q) use ($fileIds) {
-                $q->where('subject_type', TaxonomyFile::class)
-                    ->whereIn('subject_id', $fileIds);
-            });
+                ->orWhere(function ($q) use ($termIds) {
+                    $q->where('subject_type', TaxonomyTerm::class)
+                        ->whereIn('subject_id', $termIds);
+                })
+                ->orWhere(function ($q) use ($fileIds) {
+                    $q->where('subject_type', TaxonomyFile::class)
+                        ->whereIn('subject_id', $fileIds);
+                });
         })
-        ->with('causer')
-        ->orderByDesc('created_at')
-        ->get();
+            ->with(['causer', 'subject'])
+            ->orderByDesc('created_at')
+            ->get();
 
         return view('backend.taxonomy.history', [
             'taxonomy'   => $taxonomy,

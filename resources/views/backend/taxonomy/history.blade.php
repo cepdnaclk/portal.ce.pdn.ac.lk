@@ -15,7 +15,9 @@
                             <tr>
                                 <th>{{ __('Date') }}</th>
                                 <th>{{ __('User') }}</th>
+                                <th>{{ __('Item') }}</th>
                                 <th>{{ __('Description') }}</th>
+                                <th>{{ __('Changes') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -23,11 +25,34 @@
                                 <tr>
                                     <td>{{ $activity->created_at }}</td>
                                     <td>{{ $activity->causer->name ?? 'System' }}</td>
+                                    <td>
+                                        @php
+                                            $subject = $activity->subject;
+                                            $subjectName =
+                                                $subject?->name ??
+                                                ($subject?->file_name ?? '#' . $activity->subject_id);
+                                        @endphp
+                                        {{ class_basename($activity->subject_type) }}: {{ $subjectName }}
+                                    </td>
                                     <td>{{ $activity->description }}</td>
+                                    <td>
+                                        @if ($activity->properties['attributes'] ?? false)
+                                            <ul class="mb-0 list-unstyled">
+                                                @foreach ($activity->properties['attributes'] as $field => $new)
+                                                    @php $old = $activity->properties['old'][$field] ?? null; @endphp
+                                                    <li>
+                                                        <strong>{{ $field }}</strong>:
+                                                        {{ is_array($old) ? json_encode($old) : $old }} &rarr;
+                                                        {{ is_array($new) ? json_encode($new) : $new }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center">{{ __('No activity recorded.') }}</td>
+                                    <td colspan="5" class="text-center">{{ __('No activity recorded.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
