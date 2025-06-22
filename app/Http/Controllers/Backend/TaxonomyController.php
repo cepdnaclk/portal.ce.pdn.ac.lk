@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Domains\Taxonomy\Models\TaxonomyFile;
+use Spatie\Activitylog\Models\Activity;
 
 class TaxonomyController extends Controller
 {
@@ -148,6 +150,38 @@ class TaxonomyController extends Controller
             }
         }
         return true;
+    }
+
+    /**
+     * Display activity log for the given taxonomy.
+     */
+    public function history(Taxonomy $taxonomy)
+    {
+        $termIds = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->pluck('id');
+        $fileIds = TaxonomyFile::where('taxonomy_id', $taxonomy->id)->pluck('id');
+
+        $activities = Activity::where(function ($query) use ($taxonomy, $termIds, $fileIds) {
+            $query->where(function ($q) use ($taxonomy) {
+                $q->where('subject_type', Taxonomy::class)
+                    ->where('subject_id', $taxonomy->id);
+            })
+            ->orWhere(function ($q) use ($termIds) {
+                $q->where('subject_type', TaxonomyTerm::class)
+                    ->whereIn('subject_id', $termIds);
+            })
+            ->orWhere(function ($q) use ($fileIds) {
+                $q->where('subject_type', TaxonomyFile::class)
+                    ->whereIn('subject_id', $fileIds);
+            });
+        })
+        ->with('causer')
+        ->orderByDesc('created_at')
+        ->get();
+
+        return view('backend.taxonomy.history', [
+            'taxonomy'   => $taxonomy,
+            'activities' => $activities,
+        ]);
     }
     /**
      * Confirm to delete the specified resource from storage.
