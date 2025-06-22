@@ -114,8 +114,12 @@ class TaxonomyController extends Controller
             //         ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             // }
 
-            $taxonomy->update($data);
-            if (json_encode($originalProperties) !== json_encode($updatedProperties)) {
+            // Exclude 'properties' from $data before update
+            $updateData = $data;
+            unset($updateData['properties']);
+            $taxonomy->update($updateData);
+
+            if (json_encode($originalProperties) !== $request->properties) {
                 $taxonomy->properties = $updatedProperties;
             }
             $newVisibility = ($request->visibility !== null) ? true : false;
