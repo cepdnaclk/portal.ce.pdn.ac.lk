@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use Spatie\Activitylog\Models\Activity;
 
 class TaxonomyTermController extends Controller
 {
@@ -158,5 +159,23 @@ class TaxonomyTermController extends Controller
             Log::error('Failed to delete taxonomy term', ['term_id' => $term->id, 'error' => $ex->getMessage()]);
             return back()->withErrors(['error' => 'Failed to delete taxonomy term. Please try again.']);
         }
+    }
+
+    /**
+     * Display activity log for the given taxonomy term.
+     */
+    public function history(Taxonomy $taxonomy, TaxonomyTerm $term)
+    {
+        $activities = Activity::where('subject_type', TaxonomyTerm::class)
+            ->where('subject_id', $term->id)
+            ->with(['causer', 'subject'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('backend.taxonomy.terms.history', [
+            'taxonomy'   => $taxonomy,
+            'term'       => $term,
+            'activities' => $activities,
+        ]);
     }
 }

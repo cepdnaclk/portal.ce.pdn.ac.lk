@@ -49,6 +49,11 @@
                 <i class="fa fa-eye" title="View"></i>
             </a>
 
+            <!-- History Button -->
+            <a href="{{ route('dashboard.taxonomy.history', $row) }}" class="btn btn-sm btn-info">
+                <i class="fa fa-clock-o" title="History"></i>
+            </a>
+
             @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
                 <!-- Edit Button -->
                 <a href="{{ route('dashboard.taxonomy.edit', $row) }}" class="btn btn-sm btn-warning">
