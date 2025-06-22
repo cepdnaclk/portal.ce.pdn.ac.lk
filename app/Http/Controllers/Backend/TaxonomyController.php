@@ -113,9 +113,15 @@ class TaxonomyController extends Controller
             //         ->route('dashboard.taxonomy.index')
             //         ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             // }
+
             $taxonomy->update($data);
-            $taxonomy->properties = $updatedProperties;
-            $taxonomy->visibility = ($request->visibility !== null);
+            if (json_encode($originalProperties) !== json_encode($updatedProperties)) {
+                $taxonomy->properties = $updatedProperties;
+            }
+            $newVisibility = ($request->visibility !== null) ? true : false;
+            if ($taxonomy->visibility !== $newVisibility) {
+                $taxonomy->visibility = $newVisibility;
+            }
             $taxonomy->updated_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');

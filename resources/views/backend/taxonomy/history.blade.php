@@ -42,8 +42,21 @@
                                                     @php $old = $activity->properties['old'][$field] ?? null; @endphp
                                                     <li>
                                                         <strong>{{ $field }}</strong>:
-                                                        {{ is_array($old) ? json_encode($old) : $old }} &rarr;
-                                                        {{ is_array($new) ? json_encode($new) : $new }}
+                                                        @if (is_bool($old))
+                                                            {{ $old ? 1 : 0 }}
+                                                        @elseif (is_array($old))
+                                                            {{ json_encode($old) }}
+                                                        @else
+                                                            {{ $old }}
+                                                        @endif
+                                                        &rarr;
+                                                        @if (is_bool($new))
+                                                            {{ $new ? 1 : 0 }}
+                                                        @elseif (is_array($new))
+                                                            {{ json_encode($new) }}
+                                                        @else
+                                                            {{ $new }}
+                                                        @endif
                                                     </li>
                                                 @endforeach
                                             </ul>
