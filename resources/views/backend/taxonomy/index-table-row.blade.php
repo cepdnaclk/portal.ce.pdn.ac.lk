@@ -37,17 +37,24 @@
 
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
-        <!-- Manage Button -->
-        <a href="{{ route('dashboard.taxonomy.terms.index', $row) }}" class="btn btn-sm btn-secondary me-3">
-            <i class="fa fa-list" title="Manage"></i>
-        </a>
+        <div class="btn-group me-3" role="group" aria-label="View Buttons">
+            <!-- Manage Button -->
+            <a href="{{ route('dashboard.taxonomy.terms.index', $row) }}" class="btn btn-sm btn-secondary">
+                <i class="fa fa-list" title="Manage"></i>
+            </a>
+            <!-- History Button -->
+            <a href="{{ route('dashboard.taxonomy.history', $row) }}" class="btn btn-sm btn-info">
+                <i class="fa fa-clock" title="History"></i>
+            </a>
+        </div>
 
-        <div class="btn-group" role="group" aria-label="">
+        <div class="btn-group" role="group" aria-label="Edit Buttons">
 
             <!-- View Button -->
             <a href="{{ route('dashboard.taxonomy.view', $row) }}" class="btn btn-sm btn-primary">
                 <i class="fa fa-eye" title="View"></i>
             </a>
+
 
             @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
                 <!-- Edit Button -->
