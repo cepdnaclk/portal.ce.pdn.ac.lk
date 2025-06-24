@@ -28,6 +28,16 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user
                 ->push(__('View'));
         });
 
+    // History
+    Route::get('taxonomy/history/{taxonomy}', [TaxonomyController::class, 'history'])
+        ->name('taxonomy.history')
+        ->breadcrumbs(function (Trail $trail, $taxonomy) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
+                ->push($taxonomy->name)
+                ->push(__('History'));
+        });
+
     // Only Editors have access to these functionalities
     Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor']], function () {
 
