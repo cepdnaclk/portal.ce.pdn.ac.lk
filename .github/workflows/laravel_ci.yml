@@ -5,7 +5,7 @@ on:
         branches: ['main', 'dev', 'production']
 
     pull_request:
-        branches: ['main', 'dev', 'production']
+        branches: ['main', 'dev', 'production', 'release/*']
 
 jobs:
     laravel-tests:
