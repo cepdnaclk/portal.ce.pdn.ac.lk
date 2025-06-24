@@ -213,4 +213,34 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor|user
             $trail->push(__('Home'), route('dashboard.home'))
                 ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'));
         });
+
+    // Image upload endpoint
+    Route::post('taxonomy-pages/upload-image', [\App\Http\Controllers\Backend\UploadController::class, 'store'])
+        ->name('taxonomy-pages.upload-image');
+
+    Route::group(['middleware' => ['permission:user.taxonomy.data.editor']], function () {
+        // Create
+        Route::get('taxonomy-pages/create', function () {
+            return view('backend.taxonomy_pages.create');
+        })
+            ->name('taxonomy-pages.create')
+            ->breadcrumbs(function (Trail $trail) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'))
+                    ->push(__('Create'));
+            });
+
+        // Edit
+        Route::get('taxonomy-pages/edit/{taxonomyPage}', function ($taxonomyPage) {
+            return view('backend.taxonomy_pages.edit', ['taxonomyPage' => $taxonomyPage]);
+        })
+            ->name('taxonomy-pages.edit')
+            ->breadcrumbs(function (Trail $trail, $taxonomyPage) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'))
+                    ->push($taxonomyPage->slug)
+                    ->push(__('Edit'));
+            });
+
+    });
 });
