@@ -9,6 +9,12 @@
                 {{ __('Taxonomy Pages') }}
             </x-slot>
 
+            <x-slot name="headerActions">
+                @if ($logged_in_user->hasPermissionTo('user.taxonomy.data.editor'))
+                    <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.taxonomy-pages.create')" :text="__('Create Page')" />
+                @endif
+            </x-slot>
+
             <x-slot name="body">
                 @if (session('Success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -19,7 +25,7 @@
                     </div>
                 @endif
 
-                <p>This page is under development</p>
+                <livewire:backend.taxonomy-pages-table />
 
             </x-slot>
 

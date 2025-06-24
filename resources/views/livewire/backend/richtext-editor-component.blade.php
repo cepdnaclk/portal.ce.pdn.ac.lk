@@ -7,10 +7,13 @@
             .create(document.querySelector('#{{ $name }}'), {
                 toolbar: [
                     'heading', '|',
-                    'bold', 'italic', 'link', '|',
+                    'bold', 'italic', 'link', 'imageUpload', '|',
                     'bulletedList', 'numberedList', 'blockQuote', '|',
-                    'undo', 'redo'
-                ]
+                    'undo', 'redo', 'fullscreen'
+                ],
+                ckfinder: {
+                    uploadUrl: '{{ route('dashboard.taxonomy-pages.upload-image') }}?&_token={{ csrf_token() }}'
+                }
             })
             .catch(error => {
                 console.error(error);

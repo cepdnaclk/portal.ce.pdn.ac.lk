@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\TaxonomyFileController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
  * Global Routes
@@ -44,3 +45,11 @@ Route::group(
             ->withoutMiddleware(['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']);
     }
 );
+
+Route::get('taxonomy/{slug}', function ($slug) {
+    $path = "taxonomy-pages/{$slug}.html";
+    if (Storage::disk('public')->exists($path)) {
+        return Storage::disk('public')->get($path);
+    }
+    abort(404);
+})->name('taxonomy.page');

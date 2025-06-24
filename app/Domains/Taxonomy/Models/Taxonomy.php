@@ -7,6 +7,7 @@ use Database\Factories\TaxonomyFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Domains\Taxonomy\Models\TaxonomyPage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Domains\Taxonomy\Models\Traits\Scope\TaxonomyScope;
 
@@ -95,6 +96,14 @@ class Taxonomy extends Model
         return $this->hasMany(TaxonomyFile::class, 'taxonomy_id')
             ->orderBy('file_name', 'asc')
             ->pluck('file_name', 'id');
+    }
+
+    /**
+     * Get the pages associated with the taxonomy.
+     */
+    public function pages()
+    {
+        return $this->hasMany(TaxonomyPage::class, 'taxonomy_id');
     }
 
     public function first_child_terms()
