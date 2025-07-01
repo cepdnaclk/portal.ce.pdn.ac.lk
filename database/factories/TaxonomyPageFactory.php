@@ -13,11 +13,15 @@ class TaxonomyPageFactory extends Factory
 
     public function definition(): array
     {
+        $htmlContent = '<div>' . $this->faker->paragraphs(3, true) . '</div>';
+
         return [
             'slug' => $this->faker->unique()->slug,
-            'html' => '<p>'.$this->faker->sentence().'</p>',
+            'html' => $htmlContent,
             'taxonomy_id' => $this->faker->boolean ? Taxonomy::factory() : null,
+            'metadata' => [],
             'created_by' => User::factory(),
+
         ];
     }
 }

@@ -9,7 +9,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
-class TaxonomyPagesTable extends DataTableComponent
+class TaxonomyPageTable extends DataTableComponent
 {
     public array $perPageAccepted = [10, 25, 50, 100];
     public int $perPage = 25;
@@ -34,7 +34,7 @@ class TaxonomyPagesTable extends DataTableComponent
     {
         return TaxonomyPage::query()
             ->with('taxonomy')
-            ->when($this->getFilter('taxonomy_id'), fn ($q, $id) => $q->where('taxonomy_id', $id));
+            ->when($this->getFilter('taxonomy_id'), fn($q, $id) => $q->where('taxonomy_id', $id));
     }
 
     public function filters(): array
@@ -51,6 +51,6 @@ class TaxonomyPagesTable extends DataTableComponent
 
     public function rowView(): string
     {
-        return 'backend.taxonomy_pages.index-table-row';
+        return 'backend.taxonomy_page.index-table-row';
     }
 }

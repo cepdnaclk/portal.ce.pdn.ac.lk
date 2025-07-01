@@ -10,8 +10,8 @@
             </x-slot>
 
             <x-slot name="headerActions">
-                @if ($logged_in_user->hasPermissionTo('user.taxonomy.data.editor'))
-                    <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.taxonomy-pages.create')" :text="__('Create Page')" />
+                @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.page.editor'))
+                    <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.taxonomy-pages.create')" :text="__('Create a Page')" />
                 @endif
             </x-slot>
 
@@ -25,7 +25,7 @@
                     </div>
                 @endif
 
-                <livewire:backend.taxonomy-pages-table />
+                <livewire:backend.taxonomy-page-table />
 
             </x-slot>
 

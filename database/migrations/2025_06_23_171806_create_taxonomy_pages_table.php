@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('taxonomy_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('slug')->unique();
             $table->longText('html');
+            $table->json('metadata')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
