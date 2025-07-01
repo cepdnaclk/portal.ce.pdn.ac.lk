@@ -51,7 +51,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12 d-flex align-items-center">
-                                <a href="{{ route('download.taxonomy-files', [
+                                <a href="{{ route('download.taxonomy-file', [
                                     'file_name' => $taxonomyFile->file_name,
                                     'extension' => $taxonomyFile->getFileExtension(),
                                 ]) }}"
