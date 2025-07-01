@@ -35,10 +35,14 @@ class TaxonomyPageController extends Controller
             'html'         => 'string',
         ]);
 
+        // Sanitize HTML content
+        $htmlContent = $validated['html'] ?? '';
+        $htmlContent = strip_tags($htmlContent, '<p><a><b><i><strong><em><ul><ol><li><br><hr><h1><h2><h3><h4><h5><h6><span><div><img><blockquote><pre><code>'); // Allow only safe tags
+
         try {
             $taxonomyPage = new TaxonomyPage([
                 'slug'        => $validated['slug'],
-                'html'        => $validated['html'],
+                'html'        => $htmlContent,
                 'taxonomy_id' => $validated['taxonomy_id'] ?? null,
                 'metadata'    => [],
             ]);
@@ -59,6 +63,13 @@ class TaxonomyPageController extends Controller
     public function view(TaxonomyPage $taxonomyPage)
     {
         return view('backend.taxonomy_page.preview', compact('taxonomyPage'));
+    }
+
+    public function download($slug)
+    {
+        $taxonomyPage = TaxonomyPage::where('slug', $slug)->first();
+        return response($taxonomyPage->html)
+            ->header('Content-Type', 'text/html');
     }
 
     public function edit(TaxonomyPage $taxonomyPage)
@@ -82,6 +93,11 @@ class TaxonomyPageController extends Controller
             'slug'         => ['required', 'string', 'max:255', Rule::unique('taxonomy_pages')->ignore($taxonomyPage->slug, 'slug')],
             'html'         => 'string',
         ]);
+
+        // Sanitize HTML content
+        $htmlContent = $validated['html'] ?? '';
+        $htmlContent = strip_tags($htmlContent, '<p><a><b><i><strong><em><ul><ol><li><br><hr><h1><h2><h3><h4><h5><h6><span><div><img><blockquote><pre><code>'); // Allow only safe tags
+        $validated['html'] = $htmlContent;
 
         try {
             $taxonomyPage->update($validated);
