@@ -98,9 +98,6 @@ class Taxonomy extends Model
             ->pluck('file_name', 'id');
     }
 
-    /**
-     * Get the pages associated with the taxonomy.
-     */
     public function pages()
     {
         return $this->hasMany(TaxonomyPage::class, 'taxonomy_id');
