@@ -28,6 +28,12 @@
 
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
+        {{-- Download --}}
+        <a href="{{ route('download.taxonomy-page', ['slug' => $row->slug]) }}" class="btn btn-sm btn-secondary me-3"
+            target="_blank">
+            <i class="fa fa-globe" title="{{ __('Web') }}"></i>
+        </a>
+
         <!-- Manage Button -->
         <div class="btn-group" role="group" aria-label="{{ __('Actions') }}">
 

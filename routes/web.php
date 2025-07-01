@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\TaxonomyFileController;
+use App\Http\Controllers\Backend\TaxonomyPageController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -43,13 +44,9 @@ Route::group(
         Route::get('taxonomy/{file_name}.{extension}', [TaxonomyFileController::class, 'download'])
             ->name('taxonomy-files')
             ->withoutMiddleware(['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']);
+
+        Route::get('taxonomy-page/{slug}', [TaxonomyPageController::class, 'download'])
+            ->name('taxonomy-page')
+            ->withoutMiddleware(['permission:user.access.taxonomy.page.editor|user.access.taxonomy.page.viewer']);
     }
 );
-
-Route::get('taxonomy/{slug}', function ($slug) {
-    $path = "taxonomy-pages/{$slug}.html";
-    if (Storage::disk('public')->exists($path)) {
-        return Storage::disk('public')->get($path);
-    }
-    abort(404);
-})->name('taxonomy.page');
