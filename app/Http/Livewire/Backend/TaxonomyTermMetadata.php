@@ -10,6 +10,7 @@ class TaxonomyTermMetadata extends Component
     public $metadata = []; // Holds the pre-filled metadata for edit
     public $term; // Holds the term object for edit
     public $taxonomy_files = [];
+    public $taxonomy_pages = [];
 
     public function mount($property, $term = null, $taxonomy = null)
     {
@@ -22,9 +23,13 @@ class TaxonomyTermMetadata extends Component
         }
         if ($taxonomy) {
             $this->taxonomy_files = ['' => 'Select a file'];
-
             foreach ($taxonomy->files()->toArray() as $key => $file_name) {
                 $this->taxonomy_files[$key] = $file_name;
+            }
+
+            $this->taxonomy_pages = ['' => 'Select a page'];
+            foreach ($taxonomy->pages()->toArray() as $key => $page_slug) {
+                $this->taxonomy_pages[$key] = $page_slug;
             }
         }
     }

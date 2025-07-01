@@ -63,13 +63,26 @@ class TaxonomyTerm extends Model
                         // Cache file lookup by file ID
                         $fileCacheKey = 'taxonomy_' . (int)$this->taxonomy_id . '_file_' . (int)$metadataValue;
                         $taxonomyFile = cache()->remember($fileCacheKey, 300, function () use ($metadataValue) {
-                            return TaxonomyFile::find($metadataValue);
+                            return TaxonomyFile::find($metadataValue)->first();
                         });
 
                         if ($taxonomyFile) {
                             $response[$code] = route(
-                                'download.taxonomy-files',
+                                'download.taxonomy-file',
                                 ['file_name' => $taxonomyFile->file_name, 'extension' => $taxonomyFile->getFileExtension()]
+                            );
+                        }
+                    } elseif ($taxonomyCode == 'page') {
+                        // Cache page lookup by file ID
+                        $fileCacheKey = 'taxonomy_' . (int)$this->taxonomy_id . '_page_' . (int)$metadataValue;
+                        $taxonomyPage = cache()->remember($fileCacheKey, 300, function () use ($metadataValue) {
+                            return TaxonomyPage::find($metadataValue)->first();
+                        });
+
+                        if ($taxonomyPage) {
+                            $response[$code] = route(
+                                'download.taxonomy-page',
+                                ['slug' => $taxonomyPage->slug]
                             );
                         }
                     } elseif ($taxonomyCode == 'datetime') {

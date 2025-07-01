@@ -40,7 +40,8 @@ class Taxonomy extends Model
         'datetime' => 'Date Time',
         'boolean' => 'Boolean',
         'url' => 'URL',
-        'file' => 'File'
+        'file' => 'File',
+        'page' => 'Page'
     ];
 
     protected $casts = [
@@ -100,7 +101,9 @@ class Taxonomy extends Model
 
     public function pages()
     {
-        return $this->hasMany(TaxonomyPage::class, 'taxonomy_id');
+        return $this->hasMany(TaxonomyPage::class, 'taxonomy_id')
+            ->orderBy('slug', 'asc')
+            ->pluck('slug', 'id');
     }
 
     public function first_child_terms()
