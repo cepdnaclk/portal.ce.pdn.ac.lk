@@ -16,7 +16,7 @@ class TaxonomyFileSeeder extends Seeder
     public function run()
     {
         // Insert dummy taxonomy file data
-        TaxonomyFile::create([
+        TaxonomyFile::firstOrCreate([
             'file_name' => 'Sample File 1',
             'file_path' => 'taxonomy_files/sample-1.jpg',
             'taxonomy_id' => Taxonomy::first()->id,
@@ -26,7 +26,7 @@ class TaxonomyFileSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        TaxonomyFile::create([
+        TaxonomyFile::firstOrCreate([
             'file_name' => 'Sample File 2',
             'file_path' => 'taxonomy_files/sample-2.pdf',
             'taxonomy_id' => Taxonomy::first()->id,
