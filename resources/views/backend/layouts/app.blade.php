@@ -28,7 +28,8 @@
     </script>
 
     {{-- CKEditor --}}
-    <script src="https://cdn.ckeditor.com/ckeditor5/35.1.0/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/45.2.1/ckeditor5.umd.js"></script>
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/45.2.1/ckeditor5.css" />
 
 </head>
 
