@@ -2,7 +2,6 @@
 
 @section('title', __('Create Taxonomy Page'))
 
-
 @section('content')
     <div x-data="{ metadata: {} }">
 
@@ -42,7 +41,6 @@
                                 @enderror
                             </div>
                         </div>
-
 
                         <!-- Description -->
                         <div class="row">

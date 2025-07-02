@@ -14,7 +14,6 @@
                     Are you sure you want to delete <strong><i>"{{ $taxonomyPage->slug }}"</i></strong>?
                 </p>
 
-
                 <div class="d-flex">
                     {!! Form::open([
                         'url' => route('dashboard.taxonomy-pages.destroy', $taxonomyPage),
@@ -28,7 +27,6 @@
                     </a>
                     {!! Form::close() !!}
                 </div>
-
 
                 <div class="container vh-75 mt-5">
                     <h4>Preview:</h4>

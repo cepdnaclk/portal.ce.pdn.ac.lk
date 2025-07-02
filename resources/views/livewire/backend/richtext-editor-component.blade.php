@@ -9,7 +9,7 @@
                     'heading', '|',
                     'bold', 'italic', 'link', '|',
                     'bulletedList', 'numberedList', 'blockQuote', '|',
-                    'undo', 'redo', 'fullscreen'
+                    'undo', 'redo',
                 ],
             })
             .catch(error => {

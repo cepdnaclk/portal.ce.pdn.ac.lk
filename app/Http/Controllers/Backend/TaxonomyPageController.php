@@ -20,7 +20,7 @@ class TaxonomyPageController extends Controller
             $taxonomies = Taxonomy::select('id', 'name')->orderBy('name')->get();
             return view('backend.taxonomy_page.create', compact('taxonomies'));
         } catch (\Throwable $ex) {
-            Log::error('Failed to load taxonomy-file creation page', [
+            Log::error('Failed to load TaxonomyPage create page', [
                 'error' => $ex->getMessage(),
             ]);
             return abort(500);
@@ -31,18 +31,14 @@ class TaxonomyPageController extends Controller
     {
         $validated = $request->validate([
             'taxonomy_id'  => 'nullable|exists:taxonomies,id',
-            'slug'         => 'string|max:255|unique:taxonomy_pages,slug',
+            'slug'         => 'string|max:255|unique:taxonomy_pages,slug|slug',
             'html'         => 'string',
         ]);
-
-        // Sanitize HTML content
-        $htmlContent = $validated['html'] ?? '';
-        $htmlContent = strip_tags($htmlContent, '<p><a><b><i><strong><em><ul><ol><li><br><hr><h1><h2><h3><h4><h5><h6><span><div><img><blockquote><pre><code>'); // Allow only safe tags
 
         try {
             $taxonomyPage = new TaxonomyPage([
                 'slug'        => $validated['slug'],
-                'html'        => $htmlContent,
+                'html'        => $this->sanitizeHtml($validated['html'] ?? ''),
                 'taxonomy_id' => $validated['taxonomy_id'] ?? null,
                 'metadata'    => [],
             ]);
@@ -53,7 +49,7 @@ class TaxonomyPageController extends Controller
                 ->route('dashboard.taxonomy-pages.index')
                 ->with('Success', 'Taxonomy Page created successfully');
         } catch (\Throwable $ex) {
-            Log::error('Failed to create a taxonomy page', [
+            Log::error('Failed to create a TaxonomyPage', [
                 'error' => $ex->getMessage(),
             ]);
             return abort(500);
@@ -78,7 +74,7 @@ class TaxonomyPageController extends Controller
             $taxonomies = Taxonomy::select('id', 'name')->get();
             return view('backend.taxonomy_page.edit', compact('taxonomyPage', 'taxonomies'));
         } catch (\Throwable $ex) {
-            Log::error('Failed to load taxonomy-page edit page', [
+            Log::error('Failed to load TaxonomyPage edit page', [
                 'page_id' => $taxonomyPage->id,
                 'error'   => $ex->getMessage(),
             ]);
@@ -89,15 +85,19 @@ class TaxonomyPageController extends Controller
     public function update(Request $request, TaxonomyPage $taxonomyPage)
     {
         $validated = $request->validate([
-            'taxonomy_id'  => 'nullable|exists:taxonomies,id',
-            'slug'         => ['required', 'string', 'max:255', Rule::unique('taxonomy_pages')->ignore($taxonomyPage->slug, 'slug')],
-            'html'         => 'string',
+            'taxonomy_id' => 'nullable|exists:taxonomies,id',
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                'slug',
+                Rule::unique('taxonomy_pages')->ignore($taxonomyPage->slug, 'slug')
+            ],
+            'html' => 'string',
         ]);
 
-        // Sanitize HTML content
-        $htmlContent = $validated['html'] ?? '';
-        $htmlContent = strip_tags($htmlContent, '<p><a><b><i><strong><em><ul><ol><li><br><hr><h1><h2><h3><h4><h5><h6><span><div><img><blockquote><pre><code>'); // Allow only safe tags
-        $validated['html'] = $htmlContent;
+        // Ensure HTML content is sanitized
+        $validated['html'] = $this->sanitizeHtml($validated['html'] ?? '');
 
         try {
             $taxonomyPage->update($validated);
@@ -108,7 +108,7 @@ class TaxonomyPageController extends Controller
                 ->route('dashboard.taxonomy-pages.index')
                 ->with('Success', 'Taxonomy Page details updated successfully');
         } catch (\Throwable $ex) {
-            Log::error('Failed to update taxonomy page', [
+            Log::error('Failed to update TaxonomyPage', [
                 'page_id' => $taxonomyPage->id,
                 'error'   => $ex->getMessage(),
             ]);
@@ -127,16 +127,23 @@ class TaxonomyPageController extends Controller
         try {
             Storage::disk('public')->delete($taxonomyPage->file_path);
             $taxonomyPage->delete();
+
             return redirect()
                 ->route('dashboard.taxonomy-pages.index')
                 ->with('Success', 'Taxonomy Page deleted successfully');
         } catch (\Throwable $ex) {
-            Log::error('Failed to delete taxonomy pafe', [
+            Log::error('Failed to delete TaxonomyPage', [
                 'page_id' => $taxonomyPage->id,
                 'error'   => $ex->getMessage(),
             ]);
 
             return abort(500);
         }
+    }
+
+    private function sanitizeHtml($html)
+    {
+        // Allow only safe HTML tags
+        return strip_tags($html, '<p><a><b><i><strong><em><ul><ol><li><br><hr><h1><h2><h3><h4><h5><h6><span><div><img><blockquote><pre><code>');
     }
 }

@@ -39,7 +39,7 @@
                                     'max_length' => 255,
                                     'placeholder' => 'Enter an unique slug (e.g., about-us) as the page identifier',
                                 ]) !!}
-                                @error('file_name')
+                                @error('slug')
                                     <strong class="text-danger">{{ $message }}</strong>
                                 @enderror
                             </div>
