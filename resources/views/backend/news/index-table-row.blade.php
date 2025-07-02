@@ -9,10 +9,14 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    @if (strlen($row->description) > 250)
-        {{ mb_substr(strip_tags($row->description), 0, 250) }}...
+    @php
+        $desc = strip_tags($row->description);
+        $desc = str_replace('&nbsp;', ' ', $desc);
+    @endphp
+    @if (mb_strlen($desc) > 250)
+        {{ mb_substr($desc, 0, 250) }}...
     @else
-        {{ strip_tags($row->description) }}
+        {{ $desc }}
     @endif
 </x-livewire-tables::table.cell>
 
@@ -40,7 +44,7 @@
             <a href="{{ route('dashboard.news.delete', $row) }}" class="btn  btn-danger"><i class="fa fa-trash"
                     title="Delete"></i>
             </a>
-            
+
         </div>
     </div>
 </x-livewire-tables::table.cell>

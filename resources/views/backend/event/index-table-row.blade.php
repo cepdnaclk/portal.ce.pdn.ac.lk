@@ -8,10 +8,14 @@
 
 <x-livewire-tables::table.cell>
     <div>
-        @if (strlen($row->description) > 250)
-            {{ mb_substr(strip_tags($row->description), 0, 250) }}...
+        @php
+            $desc = strip_tags($row->description);
+            $desc = str_replace('&nbsp;', ' ', $desc);
+        @endphp
+        @if (mb_strlen($desc) > 250)
+            {{ mb_substr($desc, 0, 250) }}...
         @else
-            {{ strip_tags($row->description) }}
+            {{ $desc }}
         @endif
     </div>
     <br />

@@ -29,6 +29,8 @@ mix.setPublicPath('public')
     ])
     .sourceMaps()
 
+mix.copyDirectory('vendor/tinymce/tinymce', 'public/js/tinymce')
+
 if (mix.inProduction()) {
     mix.version()
 } else {
