@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyPage;
+use App\Rules\Slug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -31,7 +32,12 @@ class TaxonomyPageController extends Controller
     {
         $validated = $request->validate([
             'taxonomy_id'  => 'nullable|exists:taxonomies,id',
-            'slug'         => 'string|max:255|unique:taxonomy_pages,slug|slug',
+            'slug'         => [
+                'string',
+                'max:255',
+                'unique:taxonomy_pages',
+                new Slug
+            ],
             'html'         => 'string',
         ]);
 
@@ -90,7 +96,7 @@ class TaxonomyPageController extends Controller
                 'required',
                 'string',
                 'max:255',
-                'slug',
+                new Slug,
                 Rule::unique('taxonomy_pages')->ignore($taxonomyPage->slug, 'slug')
             ],
             'html' => 'string',
