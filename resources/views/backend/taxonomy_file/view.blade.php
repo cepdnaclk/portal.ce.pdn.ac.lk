@@ -13,7 +13,7 @@
         <!-- Download button -->
         <p>
             <a class="btn btn-sm btn-outline-primary"
-                href="{{ route('download.taxonomy-files', [
+                href="{{ route('download.taxonomy-file', [
                     'file_name' => $taxonomyFile->file_name,
                     'extension' => $taxonomyFile->getFileExtension(),
                 ]) }}"
@@ -38,7 +38,7 @@
         @if ($showPreview)
             <div class="mt-4 pb-4">
                 <h5>Preview</h5>
-                <img src="{{ route('download.taxonomy-files', [
+                <img src="{{ route('download.taxonomy-file', [
                     'file_name' => $taxonomyFile->file_name,
                     'extension' => $taxonomyFile->getFileExtension(),
                 ]) }}"

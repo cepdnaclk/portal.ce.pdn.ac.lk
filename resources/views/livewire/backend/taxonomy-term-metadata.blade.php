@@ -123,6 +123,22 @@
                 @endif
             @break
 
+            @case('page')
+                @if (empty($taxonomy_pages))
+                    <p><i>No page available for selection.</i></p>
+                @else
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa fa-globe"></i>
+                        </span>
+                        {!! Form::select("metadata[{$property['code']}]", $taxonomy_pages, old("metadata.{$property['code']}", $value), [
+                            'class' => 'form-select',
+                            'id' => $property['code'],
+                        ]) !!}
+                    </div>
+                @endif
+            @break
+
             @default
                 {!! Form::text("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
                     'class' => 'form-control',

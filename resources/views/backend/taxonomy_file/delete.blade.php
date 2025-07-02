@@ -17,7 +17,7 @@
 
                 @if ($showPreview)
                     <div class="mt-4 pb-4">
-                        <img src="{{ route('download.taxonomy-files', [
+                        <img src="{{ route('download.taxonomy-file', [
                             'file_name' => $taxonomyFile->file_name,
                             'extension' => $taxonomyFile->getFileExtension(),
                         ]) }}"

@@ -9,8 +9,8 @@
                     'heading', '|',
                     'bold', 'italic', 'link', '|',
                     'bulletedList', 'numberedList', 'blockQuote', '|',
-                    'undo', 'redo'
-                ]
+                    'undo', 'redo',
+                ],
             })
             .catch(error => {
                 console.error(error);
