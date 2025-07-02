@@ -18,7 +18,7 @@ class TaxonomyPageFactory extends Factory
         return [
             'slug' => $this->faker->unique()->slug,
             'html' => $htmlContent,
-            'taxonomy_id' => $this->faker->boolean ? Taxonomy::factory() : null,
+            'taxonomy_id' => $this->faker->boolean ? Taxonomy::factory()->create()->id : null,
             'metadata' => [],
             'created_by' => User::factory(),
 

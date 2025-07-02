@@ -63,7 +63,7 @@ class TaxonomyTerm extends Model
                         // Cache file lookup by file ID
                         $fileCacheKey = 'taxonomy_' . (int)$this->taxonomy_id . '_file_' . (int)$metadataValue;
                         $taxonomyFile = cache()->remember($fileCacheKey, 300, function () use ($metadataValue) {
-                            return TaxonomyFile::find($metadataValue)->first();
+                            return TaxonomyFile::find($metadataValue);
                         });
 
                         if ($taxonomyFile) {
