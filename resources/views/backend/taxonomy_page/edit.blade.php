@@ -1,13 +1,13 @@
 @extends('backend.layouts.app')
 
-@section('title', __('Edit Taxonomy File'))
+@section('title', __('Edit Taxonomy Page'))
 
 @section('content')
     <div x-data="{
-        metadata: {{ json_encode($taxonomyFile->metadata) ?: '{}' }},
+        metadata: {{ json_encode($taxonomyPage->metadata) ?: '{}' }},
     }">
-        {!! Form::model($taxonomyFile, [
-            'url' => route('dashboard.taxonomy-files.update', $taxonomyFile->id),
+        {!! Form::model($taxonomyPage, [
+            'url' => route('dashboard.taxonomy-pages.update', $taxonomyPage->id),
             'method' => 'PUT',
             'class' => 'container',
             'files' => true,
@@ -18,59 +18,43 @@
 
         <x-backend.card>
             <x-slot name="header">
-                {{ __('Taxonomy File : Edit') }}
+                {{ __('Taxonomy Page : Edit') }}
             </x-slot>
 
             <!-- Body -->
             <x-slot name="body">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title" style="text-align: left; text-decoration: none;">Basic Configurations</h5>
 
-                        <!-- Taxonomy Name -->
+                        <!-- Slug -->
                         <div class="row">
-                            {!! Form::label('file_name', 'File Name*', ['class' => 'col-form-label']) !!}
+                            {!! Form::label('slug', 'Slug*', ['class' => 'col-form-label']) !!}
                         </div>
 
                         <div class="form-group row">
                             <div class="col-md-12">
-                                {!! Form::text('file_name', null, [
+                                {!! Form::text('slug', $taxonomyPage->slug, [
                                     'class' => 'form-control',
                                     'required' => true,
-                                    'placeholder' => 'Enter the preferred file name to be displayed',
+                                    'max_length' => 255,
+                                    'placeholder' => 'Enter an unique slug (e.g., about-us) as the page identifier',
                                 ]) !!}
-                                @error('file_name')
+                                @error('slug')
                                     <strong class="text-danger">{{ $message }}</strong>
                                 @enderror
                             </div>
                         </div>
 
-                        <!-- Current File -->
+                        <!-- Description -->
                         <div class="row">
-                            {!! Form::label('current_file', 'Current File', ['class' => 'col-form-label']) !!}
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-12 d-flex align-items-center">
-                                <a href="{{ route('download.taxonomy-file', [
-                                    'file_name' => $taxonomyFile->file_name,
-                                    'extension' => $taxonomyFile->getFileExtension(),
-                                ]) }}"
-                                    target="_blank" class="btn btn-outline-secondary btn-sm me-3" style="min-width: 150px;">
-                                    <i class="fa fa-download me-2"></i> {{ $taxonomyFile->getFileNameWithExtension() }}
-                                </a>
-                            </div>
+                            {!! Form::label('html', 'HTML Content*', ['class' => 'col-form-label']) !!}
                         </div>
 
-                        <!-- Replace File -->
-                        <div class="row mt-3">
-                            {!! Form::label('file', "New File* (10 MB max, supports $supportedExtensions only)", [
-                                'class' => 'col-form-label',
-                            ]) !!}
-                        </div>
                         <div class="form-group row">
                             <div class="col-md-12">
-                                {!! Form::file('file', ['class' => 'form-control', 'required' => true]) !!}
-                                @error('file')
+                                <livewire:backend.richtext-editor-component name="html"
+                                    value="{{ old('html', $taxonomyPage->html ?? '') }}" style="height: 300px;" />
+                                @error('html')
                                     <strong class="text-danger">{{ $message }}</strong>
                                 @enderror
                             </div>
@@ -87,7 +71,7 @@
                                     {!! Form::select(
                                         'taxonomy_id',
                                         $taxonomies->pluck('name', 'id')->prepend(__('— none —'), ''),
-                                        $taxonomyFile->taxonomy_id,
+                                        $taxonomyPage->taxonomy_id,
                                         ['class' => 'form-control'],
                                     ) !!}
                                     @error('taxonomy_id')
