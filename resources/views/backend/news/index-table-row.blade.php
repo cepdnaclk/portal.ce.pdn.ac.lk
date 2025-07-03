@@ -1,5 +1,7 @@
-<?php use App\Domains\Auth\Models\User; ?>
-<?php use App\Helpers\DescriptionHelper; ?>
+@php
+    use App\Domains\Auth\Models\User;
+    use App\Helpers\DescriptionHelper;
+@endphp
 
 <x-livewire-tables::table.cell>
     {{ $row->title }}

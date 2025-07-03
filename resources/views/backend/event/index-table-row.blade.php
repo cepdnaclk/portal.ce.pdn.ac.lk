@@ -1,3 +1,7 @@
+@php
+    use App\Helpers\DescriptionHelper;
+@endphp
+
 <x-livewire-tables::table.cell>
     {{ $row->title }}
 </x-livewire-tables::table.cell>
