@@ -10,7 +10,7 @@
         "production": "mix --production"
     },
     "devDependencies": {
-        "@coreui/coreui": "^3.0.0",
+        "@coreui/coreui": "^5.2.0",
         "@coreui/icons": "^3.0.1",
         "@fortawesome/fontawesome-free": "^5.12.1",
         "@popperjs/core": "^2.5.1",
