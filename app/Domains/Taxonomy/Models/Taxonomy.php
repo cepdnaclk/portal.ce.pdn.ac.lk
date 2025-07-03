@@ -10,6 +10,7 @@ use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Taxonomy\Models\TaxonomyPage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Domains\Taxonomy\Models\Traits\Scope\TaxonomyScope;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * Class Taxonomy.
@@ -127,5 +128,17 @@ class Taxonomy extends Model
     protected static function newFactory()
     {
         return TaxonomyFactory::new();
+    }
+
+    /**
+     * Get the activity log options for the model.
+     *
+     * @return \Spatie\Activitylog\LogOptions
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['area', 'type', 'message', 'enabled', 'starts_at', 'ends_at'])
+            ->logOnlyDirty();
     }
 }

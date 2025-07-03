@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Domains\Event\Models\Traits\Scope\EventScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * Class Event.
@@ -52,7 +53,7 @@ class Event extends Model
 
     public static function eventTypeMap(): array
     {
-        // TODO integrate with Taxonomies 
+        // TODO integrate with Taxonomies
         return [
             0 => 'Event',
             1 => 'Seminar',
@@ -80,5 +81,17 @@ class Event extends Model
     protected static function newFactory()
     {
         return EventFactory::new();
+    }
+
+    /**
+     * Get the activity log options for the model.
+     *
+     * @return \Spatie\Activitylog\LogOptions
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['area', 'type', 'message', 'enabled', 'starts_at', 'ends_at'])
+            ->logOnlyDirty();
     }
 }
