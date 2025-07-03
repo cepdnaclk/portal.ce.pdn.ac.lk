@@ -116,7 +116,6 @@ class EventController extends Controller
 
             $event->enabled = ($request->enabled != null);
             $event->url =  urlencode(str_replace(" ", "-", $request->url));
-            $event->created_by = Auth::user()->id;
             $event->save();
 
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was updated !');
@@ -147,6 +146,7 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         try {
+            $this->deleteThumb($event->thumbURL());
             $event->delete();
             return redirect()->route('dashboard.event.index')->with('Success', 'Event was deleted !');
         } catch (\Exception $ex) {
@@ -154,6 +154,7 @@ class EventController extends Controller
             return abort(500);
         }
     }
+
     // Private function to handle deleting images
     private function deleteThumb($currentURL)
     {
@@ -162,6 +163,7 @@ class EventController extends Controller
             if (File::exists($oldImage))  unlink($oldImage);
         }
     }
+
     // Private function to handle uploading  images
     private function uploadThumb($currentURL, $newImage, $folder)
     {

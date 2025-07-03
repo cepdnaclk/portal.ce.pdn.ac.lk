@@ -6,9 +6,11 @@
 
 @section('content')
     <div>
+        @if ($taxonomy && $taxonomy->description)
+            <livewire:backend.expandable-info-card :title="'Taxonomy: ' . $taxonomy->name" :description="$taxonomy->description" />
+        @endif
 
         <x-backend.card>
-
             <x-slot name="body">
                 <form method="POST" action="{{ route('dashboard.taxonomy.terms.store', $taxonomy) }}">
                     @csrf
@@ -69,73 +71,18 @@
 
                     <!-- Metadata Section -->
                     <div class="metadata py-3 mt-5 mb-3" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
-
                         <div class="col-12 pb-3">
                             <strong>Metadata</strong>
                         </div>
 
-                        @foreach ($taxonomy->properties as $property)
-                            <div class="col-12 py-2">
-                                <div class="col ps-0">
-                                    <label>{{ $property['name'] }}
-                                        ({{ \App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']] }})
-                                    </label>
-                                </div>
-                                <div class="col-md-12 px-0">
-                                    @switch($property['data_type'])
-                                        @case('string')
-                                            {!! Form::text("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
-                                        @break
-
-                                        @case('integer')
-                                            {!! Form::number("metadata[{$property['code']}]", null, [
-                                                'class' => 'form-control',
-                                                'id' => $property['code'],
-                                                'step' => '1',
-                                            ]) !!}
-                                        @break
-
-                                        @case('float')
-                                            {!! Form::number("metadata[{$property['code']}]", null, [
-                                                'class' => 'form-control',
-                                                'id' => $property['code'],
-                                                'step' => 'any',
-                                            ]) !!}
-                                        @break
-
-                                        @case('boolean')
-                                            <div class="form-check">
-                                                {!! Form::checkbox("metadata[{$property['code']}]", 1, null, [
-                                                    'class' => 'form-check-input',
-                                                    'id' => $property['code'],
-                                                ]) !!}
-                                            </div>
-                                        @break
-
-                                        @case('date')
-                                            {!! Form::date("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
-                                        @break
-
-                                        @case('datetime')
-                                            {!! Form::datetimeLocal("metadata[{$property['code']}]", null, [
-                                                'class' => 'form-control',
-                                                'id' => $property['code'],
-                                            ]) !!}
-                                        @break
-
-                                        @case('url')
-                                            {!! Form::url("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
-                                        @break
-
-                                        @case('image')
-                                            {!! Form::file("metadata[{$property['code']}]", ['class' => 'form-control', 'id' => $property['code']]) !!}
-                                        @break
-
-                                        @default
-                                            {!! Form::text("metadata[{$property['code']}]", null, ['class' => 'form-control', 'id' => $property['code']]) !!}
-                                    @endswitch
-                                </div>
+                        @if (empty($taxonomy->properties))
+                            <div class="col-12">
+                                <p class="text-muted">No metadata properties available for this taxonomy.</p>
                             </div>
+                        @endif
+
+                        @foreach ($taxonomy->properties as $property)
+                            <livewire:backend.taxonomy-term-metadata :property="$property" :taxonomy="$taxonomy" />
                         @endforeach
                     </div>
             </x-slot>
