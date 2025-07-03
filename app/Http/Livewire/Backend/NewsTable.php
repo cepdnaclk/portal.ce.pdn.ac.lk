@@ -31,7 +31,7 @@ class NewsTable extends DataTableComponent
                 ->format(function (News $news) {
                     return view('backend.news.enabled-toggle', ['news' => $news]);
                 }),
-            Column::make("Author","user.name")
+            Column::make("Author", "user.name")
                 ->sortable()
                 ->searchable(),
             Column::make("Published at", "published_at")
@@ -52,7 +52,7 @@ class NewsTable extends DataTableComponent
                 } elseif ($enabled === 0) {
                     $query->where('enabled', false);
                 }
-            });
+            })->orderBy('published_at', 'desc');;
     }
 
 

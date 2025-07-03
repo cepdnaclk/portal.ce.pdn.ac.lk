@@ -102,7 +102,7 @@ class NewsSeeder extends Seeder
 
         foreach ($news as $item) {
             $item['description'] = str_replace('\/', '/', $item['description']);
-            News::create($item);
+            News::firstOrCreate($item);
         }
 
         $this->enableForeignKeys();

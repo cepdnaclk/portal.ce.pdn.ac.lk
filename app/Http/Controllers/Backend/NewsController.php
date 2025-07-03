@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
-
     /**
      * Show the form for creating a new resource.
      *
@@ -20,9 +20,13 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('backend.news.create');
+        try {
+            return view('backend.news.create');
+        } catch (\Exception $ex) {
+            Log::error('Failed to load news creation page', ['error' => $ex->getMessage()]);
+            return abort(500);
+        }
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -41,6 +45,7 @@ class NewsController extends Controller
             'link_url' => 'nullable|url',
             'link_caption' => 'nullable|string',
         ]);
+
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb(null, $request->image, "news");
         }
@@ -48,16 +53,16 @@ class NewsController extends Controller
         try {
             $news = new News($data);
             $news->enabled = ($request->enabled == 1);
-            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections 
+            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections
             $news->created_by = Auth::user()->id;
             $news->save();
 
             return redirect()->route('dashboard.news.index', $news)->with('Success', 'News was created !');
         } catch (\Exception $ex) {
+            Log::error('Failed to create news', ['error' => $ex->getMessage()]);
             return abort(500);
         }
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -66,9 +71,13 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
-        return view('backend.news.edit', compact('news'));
+        try {
+            return view('backend.news.edit', ['news' => $news]);
+        } catch (\Exception $ex) {
+            Log::error('Failed to load news edit page', ['error' => $ex->getMessage()]);
+            return abort(500);
+        }
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -78,6 +87,7 @@ class NewsController extends Controller
      */
     public function update(Request $request, News $news)
     {
+
         $data = request()->validate([
             'title' => ['required'],
             'url' => ['required', Rule::unique('news')->ignore($news->id)],
@@ -87,6 +97,7 @@ class NewsController extends Controller
             'link_url' => 'nullable|url',
             'link_caption' => 'nullable|string',
         ]);
+
         if ($request->hasFile('image')) {
             $data['image'] = $this->uploadThumb($news->image, $request->image, "news");
         } else {
@@ -96,12 +107,12 @@ class NewsController extends Controller
         try {
             $news->update($data);
             $news->enabled = ($request->enabled != null);
-            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections 
-            $news->created_by = Auth::user()->id;
+            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections
             $news->save();
 
             return redirect()->route('dashboard.news.index')->with('Success', 'News was updated !');
         } catch (\Exception $ex) {
+            Log::error('Failed to update news', ['news_id' => $news->id, 'error' => $ex->getMessage()]);
             return abort(500);
         }
     }
@@ -127,11 +138,11 @@ class NewsController extends Controller
     public function destroy(News $news)
     {
         try {
-
-            $this->deleteThumb($news->thumb);
+            $this->deleteThumb($news->thumbURL());
             $news->delete();
             return redirect()->route('dashboard.news.index')->with('Success', 'News was deleted !');
         } catch (\Exception $ex) {
+            Log::error('Failed to delete news', ['news_id' => $news->id, 'error' => $ex->getMessage()]);
             return abort(500);
         }
     }
@@ -141,7 +152,9 @@ class NewsController extends Controller
     {
         if ($currentURL != null && $currentURL != config('constants.frontend.dummy_thumb')) {
             $oldImage = public_path($currentURL);
-            if (File::exists($oldImage)) unlink($oldImage);
+            if (File::exists($oldImage)) {
+                unlink($oldImage);
+            }
         }
     }
 

@@ -15,7 +15,6 @@
             </x-slot>
 
             <x-slot name="body">
-
                 @if (session('Success'))
                     <div class="alert alert-success">
                         {{ session('Success') }}

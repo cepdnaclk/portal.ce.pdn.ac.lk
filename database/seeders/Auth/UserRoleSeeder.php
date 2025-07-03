@@ -19,11 +19,13 @@ class UserRoleSeeder extends Seeder
     public function run()
     {
         $this->disableForeignKeys();
-        User::find(1)->assignRole(config('boilerplate.access.role.admin'), 'Editor');
+
+        // Admin user
+        User::first()->assignRole('Administrator');
 
         // Only for the local testings
         if (app()->environment(['local', 'testing'])) {
-            User::find(2)->assignRole('Editor');
+            // Nothing to do here for now
         }
 
         $this->enableForeignKeys();

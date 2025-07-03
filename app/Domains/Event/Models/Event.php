@@ -10,7 +10,7 @@ use App\Domains\Event\Models\Traits\Scope\EventScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class News.
+ * Class Event.
  */
 class Event extends Model
 {
@@ -28,6 +28,7 @@ class Event extends Model
     protected $fillable = [
         'title',
         'url',
+        'event_type',
         'published_at',
         'description',
         'image',
@@ -46,7 +47,19 @@ class Event extends Model
      */
     protected $casts = [
         'enabled' => 'boolean',
+        'event_type' => 'array',
     ];
+
+    public static function eventTypeMap(): array
+    {
+        // TODO integrate with Taxonomies 
+        return [
+            0 => 'Event',
+            1 => 'Seminar',
+            2 => 'ACES',
+
+        ];
+    }
 
     public function thumbURL()
     {

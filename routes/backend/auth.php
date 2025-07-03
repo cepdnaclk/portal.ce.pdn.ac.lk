@@ -10,7 +10,8 @@ use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
 use Tabuna\Breadcrumbs\Trail;
 use Illuminate\Support\Facades\Route;
-// All route names are prefixed with 'admin.auth'.
+
+// All route names are prefixed with 'dashboard.auth'.
 Route::group([
     'prefix' => 'auth',
     'as' => 'auth.',
