@@ -9,7 +9,7 @@ class SemesterSeeder extends Seeder
 {
     public function run()
     {
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Semester 1',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -19,7 +19,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Semester 2',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -29,7 +29,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Semester 3',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -39,7 +39,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Semester 4',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -49,7 +49,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Short Semester',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -59,7 +59,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Semester 5',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -69,7 +69,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Semester 6',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -79,7 +79,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Semester 7',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -89,7 +89,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Semester 8',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -99,7 +99,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'General Electives',
             'version' => 1,
             'academic_program' => 'undergraduate',
@@ -109,7 +109,7 @@ class SemesterSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-        Semester::create([
+        Semester::firstOrCreate([
             'title' => 'Technical Electives',
             'version' => 1,
             'academic_program' => 'undergraduate',

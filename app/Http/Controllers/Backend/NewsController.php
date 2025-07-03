@@ -20,12 +20,12 @@ class NewsController extends Controller
      */
     public function create()
     {
-        try{
+        try {
             return view('backend.news.create');
-        }catch (\Exception $ex) {
-            Log::error('Failed to load news creation page', ['error' => $ex->getMessage()]);    
+        } catch (\Exception $ex) {
+            Log::error('Failed to load news creation page', ['error' => $ex->getMessage()]);
             return abort(500);
-        }    
+        }
     }
     /**
      * Store a newly created resource in storage.
@@ -53,7 +53,7 @@ class NewsController extends Controller
         try {
             $news = new News($data);
             $news->enabled = ($request->enabled == 1);
-            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections 
+            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections
             $news->created_by = Auth::user()->id;
             $news->save();
 
@@ -71,10 +71,10 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
-        try{
+        try {
             return view('backend.news.edit', ['news' => $news]);
-        }catch (\Exception $ex) {
-            Log::error('Failed to load news edit page', ['error' => $ex->getMessage()]);    
+        } catch (\Exception $ex) {
+            Log::error('Failed to load news edit page', ['error' => $ex->getMessage()]);
             return abort(500);
         }
     }
@@ -107,8 +107,7 @@ class NewsController extends Controller
         try {
             $news->update($data);
             $news->enabled = ($request->enabled != null);
-            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections 
-            $news->created_by = Auth::user()->id;
+            $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections
             $news->save();
 
             return redirect()->route('dashboard.news.index')->with('Success', 'News was updated !');
@@ -117,7 +116,8 @@ class NewsController extends Controller
             return abort(500);
         }
     }
-     /**
+
+    /**
      * Confirm to delete the specified resource from storage.
      *
      * @param \App\Models\News $news
@@ -138,8 +138,7 @@ class NewsController extends Controller
     public function destroy(News $news)
     {
         try {
-
-            $this->deleteThumb($news->thumb);
+            $this->deleteThumb($news->thumbURL());
             $news->delete();
             return redirect()->route('dashboard.news.index')->with('Success', 'News was deleted !');
         } catch (\Exception $ex) {
@@ -147,30 +146,30 @@ class NewsController extends Controller
             return abort(500);
         }
     }
-     // Private function to handle deleting images
-     private function deleteThumb($currentURL)
-     {
-         if ($currentURL != null && $currentURL != config('constants.frontend.dummy_thumb')) {
-             $oldImage = public_path($currentURL);
-             if (File::exists($oldImage)) {
-                unlink($oldImage);
-             }
-         }
-     }
- 
-     // Private function to handle uploading  images
-     private function uploadThumb($currentURL, $newImage, $folder)
-     {
-         // Delete the existing image
-         $this->deleteThumb($currentURL);
- 
-         $imageName = time() . '.' . $newImage->extension();
-         $newImage->move(public_path('img/' . $folder), $imageName);
-         $imagePath = "/img/$folder/" . $imageName;
-         $image = Image::make(public_path($imagePath));
-         $image->save();
-        
-         return $imageName;
-     }
-}
 
+    // Private function to handle deleting images
+    private function deleteThumb($currentURL)
+    {
+        if ($currentURL != null && $currentURL != config('constants.frontend.dummy_thumb')) {
+            $oldImage = public_path($currentURL);
+            if (File::exists($oldImage)) {
+                unlink($oldImage);
+            }
+        }
+    }
+
+    // Private function to handle uploading  images
+    private function uploadThumb($currentURL, $newImage, $folder)
+    {
+        // Delete the existing image
+        $this->deleteThumb($currentURL);
+
+        $imageName = time() . '.' . $newImage->extension();
+        $newImage->move(public_path('img/' . $folder), $imageName);
+        $imagePath = "/img/$folder/" . $imageName;
+        $image = Image::make(public_path($imagePath));
+        $image->save();
+
+        return $imageName;
+    }
+}

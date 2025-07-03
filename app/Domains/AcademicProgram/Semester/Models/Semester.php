@@ -4,6 +4,7 @@ namespace App\Domains\AcademicProgram\Semester\Models;
 
 use App\Domains\Auth\Models\User;
 use App\Domains\AcademicProgram\AcademicProgram;
+use App\Domains\AcademicProgram\Course\Models\Course;
 use App\Domains\AcademicProgram\Semester\Models\Traits\Scope\SemesterScope;
 use Database\Factories\SemesterFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,6 +53,11 @@ class Semester extends AcademicProgram
     public function academicProgram()
     {
         return $this->getAcademicPrograms()[$this->academic_program];
+    }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
     }
 
     protected static function newFactory()

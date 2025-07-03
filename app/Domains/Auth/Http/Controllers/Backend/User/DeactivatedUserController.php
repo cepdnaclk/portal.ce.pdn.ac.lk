@@ -48,8 +48,8 @@ class DeactivatedUserController
 
         return redirect()->route(
             (int) $status === 1 || !$request->user()->can('admin.access.user.reactivate') ?
-                'dashboard.auth.user' :
-                'admin.auth.user.deactivated'
+                'dashboard.auth.user.index' :
+                'dashboard.auth.user.deactivated'
         )->withFlashSuccess(__('The user was successfully updated.'));
     }
 }
