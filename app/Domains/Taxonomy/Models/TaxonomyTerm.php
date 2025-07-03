@@ -7,6 +7,7 @@ use Database\Factories\TaxonomyTermFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * Class TaxonomyTerm.
@@ -218,5 +219,17 @@ class TaxonomyTerm extends Model
     protected static function newFactory()
     {
         return TaxonomyTermFactory::new();
+    }
+
+    /**
+     * Get the activity log options for the model.
+     *
+     * @return \Spatie\Activitylog\LogOptions
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['area', 'type', 'message', 'enabled', 'starts_at', 'ends_at'])
+            ->logOnlyDirty();
     }
 }

@@ -9,6 +9,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use App\Domains\News\Models\Traits\Scope\NewsScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * Class News.
@@ -62,5 +63,17 @@ class News extends Model
     protected static function newFactory()
     {
         return NewsFactory::new();
+    }
+
+    /**
+     * Get the activity log options for the model.
+     *
+     * @return \Spatie\Activitylog\LogOptions
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['area', 'type', 'message', 'enabled', 'starts_at', 'ends_at'])
+            ->logOnlyDirty();
     }
 }

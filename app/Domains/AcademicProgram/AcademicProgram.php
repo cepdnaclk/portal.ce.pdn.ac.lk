@@ -4,6 +4,7 @@ namespace App\Domains\AcademicProgram;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
 
 class AcademicProgram extends Model
 {
@@ -56,5 +57,17 @@ class AcademicProgram extends Model
             'GE' => 'General Elective',
             'TE' => 'Technical Elective'
         ];
+    }
+
+    /**
+     * Get the activity log options for the model.
+     *
+     * @return \Spatie\Activitylog\LogOptions
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['area', 'type', 'message', 'enabled', 'starts_at', 'ends_at'])
+            ->logOnlyDirty();
     }
 }
