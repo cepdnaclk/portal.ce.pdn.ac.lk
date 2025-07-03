@@ -6,6 +6,10 @@
 
 @section('content')
     <div>
+        @if ($taxonomy && $taxonomy->description)
+            <livewire:backend.expandable-info-card :title="'Taxonomy: ' . $taxonomy->name" :description="$taxonomy->description" />
+        @endif
+
         <x-backend.card>
             <x-slot name="body">
                 <form method="POST" action="{{ route('dashboard.taxonomy.terms.update', [$taxonomy, $term]) }}">
@@ -82,90 +86,15 @@
                             <strong>Metadata</strong>
                         </div>
 
-                        @foreach ($taxonomy->properties as $property)
-                            <div class="col-12 py-2">
-                                <div class="col ps-0">
-                                    <label>{{ $property['name'] }}
-                                        ({{ \App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']] }})
-                                    </label>
-                                </div>
-                                <div class="col-md-12 px-0">
-                                    @switch($property['data_type'])
-                                        @case('string')
-                                            {!! Form::text(
-                                                "metadata[{$property['code']}]",
-                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
-                                                ['class' => 'form-control'],
-                                            ) !!}
-                                        @break
-
-                                        @case('integer')
-                                            {!! Form::number(
-                                                "metadata[{$property['code']}]",
-                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
-                                                ['class' => 'form-control', 'step' => '1'],
-                                            ) !!}
-                                        @break
-
-                                        @case('float')
-                                            {!! Form::number(
-                                                "metadata[{$property['code']}]",
-                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
-                                                ['class' => 'form-control', 'step' => 'any'],
-                                            ) !!}
-                                        @break
-
-                                        @case('boolean')
-                                            <div class="form-check">
-                                                {!! Form::checkbox(
-                                                    "metadata[{$property['code']}]",
-                                                    1,
-                                                    old("metadata.{$property['code']}", $term->getMetadata($property['code']) == 1 ? true : false),
-                                                    ['class' => 'form-check-input'],
-                                                ) !!}
-                                            </div>
-                                        @break
-
-                                        @case('date')
-                                            {!! Form::date(
-                                                "metadata[{$property['code']}]",
-                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
-                                                ['class' => 'form-control'],
-                                            ) !!}
-                                        @break
-
-                                        @case('datetime')
-                                            {!! Form::datetimeLocal(
-                                                "metadata[{$property['code']}]",
-                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
-                                                ['class' => 'form-control'],
-                                            ) !!}
-                                        @break
-
-                                        @case('url')
-                                            {!! Form::url(
-                                                "metadata[{$property['code']}]",
-                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
-                                                ['class' => 'form-control'],
-                                            ) !!}
-                                        @break
-
-                                        @case('image')
-                                            {!! Form::file("metadata[{$property['code']}]", ['class' => 'form-control']) !!}
-                                            @if ($term->getMetadata($property['code']))
-                                                <small>Current: {{ $term->getMetadata($property['code']) }}</small>
-                                            @endif
-                                        @break
-
-                                        @default
-                                            {!! Form::text(
-                                                "metadata[{$property['code']}]",
-                                                old("metadata.{$property['code']}", $term->getMetadata($property['code'])),
-                                                ['class' => 'form-control'],
-                                            ) !!}
-                                    @endswitch
-                                </div>
+                        @if (empty($taxonomy->properties))
+                            <div class="col-12">
+                                <p class="text-muted">No metadata properties available for this taxonomy.</p>
                             </div>
+                        @endif
+
+                        @foreach ($taxonomy->properties as $property)
+                            <livewire:backend.taxonomy-term-metadata :property="$property" :term="$term"
+                                :taxonomy="$taxonomy" />
                         @endforeach
                     </div>
             </x-slot>

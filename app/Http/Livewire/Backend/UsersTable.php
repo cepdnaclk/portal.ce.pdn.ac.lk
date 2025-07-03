@@ -13,6 +13,10 @@ use Rappasoft\LaravelLivewireTables\Views\Filter;
  */
 class UsersTable extends DataTableComponent
 {
+    public array $perPageAccepted = [10, 25, 50, 100];
+    public int $perPage = 25;
+    public bool $perPageAll = true;
+
     /**
      * @var
      */
@@ -58,10 +62,10 @@ class UsersTable extends DataTableComponent
         }
 
         return $query
-            ->when($this->getFilter('search'), fn ($query, $term) => $query->search($term))
-            ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type))
-            ->when($this->getFilter('active'), fn ($query, $active) => $query->where('active', $active === 'yes'))
-            ->when($this->getFilter('verified'), fn ($query, $verified) => $verified === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at'));
+            ->when($this->getFilter('search'), fn($query, $term) => $query->search($term))
+            ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type))
+            ->when($this->getFilter('active'), fn($query, $active) => $query->where('active', $active === 'yes'))
+            ->when($this->getFilter('verified'), fn($query, $verified) => $verified === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at'));
     }
 
     /**

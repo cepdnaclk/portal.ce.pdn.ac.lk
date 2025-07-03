@@ -44,17 +44,19 @@
                 </a>
             @endif
 
-            <!-- Edit Button -->
-            <a href="{{ route('dashboard.taxonomy.terms.edit', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}"
-                class="btn btn-sm btn-warning">
-                <i class="fa fa-pencil" title="Edit"></i>
-            </a>
+            @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
+                <!-- Edit Button -->
+                <a href="{{ route('dashboard.taxonomy.terms.edit', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}"
+                    class="btn btn-sm btn-warning">
+                    <i class="fa fa-pencil" title="Edit"></i>
+                </a>
 
-            <!-- Delete Button -->
-            <a href="{{ route('dashboard.taxonomy.terms.delete', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}"
-                class="btn btn-sm btn-danger">
-                <i class="fa fa-trash" title="Delete"></i>
-            </a>
+                <!-- Delete Button -->
+                <a href="{{ route('dashboard.taxonomy.terms.delete', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}"
+                    class="btn btn-sm btn-danger">
+                    <i class="fa fa-trash" title="Delete"></i>
+                </a>
+            @endif
 
         </div>
     </div>

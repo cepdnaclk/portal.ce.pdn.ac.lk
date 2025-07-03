@@ -3,7 +3,7 @@
 @section('title', __('Edit Taxonomy'))
 
 @section('content')
-    <div x-data="{ properties: {{ json_encode($taxonomy->properties) }}, is_editable: {{ $taxonomy->terms()->count() > 0 ? '0' : '1' }} }">
+    <div x-data="{ properties: {{ json_encode($taxonomy->properties) }}, is_editable: '1' }">
         {!! Form::model($taxonomy, [
             'url' => route('dashboard.taxonomy.update', $taxonomy->id),
             'method' => 'PUT',
@@ -66,6 +66,24 @@
                                 @enderror
                             </div>
                         </div>
+
+                        {{-- Visibility --}}
+                        <div class="form-group row">
+                            {!! Form::label('visibility', 'Visibility', ['class' => 'col-md-2 form-check-label']) !!}
+                            <div class="col-md-4 form-check form-switch mx-4">
+                                <input type="checkbox" id="checkVisible" name="visibility" value="1"
+                                    class="form-check-input checkbox-lg"
+                                    {{ $taxonomy->visibility == 1 ? 'checked' : '' }} />
+                                <label class="form-check-label" for="checkVisible">&nbsp;</label>
+                                <span class="ms-5 text-muted">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                    Available as an API for public use
+                                </span>
+                                @error('visibility')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -73,7 +91,7 @@
                     <div class="card-body">
                         <h5 class="card-title" style="text-align: left; text-decoration: none;">Properties</h5>
 
-                        <div x-show="is_editable=='0'">
+                        <div>
                             <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
                                 <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
                                     <path
@@ -88,11 +106,9 @@
                                 </svg>
 
                                 <div>
-                                    {{-- <b>Edit</b> and <b>Delete</b> options not available since already have <a href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}">taxonomy terms</a>. Please remove all of them to enable the Edit and Delete options. --}}
-
-                                    <b>Edit</b> and <b>Delete</b> options must be carefully used to avoid data issues with
-                                    existing <a href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}">taxonomy
-                                        terms</a>.
+                                    <b>Edit</b> and <b>Delete</b> options should be carefully used since already have <a
+                                        href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}">taxonomy
+                                        terms</a>.<br>
                                 </div>
                             </div>
                         </div>

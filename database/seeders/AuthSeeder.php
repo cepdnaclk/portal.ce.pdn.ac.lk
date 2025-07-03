@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Database\Seeders\Auth\PermissionRoleSeeder;
+use Database\Seeders\Roles\TaxonomyRoleSeeder;
 use Database\Seeders\Auth\UserRoleSeeder;
 use Database\Seeders\Auth\UserSeeder;
 use Database\Seeders\Traits\DisableForeignKeys;

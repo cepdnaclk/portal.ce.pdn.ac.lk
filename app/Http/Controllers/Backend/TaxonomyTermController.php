@@ -32,7 +32,7 @@ class TaxonomyTermController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|void
      */
     public function store(Request $request, Taxonomy $taxonomy, TaxonomyTerm $taxonomyTerm)
@@ -46,44 +46,6 @@ class TaxonomyTermController extends Controller
                 'metadata' => 'array',
             ]);
 
-
-            foreach ($taxonomy->properties as $property) {
-                $metadataKey = "metadata.{$property['code']}";
-
-                switch ($property['data_type']) {
-                    case 'string':
-                        $request->validate([$metadataKey => 'nullable|string']);
-                        break;
-                    case 'integer':
-                        $request->validate([$metadataKey => 'nullable|integer']);
-                        break;
-                    case 'float':
-                        $request->validate([$metadataKey => 'nullable|numeric']);
-                        break;
-                    case 'boolean':
-                        $request->validate([$metadataKey => 'nullable|boolean']);
-                        break;
-                    case 'date':
-                        $request->validate([$metadataKey => 'nullable|date']);
-                        break;
-                    case 'datetime':
-                        $request->validate([$metadataKey => 'nullable|date']);
-                        break;
-                    case 'url':
-                        $request->validate([$metadataKey => 'nullable|url']);
-                        break;
-                    case 'image':
-
-                        if ($request->hasFile("metadata.{$property['code']}")) {
-                            $imagePath = $this->uploadThumb(null, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
-                            $value = $imagePath;
-                        } else {
-                            $value = null;
-                        }
-                        break;
-                }
-            }
-
             $metadataArray = [];
 
             foreach ($taxonomy->properties as $property) {
@@ -92,6 +54,7 @@ class TaxonomyTermController extends Controller
                 if ($property['data_type'] === 'boolean') {
                     $value = $request->has("metadata.{$property['code']}") ? true : false;
                 }
+
                 $metadataArray[] = [
                     'code' => $property['code'],
                     'value' => $value === '' ? null : $value
@@ -128,8 +91,8 @@ class TaxonomyTermController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Domains\TaxonomyTerm\Models\TaxonomyTerm $taxonomyTerm
+     * @param Request $request
+     * @param \App\Domains\Taxonomy\Models\TaxonomyTerm $taxonomyTerm
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Taxonomy $taxonomy, TaxonomyTerm $term)
@@ -142,42 +105,6 @@ class TaxonomyTermController extends Controller
                 'metadata' => 'array',
             ]);
 
-            foreach ($taxonomy->properties as $property) {
-                $metadataKey = "metadata.{$property['code']}";
-
-                switch ($property['data_type']) {
-                    case 'string':
-                        $request->validate([$metadataKey => 'nullable|string']);
-                        break;
-                    case 'integer':
-                        $request->validate([$metadataKey => 'nullable|integer']);
-                        break;
-                    case 'float':
-                        $request->validate([$metadataKey => 'nullable|numeric']);
-                        break;
-                    case 'boolean':
-                        $request->validate([$metadataKey => 'nullable|boolean']);
-                        break;
-                    case 'date':
-                        $request->validate([$metadataKey => 'nullable|date']);
-                        break;
-                    case 'datetime':
-                        $request->validate([$metadataKey => 'nullable|date']);
-                        break;
-                    case 'url':
-                        $request->validate([$metadataKey => 'nullable|url']);
-                        break;
-                    case 'image':
-                        if ($request->hasFile("metadata.{$property['code']}")) {
-                            $imagePath = $this->uploadThumb($term, $request->file("metadata.{$property['code']}"), "taxonomy_terms");
-                            $value = $imagePath;
-                        } else {
-                            $value = null;
-                        }
-                        break;
-                }
-            }
-
             $metadataArray = [];
             foreach ($taxonomy->properties as $property) {
                 $value = $request->input("metadata.{$property['code']}");
@@ -186,7 +113,7 @@ class TaxonomyTermController extends Controller
                     $value = $request->has("metadata.{$property['code']}") ? true : false;
                 }
 
-                $metadataArray[] = [
+                $metadataArray[] =  [
                     'code' => $property['code'],
                     'value' => $value === '' ? null : $value
                 ];
@@ -214,6 +141,7 @@ class TaxonomyTermController extends Controller
     {
         return view('backend.taxonomy.terms.delete', compact('taxonomy', 'term'));
     }
+
 
     /**
      * Remove the specified resource from storage.
