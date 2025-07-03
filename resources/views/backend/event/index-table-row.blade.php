@@ -9,8 +9,7 @@
 <x-livewire-tables::table.cell>
     <div>
         @php
-            $desc = strip_tags($row->description);
-            $desc = str_replace('&nbsp;', ' ', $desc);
+            $desc = DescriptionHelper::process($row->description);
         @endphp
         @if (mb_strlen($desc) > 250)
             {{ mb_substr($desc, 0, 250) }}...
