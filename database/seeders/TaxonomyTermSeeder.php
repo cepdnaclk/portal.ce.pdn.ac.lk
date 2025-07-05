@@ -173,7 +173,7 @@ class TaxonomyTermSeeder extends Seeder
     private function createTermsWithChildren($terms, $taxonomyId, $parentId = null)
     {
         foreach ($terms as $term) {
-            $createdTerm = TaxonomyTerm::create([
+            $createdTerm = TaxonomyTerm::firstOrCreate([
                 'code' => $term['code'],
                 'name' => $term['name'],
                 'taxonomy_id' => $taxonomyId,
@@ -185,7 +185,7 @@ class TaxonomyTermSeeder extends Seeder
 
             if (isset($term['children'])) {
                 foreach ($term['children'] as $child) {
-                    TaxonomyTerm::create([
+                    TaxonomyTerm::firstOrCreate([
                         'code' => $child['code'],
                         'name' => $child['name'],
                         'taxonomy_id' => $taxonomyId,
