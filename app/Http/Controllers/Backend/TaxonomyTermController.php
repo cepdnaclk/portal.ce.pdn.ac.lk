@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use phpDocumentor\Reflection\PseudoTypes\False_;
+use Spatie\Activitylog\Models\Activity;
 
 class TaxonomyTermController extends Controller
 {
@@ -119,8 +121,14 @@ class TaxonomyTermController extends Controller
                 ];
             }
 
+            // Exclude 'metadata' from $validatedData before update
+            unset($validatedData['metadata']);
             $term->update($validatedData);
-            $term->metadata = $metadataArray;
+
+            // Update metadata only if it has changed
+            if (json_encode($term->metadata) !== json_encode($metadataArray)) {
+                $term->metadata = $metadataArray;
+            }
             $term->updated_by = Auth::user()->id;
             $term->save();
 
@@ -158,5 +166,58 @@ class TaxonomyTermController extends Controller
             Log::error('Failed to delete taxonomy term', ['term_id' => $term->id, 'error' => $ex->getMessage()]);
             return back()->withErrors(['error' => 'Failed to delete taxonomy term. Please try again.']);
         }
+    }
+
+    /**
+     * Display activity log for the given taxonomy term.
+     */
+    public function history(Taxonomy $taxonomy, TaxonomyTerm $term)
+    {
+        $activities = Activity::where('subject_type', TaxonomyTerm::class)
+            ->where('subject_id', $term->id)
+            ->with(['causer', 'subject'])
+            ->orderByDesc('created_at')
+            ->get();
+
+
+        // Convert activities collection to array
+        $activities = $activities->toArray();
+
+
+        // TODO implement a better way to visualize the diff
+        // Highlight changes for JSON/list attributes in activity log
+        foreach ($activities as &$activity) {
+            if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+                // For each activity
+                $oldMetadata = array();
+                $newMetadata = array();
+
+                if (isset($activity['properties']['old']['metadata'])) {
+                    foreach ($activity['properties']['old']['metadata'] as $key => $item) {
+                        if (isset($item['code']) && isset($item['value'])) {
+                            $oldMetadata[$item['code']] = $item['value'] ?? null;
+                        }
+                    }
+                    ksort($oldMetadata);
+                    $activity['properties']['old']['metadata'] = $oldMetadata;
+                }
+
+                if (isset($activity['properties']['attributes']['metadata'])) {
+                    foreach ($activity['properties']['attributes']['metadata'] as $key => $item) {
+                        if (isset($item['code']) && isset($item['value'])) {
+                            $newMetadata[$item['code']] = $item['value'] ?? null;
+                        }
+                    }
+                    ksort($newMetadata);
+                    $activity['properties']['attributes']['metadata'] = $newMetadata;
+                }
+            }
+        }
+
+        return view('backend.taxonomy.terms.history', [
+            'taxonomy'   => $taxonomy,
+            'term'       => $term,
+            'activities' => $activities,
+        ]);
     }
 }

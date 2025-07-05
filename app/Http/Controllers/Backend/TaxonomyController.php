@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Domains\Taxonomy\Models\TaxonomyFile;
+use Spatie\Activitylog\Models\Activity;
 
 class TaxonomyController extends Controller
 {
@@ -111,9 +113,19 @@ class TaxonomyController extends Controller
             //         ->route('dashboard.taxonomy.index')
             //         ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             // }
-            $taxonomy->update($data);
-            $taxonomy->properties = $updatedProperties;
-            $taxonomy->visibility = ($request->visibility !== null);
+
+            // Exclude 'properties' from $data before update
+            $updateData = $data;
+            unset($updateData['properties']);
+            $taxonomy->update($updateData);
+
+            if (json_encode($originalProperties) !== $request->properties) {
+                $taxonomy->properties = $updatedProperties;
+            }
+            $newVisibility = ($request->visibility !== null) ? true : false;
+            if ($taxonomy->visibility !== $newVisibility) {
+                $taxonomy->visibility = $newVisibility;
+            }
             $taxonomy->updated_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
@@ -148,6 +160,72 @@ class TaxonomyController extends Controller
             }
         }
         return true;
+    }
+
+    /**
+     * Display activity log for the given taxonomy.
+     */
+    public function history(Taxonomy $taxonomy)
+    {
+        $termIds = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->pluck('id');
+        $fileIds = TaxonomyFile::where('taxonomy_id', $taxonomy->id)->pluck('id');
+
+        $activities = Activity::where(function ($query) use ($taxonomy, $termIds, $fileIds) {
+            $query->where(function ($q) use ($taxonomy) {
+                $q->where('subject_type', Taxonomy::class)
+                    ->where('subject_id', $taxonomy->id);
+            })
+                ->orWhere(function ($q) use ($termIds) {
+                    $q->where('subject_type', TaxonomyTerm::class)
+                        ->whereIn('subject_id', $termIds);
+                })
+                ->orWhere(function ($q) use ($fileIds) {
+                    $q->where('subject_type', TaxonomyFile::class)
+                        ->whereIn('subject_id', $fileIds);
+                });
+        })
+            ->with(['causer', 'subject'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Convert activities collection to array
+        $activities = $activities->toArray();
+
+        // TODO implement a better way to visualize the diff
+        // Highlight changes for JSON/list attributes in activity log
+        foreach ($activities as &$activity) {
+            if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+                // For each activity,
+                foreach ($activity['properties']['attributes'] as $key => $newValue) {
+                    //  For each attribute
+                    $oldValue = $activity['properties']['old'][$key] ?? null;
+
+                    // If value is an array, compare and keep only show only the diff
+                    if (is_array($newValue) && is_array($oldValue)) {
+                        if (json_encode($newValue) == json_encode($oldValue)) {
+                            $activity['properties']['old'][$key] = "...";
+                            $activity['properties']['attributes'][$key] = "...";
+                        } else {
+                            // Iterate through each key in the new value
+                            foreach ($newValue as $subKey => $subValue) {
+                                // If the sub-value is different from the old value, highlight it
+                                if (array_key_exists($subKey, $oldValue)) {
+                                    if (json_encode($oldValue[$subKey]) == json_encode($subValue)) {
+                                        $activity['properties']['old'][$key][$subKey] = "...";
+                                        $activity['properties']['attributes'][$key][$subKey] = "...";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return view('backend.taxonomy.history', [
+            'taxonomy'   => $taxonomy,
+            'activities' => $activities,
+        ]);
     }
     /**
      * Confirm to delete the specified resource from storage.

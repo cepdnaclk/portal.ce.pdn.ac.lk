@@ -36,7 +36,7 @@
 
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0 justify-content-end">
-        <div class="btn-group" role="group" aria-label="">
+        <div class="btn-group me-3" role="group" aria-label="View Buttons">
             <!-- Filter Button -->
             @if ($row->parent_id == null)
                 <a href="?filters[taxonomy_term]={{ $row->id }}" class="btn btn-sm btn-primary">
@@ -44,7 +44,15 @@
                 </a>
             @endif
 
-            @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
+            <!-- History Button -->
+            <a href="{{ route('dashboard.taxonomy.terms.history', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}"
+                class="btn btn-sm btn-info">
+                <i class="fa fa-clock" title="History"></i>
+            </a>
+        </div>
+
+        @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.data.editor'))
+            <div class="btn-group" role="group" aria-label="Edit Buttons">
                 <!-- Edit Button -->
                 <a href="{{ route('dashboard.taxonomy.terms.edit', ['taxonomy' => $row->taxonomy_id, 'term' => $row->id]) }}"
                     class="btn btn-sm btn-warning">
@@ -56,8 +64,8 @@
                     class="btn btn-sm btn-danger">
                     <i class="fa fa-trash" title="Delete"></i>
                 </a>
-            @endif
+            </div>
+        @endif
 
-        </div>
     </div>
 </x-livewire-tables::table.cell>
