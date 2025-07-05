@@ -1,3 +1,7 @@
+@php
+    use App\Helpers\DescriptionHelper;
+@endphp
+
 <x-livewire-tables::table.cell>
     {{ $row->title }}
 </x-livewire-tables::table.cell>
@@ -8,10 +12,13 @@
 
 <x-livewire-tables::table.cell>
     <div>
-        @if (strlen($row->description) > 250)
-            {{ mb_substr(strip_tags($row->description), 0, 250) }}...
+        @php
+            $desc = DescriptionHelper::process($row->description);
+        @endphp
+        @if (mb_strlen($desc) > 250)
+            {{ mb_substr($desc, 0, 250) }}...
         @else
-            {{ strip_tags($row->description) }}
+            {{ $desc }}
         @endif
     </div>
     <br />

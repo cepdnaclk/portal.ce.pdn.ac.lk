@@ -158,6 +158,7 @@ class TaxonomyTest extends TestCase
             'name' => 'New Taxonomy Name',
             'description' => 'A detailed description for the new taxonomy.',
             'properties' => json_encode($propertiesArray),
+            'visibility' => true,
         ];
 
         $response = $this->post(route('dashboard.taxonomy.store'), $data);
@@ -170,11 +171,13 @@ class TaxonomyTest extends TestCase
             'name' => 'New Taxonomy Name',
             'description' => 'A detailed description for the new taxonomy.',
             'created_by' => $adminUser->id,
+            'visibility' => true,
         ]);
 
         $createdTaxonomy = Taxonomy::where('code', 'new_taxonomy_code')->first();
         $this->assertNotNull($createdTaxonomy);
         $this->assertEquals($propertiesArray, $createdTaxonomy->properties, true);
+        $this->assertTrue($createdTaxonomy->visibility);
     }
 
     /** @test */
@@ -227,6 +230,7 @@ class TaxonomyTest extends TestCase
         $this->assertEquals('Updated Taxonomy Name', $taxonomy->name);
         $this->assertEquals('An updated description for the taxonomy.', $taxonomy->description);
         $this->assertEquals($updatedPropertiesArray, $taxonomy->properties);
+        $this->assertFalse($taxonomy->visibility);
         $this->assertEquals($adminUser->id, $taxonomy->updated_by);
     }
 

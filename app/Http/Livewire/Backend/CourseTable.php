@@ -23,8 +23,7 @@ class CourseTable extends DataTableComponent
                 ->searchable()->sortable(),
             Column::make("Name", "name")
                 ->searchable()->sortable(),
-            Column::make("Semester", "semester")
-                ->searchable(),
+            Column::make("Semester", "semester"),
             Column::make("Academic Program", "academic_program")
                 ->sortable(),
             Column::make("Type", "type")

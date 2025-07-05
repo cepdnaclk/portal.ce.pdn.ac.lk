@@ -99,7 +99,7 @@ class EventSeeder extends Seeder
         ];
 
         foreach ($events as $item) {
-            Event::create($item);
+            Event::firstOrCreate($item);
         }
 
         $this->enableForeignKeys();

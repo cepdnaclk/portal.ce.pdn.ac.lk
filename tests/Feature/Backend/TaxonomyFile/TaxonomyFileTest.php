@@ -175,7 +175,7 @@ class TaxonomyFileTest extends TestCase
     //         'file_path' => $filePath,
     //     ]);
 
-    //     $response = $this->get(route('download.taxonomy-files', [
+    //     $response = $this->get(route('download.taxonomy-file', [
     //         'file_name' => $fileNameWithoutExtension,
     //         'extension' => "pdf",
     //     ]));
@@ -350,7 +350,7 @@ class TaxonomyFileTest extends TestCase
         ]);
 
         // Anyone should be able to download this file
-        $response = $this->get(route('download.taxonomy-files', [
+        $response = $this->get(route('download.taxonomy-file', [
             'file_name' => $taxonomyFileForDownload->file_name,
             'extension' => 'pdf',
         ]));

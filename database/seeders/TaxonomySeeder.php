@@ -11,7 +11,8 @@ class TaxonomySeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(){
+    public function run()
+    {
         $taxonomies = [
             'intranet' => [
                 'code' => 'intranet',
@@ -35,7 +36,7 @@ class TaxonomySeeder extends Seeder
         ];
 
         foreach ($taxonomies as $key => $taxonomy) {
-            Taxonomy::create([
+            Taxonomy::firstOrCreate([
                 'code' => $taxonomy['code'],
                 'name' => $taxonomy['name'],
                 'description' => $taxonomy['description'],
@@ -45,5 +46,4 @@ class TaxonomySeeder extends Seeder
             ]);
         }
     }
-        
 }

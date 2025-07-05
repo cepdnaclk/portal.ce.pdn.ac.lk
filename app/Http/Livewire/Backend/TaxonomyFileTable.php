@@ -21,19 +21,12 @@ class TaxonomyFileTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('File Name (Slug)', 'file_name')
-                ->searchable()
-                ->sortable(),
-
+            Column::make('File Name (Slug)', 'file_name')->searchable()->sortable(),
             Column::make('Taxonomy', 'taxonomy.name'),
-            Column::make("Created by", "created_by")
-                ->sortable(),
-            Column::make("Updated by", "updated_by")
-                ->sortable(),
-            Column::make('Created at', 'created_at')
-                ->sortable(),
-            Column::make('Updated at', 'updated_at')
-                ->sortable(),
+            Column::make("Created by", "created_by")->sortable(),
+            Column::make("Updated by", "updated_by")->sortable(),
+            Column::make('Created at', 'created_at')->sortable(),
+            Column::make('Updated at', 'updated_at')->sortable(),
             Column::make('Actions'),
         ];
     }
@@ -55,8 +48,7 @@ class TaxonomyFileTable extends DataTableComponent
         }
 
         return [
-            'taxonomy_id' => Filter::make('Taxonomy')
-                ->select($taxonomy)
+            'taxonomy_id' => Filter::make('Taxonomy')->select($taxonomy)
         ];
     }
 

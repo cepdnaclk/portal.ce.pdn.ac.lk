@@ -33,7 +33,7 @@
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
         {{-- Download --}}
-        <a href="{{ route('download.taxonomy-files', [
+        <a href="{{ route('download.taxonomy-file', [
             'file_name' => $row->file_name,
             'extension' => $row->getFileExtension(),
         ]) }}"

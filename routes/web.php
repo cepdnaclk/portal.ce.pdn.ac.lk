@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Backend\TaxonomyFileController;
+use App\Http\Controllers\Backend\TaxonomyPageController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
  * Global Routes
@@ -40,7 +42,11 @@ Route::group(
     ['prefix' => 'download', 'as' => 'download.'],
     function () {
         Route::get('taxonomy/{file_name}.{extension}', [TaxonomyFileController::class, 'download'])
-            ->name('taxonomy-files')
+            ->name('taxonomy-file')
             ->withoutMiddleware(['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']);
+
+        Route::get('taxonomy-page/{slug}', [TaxonomyPageController::class, 'download'])
+            ->name('taxonomy-page')
+            ->withoutMiddleware(['permission:user.access.taxonomy.page.editor|user.access.taxonomy.page.viewer']);
     }
 );

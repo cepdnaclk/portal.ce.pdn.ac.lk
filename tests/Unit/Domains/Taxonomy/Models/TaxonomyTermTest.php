@@ -20,7 +20,7 @@ class TaxonomyTermTest extends TestCase
         $urlGeneratorMock = \Mockery::mock(\Illuminate\Routing\UrlGenerator::class);
         $urlGeneratorMock
             ->shouldReceive('route')
-            ->with('download.taxonomy-files', \Mockery::any(), \Mockery::any()) // Matches name, parameters, and absolute flag
+            ->with('download.taxonomy-file', \Mockery::any(), \Mockery::any()) // Matches name, parameters, and absolute flag
             ->andReturnUsing(function ($name, $parameters, $absolute) {
                 if (isset($parameters['file_name']) && isset($parameters['extension'])) {
                     return 'http://localhost/download/taxonomy-files/' . $parameters['file_name'] . '.' . $parameters['extension'];
