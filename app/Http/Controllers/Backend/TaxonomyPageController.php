@@ -150,6 +150,6 @@ class TaxonomyPageController extends Controller
     private function sanitizeHtml($html)
     {
         // Allow only safe HTML tags
-        return strip_tags($html, '<p><a><b><i><strong><em><ul><ol><li><br><hr><h1><h2><h3><h4><h5><h6><span><div><img><blockquote><pre><code>');
+        return strip_tags($html, '<p><a><b><i><strong><em><ul><ol><li><br><hr><h1><h2><h3><h4><h5><h6><span><div><img><blockquote><pre><code><table><thead><tbody><tfoot><tr><th><td>');
     }
 }
