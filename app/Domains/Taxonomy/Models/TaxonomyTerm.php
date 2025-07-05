@@ -150,6 +150,8 @@ class TaxonomyTerm extends Model
 
     public static function formatMetadata($term, $metadata, $remove_null = True)
     {
+        $response = [];
+
         if ($remove_null == False) {
             $filteredMetadata = $metadata;
         } else {
