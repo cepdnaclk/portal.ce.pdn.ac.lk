@@ -1,7 +1,7 @@
 @php
     $value = null;
     if (!empty($property['code']) && $term) {
-        $value = $term->getMetadata($property['code']);
+        $value = $term->getFormattedMetadata($property['code']);
     }
 @endphp
 

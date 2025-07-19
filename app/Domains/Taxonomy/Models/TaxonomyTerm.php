@@ -150,7 +150,7 @@ class TaxonomyTerm extends Model
             ->orderBy('code', 'asc');;
     }
 
-    public function getMetadata($code)
+    public function getFormattedMetadata($code)
     {
         if (is_array($this->metadata)) {
             foreach ($this->metadata as $item) {
