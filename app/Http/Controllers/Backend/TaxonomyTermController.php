@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use Carbon\Carbon;
 use phpDocumentor\Reflection\PseudoTypes\False_;
 use Spatie\Activitylog\Models\Activity;
 use Jfcherng\Diff\DiffHelper;
@@ -241,6 +242,7 @@ class TaxonomyTermController extends Controller
             }
 
             $activity['diffs'] = $diffs;
+            $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
         }
 
         return view('backend.taxonomy.terms.history', [

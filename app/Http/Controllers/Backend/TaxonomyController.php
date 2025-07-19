@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Spatie\Activitylog\Models\Activity;
 
 class TaxonomyController extends Controller
@@ -194,7 +196,38 @@ class TaxonomyController extends Controller
 
         foreach ($activities as &$activity) {
             $diffs = [];
-            if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+            if ($activity['description'] === 'created') {
+                // Created
+                foreach ($activity['properties']['attributes'] as $field => $newValue) {
+                    $newString = is_array($newValue)
+                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($newValue ?? '');
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        '',
+                        $newString,
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            } else if ($activity['description'] === 'deleted') {
+                // Deleted
+                foreach ($activity['properties']['attributes'] as $field => $oldValue) {
+                    $oldString = is_array($oldValue)
+                        ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($newValue ?? '');
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        $oldString,
+                        '',
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            } else if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+                // Updated
                 foreach ($activity['properties']['attributes'] as $field => $newValue) {
                     $oldValue = $activity['properties']['old'][$field] ?? null;
 
@@ -205,6 +238,7 @@ class TaxonomyController extends Controller
                         ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
                         : (string) ($newValue ?? '');
 
+
                     if ($oldString === $newString) {
                         continue;
                     }
@@ -212,17 +246,15 @@ class TaxonomyController extends Controller
                     $diffs[$field] = DiffHelper::calculate(
                         $oldString,
                         $newString,
-                        'Inline',
-                        [],
-                        [
-                            'detailLevel' => 'word',
-                            'resultForIdenticals' => '',
-                        ]
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
                     );
                 }
             }
 
             $activity['diffs'] = $diffs;
+            $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
         }
 
         return view('backend.taxonomy.history', [

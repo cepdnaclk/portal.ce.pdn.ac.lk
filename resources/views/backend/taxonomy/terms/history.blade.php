@@ -3,9 +3,11 @@
 @section('title', __('Taxonomy Term History'))
 
 @section('content')
-@push('after-styles')
-    <style>{!! $diffCss !!}</style>
-@endpush
+    @push('after-styles')
+        <style>
+            {!! $diffCss !!}
+        </style>
+    @endpush
     <div class="container mt-4">
         <h3>{{ __('Change History for') }}: {{ $term->name }}</h3>
 
