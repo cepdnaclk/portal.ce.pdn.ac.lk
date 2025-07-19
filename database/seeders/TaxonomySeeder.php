@@ -198,7 +198,7 @@ class TaxonomySeeder extends Seeder
                             [
                                 'code' => 'hackers',
                                 'name' => 'Hackers',
-                                'metadata' => '[{"code": "key", "value": "3"}, {"code": "value", "value": "Hackers Club"}, {"code": "description", "value": "The events hosted by the Hackers\' Club "}]',
+                                'metadata' => '[{"code": "key", "value": "3"}, {"code": "value", "value": "Hackers Club"}, {"code": "description", "value": "The events hosted by the Hackers\' Club"}]',
                             ],
                         ],
                     ],
