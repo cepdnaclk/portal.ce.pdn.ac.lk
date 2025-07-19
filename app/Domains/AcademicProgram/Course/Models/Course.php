@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Domains\AcademicProgram\Course\Models\Traits\Scope\CourseScope;
+use App\Domains\Taxonomy\Models\TaxonomyTerm;
 
 /**
  * Class Course.
@@ -65,42 +66,81 @@ class Course extends AcademicProgram
         'updated_at' => 'datetime',
     ];
 
+
+    const CACHE_DURATION = 3600; // Cache duration in seconds (1 hour)
+
+
+    /*
+    * Get the list of academic programs.
+    * This is used to get the list of academic programs
+    *
+    * @return array
+    */
     public static function getILOTemplate(): array
     {
-        // TODO Get the list from Taxonomies
-        return [
-            'general' => [],
-            'knowledge' => [],
-            'skills' => [],
-            'attitudes' => [],
-        ];
-    }
-    public static function getMarksAllocation(): array
-    {
-        // TODO Get the list from Taxonomies
-        return [
-            'practicals' => null,
-            'quizzes' => null,
-            'assignments' => null,
-            'tutorials' => null,
-            'projects' => null,
-            'participation' => null,
-            'mid_exam' => null,
-            'end_exam' => null,
-        ];
+        $cacheKey = 'ilo_templates';
+        return  cache()->remember(
+            $cacheKey,
+            now()->addSeconds(self::CACHE_DURATION),
+            function () {
+                $courseILOs = TaxonomyTerm::where('code', 'course_ilos')->firstOrFail();
+                $ilos = [];
+                foreach ($courseILOs->children as $ilo) {
+                    $ilos[$ilo->code] = [];
+                }
+                return $ilos;
+            }
+        );
     }
 
+
+    /*
+    * Get the list of academic programs.
+    * This is used to get the list of academic programs
+    * @return array
+    */
+    public static function getMarksAllocation(): array
+    {
+        $cacheKey = 'marsk_allocation_templates';
+        $marksAllocation =  cache()->remember(
+            $cacheKey,
+            now()->addSeconds(self::CACHE_DURATION),
+            function () {
+                $allocation = TaxonomyTerm::where('code', 'mark_allocations')->firstOrFail();
+                $ilos = [];
+                foreach ($allocation->children as $ilo) {
+                    $marksAllocation[$ilo->code] = null;
+                }
+                return $marksAllocation;
+            }
+        );
+
+        return $marksAllocation;
+    }
+
+    /**
+     * Get the time allocation templates.
+     * This is used to get the time allocation templates
+     *
+     * @return array
+     */
     public static function getTimeAllocation(): array
     {
-        // TODO Get the list from Taxonomies
-        return [
-            'lecture' => null,
-            'tutorial' => null,
-            'practical' => null,
-            'design' => null,
-            'assignment' => null,
-            'independent_learning' => null
-        ];
+        $cacheKey = 'time_allocation_templates';
+        $timeAllocation =  cache()->remember(
+            $cacheKey,
+            now()->addSeconds(self::CACHE_DURATION),
+            function () {
+                $allocation = TaxonomyTerm::where('code', 'time_allocations')->firstOrFail();
+                $timeAllocation = [];
+                foreach ($allocation->children as $ilo) {
+                    $timeAllocation[$ilo->code] = null;
+                }
+                return $timeAllocation;
+            }
+        );
+
+        return $timeAllocation;
     }
 
     public function academicProgram()

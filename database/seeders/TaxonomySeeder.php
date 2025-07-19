@@ -199,8 +199,92 @@ class TaxonomySeeder extends Seeder
                                 'name' => 'Hackers',
                                 'metadata' => '[{"code": "key", "value": "3"}, {"code": "value", "value": "Hackers Club"}, {"code": "description", "value": "The events hosted by the Hackers\' Club "}]',
                             ],
+                        ],
+                    ],
+                    [
+                        'code' => 'mark_allocations',
+                        'name' => 'Marks Allocation',
+                        'metadata' => '[{"code": "key", "value": null}, {"code": "value", "value": null}, {"code": "description", "value": "List of Mark Allocation Types used in the Academic Program > Courses"}]',
+                        'terms' => [
+                            [
+                                'code' => 'practicals',
+                                'name' => 'Practicals',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'quizzes',
+                                'name' => 'Quizzes',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'assignments',
+                                'name' => 'Assignments',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'tutorials',
+                                'name' => 'Tutorials',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'projects',
+                                'name' => 'Projects',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'participation',
+                                'name' => 'Participation',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'mid_exam',
+                                'name' => 'Mid Exam',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'end_exam',
+                                'name' => 'End Exam',
+                                'metadata' => '',
+                            ],
                         ]
                     ],
+                    [
+                        'code' => 'time_allocations',
+                        'name' => 'Time Allocations',
+                        'metadata' => '[{"code": "key", "value": null}, {"code": "value", "value": null}, {"code": "description", "value": "List of Time Allocation Types used in the Academic Program > Courses"}]',
+                        'terms' => [
+                            [
+                                'code' => 'lecture',
+                                'name' => 'Lectures',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'tutorial',
+                                'name' => 'Tutorials',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'practical',
+                                'name' => 'Practicals',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'design',
+                                'name' => 'Design',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'assignment',
+                                'name' => 'Assignments',
+                                'metadata' => '',
+                            ],
+                            [
+                                'code' => 'independent_learning',
+                                'name' => 'Independent Learning',
+                                'metadata' => '',
+                            ],
+                        ]
+                    ]
                 ]
             ]
         ];
