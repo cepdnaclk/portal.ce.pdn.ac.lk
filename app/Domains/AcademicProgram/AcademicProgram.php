@@ -30,24 +30,28 @@ class AcademicProgram extends Model
     public static function getVersions($academicProgram = null): array
     {
         $cacheKey = 'academic_program_versions';
-        $academicPrograms = cache()->remember($cacheKey, now()->addSeconds(self::CACHE_DURATION), function () {
-            $undergraduate = TaxonomyTerm::where('code', 'academic_program_undergraduate')->firstOrFail();
-            $postgraduate = TaxonomyTerm::where('code', 'academic_program_postgraduate')->firstOrFail();
+        $academicPrograms = cache()->remember(
+            $cacheKey,
+            now()->addSeconds(self::CACHE_DURATION),
+            function () {
+                $undergraduate = TaxonomyTerm::where('code', 'academic_program_undergraduate')->firstOrFail();
+                $postgraduate = TaxonomyTerm::where('code', 'academic_program_postgraduate')->firstOrFail();
 
-            $academicPrograms = [
-                'undergraduate' => [],
-                'postgraduate' => []
-            ];
+                $academicPrograms = [
+                    'undergraduate' => [],
+                    'postgraduate' => []
+                ];
 
-            foreach (['undergraduate' => $undergraduate, 'postgraduate' => $postgraduate] as $type => $program) {
-                foreach ($program->children as $child) {
-                    $code = (int) $child->getFormattedMetadata('key');
-                    $academicPrograms[$type][$code] = $child->name;
+                foreach (['undergraduate' => $undergraduate, 'postgraduate' => $postgraduate] as $type => $program) {
+                    foreach ($program->children as $child) {
+                        $code = (int) $child->getFormattedMetadata('key');
+                        $academicPrograms[$type][$code] = $child->name;
+                    }
                 }
-            }
 
-            return $academicPrograms;
-        });
+                return $academicPrograms;
+            }
+        );
 
         if ($academicProgram == null) {
             $allAcademicPrograms = [];
@@ -76,14 +80,18 @@ class AcademicProgram extends Model
     public static function getTypes(): array
     {
         $cacheKey = 'academic_program_course_types';
-        $types = cache()->remember($cacheKey, now()->addSeconds(self::CACHE_DURATION), function () {
-            $courseTypes = TaxonomyTerm::where('code', 'course_types')->firstOrFail();
-            $types = [];
-            foreach ($courseTypes->children as $child) {
-                $types[$child->getFormattedMetadata('key')] = $child->name;
+        $types = cache()->remember(
+            $cacheKey,
+            now()->addSeconds(self::CACHE_DURATION),
+            function () {
+                $courseTypes = TaxonomyTerm::where('code', 'course_types')->firstOrFail();
+                $types = [];
+                foreach ($courseTypes->children as $child) {
+                    $types[$child->getFormattedMetadata('key')] = $child->name;
+                }
+                return $types;
             }
-            return $types;
-        });
+        );
 
         return $types;
     }
