@@ -32,19 +32,22 @@ class DatabaseSeeder extends Seeder
         $this->call(AuthSeeder::class);
 
         if (App::environment('local', 'testing')) {
+            // Sample data for local and testing environments
             $this->call(AnnouncementSeeder::class);
             $this->call(NewsSeeder::class);
             $this->call(EventSeeder::class);
             $this->call(SemesterSeeder::class);
             $this->call(CourseSeeder::class);
-            $this->call(TaxonomySeeder::class);
-            $this->call(TaxonomyTermSeeder::class);
             $this->call(TaxonomyFileSeeder::class);
         }
 
+        // Roles and permissions
         $this->call(EditorRoleSeeder::class);
         $this->call(AcademicRoleSeeder::class);
         $this->call(TaxonomyRoleSeeder::class);
+
+        // This seed data are required to function the site correctly
+        $this->call(TaxonomySeeder::class);
 
         Model::reguard();
     }
