@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Spatie\Activitylog\Models\Activity;
 use Jfcherng\Diff\DiffHelper;
 
@@ -230,12 +231,9 @@ class TaxonomyTermController extends Controller
                     $diffs[$field] = DiffHelper::calculate(
                         $oldString,
                         $newString,
-                        'Inline',
-                        [],
-                        [
-                            'detailLevel' => 'word',
-                            'resultForIdenticals' => '',
-                        ]
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
                     );
                 }
             }

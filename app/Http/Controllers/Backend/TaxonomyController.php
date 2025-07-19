@@ -216,7 +216,7 @@ class TaxonomyController extends Controller
                 foreach ($activity['properties']['attributes'] as $field => $oldValue) {
                     $oldString = is_array($oldValue)
                         ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-                        : (string) ($newValue ?? '');
+                        : (string) ($oldValue ?? '');
 
                     $diffs[$field] = DiffHelper::calculate(
                         $oldString,

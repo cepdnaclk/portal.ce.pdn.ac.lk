@@ -18,7 +18,6 @@ return [
 
   'render_options' => [
     'detailLevel' => 'word',
-    'resultForIdenticals' => '',
     'lineNumbers' => true,
     'tabSize' => 4,
     'resultForIdenticals' => null,
