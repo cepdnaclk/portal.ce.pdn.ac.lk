@@ -56,10 +56,9 @@ class Event extends Model
 
     public static function eventTypeMap(): array
     {
-        $cacheKey = 'event_type_map';
         return cache()->remember(
-            $cacheKey,
-            now()->addSeconds(self::CACHE_DURATION),
+            'event_type_map',
+            self::CACHE_DURATION,
             function () {
                 $events = TaxonomyTerm::where('code', 'events')->firstOrFail();
                 $eventList = [];

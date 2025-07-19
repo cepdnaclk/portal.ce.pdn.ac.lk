@@ -78,10 +78,9 @@ class Course extends AcademicProgram
     */
     public static function getILOTemplate(): array
     {
-        $cacheKey = 'ilo_templates';
         return  cache()->remember(
-            $cacheKey,
-            now()->addSeconds(self::CACHE_DURATION),
+            'ilo_templates',
+            self::CACHE_DURATION,
             function () {
                 $courseILOs = TaxonomyTerm::where('code', 'course_ilos')->firstOrFail();
                 $ilos = [];
@@ -101,10 +100,9 @@ class Course extends AcademicProgram
     */
     public static function getMarksAllocation(): array
     {
-        $cacheKey = 'marks_allocation_templates';
         $marksAllocation =  cache()->remember(
-            $cacheKey,
-            now()->addSeconds(self::CACHE_DURATION),
+            'marks_allocation_templates',
+            self::CACHE_DURATION,
             function () {
                 $allocation = TaxonomyTerm::where('code', 'mark_allocations')->firstOrFail();
                 $ilos = [];
@@ -126,10 +124,9 @@ class Course extends AcademicProgram
      */
     public static function getTimeAllocation(): array
     {
-        $cacheKey = 'time_allocation_templates';
         $timeAllocation =  cache()->remember(
-            $cacheKey,
-            now()->addSeconds(self::CACHE_DURATION),
+            'time_allocation_templates',
+            self::CACHE_DURATION,
             function () {
                 $allocation = TaxonomyTerm::where('code', 'time_allocations')->firstOrFail();
                 $timeAllocation = [];

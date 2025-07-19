@@ -29,10 +29,9 @@ class AcademicProgram extends Model
     */
     public static function getVersions($academicProgram = null): array
     {
-        $cacheKey = 'academic_program_versions';
         $academicPrograms = cache()->remember(
-            $cacheKey,
-            now()->addSeconds(self::CACHE_DURATION),
+            'academic_program_versions',
+            self::CACHE_DURATION,
             function () {
                 $undergraduate = TaxonomyTerm::where('code', 'academic_program_undergraduate')->firstOrFail();
                 $postgraduate = TaxonomyTerm::where('code', 'academic_program_postgraduate')->firstOrFail();
@@ -79,10 +78,9 @@ class AcademicProgram extends Model
     */
     public static function getTypes(): array
     {
-        $cacheKey = 'academic_program_course_types';
         $types = cache()->remember(
-            $cacheKey,
-            now()->addSeconds(self::CACHE_DURATION),
+            'academic_program_course_types',
+            self::CACHE_DURATION,
             function () {
                 $courseTypes = TaxonomyTerm::where('code', 'course_types')->firstOrFail();
                 $types = [];
