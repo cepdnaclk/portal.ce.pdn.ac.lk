@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Domains\Event\Models\Traits\Scope\EventScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Domains\Taxonomy\Models\TaxonomyTerm;
 
 /**
  * Class Event.
@@ -50,15 +51,24 @@ class Event extends Model
         'event_type' => 'array',
     ];
 
+
+    const CACHE_DURATION = 3600; // Cache duration in seconds (1 hour)
+
     public static function eventTypeMap(): array
     {
-        // TODO integrate with Taxonomies 
-        return [
-            0 => 'Event',
-            1 => 'Seminar',
-            2 => 'ACES',
-
-        ];
+        return cache()->remember(
+            'event_type_map',
+            self::CACHE_DURATION,
+            function () {
+                $events = TaxonomyTerm::where('code', 'events')->firstOrFail();
+                $eventList = [];
+                foreach ($events->children as $event) {
+                    $code = (int) $event->getFormattedMetadata('key');
+                    $eventList[$code] = $event->name;
+                }
+                return $eventList;
+            }
+        );
     }
 
     public function thumbURL()
