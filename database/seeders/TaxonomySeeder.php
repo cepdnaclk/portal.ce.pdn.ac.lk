@@ -164,10 +164,10 @@ class TaxonomySeeder extends Seeder
 
                 ],
             ],
-            'events' => [
-                'code' => 'events',
-                'name' => 'Events',
-                'description' => 'This list will manage the types of Events hosted by the department, and the list is available under Content Management > Events > Event Type',
+            'lists' => [
+                'code' => 'lists',
+                'name' => 'Lists',
+                'description' => 'This will manage the key-value list of contents used by the portal.ce.pdn.ac.lk, integrated over other places',
                 'properties' => [
                     ["code" => "key", "name" => "Key", "data_type" => "integer"],
                     ["code" => "value", "name" => "Value", "data_type" => "string"],
@@ -175,24 +175,31 @@ class TaxonomySeeder extends Seeder
                 ],
                 'terms' => [
                     [
-                        'code' => 'event',
-                        'name' => 'Event',
-                        'metadata' => '[{"code": "key", "value": "0"}, {"code": "value", "value": "Event"}, {"code": "description", "value": "Department Event"}]',
-                    ],
-                    [
-                        'code' => 'seminar',
-                        'name' => 'Seminar',
-                        'metadata' => '[{"code": "key", "value": "1"}, {"code": "value", "value": "Seminar"}, {"code": "description", "value": "Seminar hosted by the Department"}]',
-                    ],
-                    [
-                        'code' => 'aces',
-                        'name' => 'ACES',
-                        'metadata' => '[{"code": "key", "value": "2"}, {"code": "value", "value": "ACES Event"}, {"code": "description", "value": "Events hosted by the ACES team"}]',
-                    ],
-                    [
-                        'code' => 'hackers',
-                        'name' => 'Hackers',
-                        'metadata' => '[{"code": "key", "value": "3"}, {"code": "value", "value": "Hackers Club"}, {"code": "description", "value": "The events hosted by the Hackers\' Club "}]',
+                        'code' => 'events',
+                        'name' => 'Events',
+                        'metadata' => '[{"code": "key", "value": null}, {"code": "value", "value": null}, {"code": "description", "value": "This list will manage the types of Events hosted by the department, and the list is available under Content Management > Events > Event Type"}]',
+                        'terms' => [
+                            [
+                                'code' => 'event',
+                                'name' => 'Event',
+                                'metadata' => '[{"code": "key", "value": "0"}, {"code": "value", "value": "Event"}, {"code": "description", "value": "Department organized event"}]',
+                            ],
+                            [
+                                'code' => 'seminar',
+                                'name' => 'Seminar',
+                                'metadata' => '[{"code": "key", "value": "1"}, {"code": "value", "value": "Seminar"}, {"code": "description", "value": "Seminar hosted by the Department"}]',
+                            ],
+                            [
+                                'code' => 'aces',
+                                'name' => 'ACES',
+                                'metadata' => '[{"code": "key", "value": "2"}, {"code": "value", "value": "ACES Event"}, {"code": "description", "value": "Events hosted by the ACES team"}]',
+                            ],
+                            [
+                                'code' => 'hackers',
+                                'name' => 'Hackers',
+                                'metadata' => '[{"code": "key", "value": "3"}, {"code": "value", "value": "Hackers Club"}, {"code": "description", "value": "The events hosted by the Hackers\' Club "}]',
+                            ],
+                        ]
                     ],
                 ]
             ]
