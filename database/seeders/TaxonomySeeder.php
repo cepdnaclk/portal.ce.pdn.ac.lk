@@ -174,6 +174,7 @@ class TaxonomySeeder extends Seeder
                     ["code" => "description", "name" => "Description", "data_type" => "string"],
                 ],
                 'terms' => [
+                    // Events
                     [
                         'code' => 'events',
                         'name' => 'Events',
@@ -201,6 +202,35 @@ class TaxonomySeeder extends Seeder
                             ],
                         ],
                     ],
+                    // Course ILOs
+                    [
+                        'code' => 'course_ilos',
+                        'name' => 'Course ILOs list',
+                        'metadata' => '[{"code": "key", "value": null}, {"code": "value", "value": null}, {"code": "description", "value": "List of ILO Types used in the Academic Program > Courses"}]',
+                        'terms' => [
+                            [
+                                'code' => 'general',
+                                'name' => 'General',
+                                'metadata' => '[{"code": "key", "value": "1"}, {"code": "value", "value": "General"}]',
+                            ],
+                            [
+                                'code' => 'knowledge',
+                                'name' => 'Knowledge',
+                                'metadata' => '[{"code": "key", "value": "2"}, {"code": "value", "value": "Knowledge"}]',
+                            ],
+                            [
+                                'code' => 'skills',
+                                'name' => 'Skills',
+                                'metadata' => '[{"code": "key", "value": "3"}, {"code": "value", "value": "Skills"}]',
+                            ],
+                            [
+                                'code' => 'attitudes',
+                                'name' => 'Attitudes',
+                                'metadata' => '[{"code": "key", "value": "4"}, {"code": "value", "value": "Attitudes"}]',
+                            ],
+                        ],
+                    ],
+                    // Marks Allocations
                     [
                         'code' => 'mark_allocations',
                         'name' => 'Marks Allocation',
@@ -248,6 +278,7 @@ class TaxonomySeeder extends Seeder
                             ],
                         ]
                     ],
+                    // Time Allocations
                     [
                         'code' => 'time_allocations',
                         'name' => 'Time Allocations',
