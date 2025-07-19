@@ -101,7 +101,7 @@ class Course extends AcademicProgram
     */
     public static function getMarksAllocation(): array
     {
-        $cacheKey = 'marsk_allocation_templates';
+        $cacheKey = 'marks_allocation_templates';
         $marksAllocation =  cache()->remember(
             $cacheKey,
             now()->addSeconds(self::CACHE_DURATION),

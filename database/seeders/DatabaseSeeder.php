@@ -49,8 +49,6 @@ class DatabaseSeeder extends Seeder
             $this->call(TaxonomyFileSeeder::class);
         }
 
-
-
         Model::reguard();
     }
 }
