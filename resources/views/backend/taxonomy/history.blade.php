@@ -20,6 +20,7 @@
                             <tr>
                                 <th>{{ __('Date') }}</th>
                                 <th>{{ __('User') }}</th>
+                                <th>{{ __('Item') }}</th>
                                 <th>{{ __('Description') }}</th>
                                 <th>{{ __('Changes') }}</th>
                             </tr>
@@ -29,6 +30,15 @@
                                 <tr>
                                     <td>{{ $activity['created_at'] }}</td>
                                     <td>{{ $activity['causer']['name'] ?? 'System' }}</td>
+                                    <td>
+                                        @php
+                                            $subject = $activity['subject'];
+                                            $subjectName =
+                                                $subject['name'] ??
+                                                ($subject['file_name'] ?? '#' . $activity['subject_id']);
+                                        @endphp
+                                        {{ class_basename($activity['subject_type']) }}: {{ $subjectName }}
+                                    </td>
                                     <td>{{ $activity['description'] }}</td>
                                     <td>
                                         @if (!empty($activity['diffs']))
