@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Jfcherng\Diff\DiffHelper;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Spatie\Activitylog\Models\Activity;
 
 class TaxonomyController extends Controller
@@ -191,40 +194,73 @@ class TaxonomyController extends Controller
         // Convert activities collection to array
         $activities = $activities->toArray();
 
-        // TODO implement a better way to visualize the diff
-        // Highlight changes for JSON/list attributes in activity log
         foreach ($activities as &$activity) {
-            if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
-                // For each activity,
-                foreach ($activity['properties']['attributes'] as $key => $newValue) {
-                    //  For each attribute
-                    $oldValue = $activity['properties']['old'][$key] ?? null;
+            $diffs = [];
+            if ($activity['description'] === 'created') {
+                // Created
+                foreach ($activity['properties']['attributes'] as $field => $newValue) {
+                    $newString = is_array($newValue)
+                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($newValue ?? '');
 
-                    // If value is an array, compare and keep only show only the diff
-                    if (is_array($newValue) && is_array($oldValue)) {
-                        if (json_encode($newValue) == json_encode($oldValue)) {
-                            $activity['properties']['old'][$key] = "...";
-                            $activity['properties']['attributes'][$key] = "...";
-                        } else {
-                            // Iterate through each key in the new value
-                            foreach ($newValue as $subKey => $subValue) {
-                                // If the sub-value is different from the old value, highlight it
-                                if (array_key_exists($subKey, $oldValue)) {
-                                    if (json_encode($oldValue[$subKey]) == json_encode($subValue)) {
-                                        $activity['properties']['old'][$key][$subKey] = "...";
-                                        $activity['properties']['attributes'][$key][$subKey] = "...";
-                                    }
-                                }
-                            }
-                        }
+                    $diffs[$field] = DiffHelper::calculate(
+                        '',
+                        $newString,
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            } else if ($activity['description'] === 'deleted') {
+                // Deleted
+                foreach ($activity['properties']['attributes'] as $field => $oldValue) {
+                    $oldString = is_array($oldValue)
+                        ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($oldValue ?? '');
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        $oldString,
+                        '',
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            } else if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+                // Updated
+                foreach ($activity['properties']['attributes'] as $field => $newValue) {
+                    $oldValue = $activity['properties']['old'][$field] ?? null;
+
+                    $oldString = is_array($oldValue)
+                        ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($oldValue ?? '');
+                    $newString = is_array($newValue)
+                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($newValue ?? '');
+
+
+                    if ($oldString === $newString) {
+                        continue;
                     }
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        $oldString,
+                        $newString,
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
                 }
             }
+
+            $activity['diffs'] = $diffs;
+            $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
         }
 
         return view('backend.taxonomy.history', [
             'taxonomy'   => $taxonomy,
             'activities' => $activities,
+            'diffCss'    => DiffHelper::getStyleSheet(),
         ]);
     }
     /**

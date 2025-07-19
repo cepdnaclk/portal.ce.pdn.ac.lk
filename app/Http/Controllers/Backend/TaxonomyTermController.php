@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
-use phpDocumentor\Reflection\PseudoTypes\False_;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Spatie\Activitylog\Models\Activity;
+use Jfcherng\Diff\DiffHelper;
 
 class TaxonomyTermController extends Controller
 {
@@ -184,40 +186,67 @@ class TaxonomyTermController extends Controller
         $activities = $activities->toArray();
 
 
-        // TODO implement a better way to visualize the diff
-        // Highlight changes for JSON/list attributes in activity log
         foreach ($activities as &$activity) {
+            $diffs = [];
             if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
-                // For each activity
-                $oldMetadata = array();
-                $newMetadata = array();
+                $attributes = $activity['properties']['attributes'];
+                $oldValues  = $activity['properties']['old'];
 
-                if (isset($activity['properties']['old']['metadata'])) {
-                    foreach ($activity['properties']['old']['metadata'] as $key => $item) {
-                        if (isset($item['code']) && isset($item['value'])) {
-                            $oldMetadata[$item['code']] = $item['value'] ?? null;
+                if (isset($oldValues['metadata'])) {
+                    $normalized = [];
+                    foreach ($oldValues['metadata'] as $item) {
+                        if (isset($item['code'])) {
+                            $normalized[$item['code']] = $item['value'] ?? null;
                         }
                     }
-                    ksort($oldMetadata);
-                    $activity['properties']['old']['metadata'] = $oldMetadata;
+                    ksort($normalized);
+                    $oldValues['metadata'] = $normalized;
                 }
 
-                if (isset($activity['properties']['attributes']['metadata'])) {
-                    foreach ($activity['properties']['attributes']['metadata'] as $key => $item) {
-                        if (isset($item['code']) && isset($item['value'])) {
-                            $newMetadata[$item['code']] = $item['value'] ?? null;
+                if (isset($attributes['metadata'])) {
+                    $normalized = [];
+                    foreach ($attributes['metadata'] as $item) {
+                        if (isset($item['code'])) {
+                            $normalized[$item['code']] = $item['value'] ?? null;
                         }
                     }
-                    ksort($newMetadata);
-                    $activity['properties']['attributes']['metadata'] = $newMetadata;
+                    ksort($normalized);
+                    $attributes['metadata'] = $normalized;
+                }
+
+                foreach ($attributes as $field => $newValue) {
+                    $oldValue = $oldValues[$field] ?? null;
+
+                    $oldString = is_array($oldValue)
+                        ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($oldValue ?? '');
+                    $newString = is_array($newValue)
+                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($newValue ?? '');
+
+                    if ($oldString === $newString) {
+                        continue;
+                    }
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        $oldString,
+                        $newString,
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
                 }
             }
+
+            $activity['diffs'] = $diffs;
+            $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
         }
 
         return view('backend.taxonomy.terms.history', [
             'taxonomy'   => $taxonomy,
             'term'       => $term,
             'activities' => $activities,
+            'diffCss'    => DiffHelper::getStyleSheet(),
         ]);
     }
 }

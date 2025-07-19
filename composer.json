@@ -17,6 +17,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.6",
         "jamesmills/laravel-timezone": "^1.9",
+        "jfcherng/php-diff": "^6.16",
         "lab404/laravel-impersonate": "^1.6",
         "langleyfoxall/laravel-nist-password-rules": "^6.0",
         "laravel/framework": "^8.54",
