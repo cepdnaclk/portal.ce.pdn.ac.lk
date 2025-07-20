@@ -53,19 +53,6 @@
                             @enderror
                         </div>
 
-                        <!-- Taxonomy Term Code -->
-                        <div class="col-12 py-2">
-                            <div class="col ps-0">
-                                <label for="tax_term_code">Taxonomy Term Code*</label>
-                            </div>
-                            <div class="col-md-12 px-0">
-                                {!! Form::text('code', old('code', $term->code), ['class' => 'form-control']) !!}
-                                @error('code')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
                         <!-- Taxonomy Term Name -->
                         <div class="col-12 py-2">
                             <div class="col ps-0">
@@ -74,6 +61,19 @@
                             <div class="col-md-12 px-0">
                                 {!! Form::text('name', old('name', $term->name), ['class' => 'form-control']) !!}
                                 @error('name')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Taxonomy Term Code -->
+                        <div class="col-12 py-2">
+                            <div class="col ps-0">
+                                <label for="tax_term_code">Taxonomy Term Code*</label>
+                            </div>
+                            <div class="col-md-12 px-0">
+                                {!! Form::text('code', old('code', $term->code), ['class' => 'form-control']) !!}
+                                @error('code')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
