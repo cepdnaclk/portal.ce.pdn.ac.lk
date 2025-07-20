@@ -30,6 +30,8 @@
     {{-- tinyMCE Text Editor --}}
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
 
+
+
 </head>
 
 <body class="c-app">
@@ -63,5 +65,13 @@
     @stack('after-scripts')
 
 </body>
+
+<script>
+    // Tool Tip Helper
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+</script>
 
 </html>

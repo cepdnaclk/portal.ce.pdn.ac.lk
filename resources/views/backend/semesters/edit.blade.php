@@ -54,7 +54,7 @@
                 <!-- Version -->
                 <div class="form-group row">
                     {!! Form::label('version', 'Curriculum*', ['class' => 'col-md-2 col-form-label']) !!}
-                    <div class="col-md-10">
+                    <div class="col-md-9">
                         {{-- TODO make this depends from the Academic Program --}}
                         {!! Form::select('version', \App\Domains\AcademicProgram\Semester\Models\Semester::getVersions(), null, [
                             'class' => 'form-control',
@@ -63,6 +63,13 @@
                         @error('version')
                             <strong>{{ $message }}</strong>
                         @enderror
+                    </div>
+
+                    <div class="col-md-1">
+                        <x-backend.taxonomy_tooltip
+                            edit-url="{{ route('dashboard.taxonomy.alias', ['code' => 'academic_program']) }}"
+                            placement="auto">
+                        </x-backend.taxonomy_tooltip>
                     </div>
                 </div>
 
