@@ -46,7 +46,7 @@ class CourseResource extends JsonResource
                 });
             }),
             'urls' => [
-                'view' => 'https://www.ce.pdn.ac.lk/courses/' . $this->academic_program . '/' . $this->code,
+                'view' => 'https://www.ce.pdn.ac.lk/courses/' . urlencode($this->academic_program) . '/' . urlencode($this->code),
                 'edit' => route('dashboard.courses.edit', $this->id),
             ],
             // 'created_by' => User::find($this->created_by)?->name,
