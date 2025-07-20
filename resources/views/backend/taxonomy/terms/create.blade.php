@@ -48,23 +48,23 @@
                             </select>
                         </div>
 
-                        <!-- Taxonomy Term Code -->
-                        <div class="col-12 py-2">
-                            <div class="col ps-0">
-                                <label for="drop1">Taxonomy Term Code*</label>
-                            </div>
-                            <div class="col-md-12 px-0">
-                                {!! Form::text('code', '', ['class' => 'form-control']) !!}
-                            </div>
-                        </div>
-
                         <!-- Taxonomy Term Name -->
                         <div class="col-12 py-2">
                             <div class="col ps-0">
                                 <label for="drop1">Taxonomy Term Name*</label>
                             </div>
                             <div class="col-md-12 px-0">
-                                {!! Form::text('name', '', ['class' => 'form-control']) !!}
+                                {!! Form::text('name', '', ['class' => 'form-control', 'id' => 'name-input']) !!}
+                            </div>
+                        </div>
+
+                        <!-- Taxonomy Term Code -->
+                        <div class="col-12 py-2">
+                            <div class="col ps-0">
+                                <label for="drop1">Taxonomy Term Code*</label>
+                            </div>
+                            <div class="col-md-12 px-0">
+                                {!! Form::text('code', '', ['class' => 'form-control', 'id' => 'code-input']) !!}
                             </div>
                         </div>
                     </div>
@@ -94,4 +94,20 @@
         </x-backend.card>
 
     </div>
+
+    <script>
+        // JavaScript to auto-generate the code field based on the Taxonomy Term's name input
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameInput = document.getElementById('name-input');
+            const codeInput = document.getElementById('code-input');
+
+            nameInput.addEventListener('input', function() {
+                const slug = nameInput.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+                    .replace(/^-+|-+$/g, ''); // Trim leading and trailing hyphens
+                codeInput.value = slug;
+            });
+        });
+    </script>
 @endsection
