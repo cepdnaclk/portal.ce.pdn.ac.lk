@@ -34,7 +34,21 @@ class CourseResource extends JsonResource
             'marks_allocation' => json_decode($this->marks_allocation),
             'ilos' => json_decode($this->ilos, true),
             'references' => json_decode($this->references),
-            'modules' => $this->whenLoaded('modules'),
+            'modules' => $this->whenLoaded('modules', function () {
+                return $this->modules->map(function ($module) {
+                    return [
+                        'topic' => $module->topic,
+                        'description' => $module->description,
+                        'time_allocation' => json_decode($module->time_allocation, true),
+                        'created_at' => $module->created_at,
+                        'updated_at' => $module->updated_at,
+                    ];
+                });
+            }),
+            'urls' => [
+                'view' => 'https://www.ce.pdn.ac.lk/courses/' . urlencode($this->academic_program) . '/' . urlencode($this->code),
+                'edit' => route('dashboard.courses.edit', $this->id),
+            ],
             // 'created_by' => User::find($this->created_by)?->name,
             // 'updated_by' => User::find($this->updated_by)?->name,
             'created_at' => $this->created_at,
