@@ -27,7 +27,7 @@
                                     {{-- Academic Program --}}
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label for="dropAcademicProgram">
+                                            <label for="academicProgram">
                                                 Academic Program*
                                             </label>
                                         </div>
