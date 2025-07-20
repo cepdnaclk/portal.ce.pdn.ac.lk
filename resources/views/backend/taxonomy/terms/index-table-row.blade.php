@@ -38,7 +38,7 @@
     <div class="d-flex px-0 mt-0 mb-0 justify-content-end">
         <div class="btn-group me-3" role="group" aria-label="View Buttons">
             <!-- Filter Button -->
-            @if ($row->parent_id == null)
+            @if ($row->children()->count() > 0)
                 <a href="?filters[taxonomy_term]={{ $row->id }}" class="btn btn-sm btn-primary">
                     <i class="fa fa-filter" title="Filter"></i>
                 </a>

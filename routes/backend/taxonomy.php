@@ -20,6 +20,11 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user
         });
 
 
+    // Alias URL to redirect into the term page by taxonomy code
+    Route::get('taxonomy/alias/{code}', [TaxonomyTermController::class, 'alias'])
+        ->name('taxonomy.alias');
+
+
     // View
     Route::get('taxonomy/view/{taxonomy}', [TaxonomyController::class, 'view'])
         ->name('taxonomy.view')->breadcrumbs(function (Trail $trail, $taxonomy) {

@@ -58,8 +58,7 @@ class TaxonomyTermTable extends DataTableComponent
 
         foreach (
             TaxonomyTerm::query()
-                ->where('taxonomy_id', $this->taxonomy->id)
-                ->whereNull('parent_id')->get() as $key => $value
+                ->where('taxonomy_id', $this->taxonomy->id)->get() as $key => $value
         ) {
             $terms[$value->id] = $value->name;
         };

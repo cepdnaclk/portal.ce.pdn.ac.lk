@@ -249,4 +249,20 @@ class TaxonomyTermController extends Controller
             'diffCss'    => DiffHelper::getStyleSheet(),
         ]);
     }
+
+    /**
+     * Redirect to the edit page using the term code as an alias.
+     *
+     * @param string $code
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function alias($code)
+    {
+        $term = TaxonomyTerm::where('code', $code)->firstOrFail();
+        $url = route('dashboard.taxonomy.terms.index', [
+            'taxonomy' => $term->taxonomy,
+        ]) . "?filters[taxonomy_term]={$term->id}";
+
+        return redirect($url);
+    }
 }

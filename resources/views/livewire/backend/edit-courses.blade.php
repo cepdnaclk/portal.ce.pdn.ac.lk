@@ -27,7 +27,7 @@
                                     {{-- Academic Program --}}
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
-                                            <label for="drop1">
+                                            <label for="dropAcademicProgram">
                                                 Academic Program*
                                             </label>
                                         </div>
@@ -48,6 +48,11 @@
                                     <div class="col-12 col-sm-6 py-2">
                                         <div class="col ps-0">
                                             <label for="dropCurriculum">Curriculum*</label>
+
+                                            <x-backend.taxonomy_tooltip
+                                                edit-url="{{ route('dashboard.taxonomy.alias', ['code' => 'academic_program']) }}"
+                                                placement="auto" class="float-end">
+                                            </x-backend.taxonomy_tooltip>
                                         </div>
                                         <select id="dropCurriculum" name="dropCurriculum" class="form-select"
                                             wire:model="version">
