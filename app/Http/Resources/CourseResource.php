@@ -39,7 +39,7 @@ class CourseResource extends JsonResource
                     return [
                         'topic' => $module->topic,
                         'description' => $module->description,
-                        'time_allocation' => json_decode($module->time_allocation),
+                        'time_allocation' => json_decode($module->time_allocation, true),
                         'created_at' => $module->created_at,
                         'updated_at' => $module->updated_at,
                     ];
