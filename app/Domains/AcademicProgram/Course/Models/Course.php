@@ -105,7 +105,7 @@ class Course extends AcademicProgram
             self::CACHE_DURATION,
             function () {
                 $allocation = TaxonomyTerm::where('code', 'mark_allocations')->firstOrFail();
-                $ilos = [];
+                $marksAllocation = [];
                 foreach ($allocation->children as $ilo) {
                     $marksAllocation[$ilo->code] = null;
                 }

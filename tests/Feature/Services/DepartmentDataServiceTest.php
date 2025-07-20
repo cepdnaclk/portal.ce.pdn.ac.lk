@@ -13,7 +13,10 @@ class DepartmentDataServiceTest extends TestCase
     {
         Http::fake([
             '*' => Http::response([
-                ['emails' => ['faculty' => ['name' => 'nuwanjaliyagoda', 'domain' => 'eng.pdn.ac.lk']], 'email' => 'staff1@eng.pdn.ac.lk']
+                [
+                    'emails' => ['faculty' => ['name' => 'nuwanjaliyagoda', 'domain' => 'eng.pdn.ac.lk']],
+                    'email' => 'staff1@eng.pdn.ac.lk'
+                ]
             ])
         ]);
 

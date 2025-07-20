@@ -108,7 +108,11 @@ class TaxonomySeeder extends Seeder
                                         'metadata' => '[{"code": "key", "value": "1"}, {"code": "value", "value": "Current Curriculum"}]',
 
                                     ],
-                                    ['code' => 'ug_curriculum_v2', 'name' => 'Curriculum - Effective from E22', 'taxonomy_id' => '3', 'parent_id' => '30', 'metadata' => '[{"code": "key", "value": "2"}, {"code": "value", "value": "Curriculum - Effective from E22"}]', 'created_by' => '6', 'updated_by' => '6', 'created_at' => '2024-12-08 18:07:20', 'updated_at' => '2024-12-08 18:07:47'],
+                                    [
+                                        'code' => 'ug_curriculum_v2',
+                                        'name' => 'Curriculum - Effective from E22',
+                                        'metadata' => '[{"code": "key", "value": "2"}, {"code": "value", "value": "Curriculum - Effective from E22"}]',
+                                    ],
                                 ]
                             ],
                             [
