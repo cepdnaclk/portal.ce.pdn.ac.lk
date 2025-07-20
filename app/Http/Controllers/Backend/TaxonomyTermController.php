@@ -258,7 +258,7 @@ class TaxonomyTermController extends Controller
      */
     public function alias($code)
     {
-        $term = TaxonomyTerm::where('code', $code)->firstOrFail();
+        $term = TaxonomyTerm::with('taxonomy')->where('code', $code)->firstOrFail();
         $url = route('dashboard.taxonomy.terms.index', [
             'taxonomy' => $term->taxonomy,
         ]) . "?filters[taxonomy_term]={$term->id}";
