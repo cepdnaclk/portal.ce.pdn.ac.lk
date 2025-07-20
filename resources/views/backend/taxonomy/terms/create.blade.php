@@ -101,7 +101,7 @@
             const nameInput = document.getElementById('name-input');
             const codeInput = document.getElementById('code-input');
 
-            nameInput.addEventListener('change', function() {
+            nameInput.addEventListener('input', function() {
                 const slug = nameInput.value
                     .toLowerCase()
                     .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
