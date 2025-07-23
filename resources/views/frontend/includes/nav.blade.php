@@ -2,17 +2,17 @@
     <div class="container">
         <x-utils.link :href="route('frontend.index')" :text="appName()" class="navbar-brand" />
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="@lang('Toggle navigation')">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ms-auto">
                 @if (config('boilerplate.locale.status') && count(config('boilerplate.locale.languages')) > 1)
                     <li class="nav-item dropdown">
                         <x-utils.link :text="__(getLocaleName(app()->getLocale()))" class="nav-link dropdown-toggle" id="navbarDropdownLanguageLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
 
                         @include('includes.partials.lang')
                     </li>
@@ -32,14 +32,14 @@
                 @else
                     <li class="nav-item dropdown">
                         <x-utils.link href="#" id="navbarDropdown" class="nav-link dropdown-toggle" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             <x-slot name="text">
                                 <img class="rounded-circle" style="max-height: 20px" src="{{ $logged_in_user->avatar }}" />
                                 {{ $logged_in_user->name }} <span class="caret"></span>
                             </x-slot>
                         </x-utils.link>
 
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             @if ($logged_in_user->isAdmin())
                                 <x-utils.link :href="route('dashboard.home')" :text="__('Dashboard')" class="dropdown-item" />
                             @endif
