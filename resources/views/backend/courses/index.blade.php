@@ -16,7 +16,7 @@
 
             <x-slot name="body">
                 @if (session('Success'))
-                    <x-utils.alert type="success" dismissible="true">{{ session('Success') }}</x-utils.alert>
+                    <x-utils.alert type="success" dismissable="true">{{ session('Success') }}</x-utils.alert>
                 @endif
 
                 @livewire('backend.course-table')
