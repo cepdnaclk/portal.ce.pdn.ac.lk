@@ -14,19 +14,19 @@
                     <x-slot name="body">
                         <nav>
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <x-utils.link :text="__('My Profile')" class="nav-link active" id="my-profile-tab" data-toggle="pill"
+                                <x-utils.link :text="__('My Profile')" class="nav-link active" id="my-profile-tab" data-bs-toggle="pill"
                                     href="#my-profile" role="tab" aria-controls="my-profile" aria-selected="true" />
 
-                                <x-utils.link :text="__('Edit Information')" class="nav-link" id="information-tab" data-toggle="pill"
+                                <x-utils.link :text="__('Edit Information')" class="nav-link" id="information-tab" data-bs-toggle="pill"
                                     href="#information" role="tab" aria-controls="information" aria-selected="false" />
 
                                 @if (!$logged_in_user->isSocial())
-                                    <x-utils.link :text="__('Password')" class="nav-link" id="password-tab" data-toggle="pill"
+                                    <x-utils.link :text="__('Password')" class="nav-link" id="password-tab" data-bs-toggle="pill"
                                         href="#password" role="tab" aria-controls="password" aria-selected="false" />
                                 @endif
 
                                 <x-utils.link :text="__('Two Factor Authentication')" class="nav-link" id="two-factor-authentication-tab"
-                                    data-toggle="pill" href="#two-factor-authentication" role="tab"
+                                    data-bs-toggle="pill" href="#two-factor-authentication" role="tab"
                                     aria-controls="two-factor-authentication" aria-selected="false" />
                             </div>
                         </nav>

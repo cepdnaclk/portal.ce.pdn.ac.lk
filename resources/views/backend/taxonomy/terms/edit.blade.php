@@ -100,7 +100,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-right', 'id' => 'submit-button']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-end', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>

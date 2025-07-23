@@ -25,8 +25,8 @@
     @endif
 
     <div class="form-group row mb-0">
-        <div class="col-md-12 text-right">
-            <button class="btn btn-sm btn-primary float-right" type="submit">@lang('Update')</button>
+        <div class="col col-md-12 float-end">
+            <button class="btn btn-sm btn-primary float-end" type="submit">@lang('Update')</button>
         </div>
     </div><!--form-group-->
 </x-forms.patch>

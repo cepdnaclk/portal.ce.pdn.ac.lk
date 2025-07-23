@@ -16,16 +16,16 @@
         @if (config('boilerplate.locale.status') && count(config('boilerplate.locale.languages')) > 1)
             <li class="c-header-nav-item dropdown">
                 <x-utils.link :text="__(getLocaleName(app()->getLocale()))" class="c-header-nav-link dropdown-toggle"
-                    id="navbarDropdownLanguageLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                    id="navbarDropdownLanguageLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
 
                 @include('includes.partials.lang')
             </li>
         @endif
     </ul>
 
-    <ul class="c-header-nav ml-auto mr-4">
+    <ul class="c-header-nav ms-auto me-4">
         <li class="c-header-nav-item dropdown">
-            <x-utils.link class="c-header-nav-link" data-toggle="dropdown" href="#" role="button"
+            <x-utils.link class="c-header-nav-link" data-bs-toggle="dropdown" href="#" role="button"
                 aria-haspopup="true" aria-expanded="false">
                 <x-slot name="text">
                     <div class="c-avatar">
@@ -35,7 +35,7 @@
                 </x-slot>
             </x-utils.link>
 
-            <div class="dropdown-menu dropdown-menu-right pt-0">
+            <div class="dropdown-menu dropdown-menu-end pt-0">
                 <div class="dropdown-header bg-light py-2">
                     <strong>
                         <!-- @lang('Account') -->
@@ -44,27 +44,27 @@
                 </div>
 
                 <x-utils.link class="dropdown-item" href="{{ route('dashboard.home') }}"
-                    icon="c-icon mr-2 fa fa-navicon">
+                    icon="c-icon me-2 fa fa-navicon">
                     <x-slot name="text">
                         Dashboard
                     </x-slot>
                 </x-utils.link>
 
                 <x-utils.link class="dropdown-item" href="{{ route('intranet.user.account') }}"
-                    icon="c-icon mr-2 fa fa-user">
+                    icon="c-icon me-2 fa fa-user">
                     <x-slot name="text">
                         Profile
                     </x-slot>
                 </x-utils.link>
 
                 <x-utils.link class="dropdown-item" href="{{ route('intranet.user.index') }}"
-                    icon="c-icon mr-2 fa fa-window-maximize">
+                    icon="c-icon me-2 fa fa-window-maximize">
                     <x-slot name="text">
                         Intranet
                     </x-slot>
                 </x-utils.link>
 
-                <x-utils.link class="dropdown-item" icon="c-icon mr-2 fa fa-sign-out"
+                <x-utils.link class="dropdown-item" icon="c-icon me-2 fa fa-sign-out"
                     onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                     <x-slot name="text">
                         @lang('Logout')

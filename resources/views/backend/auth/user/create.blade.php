@@ -116,7 +116,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                <button class="btn btn-sm btn-primary float-right" type="submit">@lang('Create User')</button>
+                <button class="btn btn-sm btn-primary float-end" type="submit">@lang('Create User')</button>
             </x-slot>
         </x-backend.card>
     </x-forms.post>
