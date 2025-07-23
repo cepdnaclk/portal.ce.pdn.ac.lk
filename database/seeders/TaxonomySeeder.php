@@ -329,7 +329,7 @@ class TaxonomySeeder extends Seeder
 
         // Create taxonomies and their terms
         foreach ($taxonomies as $key => $taxonomy) {
-            print("\nCreating taxonomy: {$taxonomy['code']}\n");
+            // print("\nCreating taxonomy: {$taxonomy['code']}\n");
 
             $taxonomyRecord = Taxonomy::firstOrCreate([
                 'code' => $taxonomy['code'],
@@ -339,7 +339,7 @@ class TaxonomySeeder extends Seeder
             ]);
 
             if (isset($taxonomy['terms']) && sizeof($taxonomy['terms']) > 0) {
-                print("Creating taxonomy terms\n");
+                // print("Creating taxonomy terms\n");
                 $this->createTaxonomyTerms($taxonomyRecord, $taxonomy['terms']);
             }
         }
@@ -359,7 +359,7 @@ class TaxonomySeeder extends Seeder
     {
         if (is_array($terms) && ! empty($terms)) {
             foreach ($terms as $term) {
-                print(str_repeat('  ', $level + 1) . "{$term['code']}\n");
+                // print(str_repeat('  ', $level + 1) . "{$term['code']}\n");
                 $taxonomyTerm = TaxonomyTerm::firstOrCreate([
                     'code' => $term['code'],
                     'name' => $term['name'],
