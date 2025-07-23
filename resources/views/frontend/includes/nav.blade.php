@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
-        <x-utils.link :href="route('frontend.index')" :text="appName()" class="navbar-brand" />
+        <a href="{{ route('frontend.index') }}" class="navbar-brand">{{ appName() }}</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="@lang('Toggle navigation')">
@@ -11,59 +11,79 @@
             <ul class="navbar-nav ms-auto">
                 @if (config('boilerplate.locale.status') && count(config('boilerplate.locale.languages')) > 1)
                     <li class="nav-item dropdown">
-                        <x-utils.link :text="__(getLocaleName(app()->getLocale()))" class="nav-link dropdown-toggle" id="navbarDropdownLanguageLink"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
-
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLanguageLink"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ __(getLocaleName(app()->getLocale())) }}
+                        </a>
                         @include('includes.partials.lang')
                     </li>
                 @endif
 
                 @guest
                     <li class="nav-item">
-                        <x-utils.link :href="route('frontend.auth.login')" :active="activeClass(Route::is('frontend.auth.login'))" :text="__('Login')" class="nav-link" />
+                        <a href="{{ route('frontend.auth.login') }}"
+                            class="nav-link {{ activeClass(Route::is('frontend.auth.login')) }}">
+                            @lang('Login')
+                        </a>
                     </li>
 
                     @if (config('boilerplate.access.user.registration'))
                         <li class="nav-item">
-                            <x-utils.link :href="route('frontend.auth.register')" :active="activeClass(Route::is('frontend.auth.register'))" :text="__('Register')" class="nav-link" />
-
+                            <a href="{{ route('frontend.auth.register') }}"
+                                class="nav-link {{ activeClass(Route::is('frontend.auth.register')) }}">
+                                @lang('Register')
+                            </a>
                         </li>
                     @endif
                 @else
                     <li class="nav-item dropdown">
-                        <x-utils.link href="#" id="navbarDropdown" class="nav-link dropdown-toggle" role="button"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            <x-slot name="text">
-                                <img class="rounded-circle" style="max-height: 20px" src="{{ $logged_in_user->avatar }}" />
-                                {{ $logged_in_user->name }} <span class="caret"></span>
-                            </x-slot>
-                        </x-utils.link>
-
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="rounded-circle" style="max-height: 20px" src="{{ $logged_in_user->avatar }}"
+                                alt="Avatar" />
+                            {{ $logged_in_user->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             @if ($logged_in_user->isAdmin())
-                                <x-utils.link :href="route('dashboard.home')" :text="__('Dashboard')" class="dropdown-item" />
+                                <li>
+                                    <a href="{{ route('dashboard.home') }}" class="dropdown-item">
+                                        @lang('Dashboard')
+                                    </a>
+                                </li>
                             @endif
 
                             @if ($logged_in_user->isUser())
-                                <x-utils.link :href="route('intranet.user.index')" :active="activeClass(Route::is('intranet.user.index'))" :text="__('Intranet')"
-                                    class="dropdown-item" />
+                                <li>
+                                    <a href="{{ route('intranet.user.index') }}"
+                                        class="dropdown-item {{ activeClass(Route::is('intranet.user.index')) }}">
+                                        @lang('Intranet')
+                                    </a>
+                                </li>
                             @endif
 
-                            <x-utils.link :href="route('intranet.user.account')" :active="activeClass(Route::is('intranet.user.account'))" :text="__('Profile')" class="dropdown-item" />
+                            <li>
+                                <a href="{{ route('intranet.user.account') }}"
+                                    class="dropdown-item {{ activeClass(Route::is('intranet.user.account')) }}">
+                                    @lang('Profile')
+                                </a>
+                            </li>
 
-                            <x-utils.link :text="__('Logout')" class="dropdown-item"
-                                onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                <x-slot name="text">
+                            <li>
+                                <a href="#" class="dropdown-item"
+                                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                     @lang('Logout')
-                                    <x-forms.post :action="route('frontend.auth.logout')" id="logout-form" class="d-none" />
-                                </x-slot>
-                            </x-utils.link>
-                        </div>
+                                </a>
+                                <form id="logout-form" action="{{ route('frontend.auth.logout') }}" method="POST"
+                                    class="d-none">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
                     </li>
                 @endguest
             </ul>
-        </div><!--navbar-collapse-->
-    </div><!--container-->
+        </div>
+    </div>
 </nav>
 
 @if (config('boilerplate.frontend_breadcrumbs'))
