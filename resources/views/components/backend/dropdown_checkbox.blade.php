@@ -3,7 +3,6 @@
     selectedTypes: ['{{ implode("','", $selected ?? []) }}'],
     typeMap: {{ json_encode($optionsMap) }}
 }">
-    {!! Form::label('event_type', 'Event Type*', ['class' => 'col-md-2 col-form-label']) !!}
     <div class="col-md-4">
         <div class="dropdown border border-1 rounded">
             <button class="btn w-100 form-select" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
@@ -33,7 +32,7 @@
     </div>
 
     <!-- Selected tags appear here -->
-    <div class="col-md-5">
+    <div class="col-md-6">
         <div id="selected-tags" class="mt-2">
             <template x-for="type in selectedTypes" :key="type">
                 <span x-show="typeMap[type]" class="badge bg-primary me-2">
@@ -41,5 +40,9 @@
                 </span>
             </template>
         </div>
+    </div>
+
+    <div class="col-md-2">
+        {{ $slot }}
     </div>
 </div>

@@ -5,7 +5,20 @@
 @import 'variables';
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+// @import '~bootstrap/scss/bootstrap';
 
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
+
+.form-group {
+    margin-bottom: 8px !important;
+}
+
+.breadcrumb {
+    padding: 0.5rem 1rem !important;
+    // padding-bottom: 1rem !important;
+}
+
+.breadcrumb-item a {
+    text-decoration: none !important;
+}

@@ -51,7 +51,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12 d-flex align-items-center">
-                                <a href="{{ route('download.taxonomy-files', [
+                                <a href="{{ route('download.taxonomy-file', [
                                     'file_name' => $taxonomyFile->file_name,
                                     'extension' => $taxonomyFile->getFileExtension(),
                                 ]) }}"
@@ -102,7 +102,7 @@
 
             <!-- Footer -->
             <x-slot name="footer">
-                {!! Form::submit(__('Update'), ['class' => 'btn btn-primary btn-w-150 float-right']) !!}
+                {!! Form::submit(__('Update'), ['class' => 'btn btn-primary btn-w-150 float-end']) !!}
             </x-slot>
         </x-backend.card>
 

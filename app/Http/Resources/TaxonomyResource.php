@@ -24,7 +24,7 @@ class TaxonomyResource extends JsonResource
             'code' => $this->code,
             'name' => $this->name,
             'description' => $this->description,
-            // 'properties' => $this->properties,
+            'properties' => $this->properties,
             'terms' => TaxonomyTermResource::collection($this->first_child_terms),
             // 'created_by' => User::find($this->created_by)?->name,
             // 'updated_by' => User::find($this->updated_by)?->name,

@@ -79,7 +79,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit(__('Upload'), ['class' => 'btn btn-primary btn-w-150 float-right']) !!}
+                {!! Form::submit(__('Upload'), ['class' => 'btn btn-primary btn-w-150 float-end']) !!}
             </x-slot>
         </x-backend.card>
 

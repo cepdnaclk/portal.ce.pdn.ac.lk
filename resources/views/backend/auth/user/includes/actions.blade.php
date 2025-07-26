@@ -29,7 +29,7 @@
         @if ($user->isMasterAdmin() && $logged_in_user->isMasterAdmin())
             <div class="dropdown d-inline-block">
                 <a class="btn btn-sm btn-secondary dropdown-toggle" id="moreMenuLink" href="#" role="button"
-                    data-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">
+                    data-bs-toggle="dropdown" data-bs-boundary="window" aria-haspopup="true" aria-expanded="false">
                     @lang('More')
                 </a>
 
@@ -49,7 +49,7 @@
                     $logged_in_user->can('admin.access.user.deactivate')))
             <div class="dropdown d-inline-block">
                 <a class="btn btn-sm btn-secondary dropdown-toggle" id="moreMenuLink" href="#" role="button"
-                    data-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">
+                    data-bs-toggle="dropdown" data-bs-boundary="window" aria-haspopup="true" aria-expanded="false">
                     @lang('More')
                 </a>
 

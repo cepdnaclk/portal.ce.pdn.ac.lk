@@ -5,9 +5,14 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Jfcherng\Diff\DiffHelper;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Domains\Taxonomy\Models\TaxonomyFile;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
+use Spatie\Activitylog\Models\Activity;
 
 class TaxonomyController extends Controller
 {
@@ -50,12 +55,14 @@ class TaxonomyController extends Controller
             'code' => 'required|unique:taxonomies',
             'name' => 'required',
             'description' => 'nullable',
-            'properties' => 'string'
+            'properties' => 'string',
+            'visibility' => 'nullable|integer'
         ]);
 
         try {
             $taxonomy = new Taxonomy($validatedData);
             $taxonomy->properties = json_decode($request->properties);
+            $taxonomy->visibility = ($request->visibility !== null);
             $taxonomy->created_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy created successfully');
@@ -96,7 +103,8 @@ class TaxonomyController extends Controller
             'code' => 'string|required',
             'name' => 'string|required',
             'description' => 'nullable',
-            'properties' => 'string'
+            'properties' => 'string',
+            'visibility' => 'nullable|integer'
         ]);
         try {
             $originalProperties = $taxonomy->properties;
@@ -109,8 +117,18 @@ class TaxonomyController extends Controller
             //         ->withErrors('Can not update the Taxonomy Properties as it already has associated Taxonomy Terms. Please reassign or delete those first.');
             // }
 
-            $taxonomy->update($data);
-            $taxonomy->properties = $updatedProperties;
+            // Exclude 'properties' from $data before update
+            $updateData = $data;
+            unset($updateData['properties']);
+            $taxonomy->update($updateData);
+
+            if (json_encode($originalProperties) !== $request->properties) {
+                $taxonomy->properties = $updatedProperties;
+            }
+            $newVisibility = ($request->visibility !== null) ? true : false;
+            if ($taxonomy->visibility !== $newVisibility) {
+                $taxonomy->visibility = $newVisibility;
+            }
             $taxonomy->updated_by = Auth::user()->id;
             $taxonomy->save();
             return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
@@ -145,6 +163,105 @@ class TaxonomyController extends Controller
             }
         }
         return true;
+    }
+
+    /**
+     * Display activity log for the given taxonomy.
+     */
+    public function history(Taxonomy $taxonomy)
+    {
+        $termIds = TaxonomyTerm::where('taxonomy_id', $taxonomy->id)->pluck('id');
+        $fileIds = TaxonomyFile::where('taxonomy_id', $taxonomy->id)->pluck('id');
+
+        $activities = Activity::where(function ($query) use ($taxonomy, $termIds, $fileIds) {
+            $query->where(function ($q) use ($taxonomy) {
+                $q->where('subject_type', Taxonomy::class)
+                    ->where('subject_id', $taxonomy->id);
+            })
+                ->orWhere(function ($q) use ($termIds) {
+                    $q->where('subject_type', TaxonomyTerm::class)
+                        ->whereIn('subject_id', $termIds);
+                })
+                ->orWhere(function ($q) use ($fileIds) {
+                    $q->where('subject_type', TaxonomyFile::class)
+                        ->whereIn('subject_id', $fileIds);
+                });
+        })
+            ->with(['causer', 'subject'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Convert activities collection to array
+        $activities = $activities->toArray();
+
+        foreach ($activities as &$activity) {
+            $diffs = [];
+            if ($activity['description'] === 'created') {
+                // Created
+                foreach ($activity['properties']['attributes'] as $field => $newValue) {
+                    $newString = is_array($newValue)
+                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($newValue ?? '');
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        '',
+                        $newString,
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            } else if ($activity['description'] === 'deleted') {
+                // Deleted
+                foreach ($activity['properties']['attributes'] as $field => $oldValue) {
+                    $oldString = is_array($oldValue)
+                        ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($oldValue ?? '');
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        $oldString,
+                        '',
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            } else if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+                // Updated
+                foreach ($activity['properties']['attributes'] as $field => $newValue) {
+                    $oldValue = $activity['properties']['old'][$field] ?? null;
+
+                    $oldString = is_array($oldValue)
+                        ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($oldValue ?? '');
+                    $newString = is_array($newValue)
+                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($newValue ?? '');
+
+
+                    if ($oldString === $newString) {
+                        continue;
+                    }
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        $oldString,
+                        $newString,
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            }
+
+            $activity['diffs'] = $diffs;
+            $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
+        }
+
+        return view('backend.taxonomy.history', [
+            'taxonomy'   => $taxonomy,
+            'activities' => $activities,
+            'diffCss'    => DiffHelper::getStyleSheet(),
+        ]);
     }
     /**
      * Confirm to delete the specified resource from storage.

@@ -42,6 +42,11 @@
     <div class="py-2 px-3 my-2" style="border: 1px solid rgb(207, 207, 207); border-radius:5px">
         <div class="div pt-3">
             <label for="drop1">Marks Allocation</label>
+
+            <x-backend.taxonomy_tooltip
+                edit-url="{{ route('dashboard.taxonomy.alias', ['code' => 'mark_allocations']) }}" placement="auto"
+                class="float-end">
+            </x-backend.taxonomy_tooltip>
         </div>
         <hr>
         <div class="row pb-2">

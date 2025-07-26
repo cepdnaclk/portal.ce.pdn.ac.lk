@@ -17,12 +17,7 @@
 
             <x-slot name="body">
                 @if (session('Success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('Success') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="{{ __('Close') }}">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
+                    <x-utils.alert type="success" dismissable="true">{{ session('Success') }}</x-utils.alert>
                 @endif
 
                 <livewire:backend.taxonomy-file-table />

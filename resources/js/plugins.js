@@ -104,7 +104,7 @@ $(function () {
     });
 
     // Remember tab on page load
-    $('a[data-toggle="tab"], a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+    $('a[data-bs-toggle="tab"], a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
         let hash = $(e.target).attr('href');
         history.pushState ? history.pushState(null, null, hash) : location.hash = hash;
     });
@@ -115,5 +115,5 @@ $(function () {
     }
 
     // Enable tooltips everywhere
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-bs-toggle="tooltip"]').tooltip();
 });

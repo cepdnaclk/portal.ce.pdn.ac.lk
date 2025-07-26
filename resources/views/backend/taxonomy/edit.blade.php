@@ -66,6 +66,24 @@
                                 @enderror
                             </div>
                         </div>
+
+                        {{-- Visibility --}}
+                        <div class="form-group row">
+                            {!! Form::label('visibility', 'Visibility', ['class' => 'col-md-2 form-check-label']) !!}
+                            <div class="col-md-4 form-check form-switch mx-4">
+                                <input type="checkbox" id="checkVisible" name="visibility" value="1"
+                                    class="form-check-input checkbox-lg"
+                                    {{ $taxonomy->visibility == 1 ? 'checked' : '' }} />
+                                <label class="form-check-label" for="checkVisible">&nbsp;</label>
+                                <span class="ms-5 text-muted">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                    Available as an API for public use
+                                </span>
+                                @error('visibility')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -102,7 +120,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-right']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-end']) !!}
             </x-slot>
 
         </x-backend.card>

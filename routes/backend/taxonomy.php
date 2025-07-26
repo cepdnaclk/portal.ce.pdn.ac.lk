@@ -3,6 +3,7 @@
 use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\TaxonomyController;
 use App\Http\Controllers\Backend\TaxonomyFileController;
+use App\Http\Controllers\Backend\TaxonomyPageController;
 use App\Http\Controllers\Backend\TaxonomyTermController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,11 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user
         });
 
 
+    // Alias URL to redirect into the term page by taxonomy code
+    Route::get('taxonomy/alias/{code}', [TaxonomyTermController::class, 'alias'])
+        ->name('taxonomy.alias');
+
+
     // View
     Route::get('taxonomy/view/{taxonomy}', [TaxonomyController::class, 'view'])
         ->name('taxonomy.view')->breadcrumbs(function (Trail $trail, $taxonomy) {
@@ -26,6 +32,16 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user
                 ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
                 ->push($taxonomy->name)
                 ->push(__('View'));
+        });
+
+    // History
+    Route::get('taxonomy/history/{taxonomy}', [TaxonomyController::class, 'history'])
+        ->name('taxonomy.history')
+        ->breadcrumbs(function (Trail $trail, $taxonomy) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
+                ->push($taxonomy->name)
+                ->push(__('History'));
         });
 
     // Only Editors have access to these functionalities
@@ -82,6 +98,17 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user
                     ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
                     ->push($taxonomy->name)
                     ->push(__('Terms'), route('dashboard.taxonomy.terms.index', $taxonomy));
+            });
+
+        // History
+        Route::get('/history/{term}', [TaxonomyTermController::class, 'history'])
+            ->name('taxonomy.terms.history')
+            ->breadcrumbs(function (Trail $trail, $taxonomy, $term) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy'), route('dashboard.taxonomy.index'))
+                    ->push($taxonomy->name, route('dashboard.taxonomy.terms.index', $taxonomy))
+                    ->push($term->name)
+                    ->push(__('History'));
             });
 
         // Only Editors have access to these functionalities
@@ -158,7 +185,7 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user
 
 
     // Only Editors have access to these functionalities
-    Route::group(['middleware' => ['permission:user.taxonomy.data.editor']], function () {
+    Route::group(['middleware' => ['permission:user.taxonomy.file.editor']], function () {
         // Create form
         Route::get('taxonomy-files/create', [TaxonomyFileController::class, 'create'])
             ->name('taxonomy-files.create')
@@ -206,11 +233,66 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user
 Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor|user.access.taxonomy.page.viewer']], function () {
     // Index
     Route::get('taxonomy-pages', function () {
-        return view('backend.taxonomy_pages.index');
+        return view('backend.taxonomy_page.index');
     })
         ->name('taxonomy-pages.index')
         ->breadcrumbs(function (Trail $trail) {
             $trail->push(__('Home'), route('dashboard.home'))
                 ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'));
         });
+
+    // View
+    Route::get('taxonomy-pages/view/{taxonomyPage}', [TaxonomyPageController::class, 'view'])
+        ->name('taxonomy-pages.view')
+        ->breadcrumbs(function (Trail $trail, $taxonomyFile) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'))
+                ->push($taxonomyFile->file_name)
+                ->push(__('View'));
+        });
+
+
+    // Only Editors have access to these functionalities
+    Route::group(['middleware' => ['permission:user.taxonomy.page.editor']], function () {
+        // Create form
+        Route::get('taxonomy-pages/create', [TaxonomyPageController::class, 'create'])
+            ->name('taxonomy-pages.create')
+            ->breadcrumbs(function (Trail $trail) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'))
+                    ->push(__('Create'));
+            });
+
+        // Store (POST)
+        Route::post('taxonomy-pages', [TaxonomyPageController::class, 'store'])
+            ->name('taxonomy-pages.store');
+
+        // Edit form
+        Route::get('taxonomy-pages/edit/{taxonomyPage}', [TaxonomyPageController::class, 'edit'])
+            ->name('taxonomy-pages.edit')
+            ->breadcrumbs(function (Trail $trail, $taxonomyPage) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'))
+                    ->push($taxonomyPage->slug)
+                    ->push(__('Edit'), route('dashboard.taxonomy-pages.edit', $taxonomyPage));
+            });
+
+        // Update (PUT / PATCH)
+        Route::put('taxonomy-pages/{taxonomyPage}', [TaxonomyPageController::class, 'update'])
+            ->name('taxonomy-pages.update');
+
+        // Delete confirmation
+        Route::get('taxonomy-pages/delete/{taxonomyPage}', [TaxonomyPageController::class, 'delete'])
+            ->name('taxonomy-pages.delete')
+            ->breadcrumbs(function (Trail $trail, $taxonomyPage) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'))
+                    ->push($taxonomyPage->slug)
+                    ->push(__('Delete'));
+            });
+
+        // Destroy (DELETE)
+        Route::delete('taxonomy-pages/{taxonomyPage}', [TaxonomyPageController::class, 'destroy'])
+            ->name('taxonomy-pages.destroy');
+    });
 });

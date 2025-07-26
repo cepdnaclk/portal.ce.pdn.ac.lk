@@ -60,7 +60,16 @@
                 </div>
 
                 <!-- Event Type (Dropdown with Checkboxes) -->
-                <x-backend.dropdown_checkbox :selected="$event->event_type ?? []" :options-map="\App\Domains\Event\Models\Event::eventTypeMap()" />
+                <div class="form-group row">
+                    {!! Form::label('event_type', 'Event Type*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        <x-backend.dropdown_checkbox :selected="$event->event_type ?? []" :options-map="\App\Domains\Event\Models\Event::eventTypeMap()">
+                            <x-backend.taxonomy_tooltip
+                                edit-url="{{ route('dashboard.taxonomy.alias', ['code' => 'events']) }}" placement="auto">
+                            </x-backend.taxonomy_tooltip>
+                        </x-backend.dropdown_checkbox>
+                    </div>
+                </div>
 
                 <!-- Description -->
                 <div class="form-group row">
@@ -104,8 +113,9 @@
                     {!! Form::label('enabled', 'Enabled', ['class' => 'col-md-2 form-check-label']) !!}
 
                     <div class="col-md-4 form-check form-switch mx-4">
-                        <input type="checkbox" id="checkEnable" name="enabled" value={{ $event->enable ? 'checked' : '""' }}
-                            class="form-check-input checkbox-lg" {{ $event->enabled == 1 ? 'checked' : '' }} />
+                        <input type="checkbox" id="checkEnable" name="enabled"
+                            value={{ $event->enable ? 'checked' : '""' }} class="form-check-input checkbox-lg"
+                            {{ $event->enabled == 1 ? 'checked' : '' }} />
                         <label class="form-check-label" for="checkEnable">&nbsp;</label>
                         @error('enabled')
                             <strong class="text-danger">{{ $message }}</strong>
@@ -190,7 +200,7 @@
                 </div>
             </x-slot>
             <x-slot name="footer">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-right']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-end']) !!}
             </x-slot>
 
         </x-backend.card>

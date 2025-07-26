@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
-use App\Domains\Taxonomy\Validators\TaxonomyTermMetadataValidator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
+use Spatie\Activitylog\Models\Activity;
+use Jfcherng\Diff\DiffHelper;
 
 class TaxonomyTermController extends Controller
 {
@@ -46,9 +49,6 @@ class TaxonomyTermController extends Controller
                 'parent_id' => 'nullable|exists:taxonomy_terms,id',
                 'metadata' => 'array',
             ]);
-
-            app(TaxonomyTermMetadataValidator::class)
-                ->validate($request->input('metadata', []), $taxonomy);
 
             $metadataArray = [];
 
@@ -109,9 +109,6 @@ class TaxonomyTermController extends Controller
                 'metadata' => 'array',
             ]);
 
-            app(TaxonomyTermMetadataValidator::class)
-                ->validate($request->input('metadata', []), $taxonomy);
-
             $metadataArray = [];
             foreach ($taxonomy->properties as $property) {
                 $value = $request->input("metadata.{$property['code']}");
@@ -120,14 +117,20 @@ class TaxonomyTermController extends Controller
                     $value = $request->has("metadata.{$property['code']}") ? true : false;
                 }
 
-                $metadataArray[] = [
+                $metadataArray[] =  [
                     'code' => $property['code'],
                     'value' => $value === '' ? null : $value
                 ];
             }
 
+            // Exclude 'metadata' from $validatedData before update
+            unset($validatedData['metadata']);
             $term->update($validatedData);
-            $term->metadata = $metadataArray;
+
+            // Update metadata only if it has changed
+            if (json_encode($term->metadata) !== json_encode($metadataArray)) {
+                $term->metadata = $metadataArray;
+            }
             $term->updated_by = Auth::user()->id;
             $term->save();
 
@@ -165,5 +168,101 @@ class TaxonomyTermController extends Controller
             Log::error('Failed to delete taxonomy term', ['term_id' => $term->id, 'error' => $ex->getMessage()]);
             return back()->withErrors(['error' => 'Failed to delete taxonomy term. Please try again.']);
         }
+    }
+
+    /**
+     * Display activity log for the given taxonomy term.
+     */
+    public function history(Taxonomy $taxonomy, TaxonomyTerm $term)
+    {
+        $activities = Activity::where('subject_type', TaxonomyTerm::class)
+            ->where('subject_id', $term->id)
+            ->with(['causer', 'subject'])
+            ->orderByDesc('created_at')
+            ->get();
+
+
+        // Convert activities collection to array
+        $activities = $activities->toArray();
+
+
+        foreach ($activities as &$activity) {
+            $diffs = [];
+            if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+                $attributes = $activity['properties']['attributes'];
+                $oldValues  = $activity['properties']['old'];
+
+                if (isset($oldValues['metadata'])) {
+                    $normalized = [];
+                    foreach ($oldValues['metadata'] as $item) {
+                        if (isset($item['code'])) {
+                            $normalized[$item['code']] = $item['value'] ?? null;
+                        }
+                    }
+                    ksort($normalized);
+                    $oldValues['metadata'] = $normalized;
+                }
+
+                if (isset($attributes['metadata'])) {
+                    $normalized = [];
+                    foreach ($attributes['metadata'] as $item) {
+                        if (isset($item['code'])) {
+                            $normalized[$item['code']] = $item['value'] ?? null;
+                        }
+                    }
+                    ksort($normalized);
+                    $attributes['metadata'] = $normalized;
+                }
+
+                foreach ($attributes as $field => $newValue) {
+                    $oldValue = $oldValues[$field] ?? null;
+
+                    $oldString = is_array($oldValue)
+                        ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($oldValue ?? '');
+                    $newString = is_array($newValue)
+                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string) ($newValue ?? '');
+
+                    if ($oldString === $newString) {
+                        continue;
+                    }
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        $oldString,
+                        $newString,
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            }
+
+            $activity['diffs'] = $diffs;
+            $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
+        }
+
+        return view('backend.taxonomy.terms.history', [
+            'taxonomy'   => $taxonomy,
+            'term'       => $term,
+            'activities' => $activities,
+            'diffCss'    => DiffHelper::getStyleSheet(),
+        ]);
+    }
+
+    /**
+     * Redirect to the edit page using the term code as an alias.
+     *
+     * @param string $code
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function alias($code)
+    {
+        $term = TaxonomyTerm::with('taxonomy')->where('code', $code)->firstOrFail();
+        $url = route('dashboard.taxonomy.terms.index', [
+            'taxonomy' => $term->taxonomy,
+        ]) . "?filters[taxonomy_term]={$term->id}";
+
+        return redirect($url);
     }
 }

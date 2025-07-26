@@ -41,6 +41,8 @@ class TaxonomyTermMetadataValidator
                 return 'nullable|url';
             case 'file':
                 return 'nullable|integer|exists:taxonomy_files,id';
+            case 'page':
+                return 'nullable|integer|exists:taxonomy_pages,id';
             default:
                 return 'nullable';
         }

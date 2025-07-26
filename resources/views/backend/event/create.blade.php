@@ -56,7 +56,16 @@
                 </div>
 
                 <!-- Event Type (Dropdown with Checkboxes) -->
-                <x-backend.dropdown_checkbox :options-map="\App\Domains\Event\Models\Event::eventTypeMap()" />
+                <div class="form-group row">
+                    {!! Form::label('event_type', 'Event Type*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        <x-backend.dropdown_checkbox :options-map="\App\Domains\Event\Models\Event::eventTypeMap()">
+                            <x-backend.taxonomy_tooltip
+                                edit-url="{{ route('dashboard.taxonomy.alias', ['code' => 'events']) }}" placement="auto">
+                            </x-backend.taxonomy_tooltip>
+                        </x-backend.dropdown_checkbox>
+                    </div>
+                </div>
 
                 <!-- Description -->
                 <div class="form-group row">
@@ -175,7 +184,7 @@
             </x-slot>
 
             <x-slot name="footer">
-                {!! Form::submit('Create', ['class' => 'btn btn-primary btn-w-150 float-right', 'id' => 'submit-button']) !!}
+                {!! Form::submit('Create', ['class' => 'btn btn-primary btn-w-150 float-end', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>

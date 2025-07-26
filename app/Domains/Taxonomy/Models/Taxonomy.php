@@ -7,6 +7,7 @@ use Database\Factories\TaxonomyFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Domains\Taxonomy\Models\TaxonomyPage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Domains\Taxonomy\Models\Traits\Scope\TaxonomyScope;
 
@@ -26,7 +27,8 @@ class Taxonomy extends Model
         'code',
         'name',
         'description',
-        'properties'
+        'properties',
+        'visibility'
     ];
 
     public static $propertyType = [
@@ -38,11 +40,13 @@ class Taxonomy extends Model
         'datetime' => 'Date Time',
         'boolean' => 'Boolean',
         'url' => 'URL',
-        'file' => 'File'
+        'file' => 'File',
+        'page' => 'Page'
     ];
 
     protected $casts = [
         'properties' => 'json',
+        'visibility' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -93,6 +97,13 @@ class Taxonomy extends Model
         return $this->hasMany(TaxonomyFile::class, 'taxonomy_id')
             ->orderBy('file_name', 'asc')
             ->pluck('file_name', 'id');
+    }
+
+    public function pages()
+    {
+        return $this->hasMany(TaxonomyPage::class, 'taxonomy_id')
+            ->orderBy('slug', 'asc')
+            ->pluck('slug', 'id');
     }
 
     public function first_child_terms()

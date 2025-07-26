@@ -20,7 +20,7 @@ class CourseSeeder extends Seeder
     public function run()
     {
         // Semester 1 Courses
-        Course::create([
+        Course::firstOrCreate([
             'code' => 'GP101',
             'name' => 'English I',
             'credits' => 3,
@@ -44,7 +44,7 @@ class CourseSeeder extends Seeder
 
         ]);
 
-        Course::create([
+        Course::firstOrCreate([
             'code' => 'GP109',
             'name' => 'Materials Science',
             'credits' => 3,
@@ -75,7 +75,7 @@ class CourseSeeder extends Seeder
 
         ]);
 
-        Course::create([
+        Course::firstOrCreate([
             'code' => 'GP110',
             'name' => 'Engineering Mechanics',
             'credits' => 3,
@@ -105,7 +105,7 @@ class CourseSeeder extends Seeder
             'updated_by' => '1',
         ]);
 
-        Course::create([
+        Course::firstOrCreate([
             'code' => 'GP115',
             'name' => 'Calculus I',
             'credits' => 3,
@@ -135,7 +135,7 @@ class CourseSeeder extends Seeder
             'updated_by' => '1',
         ]);
 
-        Course::create([
+        Course::firstOrCreate([
             'code' => 'GP112',
             'name' => 'Engineering Measurements',
             'credits' => 3,
@@ -165,7 +165,7 @@ class CourseSeeder extends Seeder
             'updated_by' => '1',
         ]);
 
-        Course::create([
+        Course::firstOrCreate([
             'code' => 'GP113',
             'name' => 'Fundamentals of Manufacture',
             'credits' => 3,
@@ -196,7 +196,7 @@ class CourseSeeder extends Seeder
             'updated_by' => '1',
         ]);
 
-        Course::create([
+        Course::firstOrCreate([
             'code' => 'CO221',
             'name' => 'Digital Design',
             'credits' => 3,
