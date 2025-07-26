@@ -45,6 +45,17 @@ class CourseResource extends JsonResource
                     ];
                 });
             }),
+            'prerequisites' =>  $this->prerequisites->map(function ($course) {
+                return [
+                    'id' => $course->id,
+                    'code' => $course->code,
+                    'name' => $course->name,
+                    'urls' => [
+                        'view' => 'https://www.ce.pdn.ac.lk/courses/' . urlencode($course->academic_program) . '/' . urlencode($course->code),
+                        'edit' => route('dashboard.courses.edit', $course->id),
+                    ]
+                ];
+            }),
             'urls' => [
                 'view' => 'https://www.ce.pdn.ac.lk/courses/' . urlencode($this->academic_program) . '/' . urlencode($this->code),
                 'edit' => route('dashboard.courses.edit', $this->id),
