@@ -158,7 +158,7 @@ class UserService extends BaseService
 
         try {
             $user->update([
-                'type' => $user->isMasterAdmin() ? $this->model::TYPE_ADMIN : $data['type'] ?? $user->type,
+                'type' => $user->isMasterAdmin() ? User::TYPE_ADMIN : $data['type'] ?? $user->type,
                 'name' => $data['name'],
                 'email' => $data['email'],
             ]);
@@ -320,7 +320,7 @@ class UserService extends BaseService
     protected function createUser(array $data = []): User
     {
         return $this->model::updateOrCreate([
-            'type' => $data['type'] ?? $this->model::TYPE_USER,
+            'type' => $data['type'] ?? User::TYPE_USER,
             'name' => $data['name'] ?? null,
             'email' => $data['email'] ?? null,
             'password' => $data['password'] ?? null,
@@ -328,6 +328,22 @@ class UserService extends BaseService
             'provider_id' => $data['provider_id'] ?? null,
             'email_verified_at' => $data['email_verified_at'] ?? null,
             'active' => $data['active'] ?? true,
+        ]);
+    }
+
+    /**
+     * Link a social provider to an existing user.
+     *
+     * @param  User  $user
+     * @param  \Laravel\Socialite\Contracts\User  $info
+     * @param  string  $provider
+     * @return void
+     */
+    public function linkProvider(User $user, $info, $provider)
+    {
+        $user->update([
+            'provider' => $provider,
+            'provider_id' => $info->getId(),
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Domains\Auth\Http\Controllers\Frontend\Auth;
 
 use App\Domains\Auth\Events\User\UserLoggedIn;
+use App\Domains\Auth\Models\User;
 use App\Domains\Auth\Services\UserService;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +35,7 @@ class SocialController
     public function callback($provider, UserService $userService)
     {
         try {
-            // Validate for internal user 
+            // Validate for internal user
             $info = Socialite::driver($provider)->user();
             $validator = Validator::make(
                 ['email' => $info->email, 'name' => $info->name],
@@ -57,7 +58,17 @@ class SocialController
                 return redirect()->route('frontend.auth.login')->withFlashDanger(trim($errorMessage));
             }
 
-            $user = $userService->registerProvider($info, $provider);
+
+            // Check if a user with the same email already exists
+            $existingUser = User::where('email', $info->getEmail())->first();
+
+            if (!$existingUser) {
+                // Register a new user, with provider if no existing user found
+                $user = $userService->registerProvider($info, $provider);
+            } else {
+                // If the user exists, use the existing user, no need to set the provider
+                $user = $existingUser;
+            }
 
             if (!$user->isActive()) {
                 auth()->logout();
@@ -69,9 +80,15 @@ class SocialController
             event(new UserLoggedIn($user));
 
             return redirect()->route(homeRoute());
-        } catch (\Exception $ex) {
-            Log::error('Failed to handle Social Login Callback', ['user' => Socialite::driver($provider)->user(), 'error' => $ex->getMessage()]);
-            return abort(500);
+        } catch (\Throwable $e) {
+            \Log::error('Social callback failed', [
+                'exception' => get_class($e),
+                'message'   => $e->getMessage(),
+                'user_id'   => $info?->getId(),
+                'user_email' => $info?->getEmail(),
+            ]);
+            return redirect()->route('frontend.auth.login')
+                ->withErrors('Social login failed. Please try again.');
         }
     }
 }
