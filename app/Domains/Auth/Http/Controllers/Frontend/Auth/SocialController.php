@@ -66,7 +66,7 @@ class SocialController
                 // Register a new user, with provider if no existing user found
                 $user = $userService->registerProvider($info, $provider);
             } else {
-                // If the user exists, use the existing user, not need to set the provider
+                // If the user exists, use the existing user, no need to set the provider
                 $user = $existingUser;
             }
 
