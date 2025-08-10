@@ -63,13 +63,11 @@ class SocialController
             $existingUser = User::where('email', $info->getEmail())->first();
 
             if (!$existingUser) {
+                // Register a new user, with provider if no existing user found
                 $user = $userService->registerProvider($info, $provider);
             } else {
+                // If the user exists, use the existing user, not need to set the provider
                 $user = $existingUser;
-                // // If the user exists but is not linked to the provider, link it
-                // if (!$user->provider) {
-                //     $userService->linkProvider($user, $info, $provider);
-                // }
             }
 
             if (!$user->isActive()) {
