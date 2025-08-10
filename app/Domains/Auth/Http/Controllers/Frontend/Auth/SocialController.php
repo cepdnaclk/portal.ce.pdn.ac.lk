@@ -66,10 +66,10 @@ class SocialController
                 $user = $userService->registerProvider($info, $provider);
             } else {
                 $user = $existingUser;
-                // If the user exists but is not linked to the provider, link it
-                if (!$user->hasProvider($provider)) {
-                    $userService->linkProvider($user, $info, $provider);
-                }
+                // // If the user exists but is not linked to the provider, link it
+                // if (!$user->provider) {
+                //     $userService->linkProvider($user, $info, $provider);
+                // }
             }
 
             if (!$user->isActive()) {
