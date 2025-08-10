@@ -158,7 +158,7 @@ class UserService extends BaseService
 
         try {
             $user->update([
-                'type' => $user->isMasterAdmin() ? User::TYPE_USER : $data['type'] ?? $user->type,
+                'type' => $user->isMasterAdmin() ? User::TYPE_ADMIN : $data['type'] ?? $user->type,
                 'name' => $data['name'],
                 'email' => $data['email'],
             ]);
