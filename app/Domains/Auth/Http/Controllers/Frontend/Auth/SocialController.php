@@ -3,6 +3,7 @@
 namespace App\Domains\Auth\Http\Controllers\Frontend\Auth;
 
 use App\Domains\Auth\Events\User\UserLoggedIn;
+use App\Domains\Auth\Models\User;
 use App\Domains\Auth\Services\UserService;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Validator;
@@ -57,7 +58,19 @@ class SocialController
                 return redirect()->route('frontend.auth.login')->withFlashDanger(trim($errorMessage));
             }
 
-            $user = $userService->registerProvider($info, $provider);
+
+            // Check if a user with the same email already exists
+            $existingUser = User::where('email', $info->getEmail())->first();
+
+            if (!$existingUser) {
+                $user = $userService->registerProvider($info, $provider);
+            } else {
+                $user = $existingUser;
+                // If the user exists but is not linked to the provider, link it
+                if (!$user->hasProvider($provider)) {
+                    $userService->linkProvider($user, $info, $provider);
+                }
+            }
 
             if (!$user->isActive()) {
                 auth()->logout();
