@@ -345,7 +345,5 @@ class UserService extends BaseService
             'provider' => $provider,
             'provider_id' => $info->getId(),
         ]);
-
-        $user->save();
     }
 }
