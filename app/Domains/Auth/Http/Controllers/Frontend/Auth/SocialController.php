@@ -34,7 +34,7 @@ class SocialController
     public function callback($provider, UserService $userService)
     {
         try {
-            // Validate for internal user 
+            // Validate for internal user
             $info = Socialite::driver($provider)->user();
             $validator = Validator::make(
                 ['email' => $info->email, 'name' => $info->name],
@@ -69,9 +69,15 @@ class SocialController
             event(new UserLoggedIn($user));
 
             return redirect()->route(homeRoute());
-        } catch (\Exception $ex) {
-            Log::error('Failed to handle Social Login Callback', ['user' => Socialite::driver($provider)->user(), 'error' => $ex->getMessage()]);
-            return abort(500);
+        } catch (\Throwable $e) {
+            \Log::error('Social callback failed', [
+                'exception' => get_class($e),
+                'message'   => $e->getMessage(),
+                'user_id'   => $info?->getId(),
+                'user_email' => $info?->getEmail(),
+            ]);
+            return redirect()->route('frontend.auth.login')
+                ->withErrors('Social login failed. Please try again.');
         }
     }
 }
