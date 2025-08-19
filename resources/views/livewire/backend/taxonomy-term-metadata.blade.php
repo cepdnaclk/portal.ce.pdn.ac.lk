@@ -142,10 +142,15 @@
                         <span class="input-group-text">
                             <i class="fa fa-file"></i>
                         </span>
-                        {!! Form::select("metadata[{$property['code']}]", $taxonomy_files, old("metadata.{$property['code']}", $value), [
-                            'class' => 'form-select',
-                            'id' => $property['code'],
-                        ]) !!}
+                        {!! Form::select(
+                            "metadata[{$property['code']}]",
+                            collect($taxonomy_files)->sort()->toArray(),
+                            old("metadata.{$property['code']}", $value),
+                            [
+                                'class' => 'form-select',
+                                'id' => $property['code'],
+                            ],
+                        ) !!}
                     </div>
                 @endif
             @break
@@ -158,10 +163,15 @@
                         <span class="input-group-text">
                             <i class="fa fa-globe"></i>
                         </span>
-                        {!! Form::select("metadata[{$property['code']}]", $taxonomy_pages, old("metadata.{$property['code']}", $value), [
-                            'class' => 'form-select',
-                            'id' => $property['code'],
-                        ]) !!}
+                        {!! Form::select(
+                            "metadata[{$property['code']}]",
+                            collect($taxonomy_pages)->sort()->toArray(),
+                            old("metadata.{$property['code']}", $value),
+                            [
+                                'class' => 'form-select',
+                                'id' => $property['code'],
+                            ],
+                        ) !!}
                     </div>
                 @endif
             @break
