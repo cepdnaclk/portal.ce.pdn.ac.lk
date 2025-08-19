@@ -40,6 +40,7 @@ class TaxonomyTermTable extends DataTableComponent
                 ->sortable(),
             Column::make("Updated at", "updated_at")
                 ->sortable(),
+            Column::make("API"),
             Column::make("Actions")
         ];
     }
