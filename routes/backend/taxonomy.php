@@ -185,7 +185,7 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user
 
 
     // Only Editors have access to these functionalities
-    Route::group(['middleware' => ['permission:user.taxonomy.file.editor']], function () {
+    Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor']], function () {
         // Create form
         Route::get('taxonomy-files/create', [TaxonomyFileController::class, 'create'])
             ->name('taxonomy-files.create')
@@ -253,7 +253,7 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor|user
 
 
     // Only Editors have access to these functionalities
-    Route::group(['middleware' => ['permission:user.taxonomy.page.editor']], function () {
+    Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor']], function () {
         // Create form
         Route::get('taxonomy-pages/create', [TaxonomyPageController::class, 'create'])
             ->name('taxonomy-pages.create')
