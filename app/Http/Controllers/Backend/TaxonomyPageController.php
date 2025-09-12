@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
+use Spatie\Activitylog\Models\Activity;
+use Jfcherng\Diff\DiffHelper;
 
 class TaxonomyPageController extends Controller
 {
@@ -72,6 +76,81 @@ class TaxonomyPageController extends Controller
         $taxonomyPage = TaxonomyPage::where('slug', $slug)->first();
         return response($taxonomyPage->html)
             ->header('Content-Type', 'text/html');
+    }
+
+    public function history(TaxonomyPage $taxonomyPage)
+    {
+        $activities = Activity::where('subject_type', TaxonomyPage::class)
+            ->where('subject_id', $taxonomyPage->id)
+            ->with(['causer', 'subject'])
+            ->orderByDesc('created_at')
+            ->get()
+            ->toArray();
+
+        foreach ($activities as &$activity) {
+            $diffs = [];
+            if ($activity['description'] === 'created') {
+                foreach ($activity['properties']['attributes'] as $field => $newValue) {
+                    $newString = is_array($newValue)
+                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string)($newValue ?? '');
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        '',
+                        $newString,
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            } elseif ($activity['description'] === 'deleted') {
+                foreach ($activity['properties']['attributes'] as $field => $oldValue) {
+                    $oldString = is_array($oldValue)
+                        ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string)($oldValue ?? '');
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        $oldString,
+                        '',
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            } elseif (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+                foreach ($activity['properties']['attributes'] as $field => $newValue) {
+                    $oldValue = $activity['properties']['old'][$field] ?? null;
+
+                    $oldString = is_array($oldValue)
+                        ? json_encode($oldValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string)($oldValue ?? '');
+                    $newString = is_array($newValue)
+                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                        : (string)($newValue ?? '');
+
+                    if ($oldString === $newString) {
+                        continue;
+                    }
+
+                    $diffs[$field] = DiffHelper::calculate(
+                        $oldString,
+                        $newString,
+                        Config::get('diff-helper.renderer', 'Combined'),
+                        Config::get('diff-helper.calculate_options', []),
+                        Config::get('diff-helper.render_options', [])
+                    );
+                }
+            }
+
+            $activity['diffs'] = $diffs;
+            $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
+        }
+
+        return view('backend.taxonomy_page.history', [
+            'taxonomyPage' => $taxonomyPage,
+            'activities'   => $activities,
+            'diffCss'      => DiffHelper::getStyleSheet(),
+        ]);
     }
 
     public function edit(TaxonomyPage $taxonomyPage)
