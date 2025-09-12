@@ -251,6 +251,16 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor|user
                 ->push(__('View'));
         });
 
+    // History
+    Route::get('taxonomy-pages/history/{taxonomyPage}', [TaxonomyPageController::class, 'history'])
+        ->name('taxonomy-pages.history')
+        ->breadcrumbs(function (Trail $trail, $taxonomyPage) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'))
+                ->push($taxonomyPage->slug)
+                ->push(__('History'));
+        });
+
 
     // Only Editors have access to these functionalities
     Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor']], function () {

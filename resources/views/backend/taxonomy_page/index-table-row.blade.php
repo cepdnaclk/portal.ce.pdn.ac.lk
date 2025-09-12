@@ -37,6 +37,11 @@
         <!-- Manage Button -->
         <div class="btn-group" role="group" aria-label="{{ __('Actions') }}">
 
+            {{-- History Button --}}
+            <a href="{{ route('dashboard.taxonomy-pages.history', $row) }}" class="btn btn-sm btn-info">
+                <i class="fa fa-clock" title="{{ __('History') }}"></i>
+            </a>
+
             {{-- View Button --}}
             <a href="{{ route('dashboard.taxonomy-pages.view', $row) }}" class="btn btn-sm btn-primary">
                 <i class="fa fa-eye" title="{{ __('Preview') }}"></i>
