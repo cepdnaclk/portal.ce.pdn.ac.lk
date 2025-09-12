@@ -198,18 +198,20 @@ class TaxonomyController extends Controller
             $diffs = [];
             if ($activity['description'] === 'created') {
                 // Created
-                foreach ($activity['properties']['attributes'] as $field => $newValue) {
-                    $newString = is_array($newValue)
-                        ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-                        : (string) ($newValue ?? '');
+                if ($activity['properties']) {
+                    foreach ($activity['properties']['attributes'] as $field => $newValue) {
+                        $newString = is_array($newValue)
+                            ? json_encode($newValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                            : (string) ($newValue ?? '');
 
-                    $diffs[$field] = DiffHelper::calculate(
-                        '',
-                        $newString,
-                        Config::get('diff-helper.renderer', 'Combined'),
-                        Config::get('diff-helper.calculate_options', []),
-                        Config::get('diff-helper.render_options', [])
-                    );
+                        $diffs[$field] = DiffHelper::calculate(
+                            '',
+                            $newString,
+                            Config::get('diff-helper.renderer', 'Combined'),
+                            Config::get('diff-helper.calculate_options', []),
+                            Config::get('diff-helper.render_options', [])
+                        );
+                    }
                 }
             } else if ($activity['description'] === 'deleted') {
                 // Deleted
