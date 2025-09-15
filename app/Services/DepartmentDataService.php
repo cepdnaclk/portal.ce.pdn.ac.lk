@@ -60,19 +60,51 @@ class DepartmentDataService
         return $project;
     }
 
+    public function getRoleForEmail(string $email): ?string
+    {
+        $staff = Cache::remember(
+            'dept_service_staff',
+            config('constants.department_data.cache_duration'),
+            function () {
+                return $this->getData('/people/v1/staff/all/');
+            }
+        );
+
+        $staffMember = collect($staff)->firstWhere('email', $email);
+
+        if (! $staffMember) {
+            return null;
+        }
+
+        return $this->mapDesignationToRole($staffMember['designation'] ?? null);
+    }
+
+    private function mapDesignationToRole(?string $designation): ?string
+    {
+        $map = [
+            'Senior Lecturer' => 'Lecturer',
+            'Professor' => 'Lecturer',
+        ];
+
+        return $map[$designation] ?? null;
+    }
+
     private function getData($endpoint)
     {
         $url = config('constants.department_data.base_url') . $endpoint;
-        $response = Http::get($url);
+
+        try {
+            $response = Http::get($url);
+        } catch (\Exception $e) {
+            Log::error('Error in getData: ' . $e->getMessage());
+            return [];
+        }
 
         if ($response->successful()) {
             return $response->json();
-        } else {
-            $statusCode = $response->status();
-            $errorMessage = $response->body();
-
-            Log::error('Error in getData: ' . $errorMessage);
-            return [];
         }
+
+        Log::error('Error in getData: ' . $response->body());
+        return [];
     }
 }
