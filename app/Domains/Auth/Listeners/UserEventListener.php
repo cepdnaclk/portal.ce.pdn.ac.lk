@@ -9,7 +9,9 @@ use App\Domains\Auth\Events\User\UserLoggedIn;
 use App\Domains\Auth\Events\User\UserRestored;
 use App\Domains\Auth\Events\User\UserStatusChanged;
 use App\Domains\Auth\Events\User\UserUpdated;
+use App\Domains\Auth\Models\Role;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Services\DepartmentDataService;
 
 /**
  * Class UserEventListener.
@@ -57,6 +59,16 @@ class UserEventListener
                 'permissions' => $event->user->permissions ? $event->user->permissions->pluck('description')->implode(', ') : 'None',
             ])
             ->log(':causer.name created user :subject.name with roles: :properties.roles and permissions: :properties.permissions');
+
+        // Assign Roles by the Department Email
+        $user = $event->user;
+        $ds = new DepartmentDataService();
+        $roles = $ds->getRolesByDepartmentEmail($user->email);
+        if (!empty($roles)) {
+            foreach ($roles as $role) {
+                $user->assignRole($role);
+            }
+        }
     }
 
     /**
@@ -115,7 +127,7 @@ class UserEventListener
     {
         activity('user')
             ->performedOn($event->user)
-            ->log(':causer.name '.($event->status === 0 ? 'deactivated' : 'reactivated').' user :subject.name');
+            ->log(':causer.name ' . ($event->status === 0 ? 'deactivated' : 'reactivated') . ' user :subject.name');
     }
 
     /**
