@@ -9,7 +9,8 @@
     <div class="col ps-0">
         <label>
             {{ $property['name'] }}
-            ({{ \App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']] }})
+            <span
+                class="text-muted ms-1">({{ \App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']] }})</span>
 
             @if ($property['data_type'] == 'file' && $logged_in_user->hasPermissionTo('user.access.taxonomy.file.editor'))
                 {{-- Taxonomy File --}}
