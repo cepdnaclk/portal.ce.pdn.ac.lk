@@ -3,21 +3,23 @@
 namespace Tests\Unit\Domains\Auth\Listeners;
 
 use App\Domains\Auth\Events\User\UserCreated;
-use App\Domains\Auth\Listeners\AssignUserRole;
+use App\Domains\Auth\Listeners\UserEventListener;
 use App\Domains\Auth\Models\User;
 use App\Domains\Auth\Models\Role;
-use App\Services\DepartmentDataService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
-use Mockery;
 
-class AssignUserRoleTest extends TestCase
+class AssignDepartmentRoleTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function it_assigns_role_returned_by_department_service()
+    public function it_assigns_roles_based_on_department_email()
     {
+        Cache::flush();
+
         Role::factory()->create([
             'name' => 'Lecturer',
             'type' => User::TYPE_USER,
@@ -27,21 +29,26 @@ class AssignUserRoleTest extends TestCase
             'email' => 'staff@example.com',
         ]);
 
-        $service = Mockery::mock(DepartmentDataService::class);
-        $service->shouldReceive('getRoleForEmail')
-            ->once()
-            ->with('staff@example.com')
-            ->andReturn('Lecturer');
+        Http::fake([
+            config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
+                [
+                    'email' => 'staff@example.com',
+                    'designation' => 'Lecturer',
+                ],
+            ]),
+        ]);
 
-        $listener = new AssignUserRole($service);
-        $listener->handle(new UserCreated($user));
+        $listener = new UserEventListener();
+        $listener->onCreated(new UserCreated($user));
 
         $this->assertTrue($user->hasRole('Lecturer'));
     }
 
     /** @test */
-    public function it_does_not_assign_role_when_service_returns_null()
+    public function it_does_not_assign_role_for_non_staff_email()
     {
+        Cache::flush();
+
         Role::factory()->create([
             'name' => 'Lecturer',
             'type' => User::TYPE_USER,
@@ -51,14 +58,17 @@ class AssignUserRoleTest extends TestCase
             'email' => 'other@example.com',
         ]);
 
-        $service = Mockery::mock(DepartmentDataService::class);
-        $service->shouldReceive('getRoleForEmail')
-            ->once()
-            ->with('other@example.com')
-            ->andReturn(null);
+        Http::fake([
+            config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
+                [
+                    'email' => 'staff1@eng.pdn.ac.lk',
+                    'designation' => 'Lecturer',
+                ],
+            ]),
+        ]);
 
-        $listener = new AssignUserRole($service);
-        $listener->handle(new UserCreated($user));
+        $listener = new UserEventListener();
+        $listener->onCreated(new UserCreated($user));
 
         $this->assertFalse($user->hasRole('Lecturer'));
     }

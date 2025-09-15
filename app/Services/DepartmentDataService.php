@@ -59,7 +59,7 @@ class DepartmentDataService
         return $project;
     }
 
-    public function getRolesByDepartmentEmail(string $email): ?string
+    public function getRolesByDepartmentEmail(string $email): ?array
     {
         $staff = Cache::remember(
             'dept_service_staff',
