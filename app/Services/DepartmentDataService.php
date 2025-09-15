@@ -59,7 +59,7 @@ class DepartmentDataService
         return $project;
     }
 
-    public function getRoleByDepartmentEmail(string $email): ?string
+    public function getRolesByDepartmentEmail(string $email): ?string
     {
         $staff = Cache::remember(
             'dept_service_staff',
@@ -68,25 +68,15 @@ class DepartmentDataService
                 return $this->getData('/people/v1/staff/all/');
             }
         );
-
         $staffMember = collect($staff)->firstWhere('email', $email);
+        if (! $staffMember)  return null;
 
-        if (! $staffMember) {
-            return null;
-        }
-
-        return $this->mapDesignationToRole($staffMember['designation'] ?? null);
-    }
-
-    private function mapDesignationToRole(?string $designation): ?string
-    {
         $map = [
-            'Lecturer' => 'Lecturer',
-            'Senior Lecturer' => 'Lecturer',
-            'Professor' => 'Lecturer',
+            'Lecturer' => ['Lecturer'],
+            'Senior Lecturer' => ['Lecturer'],
+            'Professor' => ['Lecturer'],
         ];
-
-        return $map[$designation] ?? null;
+        return $map[$staffMember['designation']] ?? null;
     }
 
     private function getData($endpoint)

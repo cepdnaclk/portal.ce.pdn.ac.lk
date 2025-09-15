@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Domains\Auth\Listeners\RoleEventListener;
 use App\Domains\Auth\Listeners\UserEventListener;
-use App\Domains\Auth\Listeners\AssignUserRole;
 use App\Domains\Auth\Events\User\UserCreated;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -24,9 +23,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        UserCreated::class => [
-            AssignUserRole::class,
-        ],
+        // UserCreated::class => [
+        //     UserEventListener::class,
+        // ],
     ];
 
     /**
