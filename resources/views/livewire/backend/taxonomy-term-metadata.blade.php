@@ -176,6 +176,27 @@
                 @endif
             @break
 
+            @case('taxonomy_term')
+                @if (empty($taxonomy_terms))
+                    <p><i>No taxonomy terms available for selection.</i></p>
+                @else
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa fa-sitemap"></i>
+                        </span>
+                        {!! Form::select(
+                            "metadata[{$property['code']}]",
+                            collect($taxonomy_terms)->sort()->toArray(),
+                            old("metadata.{$property['code']}", $value),
+                            [
+                                'class' => 'form-select',
+                                'id' => $property['code'],
+                            ],
+                        ) !!}
+                    </div>
+                @endif
+            @break
+
             @default
                 {!! Form::text("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
                     'class' => 'form-control',

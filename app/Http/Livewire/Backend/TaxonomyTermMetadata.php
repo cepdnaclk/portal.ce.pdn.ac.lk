@@ -11,6 +11,7 @@ class TaxonomyTermMetadata extends Component
     public $term; // Holds the term object for edit
     public $taxonomy_files = [];
     public $taxonomy_pages = [];
+    public $taxonomy_terms = [];
 
     public function mount($property, $term = null, $taxonomy = null)
     {
@@ -30,6 +31,14 @@ class TaxonomyTermMetadata extends Component
             $this->taxonomy_pages = ['' => 'Select a page'];
             foreach ($taxonomy->pages()->toArray() as $key => $page_slug) {
                 $this->taxonomy_pages[$key] = $page_slug;
+            }
+
+            // Build a list of child taxonomy terms (non-root) for selection
+            $this->taxonomy_terms = ['' => 'Select a taxonomy term'];
+            foreach ($taxonomy->terms as $t) {
+                if (!is_null($t->parent_id)) {
+                    $this->taxonomy_terms[$t->id] = \App\Domains\Taxonomy\Models\TaxonomyTerm::getHierarchicalPath($t->id);
+                }
             }
         }
     }

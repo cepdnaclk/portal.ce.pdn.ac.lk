@@ -41,7 +41,8 @@ class Taxonomy extends Model
         'boolean' => 'Boolean',
         'url' => 'URL',
         'file' => 'File',
-        'page' => 'Page'
+        'page' => 'Page',
+        'taxonomy_term' => 'Taxonomy Term'
     ];
 
     protected $casts = [
