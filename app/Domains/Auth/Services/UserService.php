@@ -62,6 +62,8 @@ class UserService extends BaseService
             throw new GeneralException(__('There was a problem creating your account.'));
         }
 
+        event(new UserCreated($user));
+
         DB::commit();
 
         return $user;
@@ -94,6 +96,8 @@ class UserService extends BaseService
 
                 throw new GeneralException(__('There was a problem connecting to :provider', ['provider' => $provider]));
             }
+
+            event(new UserCreated($user));
 
             DB::commit();
         }

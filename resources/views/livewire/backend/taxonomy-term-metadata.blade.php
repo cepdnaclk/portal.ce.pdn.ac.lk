@@ -152,6 +152,15 @@
                 @endif
             @break
 
+            @case('taxonomy_term')
+                @if (empty($taxonomy_terms))
+                    <p><i>No taxonomy terms available for selection.</i></p>
+                @else
+                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_terms)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                        :placeholder="$taxonomy_pages[''] ?? 'Select a page'" :icon="'fa fa-globe'" :inputId="$property['code']" />
+                @endif
+            @break
+
             @default
                 {!! Form::text("metadata[{$property['code']}]", old("metadata.{$property['code']}", $value), [
                     'class' => 'form-control',
