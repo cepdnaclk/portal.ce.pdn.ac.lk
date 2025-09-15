@@ -22,10 +22,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-        ],
-        // UserCreated::class => [
-        //     UserEventListener::class,
-        // ],
+        ]
     ];
 
     /**
@@ -46,7 +43,5 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
-        //
     }
 }
