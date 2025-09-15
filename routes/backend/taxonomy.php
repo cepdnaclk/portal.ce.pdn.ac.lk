@@ -185,7 +185,7 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user
 
 
     // Only Editors have access to these functionalities
-    Route::group(['middleware' => ['permission:user.taxonomy.file.editor']], function () {
+    Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor']], function () {
         // Create form
         Route::get('taxonomy-files/create', [TaxonomyFileController::class, 'create'])
             ->name('taxonomy-files.create')
@@ -251,9 +251,19 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor|user
                 ->push(__('View'));
         });
 
+    // History
+    Route::get('taxonomy-pages/history/{taxonomyPage}', [TaxonomyPageController::class, 'history'])
+        ->name('taxonomy-pages.history')
+        ->breadcrumbs(function (Trail $trail, $taxonomyPage) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Taxonomy Pages'), route('dashboard.taxonomy-pages.index'))
+                ->push($taxonomyPage->slug)
+                ->push(__('History'));
+        });
+
 
     // Only Editors have access to these functionalities
-    Route::group(['middleware' => ['permission:user.taxonomy.page.editor']], function () {
+    Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor']], function () {
         // Create form
         Route::get('taxonomy-pages/create', [TaxonomyPageController::class, 'create'])
             ->name('taxonomy-pages.create')

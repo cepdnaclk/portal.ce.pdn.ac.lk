@@ -16,6 +16,9 @@ class TaxonomyPage extends Model
 {
     use HasFactory, LogsActivity;
 
+    protected static $logFillable = true;
+    protected static $logOnlyDirty = true;
+
     protected $fillable = [
         'taxonomy_id',
         'slug',
