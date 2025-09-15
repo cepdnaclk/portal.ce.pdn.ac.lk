@@ -15,7 +15,7 @@ class DepartmentDataService
             config('constants.department_data.cache_duration'),
             function () {
 
-                // Students 
+                // Students
                 $students = $this->getData('/people/v1/students/all/');
                 $student_emails = collect($students)->map(function ($user) {
                     $faculty_name = $user['emails']['faculty']['name'];
@@ -49,7 +49,6 @@ class DepartmentDataService
 
     public function getProjectData($url)
     {
-
         $project = Cache::remember(
             "project_$url",
             config('constants.department_data.cache_duration'),
@@ -60,7 +59,7 @@ class DepartmentDataService
         return $project;
     }
 
-    public function getRoleForEmail(string $email): ?string
+    public function getRoleByDepartmentEmail(string $email): ?string
     {
         $staff = Cache::remember(
             'dept_service_staff',
@@ -82,6 +81,7 @@ class DepartmentDataService
     private function mapDesignationToRole(?string $designation): ?string
     {
         $map = [
+            'Lecturer' => 'Lecturer',
             'Senior Lecturer' => 'Lecturer',
             'Professor' => 'Lecturer',
         ];

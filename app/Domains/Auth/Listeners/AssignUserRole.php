@@ -5,7 +5,7 @@ namespace App\Domains\Auth\Listeners;
 use App\Domains\Auth\Events\User\UserCreated;
 use App\Services\DepartmentDataService;
 
-class AssignDepartmentRole
+class AssignUserRole
 {
     protected DepartmentDataService $departmentDataService;
 
@@ -17,7 +17,7 @@ class AssignDepartmentRole
     public function handle(UserCreated $event): void
     {
         $user = $event->user;
-        $role = $this->departmentDataService->getRoleForEmail($user->email);
+        $role = $this->departmentDataService->getRoleByDepartmentEmail($user->email);
 
         if ($role) {
             $user->assignRole($role);
