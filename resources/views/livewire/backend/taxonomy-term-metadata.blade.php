@@ -156,20 +156,8 @@
                 @if (empty($taxonomy_terms))
                     <p><i>No taxonomy terms available for selection.</i></p>
                 @else
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fa fa-sitemap"></i>
-                        </span>
-                        {!! Form::select(
-                            "metadata[{$property['code']}]",
-                            collect($taxonomy_terms)->sort()->toArray(),
-                            old("metadata.{$property['code']}", $value),
-                            [
-                                'class' => 'form-select',
-                                'id' => $property['code'],
-                            ],
-                        ) !!}
-                    </div>
+                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_terms)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                        :placeholder="$taxonomy_pages[''] ?? 'Select a page'" :icon="'fa fa-globe'" :inputId="$property['code']" />
                 @endif
             @break
 
