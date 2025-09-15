@@ -56,7 +56,6 @@ class TaxonomyTermTable extends DataTableComponent
     public function filters(): array
     {
         $terms = [];
-
         foreach (
             TaxonomyTerm::query()
                 ->where('taxonomy_id', $this->taxonomy->id)->get() as $key => $value
