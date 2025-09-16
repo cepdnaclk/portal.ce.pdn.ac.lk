@@ -10,7 +10,7 @@ RUN composer install \
   --no-interaction \
   --no-ansi \
   --no-progress \
-  --optimize-autoloader
+  --no-scripts
 
 # 2) Node stage: build frontend assets with pnpm + Laravel Mix
 FROM node:20-alpine AS node_builder
@@ -29,29 +29,35 @@ COPY public ./public
 
 # Provide only what's needed from vendor for Mix copyDirectory
 COPY --from=composer_deps /app/vendor ./vendor
+
+# Add build tools
+RUN pnpm add -D webpack laravel-mix
+
 RUN pnpm run prod
 
 # 3) Final app image: PHP-FPM runtime
 FROM php:8.3-fpm
 
-# Install system dependencies and PHP extensions
-RUN set -eux; \
-  apt-get update \
-  && apt-get install -y --no-install-recommends \
-  git bash curl tzdata unzip zip \
-  libpng-dev libjpeg62-turbo-dev libzip-dev libfreetype6-dev libonig-dev libxml2-dev \
-  # sqlite3 \
-  && docker-php-ext-configure gd --with-freetype --with-jpeg \
-  && docker-php-ext-install -j$(nproc) \
-  pdo_mysql \
-  # pdo_sqlite \
-  gd exif bcmath opcache mbstring pcntl \
-  && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /var/www/app
 
 # Copy app source
 COPY . .
+
+# RUN composer install --no-dev --optimize-autoloader
+
+# Install system dependencies and PHP extensions
+RUN set -eux; \
+  apt-get update --fix-missing \
+  && apt-get install -y --no-install-recommends \
+  git bash curl tzdata unzip zip \
+  libpng-dev libjpeg62-turbo-dev libzip-dev libfreetype6-dev libonig-dev libxml2-dev \
+  sqlite3 \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && docker-php-ext-install -j$(nproc) \
+  pdo_mysql pdo_sqlite \
+  gd exif bcmath opcache mbstring pcntl \
+  && rm -rf /var/lib/apt/lists/*
+
 
 # Copy Composer vendor from builder
 COPY --from=composer_deps /app/vendor ./vendor
@@ -59,22 +65,26 @@ COPY --from=composer_deps /app/vendor ./vendor
 # Copy built frontend assets into public (without overwriting index.php)
 COPY --from=node_builder /app/public/js ./public/js
 COPY --from=node_builder /app/public/css ./public/css
-COPY --from=node_builder /app/mix-manifest.json ./public/mix-manifest.json
-COPY --from=node_builder /app/public/js/tinymce ./public/js/tinymce
+# COPY --from=node_builder /app/mix-manifest.json ./public/mix-manifest.json
+# COPY --from=node_builder /app/public/js/tinymce ./public/js/tinymce
 
 # Ensure proper permissions for storage and cache dirs
-RUN chown -R www-data:www-data storage bootstrap/cache \
+RUN mkdir -p storage bootstrap/cache \
+  && chown -R www-data:www-data storage bootstrap/cache \
   && find storage -type d -exec chmod 775 {} \; \
   && find storage -type f -exec chmod 664 {} \; \
   && chmod -R 775 bootstrap/cache
 
+
+RUN php artisan key:generate --no-interaction
+
 # Ensure storage & cache are writable
-RUN set -eux; \
-  php artisan key:generate --no-interaction || true; \
-  php artisan config:cache; \
-  php artisan route:cache; \
-  php artisan view:cache; \
-  php artisan event:cache || true
+# RUN set -eux; \
+#   php artisan key:generate --no-interaction || true \
+#   php artisan config:cache; \
+#   php artisan route:cache; \
+#   php artisan view:cache; \
+#   php artisan event:cache || true
 
 
 # Add entrypoint to run framework optimizations and migrations on boot
