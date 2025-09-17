@@ -35,6 +35,16 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    @if ($row->taxonomy->visibility)
+        <a target="_blank" href="{{ route('api.taxonomy.term.get', ['term_code' => $row->code]) }}">
+            /{{ $row->code }}
+        </a>
+    @else
+        <span>-</span>
+    @endif
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0 justify-content-end">
         <div class="btn-group me-3" role="group" aria-label="View Buttons">
             <!-- Filter Button -->

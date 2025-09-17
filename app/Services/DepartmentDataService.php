@@ -15,7 +15,7 @@ class DepartmentDataService
             config('constants.department_data.cache_duration'),
             function () {
 
-                // Students 
+                // Students
                 $students = $this->getData('/people/v1/students/all/');
                 $student_emails = collect($students)->map(function ($user) {
                     $faculty_name = $user['emails']['faculty']['name'];
@@ -49,7 +49,6 @@ class DepartmentDataService
 
     public function getProjectData($url)
     {
-
         $project = Cache::remember(
             "project_$url",
             config('constants.department_data.cache_duration'),
@@ -60,19 +59,42 @@ class DepartmentDataService
         return $project;
     }
 
+    public function getRolesByDepartmentEmail(string $email): ?array
+    {
+        $staff = Cache::remember(
+            'dept_service_staff',
+            config('constants.department_data.cache_duration'),
+            function () {
+                return $this->getData('/people/v1/staff/all/');
+            }
+        );
+        $staffMember = collect($staff)->firstWhere('email', $email);
+        if (! $staffMember)  return null;
+
+        $map = [
+            'Lecturer' => ['Lecturer'],
+            'Senior Lecturer' => ['Lecturer'],
+            'Professor' => ['Lecturer'],
+        ];
+        return $map[$staffMember['designation']] ?? null;
+    }
+
     private function getData($endpoint)
     {
         $url = config('constants.department_data.base_url') . $endpoint;
-        $response = Http::get($url);
+
+        try {
+            $response = Http::get($url);
+        } catch (\Exception $e) {
+            Log::error('Error in getData: ' . $e->getMessage());
+            return [];
+        }
 
         if ($response->successful()) {
             return $response->json();
-        } else {
-            $statusCode = $response->status();
-            $errorMessage = $response->body();
-
-            Log::error('Error in getData: ' . $errorMessage);
-            return [];
         }
+
+        Log::error('Error in getData: ' . $response->body());
+        return [];
     }
 }

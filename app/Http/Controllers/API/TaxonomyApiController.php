@@ -38,10 +38,12 @@ class TaxonomyApiController extends Controller
     {
         try {
             $result = Taxonomy::where('code', $taxonomy_code)
-                ->where('visibility', true)
                 ->first();
 
             if ($result) {
+                if (!$result->visibility) {
+                    return response()->json(['status' => 'error', 'message' => 'Taxonomy not available'], 404);
+                }
                 return response()->json(
                     [
                         'status' => 'success',
@@ -64,8 +66,12 @@ class TaxonomyApiController extends Controller
             $result = TaxonomyTerm::where('code', $term_code)->first();
 
             if ($result) {
+                if ($result->taxonomy && !$result->taxonomy->visibility) {
+                    return response()->json(['status' => 'error', 'message' => 'Taxonomy term not available'], 404);
+                }
+
                 $data = TaxonomyTermResource::collection([$result])->resolve()[0];
-                $data['taxonomy'] = $result->taxonomy->code; // Add the taxonomy code at the top-level term 
+                $data['taxonomy'] = $result->taxonomy->code; // Add the taxonomy code at the top-level term
 
                 return response()->json(
                     [

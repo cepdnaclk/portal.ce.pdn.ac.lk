@@ -40,6 +40,7 @@ class TaxonomyTermTable extends DataTableComponent
                 ->sortable(),
             Column::make("Updated at", "updated_at")
                 ->sortable(),
+            Column::make("API"),
             Column::make("Actions")
         ];
     }
@@ -55,7 +56,6 @@ class TaxonomyTermTable extends DataTableComponent
     public function filters(): array
     {
         $terms = [];
-
         foreach (
             TaxonomyTerm::query()
                 ->where('taxonomy_id', $this->taxonomy->id)->get() as $key => $value

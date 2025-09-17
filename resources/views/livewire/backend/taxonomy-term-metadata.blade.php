@@ -9,7 +9,8 @@
     <div class="col ps-0">
         <label>
             {{ $property['name'] }}
-            ({{ \App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']] }})
+            <span
+                class="text-muted ms-1">({{ \App\Domains\Taxonomy\Models\Taxonomy::$propertyType[$property['data_type']] }})</span>
 
             @if ($property['data_type'] == 'file' && $logged_in_user->hasPermissionTo('user.access.taxonomy.file.editor'))
                 {{-- Taxonomy File --}}
@@ -138,15 +139,8 @@
                 @if (empty($taxonomy_files))
                     <p><i>No files available for selection. </i></p>
                 @else
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fa fa-file"></i>
-                        </span>
-                        {!! Form::select("metadata[{$property['code']}]", $taxonomy_files, old("metadata.{$property['code']}", $value), [
-                            'class' => 'form-select',
-                            'id' => $property['code'],
-                        ]) !!}
-                    </div>
+                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_files)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                        :placeholder="$taxonomy_files[''] ?? 'Select a file'" :icon="'fa fa-file'" :inputId="$property['code']" />
                 @endif
             @break
 
@@ -154,15 +148,17 @@
                 @if (empty($taxonomy_pages))
                     <p><i>No page available for selection.</i></p>
                 @else
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fa fa-globe"></i>
-                        </span>
-                        {!! Form::select("metadata[{$property['code']}]", $taxonomy_pages, old("metadata.{$property['code']}", $value), [
-                            'class' => 'form-select',
-                            'id' => $property['code'],
-                        ]) !!}
-                    </div>
+                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_pages)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                        :placeholder="$taxonomy_pages[''] ?? 'Select a page'" :icon="'fa fa-globe'" :inputId="$property['code']" />
+                @endif
+            @break
+
+            @case('taxonomy_term')
+                @if (empty($taxonomy_terms))
+                    <p><i>No taxonomy terms available for selection.</i></p>
+                @else
+                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_terms)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                        :placeholder="$taxonomy_pages[''] ?? 'Select a page'" :icon="'fa fa-globe'" :inputId="$property['code']" />
                 @endif
             @break
 

@@ -32,7 +32,6 @@
     @else
         <span>-</span>
     @endif
-
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
