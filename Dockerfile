@@ -49,9 +49,9 @@ COPY . .
 RUN set -eux; \
   apt-get update --fix-missing \
   && apt-get install -y --no-install-recommends \
-  git bash curl tzdata unzip zip \
+  git bash curl tzdata unzip zip pkg-config \
   libpng-dev libjpeg62-turbo-dev libzip-dev libfreetype6-dev libonig-dev libxml2-dev \
-  sqlite3 \
+  sqlite3 libsqlite3-dev \
   && docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-install -j$(nproc) \
   pdo_mysql pdo_sqlite \
@@ -70,13 +70,14 @@ COPY --from=node_builder /app/public/css ./public/css
 
 # Ensure proper permissions for storage and cache dirs
 RUN mkdir -p storage bootstrap/cache \
+  && mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs \
   && chown -R www-data:www-data storage bootstrap/cache \
   && find storage -type d -exec chmod 775 {} \; \
   && find storage -type f -exec chmod 664 {} \; \
   && chmod -R 775 bootstrap/cache
 
 
-RUN php artisan key:generate --no-interaction
+## Do not generate APP_KEY at build-time; handled in entrypoint
 
 # Ensure storage & cache are writable
 # RUN set -eux; \
