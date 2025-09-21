@@ -103,7 +103,7 @@ abstract class PersistentStateDataTable extends DataTableComponent
             $state['sorts'] = $this->sorts;
         }
 
-        Cookie::queue($this->getCookieKey(), json_encode($state), 60 * 24 * 30);
+        Cookie::queue($this->getCookieKey(), json_encode($state), 0);
     }
 
     /**
