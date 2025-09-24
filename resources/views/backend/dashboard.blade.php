@@ -78,7 +78,7 @@
 
                     {{-- Staff --}}
                     <x-backend.shortcut-card route="{{ route('dashboard.taxonomy.alias', ['code' => 'academic-staff']) }}"
-                        label="Academic Staff" icon="fa-users" color="" />
+                        label="Academic Staff" icon="fa-users" color="primary" />
                     <x-backend.shortcut-card
                         route="{{ route('dashboard.taxonomy.alias', ['code' => 'temporary-academic-staff']) }}"
                         label="Temporary Academic Staff" icon="fa-users" color="info" />
