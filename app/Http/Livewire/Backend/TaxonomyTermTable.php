@@ -26,7 +26,7 @@ class TaxonomyTermTable extends PersistentStateDataTable
 
     protected function getCookieContextKey(): string
     {
-        return (string)($this->taxonomy->id ?? 'unknown');
+        return (string) ($this->taxonomy->id ?? 'unknown');
     }
 
     public function columns(): array

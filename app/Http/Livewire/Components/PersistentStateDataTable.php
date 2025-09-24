@@ -61,7 +61,7 @@ abstract class PersistentStateDataTable extends DataTableComponent
     /**
      * Override setPage to persist after changing page.
      */
-    public function setPage($page, $pageName = 'page'){
+    public function setPage($page, $pageName = 'page') {
         parent::setPage($page, $pageName);
         $this->persistStateToCookie();
     }
@@ -171,7 +171,7 @@ abstract class PersistentStateDataTable extends DataTableComponent
             $pageNumber = max(1, (int) $data['page']);
             $this->gotoPage($pageNumber);
         }
-      }
+    }
 
     /**
      * Build a stable cookie key that can be overridden per component.
