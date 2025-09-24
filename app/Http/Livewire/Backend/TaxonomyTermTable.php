@@ -17,7 +17,6 @@ class TaxonomyTermTable extends PersistentStateDataTable
     public string $defaultSortColumn = 'code';
     public string $defaultSortDirection = 'asc';
 
-
     public $taxonomy;
 
     public function mount($taxonomy)
