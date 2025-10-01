@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Backend;
 
+use App\Domains\Taxonomy\Models\Taxonomy;
 use Livewire\Component;
 
 class TaxonomyTermMetadata extends Component
@@ -35,10 +36,12 @@ class TaxonomyTermMetadata extends Component
 
             // Build a list of child taxonomy terms (non-root) for selection
             $this->taxonomy_terms = ['' => 'Select a taxonomy term'];
-            foreach ($taxonomy->terms as $t) {
-                if (!is_null($t->parent_id)) {
-                    $this->taxonomy_terms[$t->id] = \App\Domains\Taxonomy\Models\TaxonomyTerm::getHierarchicalPath($t->id);
-                }
+
+            // List all the taxonomy terms with their hierarchical paths
+            foreach(Taxonomy::with('terms')->get() as $tx) {
+              foreach ($tx->terms as $t) {
+                  $this->taxonomy_terms[$t->id] = \App\Domains\Taxonomy\Models\TaxonomyTerm::getHierarchicalPath($t->id);
+              }
             }
         }
     }
