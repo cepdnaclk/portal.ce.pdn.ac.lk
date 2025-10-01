@@ -4,13 +4,13 @@ namespace App\Http\Livewire\Backend;
 
 use App\Domains\Auth\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use App\Http\Livewire\Components\PersistentStateDataTable;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 /**
  * Class RolesTable.
  */
-class RolesTable extends DataTableComponent
+class RolesTable extends PersistentStateDataTable
 {
     /**
      * @return Builder

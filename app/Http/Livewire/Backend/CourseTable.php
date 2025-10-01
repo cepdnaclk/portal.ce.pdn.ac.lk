@@ -16,12 +16,6 @@ class CourseTable extends PersistentStateDataTable
     public string $defaultSortColumn = 'created_at';
     public string $defaultSortDirection = 'desc';
 
-
-    protected function getCookieContextKey(): string
-    {
-        return "";
-    }
-
     public function columns(): array
     {
         return [

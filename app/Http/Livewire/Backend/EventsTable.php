@@ -4,16 +4,15 @@ namespace App\Http\Livewire\Backend;
 
 use App\Domains\Event\Models\Event;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use App\Http\Livewire\Components\PersistentStateDataTable;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
-class EventsTable extends DataTableComponent
+class EventsTable extends PersistentStateDataTable
 {
     public array $perPageAccepted = [5, 10, 20, 50];
     public bool $perPageAll = true;
     public int $perPage = 10;
-
 
     public function columns(): array
     {
