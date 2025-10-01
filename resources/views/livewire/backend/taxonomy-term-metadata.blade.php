@@ -42,6 +42,11 @@
                         </a>
                     @endif
                 </span>
+            @elseif ($property['data_type'] == 'taxonomy_term' && $logged_in_user->hasPermissionTo('user.access.taxonomy.page.editor'))
+                {{-- Taxonomy Term --}}
+                <span class="ms-2 text-danger">
+                    <i class="fa fa-exclamation-triangle"></i> Make sure to avoid circular dependencies
+                </span>
             @endif
         </label>
     </div>
