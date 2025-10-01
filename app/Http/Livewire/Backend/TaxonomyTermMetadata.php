@@ -36,11 +36,14 @@ class TaxonomyTermMetadata extends Component
             }
 
             // Build a list of child taxonomy terms (non-root) for selection
-            $this->taxonomy_terms = Cache::remember('taxonomy_terms_hierarchical_list', 300, function () {
+            $this->taxonomy_terms = Cache::remember('taxonomy_terms_hierarchical_list_' . ($this->term->id ?? 'all'), 1, function () {
               $list = ['' => 'Select a taxonomy term'];
               foreach (Taxonomy::with('terms')->get() as $tx) {
                   foreach ($tx->terms as $t) {
-                      $list[$t->id] = \App\Domains\Taxonomy\Models\TaxonomyTerm::getHierarchicalPath($t->id);
+                      if (!$this->term || $t->code != $this->term->code) {
+                          // Skip the current term to avoid circular dependency
+                          $list[$t->id] = \App\Domains\Taxonomy\Models\TaxonomyTerm::getHierarchicalPath($t->id);
+                      }
                   }
               }
               return $list;
