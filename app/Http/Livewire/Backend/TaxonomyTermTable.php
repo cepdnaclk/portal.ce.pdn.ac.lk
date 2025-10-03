@@ -3,12 +3,12 @@
 namespace App\Http\Livewire\Backend;
 
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Http\Livewire\Components\PersistentStateDataTable;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
-class TaxonomyTermTable extends DataTableComponent
+class TaxonomyTermTable extends PersistentStateDataTable
 {
     public array $perPageAccepted = [10, 25, 50, 100];
     public int $perPage = 100;
@@ -22,6 +22,11 @@ class TaxonomyTermTable extends DataTableComponent
     public function mount($taxonomy)
     {
         $this->taxonomy = $taxonomy;
+    }
+
+    protected function getCookieContextKey(): string
+    {
+        return (string) ($this->taxonomy->id ?? 'unknown');
     }
 
     public function columns(): array

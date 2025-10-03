@@ -4,11 +4,11 @@ namespace App\Http\Livewire\Backend;
 
 use App\Domains\AcademicProgram\Semester\Models\Semester;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use App\Http\Livewire\Components\PersistentStateDataTable;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
-class SemesterTable extends DataTableComponent
+class SemesterTable extends PersistentStateDataTable
 {
     public array $perPageAccepted = [25, 50, 100];
     public bool $perPageAll = true;
