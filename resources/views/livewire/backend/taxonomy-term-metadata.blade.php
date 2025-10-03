@@ -162,7 +162,7 @@
                 @if (empty($taxonomy_terms))
                     <p><i>No taxonomy terms available for selection.</i></p>
                 @else
-                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_terms)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                    <livewire:backend.taxonomy-term-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_terms)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
                         :placeholder="$taxonomy_terms[''] ?? 'Select a Taxonomy Term'" :icon="'fa fa-globe'" :inputId="$property['code']" />
                 @endif
             @break
