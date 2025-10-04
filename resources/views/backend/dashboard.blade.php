@@ -29,6 +29,12 @@
                         <x-backend.shortcut-card route="{{ route('dashboard.event.index') }}" label="Events"
                             icon="fa-calendar" color="info" />
                     @endif
+
+                    {{-- Intranet Links --}}
+                    @if ($logged_in_user->hasAnyPermission(['user.access.taxonomy.data.editor', 'user.access.taxonomy.data.viewer']))
+                        <x-backend.shortcut-card route="{{ route('dashboard.taxonomy.alias', ['code' => 'intranet']) }}"
+                            label="Intranet" icon="fa-list" color="warning" />
+                    @endif
                 </div>
             </x-slot>
         </x-backend.card>
@@ -69,21 +75,24 @@
             <x-slot name="body" style="min-height: 20vh;" class="container-fluid overflow-auto">
                 <div class="row g-3">
                     {{-- Students --}}
-                    <x-backend.shortcut-card route="{{ route('dashboard.taxonomy.alias', ['code' => 'undergraduate']) }}"
+                    <x-backend.shortcut-card
+                        route="{{ route('dashboard.taxonomy.term.alias', ['code' => 'undergraduate']) }}"
                         label="Undergraduate Students" icon="fa-graduation-cap" color="danger" />
-                    <x-backend.shortcut-card route="{{ route('dashboard.taxonomy.alias', ['code' => 'postgraduate']) }}"
+                    <x-backend.shortcut-card
+                        route="{{ route('dashboard.taxonomy.term.alias', ['code' => 'postgraduate']) }}"
                         label="Postgraduate Students" icon="fa-graduation-cap" color="success" />
-                    <x-backend.shortcut-card route="{{ route('dashboard.taxonomy.alias', ['code' => 'alumni']) }}"
+                    <x-backend.shortcut-card route="{{ route('dashboard.taxonomy.term.alias', ['code' => 'alumni']) }}"
                         label="Alumni Students" icon="fa-graduation-cap" color="warning" />
 
                     {{-- Staff --}}
-                    <x-backend.shortcut-card route="{{ route('dashboard.taxonomy.alias', ['code' => 'academic-staff']) }}"
+                    <x-backend.shortcut-card
+                        route="{{ route('dashboard.taxonomy.term.alias', ['code' => 'academic-staff']) }}"
                         label="Academic Staff" icon="fa-users" color="primary" />
                     <x-backend.shortcut-card
-                        route="{{ route('dashboard.taxonomy.alias', ['code' => 'temporary-academic-staff']) }}"
+                        route="{{ route('dashboard.taxonomy.term.alias', ['code' => 'temporary-academic-staff']) }}"
                         label="Temporary Academic Staff" icon="fa-users" color="info" />
                     <x-backend.shortcut-card
-                        route="{{ route('dashboard.taxonomy.alias', ['code' => 'academic-support-staff']) }}"
+                        route="{{ route('dashboard.taxonomy.term.alias', ['code' => 'academic-support-staff']) }}"
                         label="Academic Support Staff" icon="fa-users" color="secondary" />
                 </div>
             </x-slot>

@@ -21,7 +21,7 @@
                 {{ Str::substr($label, 0, 2) }}
             @endif
         </span>
-        <div class="small fw-semibold text-uppercase p-2 text-body">
+        <div class="small fw-semibold p-2 text-body">
             <span class="d-inline-block">{{ $label }}</span>
         </div>
     </a>
