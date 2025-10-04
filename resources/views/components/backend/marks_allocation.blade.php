@@ -44,7 +44,7 @@
             <label for="drop1">Marks Allocation</label>
 
             <x-backend.taxonomy_tooltip
-                edit-url="{{ route('dashboard.taxonomy.alias', ['code' => 'mark_allocations']) }}" placement="auto"
+                edit-url="{{ route('dashboard.taxonomy.term.alias', ['code' => 'mark_allocations']) }}" placement="auto"
                 class="float-end">
             </x-backend.taxonomy_tooltip>
         </div>

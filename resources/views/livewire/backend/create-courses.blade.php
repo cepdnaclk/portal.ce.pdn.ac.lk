@@ -50,7 +50,7 @@
                                             <label for="dropCurriculum">Curriculum*</label>
 
                                             <x-backend.taxonomy_tooltip
-                                                edit-url="{{ route('dashboard.taxonomy.alias', ['code' => 'academic_program']) }}"
+                                                edit-url="{{ route('dashboard.taxonomy.term.alias', ['code' => 'academic_program']) }}"
                                                 placement="auto" class="float-end">
                                             </x-backend.taxonomy_tooltip>
                                         </div>
