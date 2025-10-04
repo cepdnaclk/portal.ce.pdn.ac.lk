@@ -3,6 +3,7 @@
 namespace App\Domains\Taxonomy\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Http\Resources\TaxonomyTermResource;
 use Database\Factories\TaxonomyTermFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -110,6 +111,20 @@ class TaxonomyTerm extends Model
                         if (!is_null($formattedDatetime)) {
                             $response[$code] = $formattedDatetime;
                         }
+
+                    } elseif ($taxonomyCode == 'taxonomy_term') {
+                        // Cache term lookup by term ID
+                        $termCacheKey = 'taxonomy_' . (int)$this->taxonomy_id . '_term_res_' . (int)$metadataValue;
+                        $taxonomyTermResource = cache()->remember($termCacheKey, 300, function () use ($metadataValue) {
+                            $taxonomyTerm = TaxonomyTerm::find($metadataValue);
+                            if ($taxonomyTerm) {
+                                 // Link another taxonomy term resource as a metadata item
+                                return TaxonomyTermResource::make($taxonomyTerm);
+                            } else {
+                                return null;
+                            }
+                        });
+                        $response[$code] = $taxonomyTermResource;
                     } else {
                         $response[$code] = $metadataValue;
                     }

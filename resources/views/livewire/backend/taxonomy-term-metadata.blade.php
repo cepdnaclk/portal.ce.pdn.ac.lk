@@ -42,6 +42,11 @@
                         </a>
                     @endif
                 </span>
+            @elseif ($property['data_type'] == 'taxonomy_term' && $logged_in_user->hasPermissionTo('user.access.taxonomy.page.editor'))
+                {{-- Taxonomy Term --}}
+                <span class="ms-2 text-danger">
+                    <i class="fa fa-exclamation-triangle"></i> Make sure to avoid circular dependencies
+                </span>
             @endif
         </label>
     </div>
@@ -157,8 +162,8 @@
                 @if (empty($taxonomy_terms))
                     <p><i>No taxonomy terms available for selection.</i></p>
                 @else
-                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_terms)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
-                        :placeholder="$taxonomy_pages[''] ?? 'Select a page'" :icon="'fa fa-globe'" :inputId="$property['code']" />
+                    <livewire:backend.taxonomy-term-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_terms)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                        :placeholder="$taxonomy_terms[''] ?? 'Select a Taxonomy Term'" :icon="'fa fa-globe'" :inputId="$property['code']" />
                 @endif
             @break
 
