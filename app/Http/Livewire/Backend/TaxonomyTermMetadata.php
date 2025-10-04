@@ -36,7 +36,7 @@ class TaxonomyTermMetadata extends Component
             }
 
             // Build a list of child taxonomy terms (non-root) for selection
-            $this->taxonomy_terms = Cache::remember('taxonomy_terms_hierarchical_list_' . ($this->term->id ?? 'all'), 1, function () {
+            $this->taxonomy_terms = Cache::remember('taxonomy_terms_hierarchical_list_' . ($this->term->id ?? 'all'), 300, function () {
               $list = ['' => 'Select a taxonomy term'];
               foreach (Taxonomy::with('terms')->get() as $tx) {
                   foreach ($tx->terms as $t) {
