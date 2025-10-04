@@ -300,4 +300,20 @@ class TaxonomyController extends Controller
             return abort(500);
         }
     }
+
+    /**
+     * Redirect to the edit page using the term code as an alias.
+     *
+     * @param string $code
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function alias($code)
+    {
+        $taxonomy = Taxonomy::where('code', $code)->firstOrFail();
+        $url = route('dashboard.taxonomy.terms.index', [
+            'taxonomy' => $taxonomy,
+        ]);
+
+        return redirect($url);
+    }
 }
