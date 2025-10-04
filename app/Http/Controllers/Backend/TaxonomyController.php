@@ -302,7 +302,7 @@ class TaxonomyController extends Controller
     }
 
     /**
-     * Redirect to the edit page using the term code as an alias.
+     * Redirect to a Taxonomy list page using the taxonomy as an alias.
      *
      * @param string $code
      * @return \Illuminate\Http\RedirectResponse
