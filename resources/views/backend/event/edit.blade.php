@@ -65,7 +65,8 @@
                     <div class="col-md-10">
                         <x-backend.dropdown_checkbox :selected="$event->event_type ?? []" :options-map="\App\Domains\Event\Models\Event::eventTypeMap()">
                             <x-backend.taxonomy_tooltip
-                                edit-url="{{ route('dashboard.taxonomy.alias', ['code' => 'events']) }}" placement="auto">
+                                edit-url="{{ route('dashboard.taxonomy.term.alias', ['code' => 'events']) }}"
+                                placement="auto">
                             </x-backend.taxonomy_tooltip>
                         </x-backend.dropdown_checkbox>
                     </div>

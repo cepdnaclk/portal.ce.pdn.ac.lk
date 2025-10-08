@@ -17,12 +17,11 @@
             <x-slot name="body">
                 <div class="container">
                     <h3>Manage Academic Programs</h3>
-
                     <h4>Undergraduate</h4>
                     <ul>
-                        <li> <a
+                        <li>
+                            <a
                                 href="{{ route('dashboard.semesters.index') }}?filters[academic_program]=undergraduate">Semesters</a>
-
                             <ul>
                                 @foreach ($academicPrograms as $key => $value)
                                     <li>
@@ -36,7 +35,6 @@
                         <li>
                             <a
                                 href="{{ route('dashboard.courses.index') }}?filters[academic_program]=undergraduate">Courses</a>
-
                             <ul>
                                 @foreach ($academicPrograms as $key => $value)
                                     <li>
@@ -45,7 +43,6 @@
                                     </li>
                                 @endforeach
                             </ul>
-
                         </li>
                     </ul>
 

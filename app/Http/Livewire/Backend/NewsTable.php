@@ -4,11 +4,11 @@ namespace App\Http\Livewire\Backend;
 
 use App\Domains\News\Models\News;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use App\Http\Livewire\Components\PersistentStateDataTable;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
-class NewsTable extends DataTableComponent
+class NewsTable extends PersistentStateDataTable
 {
     public array $perPageAccepted = [5, 10, 20, 50];
     public bool $perPageAll = true;

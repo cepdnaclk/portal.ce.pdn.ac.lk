@@ -5,11 +5,11 @@ namespace App\Http\Livewire\Backend;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyFile as ModelsTaxonomyFile;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use App\Http\Livewire\Components\PersistentStateDataTable;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
-class TaxonomyFileTable extends DataTableComponent
+class TaxonomyFileTable extends PersistentStateDataTable
 {
     public array $perPageAccepted = [10, 25, 50, 100];
     public int $perPage = 100;

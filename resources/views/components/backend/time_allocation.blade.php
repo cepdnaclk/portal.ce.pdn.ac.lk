@@ -18,7 +18,7 @@
             <label for="drop1">Time Allocation</label>
 
             <x-backend.taxonomy_tooltip
-                edit-url="{{ route('dashboard.taxonomy.alias', ['code' => 'time_allocations']) }}" placement="auto"
+                edit-url="{{ route('dashboard.taxonomy.term.alias', ['code' => 'time_allocations']) }}" placement="auto"
                 class="float-end">
             </x-backend.taxonomy_tooltip>
         </div>
