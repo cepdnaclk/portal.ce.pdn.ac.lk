@@ -3,6 +3,7 @@
 namespace App\Domains\Taxonomy\Models;
 
 use App\Domains\Auth\Models\User;
+use Database\Factories\TaxonomyListFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -72,5 +73,10 @@ class TaxonomyList extends Model
         }
 
         $this->attributes['items'] = json_encode(array_values($value ?? []), JSON_UNESCAPED_SLASHES);
+    }
+
+    protected static function newFactory()
+    {
+        return TaxonomyListFactory::new();
     }
 }
