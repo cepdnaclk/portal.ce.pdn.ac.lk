@@ -18,7 +18,6 @@ use Jfcherng\Diff\DiffHelper;
 
 class TaxonomyPageController extends Controller
 {
-
     public function create()
     {
         try {
@@ -40,7 +39,7 @@ class TaxonomyPageController extends Controller
                 'string',
                 'max:255',
                 'unique:taxonomy_pages',
-                new Slug
+                new Slug()
             ],
             'html'         => 'string',
         ]);
@@ -184,7 +183,7 @@ class TaxonomyPageController extends Controller
                 'required',
                 'string',
                 'max:255',
-                new Slug,
+                new Slug(),
                 Rule::unique('taxonomy_pages')->ignore($taxonomyPage->slug, 'slug')
             ],
             'html' => 'string',

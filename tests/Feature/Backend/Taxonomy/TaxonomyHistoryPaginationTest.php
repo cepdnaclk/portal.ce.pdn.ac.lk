@@ -19,7 +19,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
     {
         $this->loginAsAdmin();
         $taxonomy = Taxonomy::factory()->create();
-        
+
         // Create multiple activity log entries
         for ($i = 0; $i < 20; $i++) {
             activity()
@@ -30,7 +30,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         }
 
         $response = $this->get(route('dashboard.taxonomy.history', $taxonomy));
-        
+
         $response->assertStatus(200);
         // Should have pagination links when there are more than 15 items
         $response->assertSee('pagination');
@@ -41,7 +41,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
     {
         $this->loginAsAdmin();
         $taxonomy = Taxonomy::factory()->create();
-        
+
         // Create exactly 20 activity log entries
         for ($i = 0; $i < 20; $i++) {
             activity()
@@ -54,7 +54,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         // First page should have 15 items
         $response = $this->get(route('dashboard.taxonomy.history', $taxonomy));
         $response->assertStatus(200);
-        
+
         // Second page should exist
         $response = $this->get(route('dashboard.taxonomy.history', $taxonomy) . '?page=2');
         $response->assertStatus(200);
@@ -66,7 +66,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         $this->loginAsAdmin();
         $taxonomy = Taxonomy::factory()->create();
         $term = TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
-        
+
         // Create multiple activity log entries
         for ($i = 0; $i < 20; $i++) {
             activity()
@@ -77,7 +77,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         }
 
         $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]));
-        
+
         $response->assertStatus(200);
         // Should have pagination links when there are more than 15 items
         $response->assertSee('pagination');
@@ -89,7 +89,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         $this->loginAsAdmin();
         $taxonomy = Taxonomy::factory()->create();
         $term = TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
-        
+
         // Create exactly 20 activity log entries
         for ($i = 0; $i < 20; $i++) {
             activity()
@@ -102,7 +102,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         // First page should load
         $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]));
         $response->assertStatus(200);
-        
+
         // Second page should exist
         $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]) . '?page=2');
         $response->assertStatus(200);
@@ -113,7 +113,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
     {
         $this->loginAsAdmin();
         $taxonomyPage = TaxonomyPage::factory()->create();
-        
+
         // Create multiple activity log entries
         for ($i = 0; $i < 20; $i++) {
             activity()
@@ -124,7 +124,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         }
 
         $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage));
-        
+
         $response->assertStatus(200);
         // Should have pagination links when there are more than 15 items
         $response->assertSee('pagination');
@@ -135,7 +135,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
     {
         $this->loginAsAdmin();
         $taxonomyPage = TaxonomyPage::factory()->create();
-        
+
         // Create exactly 20 activity log entries
         for ($i = 0; $i < 20; $i++) {
             activity()
@@ -148,7 +148,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         // First page should load
         $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage));
         $response->assertStatus(200);
-        
+
         // Second page should exist
         $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage) . '?page=2');
         $response->assertStatus(200);
@@ -161,7 +161,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         $taxonomy = Taxonomy::factory()->create();
 
         $response = $this->get(route('dashboard.taxonomy.history', $taxonomy));
-        
+
         $response->assertStatus(200);
         $response->assertSee('Change History for');
     }
@@ -174,7 +174,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         $term = TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
 
         $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]));
-        
+
         $response->assertStatus(200);
         $response->assertSee('Change History for');
     }
@@ -186,7 +186,7 @@ class TaxonomyHistoryPaginationTest extends TestCase
         $taxonomyPage = TaxonomyPage::factory()->create();
 
         $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage));
-        
+
         $response->assertStatus(200);
         $response->assertSee('Change History for');
     }
