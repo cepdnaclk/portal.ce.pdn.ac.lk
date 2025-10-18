@@ -19,6 +19,21 @@
         <x-slot name="body">
             <div class="card">
                 <div class="card-body">
+                    <div class="row pt-3">
+                        <dt class="col-sm-3">Name</dt>
+                        <dd class="col-sm-9">{{ $taxonomyList->name }}</dd>
+
+                        <dt class="col-sm-3">Taxonomy</dt>
+                        <dd class="col-sm-9">{{ $taxonomyList->taxonomy?->name ?? '—' }}</dd>
+
+                        <dt class="col-sm-3">Data Type</dt>
+                        <dd class="col-sm-9">
+                            {{ $taxonomyList::DATA_TYPE_LABELS[$taxonomyList->data_type] ?? ucfirst($taxonomyList->data_typ) }}
+                        </dd>
+                    </div>
+                </div>
+
+                <div class="card-body">
                     <div x-data="{
                         items: @js($taxonomyList->items ?? []),
                         syncItems(value) {

@@ -43,7 +43,7 @@
                                 @endif
                             @elseif ($taxonomyList->data_type === 'page')
                                 @if ($page = $pageMap->get($item))
-                                    <a href="{{ route('dashboard.taxonomy-pages.view', $pag) }}">
+                                    <a href="{{ route('dashboard.taxonomy-pages.view', $page) }}" target="_blank">
                                         {{ $page->slug }}
                                     </a>
                                 @else
@@ -61,7 +61,7 @@
         </x-slot>
 
         <x-slot name="footer">
-            <a href="{{ route('dashboard.taxonomy-lists.index') }}" class="btn btn-light mr-2 btn-w-150">Back</a>
+            <a href="{{ route('dashboard.taxonomy-lists.index') }}" class="btn btn-light float-end btn-w-150">Back</a>
         </x-slot>
 
     </x-backend.card>

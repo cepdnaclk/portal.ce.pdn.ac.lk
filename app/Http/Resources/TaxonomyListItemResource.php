@@ -30,11 +30,9 @@ class TaxonomyListItemResource extends JsonResource
         }
 
         return [
-            'id' => $this->id,
             'name' => $this->name,
             'data_type' => $this->data_type,
             'items' => $items,
-            'taxonomy' => $this->taxonomy?->code,
         ];
     }
 

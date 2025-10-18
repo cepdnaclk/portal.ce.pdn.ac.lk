@@ -87,14 +87,10 @@ class TaxonomyListController extends Controller
         try {
             $taxonomyList->load('taxonomy');
             $taxonomies = Taxonomy::select('id', 'name')->orderBy('name')->get();
-            $files = TaxonomyFile::orderBy('file_name')->get(['id', 'file_name']);
-            $pages = TaxonomyPage::orderBy('slug')->get(['id', 'slug']);
 
             return view('backend.taxonomy_list.edit', [
                 'taxonomyList' => $taxonomyList,
                 'taxonomies' => $taxonomies,
-                'files' => $files,
-                'pages' => $pages,
                 'dataTypes' => TaxonomyList::DATA_TYPE_LABELS,
             ]);
         } catch (\Throwable $ex) {
@@ -110,13 +106,22 @@ class TaxonomyListController extends Controller
     {
         try {
             $taxonomyList->load('taxonomy');
-            $taxonomies = Taxonomy::select('id', 'name')->orderBy('name')->get();
-            $files = TaxonomyFile::orderBy('file_name')->get(['id', 'file_name']);
-            $pages = TaxonomyPage::orderBy('slug')->get(['id', 'slug']);
+            $taxonomyId = $taxonomyList->taxonomy ? $taxonomyList->taxonomy->id : null;
+
+            if ($taxonomyId){
+              // Load only the resources linked to the selected taxonomy
+              $files = TaxonomyFile::where('taxonomy_id', $taxonomyId)
+                  ->orderBy('file_name')->get(['id', 'file_name']);
+              $pages = TaxonomyPage::where('taxonomy_id', $taxonomyId)
+                  ->orderBy('slug')->get(['id', 'slug']);
+            } else {
+              // Load all the resources
+              $files = TaxonomyFile::orderBy('file_name')->get(['id', 'file_name']);
+              $pages = TaxonomyPage::orderBy('slug')->get(['id', 'slug']);
+            }
 
             return view('backend.taxonomy_list.manage', [
                 'taxonomyList' => $taxonomyList,
-                'taxonomies' => $taxonomies,
                 'files' => $files,
                 'pages' => $pages,
                 'dataTypes' => TaxonomyList::DATA_TYPE_LABELS,
