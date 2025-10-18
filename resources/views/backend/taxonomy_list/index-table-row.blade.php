@@ -35,7 +35,6 @@
                 <a href="{{ route('dashboard.taxonomy-lists.view', $row) }}" class="btn btn-sm btn-primary">
                     <i class="fa fa-eye" title="{{ __('Preview') }}"></i>
                 </a>
-
             </div>
 
             <!-- Manage Button -->
