@@ -68,9 +68,9 @@
            }
        },
        addItem() {
-           userInput = '';
+           this.userInput = '';
            document.getElementById('add{{ $type }}ItemModalLabel').innerHTML = 'Add Item ({{ $type }})';
-           isEditing = false;
+           this.isEditing = false;
            this.hasValidationError = false;
            this.errorMessage = '';
        },
@@ -116,7 +116,7 @@
        },
        handleSave() {
            console.log('Saving item:', this.userInput);
-
+   
            const normalized = this.validateValue(this.userInput);
            if (normalized === null) {
                this.hasValidationError = true;
@@ -150,13 +150,13 @@
                const file = this.files.find((entry) => Number(entry.id) === fileId);
                return file ? file.file_name : `Missing file (#${item})`;
            }
-
+   
            if (this.dataType === 'page') {
                const pageId = Number(item);
                const page = this.pages.find((entry) => Number(entry.id) === pageId);
                return page ? page.slug : `Missing page (#${item})`;
            }
-
+   
            return typeof item === 'string' ? item : String(item);
        }
    }" x-cloak x-init="$dispatch('items-changed', items)" x-effect="$dispatch('items-changed', items)">

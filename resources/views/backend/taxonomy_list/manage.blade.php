@@ -28,7 +28,7 @@
 
                         <dt class="col-sm-3">Data Type</dt>
                         <dd class="col-sm-9">
-                            {{ $taxonomyList::DATA_TYPE_LABELS[$taxonomyList->data_type] ?? ucfirst($taxonomyList->data_typ) }}
+                            {{ $taxonomyList::DATA_TYPE_LABELS[$taxonomyList->data_type] ?? ucfirst($taxonomyList->data_type) }}
                         </dd>
                     </div>
                 </div>

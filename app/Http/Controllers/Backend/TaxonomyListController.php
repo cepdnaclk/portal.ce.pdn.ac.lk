@@ -108,7 +108,7 @@ class TaxonomyListController extends Controller
             $taxonomyList->load('taxonomy');
             $taxonomyId = $taxonomyList->taxonomy ? $taxonomyList->taxonomy->id : null;
 
-            if ($taxonomyId){
+            if ($taxonomyId) {
               // Load only the resources linked to the selected taxonomy
               $files = TaxonomyFile::where('taxonomy_id', $taxonomyId)
                   ->orderBy('file_name')->get(['id', 'file_name']);
