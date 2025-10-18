@@ -26,19 +26,18 @@
                     </div>
                 @endif
 
-                <div class="d-flex">
+                <!-- Footer -->
+                <x-slot name="footer">
                     {!! Form::open([
                         'url' => route('dashboard.taxonomy-files.destroy', $taxonomyFile),
                         'method' => 'delete',
-                        'class' => 'container p-0',
                     ]) !!}
-                    <a href="{{ route('dashboard.taxonomy-files.index') }}" class="btn btn-light mr-2">
-                        Back
-                    </a>
-
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                    {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-w-150 float-end']) !!}
                     {!! Form::close() !!}
-                </div>
+
+                    <a href="{{ route('dashboard.taxonomy-files.index') }}"
+                        class="btn btn-light btn-outline-secondary btn-w-150 float-end mr-2">Back</a>
+                </x-slot>
             </x-slot>
         </x-backend.card>
     </div>

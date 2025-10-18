@@ -26,20 +26,22 @@
                             </li>
                         @endforeach
                     </ul>
-                    <a href="{{ route('dashboard.taxonomy.index') }}" class="btn btn-light mr-2">Back</a>
-                @else
-                    <div class="d-flex">
+                @endif
+
+
+                <x-slot name="footer">
+                    @if ($terms->count() == 0)
                         {!! Form::open([
                             'url' => route('dashboard.taxonomy.destroy', compact('taxonomy')),
                             'method' => 'delete',
-                            'class' => 'container',
                         ]) !!}
 
-                        <a href="{{ route('dashboard.taxonomy.index') }}" class="btn btn-light mr-2">Back</a>
-                        {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                        {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-w-150 float-end']) !!}
                         {!! Form::close() !!}
-                    </div>
-                @endif
+                    @endif
+                    <a href="{{ route('dashboard.taxonomy.index') }}"
+                        class="btn btn-light btn-outline-secondary btn-w-150 float-end mr-2">Back</a>
+                </x-slot>
 
             </x-slot>
         </x-backend.card>

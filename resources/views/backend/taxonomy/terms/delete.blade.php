@@ -27,18 +27,17 @@
                     </ul>
                 @endif
 
-                <div class="d-flex">
+                <x-slot name="footer">
                     {!! Form::open([
                         'url' => route('dashboard.taxonomy.terms.destroy', ['taxonomy' => $taxonomy, 'term' => $term]),
                         'method' => 'delete',
-                        'class' => 'container',
                     ]) !!}
-
-                    <a href="{{ route('dashboard.taxonomy.terms.index', $taxonomy) }}" class="btn btn-light mr-2">Back</a>
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-
+                    {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-w-150 float-end']) !!}
                     {!! Form::close() !!}
-                </div>
+
+                    <a href="{{ route('dashboard.taxonomy.terms.index', compact('taxonomy')) }}"
+                        class="btn btn-light btn-outline-secondary btn-w-150 float-end mr-2">Back</a>
+                </x-slot>
             </x-slot>
         </x-backend.card>
     </div>

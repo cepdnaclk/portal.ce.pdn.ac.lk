@@ -29,7 +29,9 @@
             ]) !!}
             {!! Form::submit('Delete', ['class' => 'btn btn-danger float-end btn-w-150']) !!}
             {!! Form::close() !!}
-            <a href="{{ route('dashboard.taxonomy-lists.index') }}" class="btn btn-light float-end btn-w-150 me-2">Back</a>
+
+            <a href="{{ route('dashboard.taxonomy-lists.index') }}"
+                class="btn btn-light btn-outline-secondary btn-w-150 float-end mr-2">Back</a>
         </x-slot>
     </x-backend.card>
 @endsection

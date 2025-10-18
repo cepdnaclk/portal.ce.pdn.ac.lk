@@ -87,6 +87,8 @@
             <!-- Footer -->
             <x-slot name="footer">
                 {!! Form::submit(__('Update'), ['class' => 'btn btn-primary btn-w-150 float-end']) !!}
+                <a href="{{ route('dashboard.taxonomy-pages.index') }}"
+                    class="btn btn-light btn-outline-secondary btn-w-150 float-end mr-2">Back</a>
             </x-slot>
         </x-backend.card>
 
