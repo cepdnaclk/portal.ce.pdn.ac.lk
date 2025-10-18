@@ -82,7 +82,8 @@ class TaxonomyTermInfoSectionTest extends TestCase
 
         $response = $this->get(route('dashboard.taxonomy.terms.create', $taxonomyWithoutDescription));
         $response->assertOk();
-        $response->assertDontSeeLivewire('backend.expandable-info-card');;
+        $response->assertDontSeeLivewire('backend.expandable-info-card');
+        ;
         $response->assertDontSee(__('Info'));
     }
 
