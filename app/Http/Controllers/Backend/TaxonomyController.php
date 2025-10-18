@@ -189,12 +189,14 @@ class TaxonomyController extends Controller
         })
             ->with(['causer', 'subject'])
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(15);
 
-        // Convert activities collection to array
-        $activities = $activities->toArray();
+        // Convert activities items to array for processing
+        $activitiesData = $activities->items();
 
-        foreach ($activities as &$activity) {
+        foreach ($activitiesData as &$activity) {
+            // Convert model to array
+            $activity = $activity->toArray();
             $diffs = [];
             if ($activity['description'] === 'created') {
                 // Created
@@ -258,6 +260,9 @@ class TaxonomyController extends Controller
             $activity['diffs'] = $diffs;
             $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
         }
+
+        // Replace items in paginator with processed data
+        $activities->setCollection(collect($activitiesData));
 
         return view('backend.taxonomy.history', [
             'taxonomy'   => $taxonomy,
