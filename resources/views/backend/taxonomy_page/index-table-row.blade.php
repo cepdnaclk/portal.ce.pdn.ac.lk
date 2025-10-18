@@ -28,15 +28,7 @@
 
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
-        {{-- Download --}}
-        <a href="{{ route('download.taxonomy-page', ['slug' => $row->slug]) }}" class="btn btn-sm btn-secondary me-3"
-            target="_blank">
-            <i class="fa fa-globe" title="{{ __('Web') }}"></i>
-        </a>
-
-        <!-- Manage Button -->
-        <div class="btn-group" role="group" aria-label="{{ __('Actions') }}">
-
+        <div class="btn-group me-3" role="group" aria-label="View Buttons">
             {{-- History Button --}}
             <a href="{{ route('dashboard.taxonomy-pages.history', $row) }}" class="btn btn-sm btn-info">
                 <i class="fa fa-clock" title="{{ __('History') }}"></i>
@@ -47,6 +39,15 @@
                 <i class="fa fa-eye" title="{{ __('Preview') }}"></i>
             </a>
 
+            {{-- Download --}}
+            <a href="{{ route('download.taxonomy-page', ['slug' => $row->slug]) }}" class="btn btn-sm btn-secondary"
+                target="_blank">
+                <i class="fa fa-globe" title="{{ __('Web') }}"></i>
+            </a>
+        </div>
+
+        <!-- Manage Button -->
+        <div class="btn-group" role="group" aria-label="{{ __('Actions') }}">
             @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.page.editor'))
                 {{-- Edit --}}
                 <a href="{{ route('dashboard.taxonomy-pages.edit', $row) }}" class="btn btn-sm btn-warning">
