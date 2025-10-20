@@ -27,7 +27,7 @@ class DepartmentDataService
                     if ($faculty_domain == 'eng.pdn.ac.lk' && $faculty_name != '' && $faculty_domain != '') {
                         // Faculty Email
                         return "$faculty_name@$faculty_domain";
-                    } else if ($personal_domain == 'eng.pdn.ac.lk') {
+                    } elseif ($personal_domain == 'eng.pdn.ac.lk') {
                         // Personal Email
                         return "$personal_name@$personal_domain";
                     }
@@ -61,6 +61,7 @@ class DepartmentDataService
 
     public function getRolesByDepartmentEmail(string $email): ?array
     {
+        // Check staff first
         $staff = Cache::remember(
             'dept_service_staff',
             config('constants.department_data.cache_duration'),
@@ -69,14 +70,48 @@ class DepartmentDataService
             }
         );
         $staffMember = collect($staff)->firstWhere('email', $email);
-        if (! $staffMember)  return null;
 
-        $map = [
-            'Lecturer' => ['Lecturer'],
-            'Senior Lecturer' => ['Lecturer'],
-            'Professor' => ['Lecturer'],
-        ];
-        return $map[$staffMember['designation']] ?? null;
+        if ($staffMember) {
+            $staffMap = [
+                'Lecturer' => ['Lecturer'],
+                'Senior Lecturer' => ['Lecturer'],
+                'Professor' => ['Lecturer'],
+                'Temporary Academic Staff' => ['Temporary Academic Staff'],
+                'Temporary Lecturer' => ['Temporary Academic Staff'],
+                'Visiting Lecturer' => ['Temporary Academic Staff'],
+                'Academic Support Staff' => ['Academic Support Staff'],
+                'Technical Officer' => ['Academic Support Staff'],
+                'Senior Technical Officer' => ['Academic Support Staff'],
+            ];
+            return $staffMap[$staffMember['designation']] ?? null;
+        }
+
+        // Check students
+        $students = Cache::remember(
+            'dept_service_students',
+            config('constants.department_data.cache_duration'),
+            function () {
+                return $this->getData('/people/v1/students/all/');
+            }
+        );
+
+        $student = collect($students)->first(function ($student) use ($email) {
+            $faculty_name = $student['emails']['faculty']['name'] ?? '';
+            $faculty_domain = $student['emails']['faculty']['domain'] ?? '';
+            $personal_name = $student['emails']['personal']['name'] ?? '';
+            $personal_domain = $student['emails']['personal']['domain'] ?? '';
+
+            $facultyEmail = ($faculty_name && $faculty_domain) ? "$faculty_name@$faculty_domain" : null;
+            $personalEmail = ($personal_name && $personal_domain) ? "$personal_name@$personal_domain" : null;
+
+            return $facultyEmail === $email || $personalEmail === $email;
+        });
+
+        if ($student) {
+            return ['Student'];
+        }
+
+        return null;
     }
 
     private function getData($endpoint)

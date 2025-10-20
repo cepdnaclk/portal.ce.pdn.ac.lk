@@ -28,6 +28,10 @@
                                 <x-utils.link :text="__('Two Factor Authentication')" class="nav-link" id="two-factor-authentication-tab"
                                     data-bs-toggle="pill" href="#two-factor-authentication" role="tab"
                                     aria-controls="two-factor-authentication" aria-selected="false" />
+
+                                <x-utils.link :text="__('Roles & Permissions')" class="nav-link" id="roles-permissions-tab"
+                                    data-bs-toggle="pill" href="#roles-permissions" role="tab"
+                                    aria-controls="roles-permissions" aria-selected="false" />
                             </div>
                         </nav>
 
@@ -53,6 +57,11 @@
                                 aria-labelledby="two-factor-authentication-tab">
                                 @include('frontend.user.account.tabs.two-factor-authentication')
                             </div><!--tab-information-->
+
+                            <div class="tab-pane fade pt-3" id="roles-permissions" role="tabpanel"
+                                aria-labelledby="roles-permissions-tab">
+                                @include('frontend.user.account.tabs.roles-permissions')
+                            </div><!--tab-roles-permissions-->
                         </div><!--tab-content-->
                     </x-slot>
                 </x-frontend.card>
