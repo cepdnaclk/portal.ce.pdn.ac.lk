@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EditorRoleSeeder::class);
         $this->call(AcademicRoleSeeder::class);
         $this->call(TaxonomyRoleSeeder::class);
+        $this->call(\Database\Seeders\Roles\UserTypeRoleSeeder::class);
 
         // This seed data are required to function the site correctly
         $this->call(TaxonomySeeder::class);
