@@ -13,7 +13,7 @@ class EventApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Event::where('enabled', 1)->orderBy('start_at', 'desc');
+            $query = Event::with('gallery')->where('enabled', 1)->orderBy('start_at', 'desc');
 
             if ($request->has('event_type')) {
 
@@ -40,7 +40,8 @@ class EventApiController extends Controller
     {
         try {
             $perPage = 20;
-            $event = Event::getUpcomingEvents()
+            $event = Event::with('gallery')
+                ->getUpcomingEvents()
                 ->orderBy('start_at', 'asc')
                 ->paginate($perPage);
 
@@ -59,7 +60,8 @@ class EventApiController extends Controller
     {
         try {
             $perPage = 20;
-            $event = Event::getPastEvents()
+            $event = Event::with('gallery')
+                ->getPastEvents()
                 ->orderBy('start_at', 'desc')
                 ->paginate($perPage);
 
@@ -77,7 +79,7 @@ class EventApiController extends Controller
     public function show($id)
     {
         try {
-            $event = Event::find($id);
+            $event = Event::with('gallery')->find($id);
 
             if ($event) {
                 return new EventResource($event);

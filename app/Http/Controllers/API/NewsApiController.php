@@ -13,7 +13,7 @@ class NewsApiController extends Controller
     {
         try {
             $perPage = 20;
-            $news = News::latest()->where('enabled', 1)->paginate($perPage);
+            $news = News::with('gallery')->latest()->where('enabled', 1)->paginate($perPage);
 
             return NewsResource::collection($news);
         } catch (\Exception $e) {
@@ -25,7 +25,7 @@ class NewsApiController extends Controller
     public function show($id)
     {
         try {
-            $news = News::find($id);
+            $news = News::with('gallery')->find($id);
             if ($news) {
                 return new NewsResource($news);
             } else {

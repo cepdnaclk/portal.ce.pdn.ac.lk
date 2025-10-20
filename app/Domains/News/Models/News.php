@@ -3,11 +3,13 @@
 namespace App\Domains\News\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Domains\Gallery\Models\GalleryImage;
 use Database\Factories\NewsFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Domains\News\Models\Traits\Scope\NewsScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -52,6 +54,22 @@ class News extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Get all gallery images for this news item.
+     */
+    public function gallery(): MorphMany
+    {
+        return $this->morphMany(GalleryImage::class, 'imageable')->ordered();
+    }
+
+    /**
+     * Get the cover image for this news item.
+     */
+    public function coverImage()
+    {
+        return $this->morphOne(GalleryImage::class, 'imageable')->where('is_cover', true);
     }
 
     /**

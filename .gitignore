@@ -33,3 +33,4 @@ _ide_helper.php
 
 # Backup Directory
 backups/*
+.php-cs-fixer.cache

@@ -3,11 +3,13 @@
 namespace App\Domains\Event\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Domains\Gallery\Models\GalleryImage;
 use Database\Factories\EventFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Domains\Event\Models\Traits\Scope\EventScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 
 /**
@@ -80,6 +82,22 @@ class Event extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Get all gallery images for this event.
+     */
+    public function gallery(): MorphMany
+    {
+        return $this->morphMany(GalleryImage::class, 'imageable')->ordered();
+    }
+
+    /**
+     * Get the cover image for this event.
+     */
+    public function coverImage()
+    {
+        return $this->morphOne(GalleryImage::class, 'imageable')->where('is_cover', true);
     }
 
     /**
