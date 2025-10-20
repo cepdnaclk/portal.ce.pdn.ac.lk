@@ -74,7 +74,7 @@ class GalleryService
         [$width, $height] = $imageInfo;
 
         if ($width < config('gallery.min_width') || $height < config('gallery.min_height')) {
-            throw new \Exception("Image dimensions must be at least " . 
+            throw new \Exception("Image dimensions must be at least " .
                 config('gallery.min_width') . "x" . config('gallery.min_height') . " pixels");
         }
 

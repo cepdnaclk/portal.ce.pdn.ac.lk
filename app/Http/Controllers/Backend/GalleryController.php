@@ -25,13 +25,15 @@ class GalleryController extends Controller
     /**
      * Show the gallery management page for a News or Event item.
      *
-     * @param mixed $imageable
+     * @param News|Event $news_or_event
      * @return \Illuminate\Contracts\View\View
      */
-    public function index($imageable)
+    public function index($news_or_event)
     {
         try {
-            // Determine type from class name
+            // Laravel route model binding passes the model instance
+            // Get the variable name from route (news or event)
+            $imageable = $news_or_event;
             $type = $this->getTypeFromModel($imageable);
 
             $stats = $this->galleryService->getGalleryStats($imageable);
@@ -51,12 +53,14 @@ class GalleryController extends Controller
      * Upload images to a gallery.
      *
      * @param UploadGalleryImagesRequest $request
-     * @param mixed $imageable
+     * @param News|Event $news_or_event
      * @return \Illuminate\Http\JsonResponse
      */
-    public function upload(UploadGalleryImagesRequest $request, $imageable)
+    public function upload(UploadGalleryImagesRequest $request, $news_or_event)
     {
         try {
+            $imageable = $news_or_event;
+            
             // Check if max images limit reached
             $stats = $this->galleryService->getGalleryStats($imageable);
             if (!$stats['can_add_more']) {
@@ -78,7 +82,7 @@ class GalleryController extends Controller
         } catch (\Exception $ex) {
             Log::error('Failed to upload gallery images', [
                 'error' => $ex->getMessage(),
-                'imageable_id' => $imageable->id,
+                'imageable_id' => $news_or_event->id,
             ]);
 
             return response()->json([
@@ -120,13 +124,14 @@ class GalleryController extends Controller
     /**
      * Set an image as the cover.
      *
-     * @param mixed $imageable
+     * @param News|Event $news_or_event
      * @param int $image
      * @return \Illuminate\Http\JsonResponse
      */
-    public function setCover($imageable, int $image)
+    public function setCover($news_or_event, int $image)
     {
         try {
+            $imageable = $news_or_event;
             $coverImage = $this->galleryService->setCoverImage($imageable, $image);
 
             return response()->json([
@@ -136,7 +141,7 @@ class GalleryController extends Controller
         } catch (\Exception $ex) {
             Log::error('Failed to set cover image', [
                 'error' => $ex->getMessage(),
-                'imageable_id' => $imageable->id,
+                'imageable_id' => $news_or_event->id,
                 'image_id' => $image,
             ]);
 
@@ -150,12 +155,13 @@ class GalleryController extends Controller
      * Reorder gallery images.
      *
      * @param ReorderGalleryImagesRequest $request
-     * @param mixed $imageable
+     * @param News|Event $news_or_event
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reorder(ReorderGalleryImagesRequest $request, $imageable)
+    public function reorder(ReorderGalleryImagesRequest $request, $news_or_event)
     {
         try {
+            $imageable = $news_or_event;
             $this->galleryService->reorderImages($imageable, $request->input('ordered_ids'));
 
             return response()->json([
@@ -164,7 +170,7 @@ class GalleryController extends Controller
         } catch (\Exception $ex) {
             Log::error('Failed to reorder gallery images', [
                 'error' => $ex->getMessage(),
-                'imageable_id' => $imageable->id,
+                'imageable_id' => $news_or_event->id,
             ]);
 
             return response()->json([
@@ -209,6 +215,10 @@ class GalleryController extends Controller
      */
     protected function getTypeFromModel($imageable): string
     {
+        if (is_string($imageable)) {
+            return $imageable;
+        }
+        
         $class = get_class($imageable);
         $shortName = class_basename($class);
 

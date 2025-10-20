@@ -151,13 +151,13 @@ class GalleryTest extends TestCase
         Storage::fake('public');
         $this->loginAsEditor();
         $news = News::factory()->create();
-        
+
         $image1 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
             'is_cover' => true,
         ]);
-        
+
         $image2 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
@@ -167,13 +167,13 @@ class GalleryTest extends TestCase
         $response = $this->put(route('dashboard.news.gallery.set-cover', [$news, $image2]));
 
         $response->assertStatus(200);
-        
+
         // Check that only image2 is now cover
         $this->assertDatabaseHas('gallery_images', [
             'id' => $image2->id,
             'is_cover' => true,
         ]);
-        
+
         $this->assertDatabaseHas('gallery_images', [
             'id' => $image1->id,
             'is_cover' => false,
@@ -186,13 +186,13 @@ class GalleryTest extends TestCase
         Storage::fake('public');
         $this->loginAsEditor();
         $news = News::factory()->create();
-        
+
         $image1 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
             'order' => 0,
         ]);
-        
+
         $image2 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
@@ -204,12 +204,12 @@ class GalleryTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        
+
         $this->assertDatabaseHas('gallery_images', [
             'id' => $image2->id,
             'order' => 0,
         ]);
-        
+
         $this->assertDatabaseHas('gallery_images', [
             'id' => $image1->id,
             'order' => 1,
@@ -222,7 +222,7 @@ class GalleryTest extends TestCase
         Storage::fake('public');
         $this->loginAsEditor();
         $news = News::factory()->create();
-        
+
         $image = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
@@ -240,14 +240,14 @@ class GalleryTest extends TestCase
         Storage::fake('public');
         $this->loginAsEditor();
         $news = News::factory()->create();
-        
+
         $image1 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
             'is_cover' => true,
             'order' => 0,
         ]);
-        
+
         $image2 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,

@@ -15,9 +15,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class GalleryImage extends Model
 {
-    use SoftDeletes,
-        HasFactory,
-        LogsActivity;
+    use SoftDeletes;
+    use HasFactory;
+    use LogsActivity;
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
@@ -81,7 +81,7 @@ class GalleryImage extends Model
     public function getSizeUrl(string $size): string
     {
         $sizePath = $this->getSizePath($size);
-        
+
         if (Storage::disk($this->disk)->exists($sizePath)) {
             return Storage::disk($this->disk)->url($sizePath);
         }

@@ -89,13 +89,13 @@ class GalleryServiceTest extends TestCase
     {
         Storage::fake('public');
         $news = News::factory()->create();
-        
+
         $image1 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
             'order' => 0,
         ]);
-        
+
         $image2 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
@@ -116,13 +116,13 @@ class GalleryServiceTest extends TestCase
     {
         Storage::fake('public');
         $news = News::factory()->create();
-        
+
         $image1 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
             'is_cover' => true,
         ]);
-        
+
         $image2 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
@@ -143,19 +143,19 @@ class GalleryServiceTest extends TestCase
     {
         Storage::fake('public');
         $news = News::factory()->create();
-        
+
         $image1 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
             'is_cover' => true,
         ]);
-        
+
         $image2 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
             'is_cover' => false,
         ]);
-        
+
         $image3 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
@@ -173,14 +173,14 @@ class GalleryServiceTest extends TestCase
     {
         Storage::fake('public');
         $news = News::factory()->create();
-        
+
         $image1 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
             'is_cover' => true,
             'order' => 0,
         ]);
-        
+
         $image2 = GalleryImage::factory()->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
@@ -199,7 +199,7 @@ class GalleryServiceTest extends TestCase
     {
         Storage::fake('public');
         $news = News::factory()->create();
-        
+
         GalleryImage::factory()->count(3)->create([
             'imageable_type' => News::class,
             'imageable_id' => $news->id,
@@ -219,7 +219,7 @@ class GalleryServiceTest extends TestCase
     {
         Storage::fake('public');
         $news = News::factory()->create();
-        
+
         $maxImages = config('gallery.max_images');
         GalleryImage::factory()->count($maxImages)->create([
             'imageable_type' => News::class,
