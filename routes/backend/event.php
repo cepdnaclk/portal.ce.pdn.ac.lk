@@ -59,4 +59,22 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
     Route::get('events/preview/{event}', function (Event $event){
         return view('backend.event.preview', compact('event'));
     })->name('event.preview');
+
+    // Gallery management routes
+    Route::get('events/{event}/gallery', [\App\Http\Controllers\Backend\GalleryController::class, 'index'])
+        ->name('event.gallery.index')
+        ->breadcrumbs(function (Trail $trail, Event $event) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Event'), route('dashboard.event.index'))
+                ->push(__('Gallery'));
+        });
+
+    Route::post('events/{event}/gallery/upload', [\App\Http\Controllers\Backend\GalleryController::class, 'upload'])
+        ->name('event.gallery.upload');
+
+    Route::put('events/{event}/gallery/{image}/cover', [\App\Http\Controllers\Backend\GalleryController::class, 'setCover'])
+        ->name('event.gallery.set-cover');
+
+    Route::post('events/{event}/gallery/reorder', [\App\Http\Controllers\Backend\GalleryController::class, 'reorder'])
+        ->name('event.gallery.reorder');
 });

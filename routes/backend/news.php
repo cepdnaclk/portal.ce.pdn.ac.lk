@@ -59,4 +59,28 @@ Route::group(['middleware' => ['permission:user.access.editor.news']], function 
     Route::get('news/preview/{news}', function (News $news) {
         return view('backend.news.preview', compact('news'));
     })->name('news.preview');
+
+    // Gallery management routes
+    Route::get('news/{news}/gallery', [\App\Http\Controllers\Backend\GalleryController::class, 'index'])
+        ->name('news.gallery.index')
+        ->breadcrumbs(function (Trail $trail, News $news) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('News'), route('dashboard.news.index'))
+                ->push(__('Gallery'));
+        });
+
+    Route::post('news/{news}/gallery/upload', [\App\Http\Controllers\Backend\GalleryController::class, 'upload'])
+        ->name('news.gallery.upload');
+
+    Route::put('news/{news}/gallery/{image}/cover', [\App\Http\Controllers\Backend\GalleryController::class, 'setCover'])
+        ->name('news.gallery.set-cover');
+
+    Route::post('news/{news}/gallery/reorder', [\App\Http\Controllers\Backend\GalleryController::class, 'reorder'])
+        ->name('news.gallery.reorder');
+
+    Route::put('gallery/{image}', [\App\Http\Controllers\Backend\GalleryController::class, 'update'])
+        ->name('gallery.update');
+
+    Route::delete('gallery/{image}', [\App\Http\Controllers\Backend\GalleryController::class, 'destroy'])
+        ->name('gallery.destroy');
 });
