@@ -2,9 +2,11 @@
 
 namespace App\Domains\Gallery\Models;
 
+use Database\Factories\GalleryImageFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -14,6 +16,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class GalleryImage extends Model
 {
     use SoftDeletes,
+        HasFactory,
         LogsActivity;
 
     protected static $logFillable = true;
@@ -151,6 +154,16 @@ class GalleryImage extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('order', 'asc');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return GalleryImageFactory::new();
     }
 
     /**

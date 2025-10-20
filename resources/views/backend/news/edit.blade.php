@@ -133,6 +133,11 @@
             </x-slot>
 
             <x-slot name="footer">
+                @if(config('gallery.enabled'))
+                    <a href="{{ route('dashboard.news.gallery.index', $news) }}" class="btn btn-secondary">
+                        <i class="fas fa-images"></i> Manage Gallery
+                    </a>
+                @endif
                 {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-end', 'id' => 'submit-button']) !!}
             </x-slot>
 

@@ -201,6 +201,11 @@
                 </div>
             </x-slot>
             <x-slot name="footer">
+                @if(config('gallery.enabled'))
+                    <a href="{{ route('dashboard.event.gallery.index', $event) }}" class="btn btn-secondary">
+                        <i class="fas fa-images"></i> Manage Gallery
+                    </a>
+                @endif
                 {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-end']) !!}
             </x-slot>
 
