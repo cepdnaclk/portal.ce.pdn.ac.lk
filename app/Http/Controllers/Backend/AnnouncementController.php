@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 class AnnouncementController extends Controller
 {
-
     /**
      * Show the form for creating a new resource.
      *
@@ -83,7 +82,7 @@ class AnnouncementController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Announcement $announcement)
-    {  
+    {
         $data = request()->validate([
             'area' => ['required', Rule::in(array_keys(Announcement::areas()))],
             'type' => ['required', Rule::in(array_keys(Announcement::types()))],

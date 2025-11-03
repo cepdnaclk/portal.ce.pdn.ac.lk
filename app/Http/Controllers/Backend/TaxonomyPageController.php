@@ -18,7 +18,6 @@ use Jfcherng\Diff\DiffHelper;
 
 class TaxonomyPageController extends Controller
 {
-
     public function create()
     {
         try {
@@ -40,7 +39,7 @@ class TaxonomyPageController extends Controller
                 'string',
                 'max:255',
                 'unique:taxonomy_pages',
-                new Slug
+                new Slug()
             ],
             'html'         => 'string',
         ]);
@@ -84,10 +83,14 @@ class TaxonomyPageController extends Controller
             ->where('subject_id', $taxonomyPage->id)
             ->with(['causer', 'subject'])
             ->orderByDesc('created_at')
-            ->get()
-            ->toArray();
+            ->paginate(15);
 
-        foreach ($activities as &$activity) {
+        // Convert activities items to array for processing
+        $activitiesData = $activities->items();
+
+        foreach ($activitiesData as &$activity) {
+            // Convert model to array
+            $activity = $activity->toArray();
             $diffs = [];
             if ($activity['description'] === 'created') {
                 if ($activity['properties']) {
@@ -148,6 +151,9 @@ class TaxonomyPageController extends Controller
             $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
         }
 
+        // Replace items in paginator with processed data
+        $activities->setCollection(collect($activitiesData));
+
         return view('backend.taxonomy_page.history', [
             'taxonomyPage' => $taxonomyPage,
             'activities'   => $activities,
@@ -177,7 +183,7 @@ class TaxonomyPageController extends Controller
                 'required',
                 'string',
                 'max:255',
-                new Slug,
+                new Slug(),
                 Rule::unique('taxonomy_pages')->ignore($taxonomyPage->slug, 'slug')
             ],
             'html' => 'string',
