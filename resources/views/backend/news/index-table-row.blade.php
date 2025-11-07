@@ -43,6 +43,9 @@
             <a href="{{ route('dashboard.news.edit', $row) }}" class="btn  btn-info"><i class="fa fa-pencil"
                     title="Edit"></i>
             </a>
+            <a href="{{ route('dashboard.news.gallery.index', $row) }}" class="btn btn-secondary">
+                <i class="fa fa-picture-o" title="Edit Gallery"></i>
+            </a>
             <a href="{{ route('dashboard.news.delete', $row) }}" class="btn  btn-danger"><i class="fa fa-trash"
                     title="Delete"></i>
             </a>
