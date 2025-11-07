@@ -51,10 +51,26 @@ class News extends Model
    */
   public function thumbURL()
   {
-    if ($cover = $this->coverImage()->first()) {
+    $cover = $this->cover_image;
+    if ($cover) {
       return $cover->getSizeUrl('thumb');
     }
     return asset(ltrim(config('gallery.dummy_thumb'), '/'));
+  }
+
+  /**
+   * Accessor for the cover image, avoids N+1 queries.
+   *
+   * @return \App\Domains\Gallery\Models\GalleryImage|null
+   */
+  public function getCoverImageAttribute()
+  {
+    // If the relationship is already loaded, use it
+    if ($this->relationLoaded('coverImage')) {
+      return $this->getRelationValue('coverImage');
+    }
+    // Otherwise, query for it
+    return $this->coverImage()->first();
   }
 
   /**

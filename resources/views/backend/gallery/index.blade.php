@@ -28,7 +28,7 @@
                                 <input type="file" class="form-control" id="images" name="images[]" multiple
                                     accept="image/jpeg" required>
                                 <small class="form-text text-muted">
-                                    Recommended to use <b>4:3 aspect ration</b> for the best view.
+                                    Recommended to use <b>4:3 aspect ratio</b> for the best view.
                                     Only JPEG images are allowed. Maximum size:
                                     <b>{{ config('gallery.max_file_size') / 1024 }}MB</b> per image.
                                     Minimum dimensions:
