@@ -14,7 +14,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 /**
  * Base content model shared by News and Event domains.
  */
-abstract class ContentItem extends Model
+abstract class BaseContent extends Model
 {
   use HasFactory,
     LogsActivity;

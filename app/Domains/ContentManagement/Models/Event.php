@@ -5,12 +5,12 @@ namespace App\Domains\ContentManagement\Models;
 use Database\Factories\EventFactory;
 use App\Domains\ContentManagement\Models\Traits\Scope\EventScope;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
-use App\Domains\ContentManagement\Models\ContentItem;
+use App\Domains\ContentManagement\Models\BaseContent;
 
 /**
  * Class Event.
  */
-class Event extends ContentItem
+class Event extends BaseContent
 {
   use EventScope;
 

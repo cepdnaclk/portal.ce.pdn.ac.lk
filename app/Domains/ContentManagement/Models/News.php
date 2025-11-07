@@ -2,14 +2,14 @@
 
 namespace App\Domains\ContentManagement\Models;
 
-use App\Domains\ContentManagement\Models\ContentItem;
+use App\Domains\ContentManagement\Models\BaseContent;
 use Database\Factories\NewsFactory;
 use App\Domains\ContentManagement\Models\Traits\Scope\NewsScope;
 
 /**
  * Class News.
  */
-class News extends ContentItem
+class News extends BaseContent
 {
   use NewsScope;
 
