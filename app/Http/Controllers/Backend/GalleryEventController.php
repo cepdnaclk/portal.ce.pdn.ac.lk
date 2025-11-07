@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Domains\Event\Models\Event;
+use App\Domains\ContentManagement\Models\Event;
 
 class GalleryEventController extends GalleryController
 {

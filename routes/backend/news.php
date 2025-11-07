@@ -1,7 +1,7 @@
 <?php
 
 use Tabuna\Breadcrumbs\Trail;
-use App\Domains\News\Models\News;
+use App\Domains\ContentManagement\Models\News;
 use App\Http\Controllers\Backend\GalleryNewsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\NewsController;

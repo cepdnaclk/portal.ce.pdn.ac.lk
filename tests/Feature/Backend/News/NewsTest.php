@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Backend\News;
 
-use App\Domains\News\Models\News;
+use App\Domains\ContentManagement\Models\News;
 use App\Domains\Auth\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;

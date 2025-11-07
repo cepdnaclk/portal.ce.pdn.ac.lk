@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\Gallery\Models\GalleryImage;
-use App\Domains\News\Models\News;
+use App\Domains\ContentManagement\Models\News;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
