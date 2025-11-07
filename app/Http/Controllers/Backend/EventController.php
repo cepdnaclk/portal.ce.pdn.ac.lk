@@ -160,7 +160,9 @@ class EventController extends Controller
     {
         if ($currentURL != null) {
             $oldImage = public_path($currentURL);
-            if (File::exists($oldImage))  unlink($oldImage);
+            if (File::exists($oldImage)) {
+                unlink($oldImage);
+            }
         }
     }
 

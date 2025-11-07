@@ -143,8 +143,12 @@ class TaxonomyController extends Controller
     {
         $originalMap = [];
         $updatedMap = [];
-        foreach ($original as $item)  $originalMap[$item->code] = $item;
-        foreach ($updated as $item) $updatedMap[$item->code] = $item;
+        foreach ($original as $item) {
+            $originalMap[$item->code] = $item;
+        }
+        foreach ($updated as $item) {
+            $updatedMap[$item->code] = $item;
+        }
 
         // Ensure existing items are not modified
         foreach ($originalMap as $code => $originalItem) {
@@ -189,12 +193,14 @@ class TaxonomyController extends Controller
         })
             ->with(['causer', 'subject'])
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(15);
 
-        // Convert activities collection to array
-        $activities = $activities->toArray();
+        // Convert activities items to array for processing
+        $activitiesData = $activities->items();
 
-        foreach ($activities as &$activity) {
+        foreach ($activitiesData as &$activity) {
+            // Convert model to array
+            $activity = $activity->toArray();
             $diffs = [];
             if ($activity['description'] === 'created') {
                 // Created
@@ -213,7 +219,7 @@ class TaxonomyController extends Controller
                         );
                     }
                 }
-            } else if ($activity['description'] === 'deleted') {
+            } elseif ($activity['description'] === 'deleted') {
                 // Deleted
                 foreach ($activity['properties']['attributes'] as $field => $oldValue) {
                     $oldString = is_array($oldValue)
@@ -228,7 +234,7 @@ class TaxonomyController extends Controller
                         Config::get('diff-helper.render_options', [])
                     );
                 }
-            } else if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
+            } elseif (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
                 // Updated
                 foreach ($activity['properties']['attributes'] as $field => $newValue) {
                     $oldValue = $activity['properties']['old'][$field] ?? null;
@@ -258,6 +264,9 @@ class TaxonomyController extends Controller
             $activity['diffs'] = $diffs;
             $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
         }
+
+        // Replace items in paginator with processed data
+        $activities->setCollection(collect($activitiesData));
 
         return view('backend.taxonomy.history', [
             'taxonomy'   => $taxonomy,
