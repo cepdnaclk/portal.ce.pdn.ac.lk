@@ -64,9 +64,11 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
   // Gallery management routes
   Route::get('events/{event}/gallery', [GalleryEventController::class, 'index'])
     ->name('event.gallery.index')
-    ->breadcrumbs(function (Trail $trail) {
+    ->breadcrumbs(function (Trail $trail, $event) {
+      $eventModel = Event::findOrFail($event);
       $trail->push(__('Home'), route('dashboard.home'))
         ->push(__('Event'), route('dashboard.event.index'))
+        ->push(__($eventModel->title), route('dashboard.event.edit', $eventModel))
         ->push(__('Gallery'));
     });
 

@@ -63,9 +63,11 @@ Route::group(['middleware' => ['permission:user.access.editor.news']], function 
   // Gallery management routes
   Route::get('news/{news}/gallery', [GalleryNewsController::class, 'index'])
     ->name('news.gallery.index')
-    ->breadcrumbs(function (Trail $trail) {
+    ->breadcrumbs(function (Trail $trail, $news) {
+      $newsModel = News::findOrFail($news);
       $trail->push(__('Home'), route('dashboard.home'))
         ->push(__('News'), route('dashboard.news.index'))
+        ->push(__($newsModel->title), route('dashboard.news.edit', $newsModel))
         ->push(__('Gallery'));
     });
 
