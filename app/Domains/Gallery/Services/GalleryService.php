@@ -81,7 +81,7 @@ class GalleryService
     // Generate unique filename
     $disk = config('gallery.disk');
     $extension = $file->getClientOriginalExtension();
-    $filename = Str::random(10) . '.' . $extension;
+    $filename = time() . mt_rand(1, 9) . '.' . $extension;
     $basePath = config('gallery.storage_path');
     $path = "{$basePath}/{$filename}";
 
