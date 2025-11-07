@@ -72,6 +72,7 @@
                     </div>
                 </div>
 
+                {{--
                 <!-- Image -->
                 <div class="form-group row" x-data="{
                     imagePreview: '{{ $news->thumbURL() }}',
@@ -94,6 +95,7 @@
                             style="max-width: 150px; max-height: 150px; object-fit: cover;" />
                     </div>
                 </div>
+                --}}
 
 
                 <!-- Enabled -->
@@ -133,12 +135,13 @@
             </x-slot>
 
             <x-slot name="footer">
-                @if(config('gallery.enabled'))
-                    <a href="{{ route('dashboard.news.gallery.index', $news) }}" class="btn btn-secondary">
-                        <i class="fas fa-images"></i> Manage Gallery
+                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-end ms-2', 'id' => 'submit-button']) !!}
+                @if (config('gallery.enabled'))
+                    <a href="{{ route('dashboard.news.gallery.index', $news) }}"
+                        class="btn btn-secondary btn-w-150  float-end">
+                        <i class="fas fa-images me-2"></i> Manage Gallery
                     </a>
                 @endif
-                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-end', 'id' => 'submit-button']) !!}
             </x-slot>
 
         </x-backend.card>

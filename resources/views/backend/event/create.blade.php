@@ -81,6 +81,7 @@
                     </div>
                 </div>
 
+                {{--
                 <!-- Image -->
                 <div class="form-group row" x-data="{
                     imagePreview: null,
@@ -104,6 +105,7 @@
                         </div>
                     </div>
                 </div>
+                --}}
 
                 <!-- Enabled -->
                 <div class="form-group row">

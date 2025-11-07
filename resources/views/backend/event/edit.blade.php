@@ -86,6 +86,7 @@
                     </div>
                 </div>
 
+                {{--
                 <!-- Image -->
                 <div class="form-group row" x-data="{
                     imagePreview: '{{ $event->thumbURL() }}',
@@ -108,15 +109,15 @@
                             style="max-width: 150px; max-height: 150px; object-fit: cover;" />
                     </div>
                 </div>
+                --}}
 
                 <!-- Enabled -->
                 <div class="form-group row">
                     {!! Form::label('enabled', 'Enabled', ['class' => 'col-md-2 form-check-label']) !!}
 
                     <div class="col-md-4 form-check form-switch mx-4">
-                        <input type="checkbox" id="checkEnable" name="enabled"
-                            value={{ $event->enable ? 'checked' : '""' }} class="form-check-input checkbox-lg"
-                            {{ $event->enabled == 1 ? 'checked' : '' }} />
+                        <input type="checkbox" id="checkEnable" name="enabled" value={{ $event->enable ? 'checked' : '""' }}
+                            class="form-check-input checkbox-lg" {{ $event->enabled == 1 ? 'checked' : '' }} />
                         <label class="form-check-label" for="checkEnable">&nbsp;</label>
                         @error('enabled')
                             <strong class="text-danger">{{ $message }}</strong>
@@ -169,7 +170,7 @@
                     </div>
                 </div>
 
-                <!-- Dnd time -->
+                <!-- End time -->
                 <div class="form-group row">
                     {!! Form::label('end_at', 'End Time', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-4">
@@ -201,12 +202,13 @@
                 </div>
             </x-slot>
             <x-slot name="footer">
-                @if(config('gallery.enabled'))
-                    <a href="{{ route('dashboard.event.gallery.index', $event) }}" class="btn btn-secondary">
-                        <i class="fas fa-images"></i> Manage Gallery
+                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-end ms-2', 'id' => 'submit-button']) !!}
+                @if (config('gallery.enabled'))
+                    <a href="{{ route('dashboard.event.gallery.index', $event) }}"
+                        class="btn btn-secondary btn-w-150  float-end">
+                        <i class="fas fa-images me-2"></i> Manage Gallery
                     </a>
                 @endif
-                {!! Form::submit('Update', ['class' => 'btn btn-primary btn-w-150 float-end']) !!}
             </x-slot>
 
         </x-backend.card>
