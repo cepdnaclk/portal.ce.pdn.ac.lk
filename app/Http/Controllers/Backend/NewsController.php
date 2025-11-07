@@ -101,11 +101,11 @@ class NewsController extends Controller
       'link_caption' => 'nullable|string',
     ]);
 
-    if ($request->hasFile('image')) {
-      $data['image'] = $this->uploadThumb($news->image, $request->image, "news");
-    } else {
-      $data['image'] = $news->image;
-    }
+    // if ($request->hasFile('image')) {
+    //   $data['image'] = $this->uploadThumb($news->image, $request->image, "news");
+    // } else {
+    //   $data['image'] = $news->image;
+    // }
 
     try {
       $news->update($data);
