@@ -74,7 +74,7 @@ class EventController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Event $event
+     * @param \App\Domains\ContentManagement\Models\Event $event
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function edit(Event $event)
@@ -86,7 +86,7 @@ class EventController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Event $event
+     * @param \App\Domains\ContentManagement\Models\Event $event
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Event $event)
@@ -130,7 +130,7 @@ class EventController extends Controller
     /**
      * Confirm to delete the specified resource from storage.
      *
-     * @param \App\Models\Event $event
+     * @param \App\Domains\ContentManagement\Models\Event $event
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function delete(Event $event)
@@ -141,7 +141,7 @@ class EventController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Event $event
+     * @param \App\Domains\ContentManagement\Models\Event $event
      * @param \App\Domains\Gallery\Services\GalleryService $galleryService
      * @return \Illuminate\Http\RedirectResponse|null
      */

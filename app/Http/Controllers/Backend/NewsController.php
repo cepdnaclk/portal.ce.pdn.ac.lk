@@ -136,7 +136,7 @@ class NewsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\News $news
+     * @param \App\Domains\ContentManagement\Models\News $news
      * @param \App\Domains\Gallery\Services\GalleryService $galleryService
      * @return \Illuminate\Http\RedirectResponse|null
      */
