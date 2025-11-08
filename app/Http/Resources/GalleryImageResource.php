@@ -18,12 +18,12 @@ class GalleryImageResource extends JsonResource
     return [
       // 'id' => $this->id,
       'filename' => $this->filename,
+      'order' => $this->order,
       'is_cover' => $this->is_cover,
       // 'original_filename' => $this->original_filename,
       'alt_text' => $this->alt_text,
       'caption' => $this->caption,
       'credit' => $this->credit,
-      // 'order' => $this->order,
       'urls' => $this->getAllSizes(),
       'metadata' => [
         'width' => $this->width,
