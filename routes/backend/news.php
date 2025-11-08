@@ -72,7 +72,8 @@ Route::group(['middleware' => ['permission:user.access.editor.news']], function 
     });
 
   Route::post('news/{news}/gallery/upload', [GalleryNewsController::class, 'upload'])
-    ->name('news.gallery.upload');
+    ->name('news.gallery.upload')
+    ->middleware('throttle:gallery-uploads');
 
   Route::put('news/{news}/gallery/{image}/cover', [GalleryNewsController::class, 'setCover'])
     ->name('news.gallery.set-cover');
