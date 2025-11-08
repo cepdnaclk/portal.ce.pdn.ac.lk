@@ -9,38 +9,39 @@ use Illuminate\Database\Seeder;
 
 class UserTypeRoleSeeder extends Seeder
 {
-    use DisableForeignKeys;
+  use DisableForeignKeys;
 
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        $this->disableForeignKeys();
+  /**
+   * Run the database seeds.
+   *
+   * @return void
+   */
+  public function run()
+  {
+    $this->disableForeignKeys();
 
-        // Create Roles for different user types
-        Role::firstOrCreate([
-            'type' => User::TYPE_USER,
-            'name' => 'Lecturer',
-        ]);
+    // Create Roles for different user types
 
-        Role::firstOrCreate([
-            'type' => User::TYPE_USER,
-            'name' => 'Student',
-        ]);
+    // Student Level Roles
+    Role::firstOrCreate([
+      'type' => User::TYPE_USER,
+      'name' => 'Student',
+    ]);
 
-        Role::firstOrCreate([
-            'type' => User::TYPE_USER,
-            'name' => 'Temporary Academic Staff',
-        ]);
+    // Staff Level Roles
+    Role::firstOrCreate([
+      'type' => User::TYPE_USER,
+      'name' => 'Lecturer',
+    ]);
+    Role::firstOrCreate([
+      'type' => User::TYPE_USER,
+      'name' => 'Temporary Academic Staff',
+    ]);
+    Role::firstOrCreate([
+      'type' => User::TYPE_USER,
+      'name' => 'Academic Support Staff',
+    ]);
 
-        Role::firstOrCreate([
-            'type' => User::TYPE_USER,
-            'name' => 'Academic Support Staff',
-        ]);
-
-        $this->enableForeignKeys();
-    }
+    $this->enableForeignKeys();
+  }
 }
