@@ -213,27 +213,6 @@ class GalleryController extends Controller
   }
 
   /**
-   * Permanently delete all gallery images attached to the given model.
-   *
-   * @param News|Event $imageable
-   * @return void
-   */
-  public function deleteGalleryForImageable($imageable): void
-  {
-    if (!$imageable) {
-      return;
-    }
-
-    DB::transaction(function () use ($imageable) {
-      $query = $imageable->gallery()->lockForUpdate();
-
-      foreach ($query->cursor() as $image) {
-        $image->forceDelete();
-      }
-    });
-  }
-
-  /**
    * Get the type from the model class.
    *
    * @param mixed $imageable
