@@ -33,4 +33,6 @@ _ide_helper.php
 .DS_Store
 
 # Backup Directory
-backups/
+backups/*
+
+.php-cs-fixer.cache
