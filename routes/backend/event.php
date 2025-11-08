@@ -73,7 +73,8 @@ Route::group(['middleware' => ['permission:user.access.editor.events']], functio
     });
 
   Route::post('events/{event}/gallery/upload', [GalleryEventController::class, 'upload'])
-    ->name('event.gallery.upload');
+    ->name('event.gallery.upload')
+    ->middleware('throttle:gallery-uploads');
 
   Route::put('events/{event}/gallery/{image}/cover', [GalleryEventController::class, 'setCover'])
     ->name('event.gallery.set-cover');
