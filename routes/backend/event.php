@@ -1,7 +1,7 @@
 <?php
 
 use Tabuna\Breadcrumbs\Trail;
-use App\Domains\Event\Models\Event;
+use App\Domains\ContentManagement\Models\Event;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\EventController;
 use App\Http\Controllers\Backend\GalleryEventController;

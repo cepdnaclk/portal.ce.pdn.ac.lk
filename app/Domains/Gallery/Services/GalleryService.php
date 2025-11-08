@@ -268,4 +268,25 @@ class GalleryService
       'can_add_more' => $gallery->count() < config('gallery.max_images'),
     ];
   }
+
+  /**
+   * Permanently delete all gallery images attached to the given model.
+   *
+   * @param mixed $imageable
+   * @return void
+   */
+  public function deleteGalleryForImageable($imageable): void
+  {
+    if (!$imageable) {
+      return;
+    }
+
+    DB::transaction(function () use ($imageable) {
+      $query = $imageable->gallery()->lockForUpdate();
+
+      foreach ($query->cursor() as $image) {
+        $image->forceDelete();
+      }
+    });
+  }
 }

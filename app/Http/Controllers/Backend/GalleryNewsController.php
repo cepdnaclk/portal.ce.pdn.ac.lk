@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Domains\News\Models\News;
+use App\Domains\ContentManagement\Models\News;
 
 class GalleryNewsController extends GalleryController
 {

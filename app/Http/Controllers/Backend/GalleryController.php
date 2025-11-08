@@ -8,8 +8,8 @@ use App\Domains\Gallery\Services\GalleryService;
 use App\Http\Requests\Gallery\UploadGalleryImagesRequest;
 use App\Http\Requests\Gallery\UpdateGalleryImageRequest;
 use App\Http\Requests\Gallery\ReorderGalleryImagesRequest;
-use App\Domains\News\Models\News;
-use App\Domains\Event\Models\Event;
+use App\Domains\ContentManagement\Models\News;
+use App\Domains\ContentManagement\Models\Event;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -210,27 +210,6 @@ class GalleryController extends Controller
         'message' => 'Failed to delete image',
       ], 500);
     }
-  }
-
-  /**
-   * Permanently delete all gallery images attached to the given model.
-   *
-   * @param News|Event $imageable
-   * @return void
-   */
-  public function deleteGalleryForImageable($imageable): void
-  {
-    if (!$imageable) {
-      return;
-    }
-
-    DB::transaction(function () use ($imageable) {
-      $query = $imageable->gallery()->lockForUpdate();
-
-      foreach ($query->cursor() as $image) {
-        $image->forceDelete();
-      }
-    });
   }
 
   /**
