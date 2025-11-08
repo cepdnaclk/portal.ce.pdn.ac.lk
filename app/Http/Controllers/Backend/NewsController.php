@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Domains\ContentManagement\Models\News;
+use App\Domains\Gallery\Services\GalleryService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
@@ -135,15 +136,15 @@ class NewsController extends Controller
   /**
    * Remove the specified resource from storage.
    *
-   * @param \App\Models\News $news
-   * @param \App\Http\Controllers\Backend\GalleryController $galleryController
+   * @param \App\Domains\ContentManagement\Models\News $news
+   * @param \App\Domains\Gallery\Services\GalleryService $galleryService
    * @return \Illuminate\Http\RedirectResponse|null
    */
-  public function destroy(News $news, GalleryController $galleryController)
+  public function destroy(News $news, GalleryService $galleryService)
   {
     try {
       // $this->deleteThumb($news->thumbURL());
-      $galleryController->deleteGalleryForImageable($news);
+      $galleryService->deleteGalleryForImageable($news);
       $news->delete();
 
 
