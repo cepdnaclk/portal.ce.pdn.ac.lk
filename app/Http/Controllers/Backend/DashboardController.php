@@ -14,9 +14,9 @@ class DashboardController
      */
     public function index()
     {
-        try{
+        try {
             return view('backend.dashboard');
-        }catch (\Exception $ex) {       
+        } catch (\Exception $ex) {
             Log::error('Failed to load dashboard', ['error' => $ex->getMessage()]);
             return abort(500);
         }
