@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Backend\GalleryController;
+use App\Http\Controllers\Backend\GalleryEventController;
+use App\Http\Controllers\Backend\GalleryNewsController;
 use App\Http\Controllers\Backend\TaxonomyFileController;
 use App\Http\Controllers\Backend\TaxonomyPageController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\Media\LegacyImageController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 /*
  * Global Routes
@@ -15,38 +18,44 @@ use Illuminate\Support\Facades\Storage;
 // Switch between the included languages
 Route::get('lang/{lang}', [LocaleController::class, 'change'])->name('locale.change');
 
+
 /*
  * Frontend Routes
  */
 Route::group(['as' => 'frontend.'], function () {
-    includeRouteFiles(__DIR__ . '/frontend/');
+  includeRouteFiles(__DIR__ . '/frontend/');
 });
 
 /**
  * Intranet Routes
  */
 Route::group(['prefix' => 'intranet', 'as' => 'intranet.', 'middleware' => 'auth'], function () {
-    includeRouteFiles(__DIR__ . '/intranet/');
+  includeRouteFiles(__DIR__ . '/intranet/');
 });
 
 /*
  * Backend Routes
  */
 Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function () {
-    includeRouteFiles(__DIR__ . '/backend/');
+  includeRouteFiles(__DIR__ . '/backend/');
 });
 
 // Download
 
 Route::group(
-    ['prefix' => 'download', 'as' => 'download.'],
-    function () {
-        Route::get('taxonomy/{file_name}.{extension}', [TaxonomyFileController::class, 'download'])
-            ->name('taxonomy-file')
-            ->withoutMiddleware(['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']);
+  ['prefix' => 'download', 'as' => 'download.'],
+  function () {
+    Route::get('taxonomy/{file_name}.{extension}', [TaxonomyFileController::class, 'download'])
+      ->name('taxonomy-file')
+      ->withoutMiddleware(['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']);
 
-        Route::get('taxonomy-page/{slug}', [TaxonomyPageController::class, 'download'])
-            ->name('taxonomy-page')
-            ->withoutMiddleware(['permission:user.access.taxonomy.page.editor|user.access.taxonomy.page.viewer']);
-    }
+    Route::get('taxonomy-page/{slug}', [TaxonomyPageController::class, 'download'])
+      ->name('taxonomy-page')
+      ->withoutMiddleware(['permission:user.access.taxonomy.page.editor|user.access.taxonomy.page.viewer']);
+
+    // For News and Event Galleries
+    Route::get('gallery/{path}', [GalleryController::class, 'download'])
+      ->where('path', '.*')
+      ->name('gallery');
+  }
 );

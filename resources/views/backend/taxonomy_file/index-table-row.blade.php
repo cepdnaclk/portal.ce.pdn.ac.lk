@@ -32,23 +32,23 @@
 
 <x-livewire-tables::table.cell>
     <div class="d-flex px-0 mt-0 mb-0">
-        {{-- Download --}}
-        <a href="{{ route('download.taxonomy-file', [
-            'file_name' => $row->file_name,
-            'extension' => $row->getFileExtension(),
-        ]) }}"
-            class="btn btn-sm btn-secondary me-3" target="_blank">
-            <i class="fa fa-download" title="{{ __('Download') }}"></i>
-        </a>
-
-        <!-- Manage Button -->
-        <div class="btn-group" role="group" aria-label="{{ __('Actions') }}">
-
+        <div class="btn-group me-3" role="group" aria-label="View Buttons">
             {{-- View Button --}}
             <a href="{{ route('dashboard.taxonomy-files.view', $row) }}" class="btn btn-sm btn-primary">
                 <i class="fa fa-eye" title="{{ __('View') }}"></i>
             </a>
+            {{-- Download --}}
+            <a href="{{ route('download.taxonomy-file', [
+                'file_name' => $row->file_name,
+                'extension' => $row->getFileExtension(),
+            ]) }}"
+                class="btn btn-sm btn-secondary" target="_blank">
+                <i class="fa fa-download" title="{{ __('Download') }}"></i>
+            </a>
+        </div>
 
+        <!-- Manage Button -->
+        <div class="btn-group" role="group" aria-label="{{ __('Actions') }}">
             @if ($logged_in_user->hasPermissionTo('user.access.taxonomy.file.editor'))
                 {{-- Edit --}}
                 <a href="{{ route('dashboard.taxonomy-files.edit', $row) }}" class="btn btn-sm btn-warning">

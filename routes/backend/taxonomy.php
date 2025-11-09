@@ -4,6 +4,7 @@ use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\TaxonomyController;
 use App\Http\Controllers\Backend\TaxonomyFileController;
 use App\Http\Controllers\Backend\TaxonomyPageController;
+use App\Http\Controllers\Backend\TaxonomyListController;
 use App\Http\Controllers\Backend\TaxonomyTermController;
 use Illuminate\Support\Facades\Route;
 
@@ -230,6 +231,84 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user
         // Destroy (DELETE)
         Route::delete('taxonomy-files/{taxonomyFile}', [TaxonomyFileController::class, 'destroy'])
             ->name('taxonomy-files.destroy');
+    });
+});
+
+// Taxonomy Lists
+Route::group(['middleware' => ['permission:user.access.taxonomy.list.editor|user.access.taxonomy.list.viewer']], function () {
+    Route::get('taxonomy-lists', function () {
+        return view('backend.taxonomy_list.index');
+    })
+        ->name('taxonomy-lists.index')
+        ->breadcrumbs(function (Trail $trail) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Taxonomy Lists'), route('dashboard.taxonomy-lists.index'));
+        });
+
+    Route::get('taxonomy-lists/view/{taxonomyList}', [TaxonomyListController::class, 'view'])
+        ->name('taxonomy-lists.view')
+        ->breadcrumbs(function (Trail $trail, $taxonomyList) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Taxonomy Lists'), route('dashboard.taxonomy-lists.index'))
+                ->push($taxonomyList->name)
+                ->push(__('View'));
+        });
+
+    Route::get('taxonomy-lists/history/{taxonomyList}', [TaxonomyListController::class, 'history'])
+        ->name('taxonomy-lists.history')
+        ->breadcrumbs(function (Trail $trail, $taxonomyList) {
+            $trail->push(__('Home'), route('dashboard.home'))
+                ->push(__('Taxonomy Lists'), route('dashboard.taxonomy-lists.index'))
+                ->push($taxonomyList->name)
+                ->push(__('History'));
+        });
+
+    Route::group(['middleware' => ['permission:user.access.taxonomy.list.editor']], function () {
+        Route::get('taxonomy-lists/create', [TaxonomyListController::class, 'create'])
+            ->name('taxonomy-lists.create')
+            ->breadcrumbs(function (Trail $trail) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy Lists'), route('dashboard.taxonomy-lists.index'))
+                    ->push(__('Create'));
+            });
+
+        Route::post('taxonomy-lists', [TaxonomyListController::class, 'store'])
+            ->name('taxonomy-lists.store');
+
+        Route::get('taxonomy-lists/edit/{taxonomyList}', [TaxonomyListController::class, 'edit'])
+            ->name('taxonomy-lists.edit')
+            ->breadcrumbs(function (Trail $trail, $taxonomyList) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy Lists'), route('dashboard.taxonomy-lists.index'))
+                    ->push($taxonomyList->name)
+                    ->push(__('Edit'), route('dashboard.taxonomy-lists.edit', $taxonomyList));
+            });
+        Route::put('taxonomy-lists/manage/{taxonomyList}', [TaxonomyListController::class, 'update'])
+            ->name('taxonomy-lists.update');
+
+        // Manage Items
+        Route::get('taxonomy-lists/manage/{taxonomyList}', [TaxonomyListController::class, 'manage'])
+            ->name('taxonomy-lists.manage')
+            ->breadcrumbs(function (Trail $trail, $taxonomyList) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy Lists'), route('dashboard.taxonomy-lists.index'))
+                    ->push($taxonomyList->name, route('dashboard.taxonomy-lists.edit', $taxonomyList))
+                    ->push(__('Manage'), route('dashboard.taxonomy-lists.manage', $taxonomyList));
+            });
+        Route::put('taxonomy-lists/{taxonomyList}', [TaxonomyListController::class, 'update_list'])
+            ->name('taxonomy-lists.update_list');
+
+        Route::get('taxonomy-lists/delete/{taxonomyList}', [TaxonomyListController::class, 'delete'])
+            ->name('taxonomy-lists.delete')
+            ->breadcrumbs(function (Trail $trail, $taxonomyList) {
+                $trail->push(__('Home'), route('dashboard.home'))
+                    ->push(__('Taxonomy Lists'), route('dashboard.taxonomy-lists.index'))
+                    ->push($taxonomyList->name)
+                    ->push(__('Delete'));
+            });
+
+        Route::delete('taxonomy-lists/{taxonomyList}', [TaxonomyListController::class, 'destroy'])
+            ->name('taxonomy-lists.destroy');
     });
 });
 

@@ -59,6 +59,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="mt-3">
+                    {{ $activities->links() }}
+                </div>
             </x-slot>
         </x-backend.card>
     </div>
