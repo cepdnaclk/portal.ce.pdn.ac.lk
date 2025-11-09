@@ -8,6 +8,9 @@
         "source.fixAll": "always"
     },
     "prettier.configPath": ".prettierrc.json",
+    "[php]": {
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+    },
     "[css]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
@@ -32,6 +35,7 @@
     //
     // pnpm --------------------------------------------------------------------------------------
     "npm.packageManager": "pnpm",
-    "npm.scriptRunner": "pnpm"
+    "npm.scriptRunner": "pnpm",
+    "cSpell.words": ["Imageable"]
     //
 }
