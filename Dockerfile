@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for Laravel (PHP-FPM + built assets)
 
 # 1) Composer stage: install PHP dependencies
-FROM composer:2 AS composer_deps
+FROM composer:2.2 AS composer_deps
 WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install \
@@ -13,7 +13,7 @@ RUN composer install \
   --no-scripts
 
 # 2) Node stage: build frontend assets with pnpm + Laravel Mix
-FROM node:20-alpine AS node_builder
+FROM node:22-alpine3.22 AS node_builder
 WORKDIR /app
 
 # Install pnpm matching repo's packageManager version

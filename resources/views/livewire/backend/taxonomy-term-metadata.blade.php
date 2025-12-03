@@ -42,6 +42,21 @@
                         </a>
                     @endif
                 </span>
+            @elseif ($property['data_type'] == 'list' && $logged_in_user->hasPermissionTo('user.access.taxonomy.list.editor'))
+                {{-- Taxonomy List --}}
+                <span class="ms-2">
+                    <a class="ms-2 text-decoration-none" target="_blank"
+                        href="{{ route('dashboard.taxonomy-lists.create') }}">
+                        <i class="fa fa-plus"></i>
+                    </a>
+
+                    @if (!empty($value) && isset($taxonomy_lists[$value]))
+                        <a class="ms-2 text-decoration-none" target="_blank"
+                            href="{{ route('dashboard.taxonomy-lists.edit', $value) }}">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    @endif
+                </span>
             @elseif ($property['data_type'] == 'taxonomy_term' && $logged_in_user->hasPermissionTo('user.access.taxonomy.page.editor'))
                 {{-- Taxonomy Term --}}
                 <span class="ms-2 text-danger">
@@ -155,6 +170,15 @@
                 @else
                     <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_pages)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
                         :placeholder="$taxonomy_pages[''] ?? 'Select a page'" :icon="'fa fa-globe'" :inputId="$property['code']" />
+                @endif
+            @break
+
+            @case('list')
+                @if (empty($taxonomy_lists) || count($taxonomy_lists) <= 1)
+                    <p><i>No taxonomy lists available for selection.</i></p>
+                @else
+                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_lists)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                        :placeholder="$taxonomy_lists[''] ?? 'Select a list'" :icon="'fa fa-list'" :inputId="$property['code']" />
                 @endif
             @break
 

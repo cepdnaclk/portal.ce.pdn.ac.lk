@@ -22,6 +22,7 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+.php-cs-fixer.cache
 
 package-lock.json
 
@@ -33,3 +34,5 @@ _ide_helper.php
 
 # Backup Directory
 backups/*
+
+.php-cs-fixer.cache

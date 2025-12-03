@@ -10,6 +10,8 @@ Internal and Public web service provider of the Department of Computer Engineeri
 
 ## Useful Commands and Instructions
 
+For contributor onboarding and coding standards, see the [Repository Guidelines](AGENTS.md).
+
 You need to install WAMP or XAMP server and run it before following commands.
 Please make sure you already created a Database and a Database User Account.
 

@@ -179,14 +179,14 @@ class TaxonomyTermController extends Controller
             ->where('subject_id', $term->id)
             ->with(['causer', 'subject'])
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(15);
 
+        // Convert activities items to array for processing
+        $activitiesData = $activities->items();
 
-        // Convert activities collection to array
-        $activities = $activities->toArray();
-
-
-        foreach ($activities as &$activity) {
+        foreach ($activitiesData as &$activity) {
+            // Convert model to array
+            $activity = $activity->toArray();
             $diffs = [];
             if (isset($activity['properties']['attributes']) && isset($activity['properties']['old'])) {
                 $attributes = $activity['properties']['attributes'];
@@ -241,6 +241,9 @@ class TaxonomyTermController extends Controller
             $activity['diffs'] = $diffs;
             $activity['created_at'] = Carbon::parse($activity['created_at'])->format('Y-m-d H:i');
         }
+
+        // Replace items in paginator with processed data
+        $activities->setCollection(collect($activitiesData));
 
         return view('backend.taxonomy.terms.history', [
             'taxonomy'   => $taxonomy,

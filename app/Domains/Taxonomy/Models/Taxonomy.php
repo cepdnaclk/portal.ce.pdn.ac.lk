@@ -42,6 +42,7 @@ class Taxonomy extends Model
         'url' => 'URL',
         'file' => 'File',
         'page' => 'Page',
+        'list' => 'List',
         'taxonomy_term' => 'Taxonomy Term'
     ];
 
@@ -105,6 +106,13 @@ class Taxonomy extends Model
         return $this->hasMany(TaxonomyPage::class, 'taxonomy_id')
             ->orderBy('slug', 'asc')
             ->pluck('slug', 'id');
+    }
+
+    public function lists()
+    {
+        return $this->hasMany(TaxonomyList::class, 'taxonomy_id')
+            ->orderBy('name', 'asc')
+            ->pluck('name', 'id');
     }
 
     public function first_child_terms()
