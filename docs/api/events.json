@@ -1,0 +1,323 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Events API",
+        "version": "1.0.0",
+        "description": "Endpoints for public events with filtering, upcoming, and past listings."
+    },
+    "servers": [
+        {
+            "url": "https://portal.ce.pdn.ac.lk/api",
+            "description": "API base"
+        }
+    ],
+    "paths": {
+        "/events/v1": {
+            "get": {
+                "summary": "List events",
+                "description": "Returns enabled events ordered by start date with optional filtering by event type.",
+                "tags": ["Events"],
+                "parameters": [
+                    {
+                        "name": "event_type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["Event", "ACES", "Hackers", "Seminar"]
+                        },
+                        "description": "Filter by event type."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated events list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "links": {
+                                            "$ref": "#/components/schemas/PaginationLinks"
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/v1/upcoming": {
+            "get": {
+                "summary": "Upcoming events",
+                "description": "Returns upcoming events ordered by start date ascending.",
+                "tags": ["Events"],
+                "responses": {
+                    "200": {
+                        "description": "Upcoming events",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "links": {
+                                            "$ref": "#/components/schemas/PaginationLinks"
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No events",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/v1/past": {
+            "get": {
+                "summary": "Past events",
+                "description": "Returns past events ordered by start date descending.",
+                "tags": ["Events"],
+                "responses": {
+                    "200": {
+                        "description": "Past events",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        },
+                                        "links": {
+                                            "$ref": "#/components/schemas/PaginationLinks"
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No events",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/v1/{id}": {
+            "get": {
+                "summary": "Get an event",
+                "description": "Returns a single event by numeric identifier.",
+                "tags": ["Events"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Event"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Event not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Event": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "title": { "type": "string" },
+                    "description": { "type": "string" },
+                    "url": { "type": "string", "format": "uri" },
+                    "author": { "type": "string" },
+                    "image": { "type": "string", "format": "uri" },
+                    "start_at": { "type": "string", "format": "date-time" },
+                    "end_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "event_type": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": ["Event", "ACES", "Hackers", "Seminar"]
+                        }
+                    },
+                    "location": { "type": "string", "nullable": true },
+                    "link_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
+                    "link_caption": { "type": "string", "nullable": true },
+                    "published_at": { "type": "string", "format": "date-time" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                },
+                "required": [
+                    "id",
+                    "title",
+                    "description",
+                    "url",
+                    "author",
+                    "image",
+                    "start_at",
+                    "event_type",
+                    "published_at",
+                    "created_at",
+                    "updated_at"
+                ]
+            },
+            "PaginationLinks": {
+                "type": "object",
+                "properties": {
+                    "first": { "type": "string", "format": "uri" },
+                    "last": { "type": "string", "format": "uri" },
+                    "prev": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
+                    "next": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    }
+                }
+            },
+            "PaginationMeta": {
+                "type": "object",
+                "properties": {
+                    "current_page": { "type": "integer" },
+                    "from": { "type": "integer", "nullable": true },
+                    "last_page": { "type": "integer" },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "url": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "nullable": true
+                                },
+                                "label": { "type": "string" },
+                                "active": { "type": "boolean" }
+                            }
+                        }
+                    },
+                    "path": { "type": "string", "format": "uri" },
+                    "per_page": { "type": "integer" },
+                    "to": { "type": "integer", "nullable": true },
+                    "total": { "type": "integer" }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": { "message": { "type": "string" } }
+            }
+        }
+    }
+}
