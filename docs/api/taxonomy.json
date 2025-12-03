@@ -7,12 +7,12 @@
     },
     "servers": [
         {
-            "url": "https://portal.ce.pdn.ac.lk/api",
+            "url": "https://portal.ce.pdn.ac.lk/api/taxonomy/v1",
             "description": "API base"
         }
     ],
     "paths": {
-        "/taxonomy/v1/": {
+        "/": {
             "get": {
                 "summary": "List taxonomies",
                 "description": "Returns all visible taxonomies with basic metadata.",
@@ -63,7 +63,7 @@
                 }
             }
         },
-        "/taxonomy/v1/{taxonomy_code}": {
+        "/{taxonomy_code}": {
             "get": {
                 "summary": "Get a taxonomy",
                 "description": "Returns a single taxonomy if it is visible.",
@@ -119,7 +119,7 @@
                 }
             }
         },
-        "/taxonomy/v1/term/{term_code}": {
+        "/term/{term_code}": {
             "get": {
                 "summary": "Get a taxonomy term",
                 "description": "Returns a single term; response includes top-level taxonomy code and child terms if present.",

@@ -7,12 +7,12 @@
     },
     "servers": [
         {
-            "url": "https://portal.ce.pdn.ac.lk/api",
+            "url": "https://portal.ce.pdn.ac.lk/api/academic/v1",
             "description": "API base"
         }
     ],
     "paths": {
-        "/academic/v1/undergraduate/courses": {
+        "/undergraduate/courses": {
             "get": {
                 "summary": "List undergraduate courses",
                 "description": "Returns courses for the undergraduate program with optional filtering.",
@@ -81,7 +81,7 @@
                 }
             }
         },
-        "/academic/v1/undergraduate/semesters": {
+        "/undergraduate/semesters": {
             "get": {
                 "summary": "List undergraduate semesters",
                 "description": "Returns semesters for the undergraduate program with optional filtering.",

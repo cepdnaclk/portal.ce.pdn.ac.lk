@@ -7,12 +7,12 @@
     },
     "servers": [
         {
-            "url": "https://portal.ce.pdn.ac.lk/api",
+            "url": "https://portal.ce.pdn.ac.lk/api/news/v1",
             "description": "API base"
         }
     ],
     "paths": {
-        "/news/v1/": {
+        "/": {
             "get": {
                 "summary": "List published news",
                 "description": "Returns the latest enabled news items paginated in batches of 20.",
@@ -55,7 +55,7 @@
                 }
             }
         },
-        "/news/v1/{id}": {
+        "/{id}": {
             "get": {
                 "summary": "Get a news item",
                 "description": "Returns a single news item by numeric identifier.",

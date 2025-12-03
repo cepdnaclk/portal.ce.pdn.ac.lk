@@ -7,12 +7,12 @@
     },
     "servers": [
         {
-            "url": "https://portal.ce.pdn.ac.lk/api",
+            "url": "https://portal.ce.pdn.ac.lk/api/events/v1",
             "description": "API base"
         }
     ],
     "paths": {
-        "/events/v1": {
+        "/": {
             "get": {
                 "summary": "List events",
                 "description": "Returns enabled events ordered by start date with optional filtering by event type.",
@@ -67,7 +67,7 @@
                 }
             }
         },
-        "/events/v1/upcoming": {
+        "/upcoming": {
             "get": {
                 "summary": "Upcoming events",
                 "description": "Returns upcoming events ordered by start date ascending.",
@@ -120,7 +120,7 @@
                 }
             }
         },
-        "/events/v1/past": {
+        "/past": {
             "get": {
                 "summary": "Past events",
                 "description": "Returns past events ordered by start date descending.",
@@ -173,7 +173,7 @@
                 }
             }
         },
-        "/events/v1/{id}": {
+        "/{id}": {
             "get": {
                 "summary": "Get an event",
                 "description": "Returns a single event by numeric identifier.",
