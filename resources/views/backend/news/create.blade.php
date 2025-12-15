@@ -69,32 +69,6 @@
                     </div>
                 </div>
 
-                {{--
-                <!-- Image -->
-                <div class="form-group row" x-data="{
-                    imagePreview: null,
-                    updatePreview(event) {
-                        const file = event.target.files[0];
-                        const reader = new FileReader();
-                        reader.onload = (e) => { this.imagePreview = e.target.result; };
-                        if (file) reader.readAsDataURL(file);
-                    }
-                }">
-                    {!! Form::label('image', 'Image', ['class' => 'col-md-2 col-form-label']) !!}
-                    <div class="col-md-10">
-                        {!! Form::file('image', ['accept' => 'image/*', 'x-on:change' => 'updatePreview($event)']) !!}
-                        @error('image')
-                            <strong class="text-danger">{{ $message }}</strong>
-                        @enderror
-
-                        <div x-show="imagePreview" style="margin-top: 10px;">
-                            <img x-bind:src="imagePreview" alt="Image Preview"
-                                style="max-width: 200px; max-height: 200px; object-fit: cover;" />
-                        </div>
-                    </div>
-                </div>
-                --}}
-
                 <!-- Enabled -->
                 <div class="form-group row">
                     {!! Form::label('enabled', 'Enabled*', ['class' => 'col-md-2 form-check-label']) !!}

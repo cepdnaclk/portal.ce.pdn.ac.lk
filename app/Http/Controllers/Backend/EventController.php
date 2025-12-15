@@ -106,12 +106,6 @@ class EventController extends Controller
       'location' => 'string|required',
     ]);
 
-    // if ($request->hasFile('image')) {
-    //   $data['image'] = $this->uploadThumb($event->image, $request->image, "events");
-    // } else {
-    //   $data['image'] = $event->image;
-    // }
-
     try {
       $event->update($data);
 
@@ -157,24 +151,4 @@ class EventController extends Controller
       return abort(500);
     }
   }
-
-  // // Private function to handle deleting images
-  // private function deleteThumb($currentURL)
-  // {
-  //   if ($currentURL != null) {
-  //     $oldImage = public_path($currentURL);
-  //     if (File::exists($oldImage))  unlink($oldImage);
-  //   }
-  // }
-
-  // // Private function to handle uploading  images
-  // private function uploadThumb($currentURL, $newImage, $folder)
-  // {
-  //   $this->deleteThumb($currentURL);
-
-  //   $imageName = time() . '.' . $newImage->extension();
-  //   $newImage->move(public_path('img/' . $folder), $imageName);
-  //   $imagePath = "/img/$folder/" . $imageName;
-  //   $image = Image::make(public_path($imagePath));
-  //   $image->save();
 }

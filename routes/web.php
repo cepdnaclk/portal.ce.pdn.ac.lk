@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 // Switch between the included languages
 Route::get('lang/{lang}', [LocaleController::class, 'change'])->name('locale.change');
 
-
 /*
  * Frontend Routes
  */

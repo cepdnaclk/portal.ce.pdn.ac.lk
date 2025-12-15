@@ -102,12 +102,6 @@ class NewsController extends Controller
       'link_caption' => 'nullable|string',
     ]);
 
-    // if ($request->hasFile('image')) {
-    //   $data['image'] = $this->uploadThumb($news->image, $request->image, "news");
-    // } else {
-    //   $data['image'] = $news->image;
-    // }
-
     try {
       $news->update($data);
       $news->enabled = ($request->enabled != null);
@@ -154,30 +148,4 @@ class NewsController extends Controller
       return abort(500);
     }
   }
-
-  // // Private function to handle deleting images
-  // private function deleteThumb($currentURL)
-  // {
-  //   if ($currentURL != null && $currentURL != config('constants.frontend.dummy_thumb')) {
-  //     $oldImage = public_path($currentURL);
-  //     if (File::exists($oldImage)) {
-  //       unlink($oldImage);
-  //     }
-  //   }
-  // }
-
-  // // Private function to handle uploading  images
-  // private function uploadThumb($currentURL, $newImage, $folder)
-  // {
-  //   // Delete the existing image
-  //   $this->deleteThumb($currentURL);
-
-  //   $imageName = time() . '.' . $newImage->extension();
-  //   $newImage->move(public_path('img/' . $folder), $imageName);
-  //   $imagePath = "/img/$folder/" . $imageName;
-  //   $image = Image::make(public_path($imagePath));
-  //   $image->save();
-
-  //   return $imageName;
-  // }
 }
