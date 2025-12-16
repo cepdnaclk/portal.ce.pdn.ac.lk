@@ -34,7 +34,13 @@
                             {!! Form::label('taxonomy_id', 'Related Taxonomy (Optional)', ['class' => 'form-label']) !!}
 
                             @if (count($taxonomyList->items ?? []) > 0)
-                                {!! Form::text('taxonomy_id', null, ['class' => 'form-control', 'readonly' => true]) !!}
+                                {!! Form::select(
+                                    'taxonomy_id_select',
+                                    $taxonomies->pluck('name', 'id')->prepend(__('— none —'), ''),
+                                    $taxonomyList->taxonomy_id,
+                                    ['class' => 'form-select', 'disabled' => 'disabled'],
+                                ) !!}
+                                {!! Form::hidden('taxonomy_id', $taxonomyList->taxonomy_id) !!}
 
                                 <small class="text-muted">
                                     {{ __('Related Taxonomy cannot be changed while the list contains items.') }}

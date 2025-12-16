@@ -103,7 +103,7 @@
                                         <div class="mt-3 d-flex justify-content-between">
                                             <button type="button" class="btn btn-sm btn-primary save-metadata-btn"
                                                 data-id="{{ $image->id }}">
-                                                <i class="fas fa-save"></i> Save
+                                                <i class="fas fa-save"></i> Update
                                             </button>
                                             <button type="button" class="btn btn-sm btn-danger delete-image-btn"
                                                 data-id="{{ $image->id }}">
