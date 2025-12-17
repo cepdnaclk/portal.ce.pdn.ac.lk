@@ -32,27 +32,12 @@
                     @isset($taxonomies)
                         <div class="mb-3">
                             {!! Form::label('taxonomy_id', 'Related Taxonomy (Optional)', ['class' => 'form-label']) !!}
-
-                            @if (count($taxonomyList->items ?? []) > 0)
-                                {!! Form::select(
-                                    'taxonomy_id_select',
-                                    $taxonomies->pluck('name', 'id')->prepend(__('— none —'), ''),
-                                    $taxonomyList->taxonomy_id,
-                                    ['class' => 'form-select', 'disabled' => 'disabled'],
-                                ) !!}
-                                {!! Form::hidden('taxonomy_id', $taxonomyList->taxonomy_id) !!}
-
-                                <small class="text-muted">
-                                    {{ __('Related Taxonomy cannot be changed while the list contains items.') }}
-                                </small>
-                            @else
-                                {!! Form::select(
-                                    'taxonomy_id',
-                                    $taxonomies->pluck('name', 'id')->prepend(__('— none —'), ''),
-                                    $taxonomyList->taxonomy_id,
-                                    ['class' => 'form-select'],
-                                ) !!}
-                            @endif
+                            {!! Form::select(
+                                'taxonomy_id',
+                                $taxonomies->pluck('name', 'id')->prepend(__('— none —'), ''),
+                                $taxonomyList->taxonomy_id,
+                                ['class' => 'form-select'],
+                            ) !!}
                             @error('taxonomy_id')
                                 <strong class="text-danger">{{ $message }}</strong>
                             @enderror
