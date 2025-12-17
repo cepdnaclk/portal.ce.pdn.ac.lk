@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Storage;
 
 class TaxonomyFileController extends Controller
 {
-
     public function create()
     {
         try {

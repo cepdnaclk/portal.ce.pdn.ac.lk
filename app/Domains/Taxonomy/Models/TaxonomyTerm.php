@@ -3,6 +3,7 @@
 namespace App\Domains\Taxonomy\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Http\Resources\TaxonomyListItemResource;
 use App\Http\Resources\TaxonomyTermResource;
 use Database\Factories\TaxonomyTermFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -85,6 +86,16 @@ class TaxonomyTerm extends Model
                                 'download.taxonomy-page',
                                 ['slug' => $taxonomyPage->slug]
                             );
+                        }
+                    } elseif ($taxonomyCode == 'list') {
+                        $listCacheKey = 'taxonomy_' . (int)$this->taxonomy_id . '_list_' . (int)$metadataValue;
+                        $taxonomyListResource = cache()->remember($listCacheKey, 300, function () use ($metadataValue) {
+                            $taxonomyList = TaxonomyList::with('taxonomy')->find($metadataValue);
+                            return $taxonomyList ? TaxonomyListItemResource::make($taxonomyList) : null;
+                        });
+
+                        if ($taxonomyListResource) {
+                            $response[$code] = $taxonomyListResource;
                         }
                     } elseif ($taxonomyCode == 'datetime') {
                         $timestamp = false;

@@ -40,6 +40,10 @@ class TaxonomyRoleSeeder extends Seeder
                 'name' => 'user.access.taxonomy.page',
                 'description' => 'Manage Taxonomy Pages',
             ],
+            [
+                'name' => 'user.access.taxonomy.list',
+                'description' => 'Manage Taxonomy Lists',
+            ],
         ];
 
         foreach ($permissions as $permissionData) {

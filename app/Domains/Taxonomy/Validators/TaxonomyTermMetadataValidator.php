@@ -43,6 +43,8 @@ class TaxonomyTermMetadataValidator
                 return 'nullable|integer|exists:taxonomy_files,id';
             case 'page':
                 return 'nullable|integer|exists:taxonomy_pages,id';
+            case 'list':
+                return 'nullable|integer|exists:taxonomy_lists,id';
             case 'taxonomy_term':
                 return 'nullable|integer|exists:taxonomy_terms,id';
             default:

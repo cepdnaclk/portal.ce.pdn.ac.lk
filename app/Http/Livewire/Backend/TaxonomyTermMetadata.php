@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Backend;
 
 use App\Domains\Taxonomy\Models\Taxonomy;
+use App\Domains\Taxonomy\Models\TaxonomyList;
 use Livewire\Component;
 use Illuminate\Support\Facades\Cache;
 
@@ -14,6 +15,7 @@ class TaxonomyTermMetadata extends Component
     public $taxonomy_files = [];
     public $taxonomy_pages = [];
     public $taxonomy_terms = [];
+    public $taxonomy_lists = [];
 
     public function mount($property, $term = null, $taxonomy = null)
     {
@@ -34,6 +36,15 @@ class TaxonomyTermMetadata extends Component
             foreach ($taxonomy->pages()->toArray() as $key => $page_slug) {
                 $this->taxonomy_pages[$key] = $page_slug;
             }
+
+            $this->taxonomy_lists = ['' => 'Select a list'];
+            foreach ($taxonomy->lists()->toArray() as $key => $listName) {
+                $this->taxonomy_lists[$key] = $listName;
+            }
+            // Load Non-related Taxonomy Lists
+            // foreach (TaxonomyList::whereNull('taxonomy_id')->orderBy('name')->get(['id', 'name']) as $globalList) {
+            //     $this->taxonomy_lists[$globalList->id] = $globalList->name;
+            // }
 
             // Build a list of child taxonomy terms (non-root) for selection
             $this->taxonomy_terms = Cache::remember('taxonomy_terms_hierarchical_list_' . ($this->term->id ?? 'all'), 300, function () {

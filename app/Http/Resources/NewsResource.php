@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Domains\Auth\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\URL;
+use App\Http\Resources\GalleryImageResource;
 
 class NewsResource extends JsonResource
 {
@@ -28,7 +29,7 @@ class NewsResource extends JsonResource
             'published_at' => $this->published_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-
+            'gallery' => config('gallery.enabled') ? GalleryImageResource::collection($this->whenLoaded('gallery')) : [],
         ];
     }
 }
