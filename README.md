@@ -72,7 +72,7 @@ pnpm run watch
 
 #### Tenants (multi-site content)
 
-- Define tenants in `config/tenants.php` with `slug`, `url`, `description`.
+- Define tenants in `config/tenants.php` with `slug`, `name`, `url`, `description`.
 - The `default` tenant slug controls the content returned by v1 APIs.
 - Sync tenants from config with:
 
@@ -80,10 +80,10 @@ pnpm run watch
 php artisan tenants:sync
 ```
 
-##### API examples (v2 tenant-aware)
+##### API examples (v2 tenant-aware APIs)
 
-- News: `GET /api/v2/{tenant_slug}/news`
-- Events: `GET /api/v2/{tenant_slug}/events`
+- News: `GET /api/news/v2/{tenant_slug}`
+- Events: `GET /api/events/v2/{tenant_slug}`
 - For unknown tenant slugs, v2 returns `404 Tenant not found`.
 
 #### Cache and optimization
