@@ -11,35 +11,35 @@ use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
  */
 class UpdatePasswordRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
+  /**
+   * Determine if the user is authorized to make this request.
+   *
+   * @return bool
+   */
+  public function authorize()
+  {
+    return true;
+  }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            'current_password' => ['required', 'max:100'],
-            'password' => array_merge(
-                [
-                    'max:100',
-                    new UnusedPassword($this->user()),
-                ],
-                PasswordRules::changePassword(
-                    $this->email,
-                    config('boilerplate.access.user.password_history') ? 'current_password' : null
-                )
-            ),
-        ];
-    }
+  /**
+   * Get the validation rules that apply to the request.
+   *
+   * @return array
+   */
+  public function rules()
+  {
+    return [
+      'current_password' => ['required', 'max:100'],
+      'password' => array_merge(
+        [
+          'max:100',
+          new UnusedPassword($this->user()),
+        ],
+        PasswordRules::changePassword(
+          $this->email,
+          config('boilerplate.access.user.password_history') ? 'current_password' : null
+        )
+      ),
+    ];
+  }
 }

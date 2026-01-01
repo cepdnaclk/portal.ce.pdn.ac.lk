@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
  */
 class VerificationController
 {
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Email Verification Controller
     |--------------------------------------------------------------------------
@@ -21,28 +21,28 @@ class VerificationController
     |
     */
 
-    use VerifiesEmails;
+  use VerifiesEmails;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @return string
-     */
-    public function redirectPath()
-    {
-        return route(homeRoute());
-    }
+  /**
+   * Where to redirect users after login.
+   *
+   * @return string
+   */
+  public function redirectPath()
+  {
+    return route(homeRoute());
+  }
 
-    /**
-     * Show the email verification notice.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request)
-    {
-        return $request->user()->hasVerifiedEmail()
-            ? redirect($this->redirectPath())
-            : view('frontend.auth.verify');
-    }
+  /**
+   * Show the email verification notice.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function show(Request $request)
+  {
+    return $request->user()->hasVerifiedEmail()
+      ? redirect($this->redirectPath())
+      : view('frontend.auth.verify');
+  }
 }

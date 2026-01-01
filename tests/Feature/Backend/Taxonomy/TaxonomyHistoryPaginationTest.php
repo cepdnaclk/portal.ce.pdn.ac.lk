@@ -12,182 +12,182 @@ use Tests\TestCase;
 
 class TaxonomyHistoryPaginationTest extends TestCase
 {
-    use RefreshDatabase;
+  use RefreshDatabase;
 
-    /** @test */
-    public function test_taxonomy_history_displays_paginated_results()
-    {
-        $this->loginAsAdmin();
-        $taxonomy = Taxonomy::factory()->create();
+  /** @test */
+  public function test_taxonomy_history_displays_paginated_results()
+  {
+    $this->loginAsAdmin();
+    $taxonomy = Taxonomy::factory()->create();
 
-        // Create multiple activity log entries
-        for ($i = 0; $i < 20; $i++) {
-            activity()
-                ->performedOn($taxonomy)
-                ->causedBy(auth()->user())
-                ->withProperties(['attributes' => ['name' => "Update $i"]])
-                ->log('updated');
-        }
-
-        $response = $this->get(route('dashboard.taxonomy.history', $taxonomy));
-
-        $response->assertStatus(200);
-        // Should have pagination links when there are more than 15 items
-        $response->assertSee('pagination');
+    // Create multiple activity log entries
+    for ($i = 0; $i < 20; $i++) {
+      activity()
+        ->performedOn($taxonomy)
+        ->causedBy(auth()->user())
+        ->withProperties(['attributes' => ['name' => "Update $i"]])
+        ->log('updated');
     }
 
-    /** @test */
-    public function test_taxonomy_history_pagination_works()
-    {
-        $this->loginAsAdmin();
-        $taxonomy = Taxonomy::factory()->create();
+    $response = $this->get(route('dashboard.taxonomy.history', $taxonomy));
 
-        // Create exactly 20 activity log entries
-        for ($i = 0; $i < 20; $i++) {
-            activity()
-                ->performedOn($taxonomy)
-                ->causedBy(auth()->user())
-                ->withProperties(['attributes' => ['name' => "Update $i"]])
-                ->log('updated');
-        }
+    $response->assertStatus(200);
+    // Should have pagination links when there are more than 15 items
+    $response->assertSee('pagination');
+  }
 
-        // First page should have 15 items
-        $response = $this->get(route('dashboard.taxonomy.history', $taxonomy));
-        $response->assertStatus(200);
+  /** @test */
+  public function test_taxonomy_history_pagination_works()
+  {
+    $this->loginAsAdmin();
+    $taxonomy = Taxonomy::factory()->create();
 
-        // Second page should exist
-        $response = $this->get(route('dashboard.taxonomy.history', $taxonomy) . '?page=2');
-        $response->assertStatus(200);
+    // Create exactly 20 activity log entries
+    for ($i = 0; $i < 20; $i++) {
+      activity()
+        ->performedOn($taxonomy)
+        ->causedBy(auth()->user())
+        ->withProperties(['attributes' => ['name' => "Update $i"]])
+        ->log('updated');
     }
 
-    /** @test */
-    public function test_taxonomy_term_history_displays_paginated_results()
-    {
-        $this->loginAsAdmin();
-        $taxonomy = Taxonomy::factory()->create();
-        $term = TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
+    // First page should have 15 items
+    $response = $this->get(route('dashboard.taxonomy.history', $taxonomy));
+    $response->assertStatus(200);
 
-        // Create multiple activity log entries
-        for ($i = 0; $i < 20; $i++) {
-            activity()
-                ->performedOn($term)
-                ->causedBy(auth()->user())
-                ->withProperties(['attributes' => ['name' => "Update $i"]])
-                ->log('updated');
-        }
+    // Second page should exist
+    $response = $this->get(route('dashboard.taxonomy.history', $taxonomy) . '?page=2');
+    $response->assertStatus(200);
+  }
 
-        $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]));
+  /** @test */
+  public function test_taxonomy_term_history_displays_paginated_results()
+  {
+    $this->loginAsAdmin();
+    $taxonomy = Taxonomy::factory()->create();
+    $term = TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
 
-        $response->assertStatus(200);
-        // Should have pagination links when there are more than 15 items
-        $response->assertSee('pagination');
+    // Create multiple activity log entries
+    for ($i = 0; $i < 20; $i++) {
+      activity()
+        ->performedOn($term)
+        ->causedBy(auth()->user())
+        ->withProperties(['attributes' => ['name' => "Update $i"]])
+        ->log('updated');
     }
 
-    /** @test */
-    public function test_taxonomy_term_history_pagination_works()
-    {
-        $this->loginAsAdmin();
-        $taxonomy = Taxonomy::factory()->create();
-        $term = TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
+    $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]));
 
-        // Create exactly 20 activity log entries
-        for ($i = 0; $i < 20; $i++) {
-            activity()
-                ->performedOn($term)
-                ->causedBy(auth()->user())
-                ->withProperties(['attributes' => ['name' => "Update $i"]])
-                ->log('updated');
-        }
+    $response->assertStatus(200);
+    // Should have pagination links when there are more than 15 items
+    $response->assertSee('pagination');
+  }
 
-        // First page should load
-        $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]));
-        $response->assertStatus(200);
+  /** @test */
+  public function test_taxonomy_term_history_pagination_works()
+  {
+    $this->loginAsAdmin();
+    $taxonomy = Taxonomy::factory()->create();
+    $term = TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
 
-        // Second page should exist
-        $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]) . '?page=2');
-        $response->assertStatus(200);
+    // Create exactly 20 activity log entries
+    for ($i = 0; $i < 20; $i++) {
+      activity()
+        ->performedOn($term)
+        ->causedBy(auth()->user())
+        ->withProperties(['attributes' => ['name' => "Update $i"]])
+        ->log('updated');
     }
 
-    /** @test */
-    public function test_taxonomy_page_history_displays_paginated_results()
-    {
-        $this->loginAsAdmin();
-        $taxonomyPage = TaxonomyPage::factory()->create();
+    // First page should load
+    $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]));
+    $response->assertStatus(200);
 
-        // Create multiple activity log entries
-        for ($i = 0; $i < 20; $i++) {
-            activity()
-                ->performedOn($taxonomyPage)
-                ->causedBy(auth()->user())
-                ->withProperties(['attributes' => ['slug' => "update-$i"]])
-                ->log('updated');
-        }
+    // Second page should exist
+    $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]) . '?page=2');
+    $response->assertStatus(200);
+  }
 
-        $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage));
+  /** @test */
+  public function test_taxonomy_page_history_displays_paginated_results()
+  {
+    $this->loginAsAdmin();
+    $taxonomyPage = TaxonomyPage::factory()->create();
 
-        $response->assertStatus(200);
-        // Should have pagination links when there are more than 15 items
-        $response->assertSee('pagination');
+    // Create multiple activity log entries
+    for ($i = 0; $i < 20; $i++) {
+      activity()
+        ->performedOn($taxonomyPage)
+        ->causedBy(auth()->user())
+        ->withProperties(['attributes' => ['slug' => "update-$i"]])
+        ->log('updated');
     }
 
-    /** @test */
-    public function test_taxonomy_page_history_pagination_works()
-    {
-        $this->loginAsAdmin();
-        $taxonomyPage = TaxonomyPage::factory()->create();
+    $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage));
 
-        // Create exactly 20 activity log entries
-        for ($i = 0; $i < 20; $i++) {
-            activity()
-                ->performedOn($taxonomyPage)
-                ->causedBy(auth()->user())
-                ->withProperties(['attributes' => ['slug' => "update-$i"]])
-                ->log('updated');
-        }
+    $response->assertStatus(200);
+    // Should have pagination links when there are more than 15 items
+    $response->assertSee('pagination');
+  }
 
-        // First page should load
-        $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage));
-        $response->assertStatus(200);
+  /** @test */
+  public function test_taxonomy_page_history_pagination_works()
+  {
+    $this->loginAsAdmin();
+    $taxonomyPage = TaxonomyPage::factory()->create();
 
-        // Second page should exist
-        $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage) . '?page=2');
-        $response->assertStatus(200);
+    // Create exactly 20 activity log entries
+    for ($i = 0; $i < 20; $i++) {
+      activity()
+        ->performedOn($taxonomyPage)
+        ->causedBy(auth()->user())
+        ->withProperties(['attributes' => ['slug' => "update-$i"]])
+        ->log('updated');
     }
 
-    /** @test */
-    public function test_taxonomy_history_page_loads_correctly()
-    {
-        $this->loginAsAdmin();
-        $taxonomy = Taxonomy::factory()->create();
+    // First page should load
+    $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage));
+    $response->assertStatus(200);
 
-        $response = $this->get(route('dashboard.taxonomy.history', $taxonomy));
+    // Second page should exist
+    $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage) . '?page=2');
+    $response->assertStatus(200);
+  }
 
-        $response->assertStatus(200);
-        $response->assertSee('Change History for');
-    }
+  /** @test */
+  public function test_taxonomy_history_page_loads_correctly()
+  {
+    $this->loginAsAdmin();
+    $taxonomy = Taxonomy::factory()->create();
 
-    /** @test */
-    public function test_taxonomy_term_history_page_loads_correctly()
-    {
-        $this->loginAsAdmin();
-        $taxonomy = Taxonomy::factory()->create();
-        $term = TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
+    $response = $this->get(route('dashboard.taxonomy.history', $taxonomy));
 
-        $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]));
+    $response->assertStatus(200);
+    $response->assertSee('Change History for');
+  }
 
-        $response->assertStatus(200);
-        $response->assertSee('Change History for');
-    }
+  /** @test */
+  public function test_taxonomy_term_history_page_loads_correctly()
+  {
+    $this->loginAsAdmin();
+    $taxonomy = Taxonomy::factory()->create();
+    $term = TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
 
-    /** @test */
-    public function test_taxonomy_page_history_page_loads_correctly()
-    {
-        $this->loginAsAdmin();
-        $taxonomyPage = TaxonomyPage::factory()->create();
+    $response = $this->get(route('dashboard.taxonomy.terms.history', [$taxonomy, $term]));
 
-        $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage));
+    $response->assertStatus(200);
+    $response->assertSee('Change History for');
+  }
 
-        $response->assertStatus(200);
-        $response->assertSee('Change History for');
-    }
+  /** @test */
+  public function test_taxonomy_page_history_page_loads_correctly()
+  {
+    $this->loginAsAdmin();
+    $taxonomyPage = TaxonomyPage::factory()->create();
+
+    $response = $this->get(route('dashboard.taxonomy-pages.history', $taxonomyPage));
+
+    $response->assertStatus(200);
+    $response->assertSee('Change History for');
+  }
 }

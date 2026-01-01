@@ -12,39 +12,39 @@ use Tests\TestCase;
  */
 class VerificationTest extends TestCase
 {
-    /** @test */
-    public function an_unverified_user_cannot_access_dashboard()
-    {
-        $user = User::factory()->unconfirmed()->create();
+  /** @test */
+  public function an_unverified_user_cannot_access_dashboard()
+  {
+    $user = User::factory()->unconfirmed()->create();
 
-        $this->actingAs($user);
+    $this->actingAs($user);
 
-        $this->get('/intranet')->assertRedirect('/email/verify');
-    }
+    $this->get('/intranet')->assertRedirect('/email/verify');
+  }
 
-    /** @test */
-    public function an_unverified_user_cannot_access_account()
-    {
-        $user = User::factory()->unconfirmed()->create();
+  /** @test */
+  public function an_unverified_user_cannot_access_account()
+  {
+    $user = User::factory()->unconfirmed()->create();
 
-        $this->actingAs($user);
+    $this->actingAs($user);
 
-        $this->get('/intranet/account')->assertRedirect('/email/verify');
-    }
+    $this->get('/intranet/account')->assertRedirect('/email/verify');
+  }
 
-    /** @test */
-    public function a_user_can_resend_the_verification_email()
-    {
-        Notification::fake();
+  /** @test */
+  public function a_user_can_resend_the_verification_email()
+  {
+    Notification::fake();
 
-        $user = User::factory()->unconfirmed()->create();
+    $user = User::factory()->unconfirmed()->create();
 
-        $this->actingAs($user);
+    $this->actingAs($user);
 
-        $this->get('/intranet/account')->assertRedirect('/email/verify');
+    $this->get('/intranet/account')->assertRedirect('/email/verify');
 
-        $this->post('/email/resend');
+    $this->post('/email/resend');
 
-        Notification::assertSentTo($user, VerifyEmail::class);
-    }
+    Notification::assertSentTo($user, VerifyEmail::class);
+  }
 }

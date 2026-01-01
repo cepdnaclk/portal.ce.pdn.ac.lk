@@ -10,54 +10,54 @@ use App\Domains\Auth\Services\UserService;
  */
 class DeletedUserController
 {
-    /**
-     * @var UserService
-     */
-    protected $userService;
+  /**
+   * @var UserService
+   */
+  protected $userService;
 
-    /**
-     * DeletedUserController constructor.
-     *
-     * @param  UserService  $userService
-     */
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
-    }
+  /**
+   * DeletedUserController constructor.
+   *
+   * @param  UserService  $userService
+   */
+  public function __construct(UserService $userService)
+  {
+    $this->userService = $userService;
+  }
 
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index()
-    {
-        return view('backend.auth.user.deleted');
-    }
+  /**
+   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+   */
+  public function index()
+  {
+    return view('backend.auth.user.deleted');
+  }
 
-    /**
-     * @param  User  $deletedUser
-     * @return mixed
-     *
-     * @throws \App\Exceptions\GeneralException
-     */
-    public function update(User $deletedUser)
-    {
-        $this->userService->restore($deletedUser);
+  /**
+   * @param  User  $deletedUser
+   * @return mixed
+   *
+   * @throws \App\Exceptions\GeneralException
+   */
+  public function update(User $deletedUser)
+  {
+    $this->userService->restore($deletedUser);
 
-        return redirect()->route('dashboard.auth.user.index')->withFlashSuccess(__('The user was successfully restored.'));
-    }
+    return redirect()->route('dashboard.auth.user.index')->withFlashSuccess(__('The user was successfully restored.'));
+  }
 
-    /**
-     * @param  User  $deletedUser
-     * @return mixed
-     *
-     * @throws \App\Exceptions\GeneralException
-     */
-    public function destroy(User $deletedUser)
-    {
-        abort_unless(config('boilerplate.access.user.permanently_delete'), 404);
+  /**
+   * @param  User  $deletedUser
+   * @return mixed
+   *
+   * @throws \App\Exceptions\GeneralException
+   */
+  public function destroy(User $deletedUser)
+  {
+    abort_unless(config('boilerplate.access.user.permanently_delete'), 404);
 
-        $this->userService->destroy($deletedUser);
+    $this->userService->destroy($deletedUser);
 
-        return redirect()->route('dashboard.auth.user.deleted')->withFlashSuccess(__('The user was permanently deleted.'));
-    }
+    return redirect()->route('dashboard.auth.user.deleted')->withFlashSuccess(__('The user was permanently deleted.'));
+  }
 }

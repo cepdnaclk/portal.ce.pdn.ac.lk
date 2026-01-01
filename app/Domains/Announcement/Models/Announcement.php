@@ -13,68 +13,68 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class Announcement extends Model
 {
-    use AnnouncementScope,
-        HasFactory,
-        LogsActivity;
+  use AnnouncementScope,
+    HasFactory,
+    LogsActivity;
 
-    public const TYPE_FRONTEND = 'frontend';
-    public const TYPE_BACKEND = 'backend';
+  public const TYPE_FRONTEND = 'frontend';
+  public const TYPE_BACKEND = 'backend';
 
-    protected static $logFillable = true;
-    protected static $logOnlyDirty = true;
+  protected static $logFillable = true;
+  protected static $logOnlyDirty = true;
 
-    /**
-     * @var string[]
-     */
-    protected $fillable = [
-        'area',
-        'type',
-        'message',
-        'enabled',
-        'starts_at',
-        'ends_at',
+  /**
+   * @var string[]
+   */
+  protected $fillable = [
+    'area',
+    'type',
+    'message',
+    'enabled',
+    'starts_at',
+    'ends_at',
+  ];
+
+  /**
+   * @var string[]
+   */
+  protected $dates = [
+    'starts_at',
+    'ends_at',
+  ];
+
+  /**
+   * @var string[]
+   */
+  protected $casts = [
+    'enabled' => 'boolean',
+  ];
+
+  public static function areas()
+  {
+    return [
+      'frontend' => 'Frontend',
+      'backend' => 'Backend'
     ];
+  }
 
-    /**
-     * @var string[]
-     */
-    protected $dates = [
-        'starts_at',
-        'ends_at',
+  public static function types()
+  {
+    return [
+      'info' => 'Info',
+      'danger' => 'Danger',
+      'warning' => 'Warning',
+      'success' => 'Success'
     ];
+  }
 
-    /**
-     * @var string[]
-     */
-    protected $casts = [
-        'enabled' => 'boolean',
-    ];
-
-    public static function areas()
-    {
-        return [
-            'frontend' => 'Frontend',
-            'backend' => 'Backend'
-        ];
-    }
-
-    public static function types()
-    {
-        return [
-            'info' => 'Info',
-            'danger' => 'Danger',
-            'warning' => 'Warning',
-            'success' => 'Success'
-        ];
-    }
-
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    protected static function newFactory()
-    {
-        return AnnouncementFactory::new();
-    }
+  /**
+   * Create a new factory instance for the model.
+   *
+   * @return \Illuminate\Database\Eloquent\Factories\Factory
+   */
+  protected static function newFactory()
+  {
+    return AnnouncementFactory::new();
+  }
 }

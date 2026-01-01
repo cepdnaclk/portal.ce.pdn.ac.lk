@@ -19,7 +19,8 @@
                                 <label for="code" class="col-md-4 col-form-label text-md-right">@lang('Authorization Code')</label>
 
                                 <div class="col-md-6">
-                                    <input type="text" name="code" id="code" maxlength="10" class="form-control" placeholder="{{ __('Authorization Code') }}" required />
+                                    <input type="text" name="code" id="code" maxlength="10" class="form-control"
+                                        placeholder="{{ __('Authorization Code') }}" required />
                                 </div>
                             </div><!--form-group-->
 

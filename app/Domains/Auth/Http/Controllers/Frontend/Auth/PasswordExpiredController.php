@@ -10,30 +10,30 @@ use App\Domains\Auth\Services\UserService;
  */
 class PasswordExpiredController
 {
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function expired()
-    {
-        abort_unless(config('boilerplate.access.user.password_expires_days'), 404);
+  /**
+   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+   */
+  public function expired()
+  {
+    abort_unless(config('boilerplate.access.user.password_expires_days'), 404);
 
-        return view('frontend.auth.passwords.expired');
-    }
+    return view('frontend.auth.passwords.expired');
+  }
 
-    /**
-     * @param  UpdatePasswordRequest  $request
-     * @param  UserService  $userService
-     * @return mixed
-     *
-     * @throws \Throwable
-     */
-    public function update(UpdatePasswordRequest $request, UserService $userService)
-    {
-        abort_unless(config('boilerplate.access.user.password_expires_days'), 404);
+  /**
+   * @param  UpdatePasswordRequest  $request
+   * @param  UserService  $userService
+   * @return mixed
+   *
+   * @throws \Throwable
+   */
+  public function update(UpdatePasswordRequest $request, UserService $userService)
+  {
+    abort_unless(config('boilerplate.access.user.password_expires_days'), 404);
 
-        $userService->updatePassword($request->user(), $request->only('old_password', 'password'), true);
+    $userService->updatePassword($request->user(), $request->only('old_password', 'password'), true);
 
-        return redirect()->route('intranet.user.account')
-            ->withFlashSuccess(__('Password successfully updated.'));
-    }
+    return redirect()->route('intranet.user.account')
+      ->withFlashSuccess(__('Password successfully updated.'));
+  }
 }

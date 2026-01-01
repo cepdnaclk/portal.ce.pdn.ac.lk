@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard/home', 301);
 
 Route::get('home', [DashboardController::class, 'index'])
-    ->name('home')
-    ->breadcrumbs(function (Trail $trail) {
-        $trail->push(__('Home'), route('dashboard.home'));
-    });
+  ->name('home')
+  ->breadcrumbs(function (Trail $trail) {
+    $trail->push(__('Home'), route('dashboard.home'));
+  });

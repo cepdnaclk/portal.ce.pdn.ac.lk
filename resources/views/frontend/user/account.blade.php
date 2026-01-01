@@ -14,8 +14,9 @@
                     <x-slot name="body">
                         <nav>
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <x-utils.link :text="__('My Profile')" class="nav-link active" id="my-profile-tab" data-bs-toggle="pill"
-                                    href="#my-profile" role="tab" aria-controls="my-profile" aria-selected="true" />
+                                <x-utils.link :text="__('My Profile')" class="nav-link active" id="my-profile-tab"
+                                    data-bs-toggle="pill" href="#my-profile" role="tab" aria-controls="my-profile"
+                                    aria-selected="true" />
 
                                 <x-utils.link :text="__('Edit Information')" class="nav-link" id="information-tab" data-bs-toggle="pill"
                                     href="#information" role="tab" aria-controls="information" aria-selected="false" />

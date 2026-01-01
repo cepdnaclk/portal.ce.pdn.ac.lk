@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\ConfirmsPasswords;
  */
 class ConfirmPasswordController
 {
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Confirm Password Controller
     |--------------------------------------------------------------------------
@@ -21,22 +21,22 @@ class ConfirmPasswordController
     |
     */
 
-    use ConfirmsPasswords;
+  use ConfirmsPasswords;
 
-    /**
-     * Where to redirect users when the intended url fails.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
+  /**
+   * Where to redirect users when the intended url fails.
+   *
+   * @var string
+   */
+  protected $redirectTo = RouteServiceProvider::HOME;
 
-    /**
-     * Display the password confirmation view.
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function showConfirmForm()
-    {
-        return view('frontend.auth.passwords.confirm');
-    }
+  /**
+   * Display the password confirmation view.
+   *
+   * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+   */
+  public function showConfirmForm()
+  {
+    return view('frontend.auth.passwords.confirm');
+  }
 }

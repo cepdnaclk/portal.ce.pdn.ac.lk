@@ -16,7 +16,8 @@
         @if (config('boilerplate.locale.status') && count(config('boilerplate.locale.languages')) > 1)
             <li class="c-header-nav-item dropdown">
                 <x-utils.link :text="__(getLocaleName(app()->getLocale()))" class="c-header-nav-link dropdown-toggle"
-                    id="navbarDropdownLanguageLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                    id="navbarDropdownLanguageLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" />
 
                 @include('includes.partials.lang')
             </li>

@@ -11,37 +11,37 @@ use Tests\TestCase;
  */
 class ClearSessionTest extends TestCase
 {
-    use RefreshDatabase;
+  use RefreshDatabase;
 
-    /** @test */
-    public function only_a_user_with_correct_permissions_can_clear_user_sessions()
-    {
-        $this->actingAs($user = User::factory()->admin()->create());
+  /** @test */
+  public function only_a_user_with_correct_permissions_can_clear_user_sessions()
+  {
+    $this->actingAs($user = User::factory()->admin()->create());
 
-        $user->syncPermissions(['admin.access.user.clear-session']);
+    $user->syncPermissions(['admin.access.user.clear-session']);
 
-        $newUser = User::factory()->create();
+    $newUser = User::factory()->create();
 
-        $response = $this->post('/dashboard/auth/user/' . $newUser->id . '/clear-session');
+    $response = $this->post('/dashboard/auth/user/' . $newUser->id . '/clear-session');
 
-        $response->assertSessionHas('flash_success', __('The user\'s session was successfully cleared.'));
+    $response->assertSessionHas('flash_success', __('The user\'s session was successfully cleared.'));
 
-        $user->syncPermissions([]);
+    $user->syncPermissions([]);
 
-        $response = $this->post('/dashboard/auth/user/' . $newUser->id . '/clear-session');
+    $response = $this->post('/dashboard/auth/user/' . $newUser->id . '/clear-session');
 
-        $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
-    }
+    $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
+  }
 
-    /** @test */
-    public function a_user_can_not_clear_their_own_session()
-    {
-        $this->actingAs($user = User::factory()->admin()->create());
+  /** @test */
+  public function a_user_can_not_clear_their_own_session()
+  {
+    $this->actingAs($user = User::factory()->admin()->create());
 
-        $user->syncPermissions(['admin.access.user.clear-session']);
+    $user->syncPermissions(['admin.access.user.clear-session']);
 
-        $response = $this->post('/dashboard/auth/user/' . $user->id . '/clear-session');
+    $response = $this->post('/dashboard/auth/user/' . $user->id . '/clear-session');
 
-        $response->assertSessionHas('flash_danger', __('You can not clear your own session.'));
-    }
+    $response->assertSessionHas('flash_danger', __('You can not clear your own session.'));
+  }
 }
