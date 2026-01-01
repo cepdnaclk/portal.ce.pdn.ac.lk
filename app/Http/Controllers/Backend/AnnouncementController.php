@@ -58,7 +58,6 @@ class AnnouncementController extends Controller
     try {
       $announcement = new Announcement($data);
       $announcement->enabled = ($request->enabled != null);
-      $announcement->tenant_id = $data['tenant_id'];
       $announcement->save();
 
       return redirect()->route('dashboard.announcements.index', $announcement)->with('Success', 'Announcement was created !');
@@ -115,7 +114,6 @@ class AnnouncementController extends Controller
 
     try {
       $announcement->enabled = ($request->enabled != null);
-      $announcement->tenant_id = $data['tenant_id'];
       $announcement->update($data);
       return redirect()->route('dashboard.announcements.index')->with('Success', 'Announcement was updated !');
     } catch (\Exception $ex) {

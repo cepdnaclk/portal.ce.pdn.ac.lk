@@ -64,7 +64,6 @@ class NewsController extends Controller
       $news->enabled = ($request->enabled == 1);
       $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections
       $news->created_by = Auth::user()->id;
-      $news->tenant_id = $data['tenant_id'];
       $news->save();
 
 
@@ -125,7 +124,6 @@ class NewsController extends Controller
       $news->update($data);
       $news->enabled = ($request->enabled != null);
       $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections
-      $news->tenant_id = $data['tenant_id'];
       $news->save();
 
       return redirect()->route('dashboard.news.index')->with('Success', 'News was updated !');

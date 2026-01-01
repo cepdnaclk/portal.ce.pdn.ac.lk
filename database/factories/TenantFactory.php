@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Str;
+use Illuminate\Support\Str;
 
 class TenantFactory extends Factory
 {
