@@ -99,7 +99,23 @@ trait UserMethod
 
     $tenantId = $tenant instanceof Tenant ? $tenant->id : $tenant;
 
-    return $tenantId ? $this->tenants->contains('id', $tenantId) : false;
+    if (! $tenantId) {
+      return false;
+    }
+
+    if ($this->isAdmin() && $this->tenants()->count() === 0) {
+      return true;
+    }
+
+    if ($this->tenants->contains('id', $tenantId)) {
+      return true;
+    }
+
+    return $this->roles()
+      ->whereHas('tenants', function ($query) use ($tenantId) {
+        $query->whereKey($tenantId);
+      })
+      ->exists();
   }
 
   /**

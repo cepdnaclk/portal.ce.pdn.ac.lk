@@ -116,6 +116,22 @@ class TenantResolver
       return Tenant::query()->get();
     }
 
-    return $user->tenants()->get();
+    $userTenants = $user->tenants()->get();
+    $roleIds = $user->roles()->pluck('roles.id');
+
+    if ($roleIds->isEmpty()) {
+      return $userTenants;
+    }
+
+    $roleTenants = Tenant::query()
+      ->whereHas('roles', function ($query) use ($roleIds) {
+        $query->whereIn('roles.id', $roleIds);
+      })
+      ->get();
+
+    return $userTenants
+      ->merge($roleTenants)
+      ->unique('id')
+      ->values();
   }
 }

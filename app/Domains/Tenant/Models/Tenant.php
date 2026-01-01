@@ -2,6 +2,7 @@
 
 namespace App\Domains\Tenant\Models;
 
+use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,11 @@ class Tenant extends Model
   public function users(): BelongsToMany
   {
     return $this->belongsToMany(User::class, 'tenant_user');
+  }
+
+  public function roles(): BelongsToMany
+  {
+    return $this->belongsToMany(Role::class, 'tenant_role');
   }
 
   public static function default(): ?self

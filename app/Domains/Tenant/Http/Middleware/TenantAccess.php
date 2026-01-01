@@ -29,11 +29,7 @@ class TenantAccess
     $user = $request->user();
 
     if ($user && $explicitTenant && ! $user->hasAllAccess()) {
-      if ($user->isAdmin() && $user->tenants()->count() === 0) {
-        return $next($request);
-      }
-
-      $hasAccess = $user->tenants()->whereKey($tenant->id)->exists();
+      $hasAccess = $user->hasTenantAccess($tenant->id);
 
       if (! $hasAccess) {
         return $this->handleForbidden($request);
