@@ -2,72 +2,84 @@
 
 ## 1. Purpose and Scope
 
-- **Purpose**: Define the initial public portal capabilities delivered in phase 1.
-- **Scope**: Public-facing content publishing (news, events, announcements), basic intranet entry point, localization switcher, user authentication, and editor-facing dashboards.
+- Purpose: Specify the initial public portal and editorial capabilities shipped in phase 1.
+- Scope: Public-facing content (news, events, announcements), dashboard editing with galleries, localization switcher, authentication, and download endpoints reused by later phases.
+- Out of scope: Academic program and taxonomy capabilities (introduced in later phases).
 
-## 2. Release Context
+## 2. References
 
-- v0.1.0 — Layout changes; establishes the base Laravel/Vue portal shell and UI structure.
-- v1.0.0 — Manage News and Events; adds core content CMS for news/events.
-- v1.1.0 — Bug fixes and improvements.
-- v1.2.0 — Hardens first release series; stabilizes content workflows with additional features (Google Sign in, Preview Pages) and bug fixes.
+- Routes: `routes/backend/{news.php,event.php,announcements.php}`, `routes/web.php` (download/gallery and locale).
+- Data models: `database/migrations/2024_06_22_200003_create_news_table.php`, `2024_06_27_150621_create_events_table.php`, `2024_10_09_114038_add_event_type_to_events_table.php`, `2020_05_25_021239_create_announcements_table.php`.
+- API/OpenAPI: `docs/api/*.json` (public news/events endpoints).
 
 ## 3. Stakeholders and Users
 
-- Public visitors: consume published news, events, announcements.
-- Content editors (news/events/announcements): create, edit, preview, publish, and maintain assets.
-- Administrators: manage users/roles, approve content, and configure localization.
-- Intranet users: authenticated student/staff accessing dashboard entry points.
+- Public visitors: browse published news, events, and announcements.
+- Content editors: manage announcements, news, and events (including galleries).
+- Administrators: manage users/roles and enforce permissions.
+- Intranet users: authenticated staff/students accessing dashboard entry points.
 
-## 4. System Features and Functional Requirements
+## 4. Actors, Roles, and Permissions
 
-- F1 Authentication & Access Control
-  - Support user login/logout with Laravel auth; enforce role/permission checks on dashboard routes.
-  - Password reset via email token; session timeout aligned with security policy.
+- Authenticated dashboard users gated by `auth` middleware.
+- News editors: `permission:user.access.editor.news`.
+- Event editors: `permission:user.access.editor.events`.
+- Announcements: protected by dashboard auth; no additional permission middleware is defined in routes.
+
+## 5. Functional Requirements
+
+- F1 Authentication & Localization
+  - Provide login/logout and password reset flows via Laravel auth.
+  - Locale switching available at `lang/{lang}`; applies to public and dashboard views.
 - F2 Announcement Management
-  - Create/edit/delete announcements with effective/expiry dates.
-  - Publish/unpublish without deleting content; list announcements by recency.
+  - Create/edit/delete announcements with `area`, `type`, `message`, `starts_at`, `ends_at`, and `enabled` flags.
+  - Schedule visibility using start/end timestamps; deactivate via `enabled`.
 - F3 News Management
-  - Create/edit/delete news items with title, body, publish window, author, status (draft/published).
-  - Upload and manage image galleries per news item (upload, reorder, set cover, delete).
-  - Preview news before publish; public view routes for published items.
+  - Create/edit/delete news with `title`, `description`, `url` (unique slug), `image`, optional link (`link_url`, `link_caption`), `published_at`, `enabled`, and ownership metadata.
+  - Preview draft news via dashboard preview route before publish.
+  - Manage news galleries: upload (throttled by `gallery-uploads`), reorder, set cover, update captions, and delete images; public downloads served via `download/gallery/{path}`.
 - F4 Event Management
-  - Create/edit/delete events with scheduling metadata (start/end), venue, description, contacts.
-  - Manage per-event image galleries (upload, reorder, set cover, delete).
-  - Preview events before publish; public view routes for published events.
-- F5 Dashboard & Navigation
-  - Provide authenticated dashboard navigation for editors/admins; breadcrumbs for usability.
-- F6 Content Publishing Rules
-  - Only users with feature-specific permissions may create/update/delete content.
-  - Prevent public access to draft/unpublished items; enforce published state checks on frontend.
+  - Create/edit/delete events with `title`, `description`, `url`, `published_at`, `start_at`, `end_at`, `location`, `image`, optional link, `event_type` (JSON), `enabled`, and ownership metadata.
+  - Preview draft events; enforce required start time and optional end time.
+  - Manage event galleries with the same capabilities and throttling as news galleries.
+- F5 Dashboard Navigation and UX
+  - Breadcrumbs on dashboard routes for news/events/announcements.
+  - Separate index, create, edit, delete, preview, and gallery management screens per module.
+- F6 Publishing and Visibility Rules
+  - Only users with module permissions can mutate news/events; dashboard auth is required for announcements.
+  - Draft/disabled items stay hidden from public endpoints; downloads restricted to published/gallery assets only.
 
-## 5. Data Requirements
+## 6. Data Requirements
 
-- Persist news, events, and announcements with timestamps and owner metadata.
+- Persist announcements (`area`, `type`, `message`, `enabled`, `starts_at`, `ends_at`).
+- Persist news records and associated gallery assets; keep creator timestamps and ownership.
+- Persist event records with schedule metadata and galleries; retain creator timestamps and ownership.
+- Enforce uniqueness on news `url`, event `url`, and gallery file paths.
 
-## 6. External Interfaces
+## 7. External Interfaces
 
-- Web UI: Laravel Blade for public site and dashboard forms.
-- API: REST-style routes for public consumption of news/events (OpenAPI docs under `docs/api/*.json`).
-- Storage: File system for thumbnail uploads; download endpoints expose sanitized paths.
+- Web UI: Blade/Vue dashboard forms for CRUD and gallery management; Blade public pages for published content.
+  - Download endpoints: `download/gallery/{path}`; taxonomy downloads introduced later share the same group.
+- API: REST-style public routes for news/events (see `docs/api/*.json`).
+- Email: password reset delivery uses configured mail transport.
 
-## 7. Non-functional Requirements
+## 8. Non-functional Requirements
 
-- Availability: 99% monthly for public content; graceful error pages for outages.
-- Performance: Public pages render in <2s P95 on campus network.
-- Security: Enforce Role-Based Access Control (RBAC) on dashboard routes; validate file types/sizes.
-- Usability: Accessible navigation with breadcrumbs; mobile-friendly layouts for public content.
-- Maintainability: PSR-12 PHP, Prettier JS formatting; automated CI (Laravel CI badge) must pass.
+- Availability: public content available 99% monthly; graceful error pages for outages.
+- Performance: public pages and gallery downloads respond in <2s P95 on campus network.
+- Security: RBAC enforced via middleware; file uploads validated for type/size; gallery uploads throttled.
+- Usability: mobile-friendly public pages; breadcrumbs and previews for editors.
+- Maintainability: PSR-12 PHP and Prettier JS; CI (Laravel CI badge) must pass.
 
-## 8. Constraints and Assumptions
+## 9. Constraints and Assumptions
 
-- Laravel framework with Vue 2 frontend; PNPM/Composer managed dependencies.
-- Authentication uses session cookies; assumes HTTPS termination by deployment environment.
-- Email delivery configured externally for password resets/notifications.
-- Content editors are trained; no guest content creation.
+- Laravel backend with Vue 2 assets; dependencies managed via Composer/PNPM.
+- Session-cookie authentication; HTTPS termination handled by hosting environment.
+- Storage: local filesystem with `php artisan storage:link`; filenames sanitized on upload.
+- Editors are trained; no guest authoring.
 
-## 9. Acceptance Criteria
+## 10. Acceptance Criteria
 
-- Editors can create, preview, publish, and retire news/events/announcements.
-- Public visitors can view published items and assets without authentication (via APIs).
-- Role/permission checks block unauthorized access to dashboard routes.
+- Editors can create, preview, publish, and retire announcements, news, and events via dashboard routes.
+- Public visitors can view only enabled/published items and download gallery assets through sanctioned routes.
+- Permissions block unauthorized dashboard access for news/events; announcements remain within authenticated dashboard access.

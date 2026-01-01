@@ -2,86 +2,87 @@
 
 ## 1. Purpose and Scope
 
-- Purpose: Define requirements for the Taxonomy Integration introduced in phase 3.
-- Scope: Taxonomy data/term/page/file/list management, permissions for taxonomy roles, download endpoints, aliasing, and audit/history logging.
-- Out of scope: New course features (Phase 2) and non-taxonomy feature development beyond maintenance.
+- Purpose: Define the taxonomy-driven extensions delivered in phase 3.
+- Scope: Dashboard CRUD for taxonomies, terms, files, pages, and lists; download/alias endpoints; history logging; permission hardening; and integration with prior phases (content + academics).
+- Out of scope: New academic/course features beyond taxonomy reuse.
 
-## 2. Release Context
+## 2. References
 
-- v3.0.0 — Taxonomy Integration; introduces taxonomy data model and dashboards.
-- v3.1.0/v3.1.1 — Taxonomy permissions and hotfix; tightens access control, introduce a better WYSIWYG editor for News and Event pages.
-- v3.2.0 — Taxonomy Files integration support, and additional UI enhancements.
-- v3.3.0 — Taxonomy Pages, history logging and taxonomy feature integration for News and Event configs.
-- v3.3.1 — Hotfix: Adding missing prerequisites into course list API.
-- v3.3.2 — Hotfix: BS4 integration and fix for Gmail Login.
-- v3.3.3 — Hotfix: Manage permission for Taxonomy Files and Pages.
-- v3.3.4 — Hotfix: History logging for Taxonomy Files and Pages.
-- v3.4.0 — Taxonomy Term management enhancements and refined Role managements
-- v3.4.1 — Improved Livewire tables, fixed data length for Taxonomy items and API improvements on Taxonomy endpoints.
-- v3.4.2 — Taxonomy Lists feature, Gallery feature and API improvements and proper documentations.
-- v3.4.3 — Added SRS documents for phase 1-3.
+- Routes: `routes/backend/taxonomy.php`, download routes in `routes/web.php`.
+- Data models: `database/migrations/2024_10_11_120037_create_taxonomies_table.php`, `2025_06_17_084036_add_visibility_to_taxonomies_table.php`, `2024_10_12_085403_create_taxonomy_terms_table.php`, `2025_05_17_220220_create_taxonomy_files_table.php`, `2025_06_23_171806_create_taxonomy_pages_table.php`, `2025_10_08_000000_create_taxonomy_lists_table.php`, `2025_10_07_210632_update_taxonomy_code_length.php`.
+- Controllers: `App\Http\Controllers\Backend\{TaxonomyController,TaxonomyTermController,TaxonomyFileController,TaxonomyPageController,TaxonomyListController}`.
+- API/OpenAPI: `docs/api/taxonomy.json`.
 
 ## 3. Stakeholders and Users
 
-- Taxonomy administrators/editors: curate taxonomy structures, terms, files, and pages.
-- External Sub-systems: read/download published taxonomy content and media.
-- System administrators: manage permissions, audit logs, and operational health.
+- Taxonomy administrators/editors: manage structures, terms, files, pages, and lists.
+- External consumers: fetch taxonomy data and download published files/pages.
+- System administrators: govern permissions and audit history.
 
-## 4. System Features and Functional Requirements
+## 4. Actors, Roles, and Permissions
 
-- F1 Access Control
-  - Enforce fine-grained permissions: taxonomy data editor/viewer, taxonomy file editor/viewer, taxonomy page editor/viewer.
-  - Middleware must block unauthorized access and allow downloads only when permissions permit or when explicitly exempted (public downloads).
-- F2 Taxonomy Data Management
-  - Create/edit/delete taxonomy definitions with name, code, description, and publishing state.
-  - Provide alias resolution routes for taxonomy code and term code lookup.
-  - Maintain history views per taxonomy (timeline of changes).
-- F3 Taxonomy Term Management
-  - Create/edit/delete terms under a taxonomy with metadata (code, name, description, ordering).
-  - View term history; enforce referential integrity when deleting terms with children or attachments.
-- F4 Taxonomy Files
-  - Upload, view, edit, and delete taxonomy files with metadata (file name, description, taxonomy association).
-  - Download endpoint with path validation and throttling as configured.
-  - Record change history for file metadata/versions.
-- F5 Taxonomy Pages
-  - Create/edit/delete taxonomy-linked pages (rich content) with slug-based routing.
-  - Download/export HTML pages via dedicated endpoint.
-  - Track page history and expose viewable logs for editors.
+- Authenticated dashboard users with permission middleware:
+  - Data: `user.access.taxonomy.data.editor` or `user.access.taxonomy.data.viewer`.
+  - Files: `user.access.taxonomy.file.editor` or `user.access.taxonomy.file.viewer`.
+  - Pages: `user.access.taxonomy.page.editor` or `user.access.taxonomy.page.viewer`.
+  - Lists: `user.access.taxonomy.list.editor` or `user.access.taxonomy.list.viewer`.
+- Download exemptions: taxonomy file/page downloads remove permission middleware for public access where configured.
+
+## 5. Functional Requirements
+
+- F1 Taxonomy Data
+  - Create/edit/delete taxonomies with `code`, `name`, optional `description`, JSON `properties`, and `visibility` flag; history logged via `LogsActivity`.
+  - Alias routes resolve taxonomy by `code` and term by `code` (`/taxonomy/alias/{code}`, `/taxonomy/alias/term/{code}`).
+  - Breadcrumbed views for index, view, history, create, edit, delete.
+- F2 Terms
+  - Create/edit/delete terms under a taxonomy with unique `code`, `name`, `metadata` (JSON), optional `parent_id`, and ownership metadata.
+  - Maintain history views; enforce referential integrity for parent/child relationships.
+  - Redirect to term via alias route.
+- F3 Files
+  - Upload/view/edit/delete taxonomy files with `file_name`, unique `file_path`, optional `taxonomy_id`, JSON `metadata`, and ownership metadata.
+  - Download endpoint at `download/taxonomy/{file_name}.{extension}` available without permission middleware; must validate path before serving content.
+- F4 Pages
+  - Create/edit/delete taxonomy-linked pages with unique `slug`, HTML content (`html`), optional `metadata`, and ownership metadata.
+  - Download/export at `download/taxonomy-page/{slug}` without permission middleware; history view available.
+- F5 Lists
+  - Create/edit/delete taxonomy lists with `name`, optional `taxonomy_id`, `data_type`, JSON `items`, and ownership metadata.
+  - Manage list items through dedicated manage route (`taxonomy-lists/manage/{taxonomyList}`).
 - F6 Navigation and UX
-  - Dashboard landing for taxonomy with breadcrumbs; list views for taxonomy, terms, files, and pages.
-  - Provide redirects/aliases to ease navigation from codes to detail pages.
+  - Dashboard landing pages for taxonomies, terms, files, pages, and lists with breadcrumbs.
+  - Alias redirects simplify navigation from codes to detail screens.
 - F7 Integration and Backward Compatibility
-  - Preserve Phase 1/2 modules (news/events/announcements, academic programs) without breaking routes.
-  - Refreshed API documentation is available as GitHub-hosted pages for documentation requirements.
+  - Downloads for taxonomy assets coexist with gallery downloads and academic/content routes.
+  - Taxonomy terms power course templates (ILOs/allocations) without breaking phase 1/2 functionality.
 
-## 5. Data Requirements
+## 6. Data Requirements
 
-- Persist taxonomy, term, page, file, and list entities with timestamps, creator/updater, and version/history records.
-- Store file binaries in configured storage with sanitized filenames; maintain mapping to taxonomy records.
-- Maintain slug/code uniqueness within a taxonomy scope; log audit events for changes.
+- Enforce uniqueness: taxonomy `code`, term `code`, page `slug`, file `file_path`.
+- Persist created/updated user references and timestamps across taxonomy entities.
+- Store file binaries in configured storage path; map to taxonomy records for retrieval.
+- Track history/audit data through `LogsActivity` traits.
 
-## 6. External Interfaces
+## 7. External Interfaces
 
-- Web UI: Laravel Blade dashboard for taxonomy CRUD, history views, and downloads.
-- API: REST-style taxonomy endpoints (OpenAPI spec available at `docs/api/taxonomy.json`).
-- Download endpoints with middleware exemptions for public access for files and images.
+- Web UI: Blade dashboards for taxonomy CRUD, history, and item management; breadcrumbs on all screens.
+- API: REST-style taxonomy endpoints (see OpenAPI).
+- Downloads: public endpoints under `download/` for taxonomy files/pages with permission exemptions.
 
-## 7. Non-functional Requirements
+## 8. Non-functional Requirements
 
-- Security: Strict RBAC across taxonomy modules; middleware coverage for downloads; input validation on uploads (size/type).
-- Auditability: History views must reflect create/update/delete events for taxonomy entities; logs retained per retention policy.
-- Performance: Taxonomy list views load in <2s P95 for 500 entries; downloads stream efficiently with chunked responses.
-- Availability: 99% monthly for taxonomy browsing and downloads; maintenance mode available for migrations.
-- Maintainability: PSR-12/Prettier standards; automated CI covers taxonomy controllers, middleware, and history logging.
+- Security: permission middleware per module; download exemptions limited to explicit routes; upload validation for size/type.
+- Auditability: history views for taxonomies, terms, files, pages, and lists; activity logs capture changes.
+- Performance: taxonomy list and history views respond in <2s P95 for typical datasets; downloads stream efficiently.
+- Availability: 99% monthly for taxonomy browsing and downloads; maintenance mode available during migrations.
+- Maintainability: PSR-12/Prettier standards; CI coverage includes taxonomy controllers, middleware, and history logging.
 
-## 8. Constraints and Assumptions
+## 9. Constraints and Assumptions
 
-- Uses existing Laravel auth and storage configuration.
-- Download routes may bypass certain permissions only when explicitly configured via middleware exemptions.
-- History logging relies on database support for version/audit tables; migrations applied before release.
+- Relies on existing Laravel auth and storage configuration.
+- Permission exemptions apply only to download routes declared without middleware in `routes/web.php`.
+- Database migrations (including code length and visibility updates) must be applied before release.
 
-## 9. Acceptance Criteria
+## 10. Acceptance Criteria
 
-- Authorized editors can create taxonomies, terms, files, pages, and lists; history views show change events.
-- Unauthorized users are blocked from editor routes; viewer permissions allow read-only access.
-- Public downloads for permitted taxonomy pages/files work via alias/slug routes without exposing protected content.
+- Authorized editors/viewers can navigate, create, and update taxonomies, terms, files, pages, and lists; history views display audit entries.
+- Unauthorized users are blocked from dashboard routes; download exemptions work only on the declared public download endpoints.
+- Public downloads for taxonomy pages/files resolve via slug/filename and return the stored asset without exposing protected content.
