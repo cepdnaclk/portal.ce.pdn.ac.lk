@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Domains\Auth\Models\User;
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class TenantSeeder extends Seeder
 {
@@ -18,7 +20,7 @@ class TenantSeeder extends Seeder
         continue;
       }
 
-      Tenant::updateOrCreate(
+      $tenant = Tenant::updateOrCreate(
         ['slug' => $slug],
         [
           'url' => $tenantData['url'] ?? '',
@@ -28,7 +30,19 @@ class TenantSeeder extends Seeder
         ]
       );
 
-      // TODO - Add Tenant access to all Admin users by default if not exists
+      // Admins will be assigned all Tenants
+      $adminIds = User::query()
+        ->where('type', User::TYPE_ADMIN)
+        ->whereDoesntHave('tenants')
+        ->pluck('id');
+      if ($adminIds->isNotEmpty()) {
+        $rows = $adminIds->map(fn($userId) => [
+          'tenant_id' => $tenant->id,
+          'user_id' => $userId,
+        ])->all();
+
+        DB::table('tenant_user')->upsert($rows, ['tenant_id', 'user_id']);
+      }
     }
 
     if ($defaultSlug) {
