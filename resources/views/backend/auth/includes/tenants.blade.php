@@ -15,10 +15,10 @@
                             <span class="text-muted">- {{ $tenant->description }}</span>
                         @endif
                     </label>
-                </div><!--form-check-->
+                </div>
             </div>
         @empty
             <p class="mb-0"><em>@lang('There are no tenants to choose from.')</em></p>
         @endforelse
     </div>
-</div><!--form-group-->
+</div>
