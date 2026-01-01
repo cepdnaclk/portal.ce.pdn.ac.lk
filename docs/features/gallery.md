@@ -4,12 +4,12 @@
 
 The Gallery feature allows administrators to attach multiple images to News and Event items. Each gallery supports:
 
--   Multiple image uploads
--   Image reordering via drag-and-drop
--   Cover image selection
--   Metadata (alt text, caption, credit)
--   Automatic image resizing
--   JSON API exposure
+- Multiple image uploads
+- Image reordering via drag-and-drop
+- Cover image selection
+- Metadata (alt text, caption, credit)
+- Automatic image resizing
+- JSON API exposure
 
 ## Architecture
 
@@ -41,9 +41,9 @@ gallery_images
 
 ### Models
 
--   **GalleryImage**: Core model representing a gallery image
--   **News**: Has polymorphic relationship with GalleryImage
--   **Event**: Has polymorphic relationship with GalleryImage
+- **GalleryImage**: Core model representing a gallery image
+- **News**: Has polymorphic relationship with GalleryImage
+- **Event**: Has polymorphic relationship with GalleryImage
 
 ## Configuration
 
@@ -109,34 +109,34 @@ Generated sizes are configured in `config/gallery.php`:
 
 #### Update Metadata
 
--   Edit alt text (required for accessibility)
--   Add caption (optional, supports basic HTML tags)
--   Add credit/photographer name (optional)
--   Click "Save" to update
+- Edit alt text (required for accessibility)
+- Add caption (optional, supports basic HTML tags)
+- Add credit/photographer name (optional)
+- Click "Save" to update
 
 #### Set Cover Image
 
--   Click "Set as Cover" on any image to make it the primary image
--   Only one image can be the cover at a time
+- Click "Set as Cover" on any image to make it the primary image
+- Only one image can be the cover at a time
 
 #### Reorder Images
 
--   Drag images by the footer handle
--   Order is automatically saved
--   Images appear in the API in this order
+- Drag images by the footer handle
+- Order is automatically saved
+- Images appear in the API in this order
 
 #### Delete Images
 
--   Click the "Delete" button on any image
--   Confirm deletion
--   If the deleted image was the cover, the first remaining image becomes the cover
+- Click the "Delete" button on any image
+- Confirm deletion
+- If the deleted image was the cover, the first remaining image becomes the cover
 
 ### Constraints
 
--   Only JPEG images are allowed for security
--   Maximum file size: 10 MB per image
--   Minimum dimensions: 200x200 pixels
--   Maximum 12 images per News/Event item (configurable)
+- Only JPEG images are allowed for security
+- Maximum file size: 10 MB per image
+- Minimum dimensions: 200x200 pixels
+- Maximum 12 images per News/Event item (configurable)
 
 ## API Endpoints
 
@@ -177,10 +177,10 @@ Generated sizes are configured in `config/gallery.php`:
 
 ### Validation
 
--   **MIME Type Checking**: Uses `finfo_file()` to verify actual file content, not just extension
--   **File Size Limits**: Enforced at upload time
--   **Dimension Validation**: Minimum dimensions checked server-side
--   **Input Sanitization**: Alt text, caption, and credit fields are sanitized
+- **MIME Type Checking**: Uses `finfo_file()` to verify actual file content, not just extension
+- **File Size Limits**: Enforced at upload time
+- **Dimension Validation**: Minimum dimensions checked server-side
+- **Input Sanitization**: Alt text, caption, and credit fields are sanitized
 
 ### Rate Limiting
 
@@ -201,8 +201,8 @@ Route::post('news/{news}/gallery/upload', ...)
 
 ### Authorization
 
--   Gallery management is protected by the same permissions as News/Event editing
--   Only users with `user.access.editor.news` or `user.access.editor.events` can manage galleries
+- Gallery management is protected by the same permissions as News/Event editing
+- Only users with `user.access.editor.news` or `user.access.editor.events` can manage galleries
 
 ## Troubleshooting
 
@@ -267,21 +267,21 @@ If using `GALLERY_QUEUE_PROCESSING=true`:
 
 ### Caching
 
--   Image URLs include version parameter for cache busting
--   Set long TTL in headers (configured via `gallery.cache_ttl`)
--   Consider CDN for production
+- Image URLs include version parameter for cache busting
+- Set long TTL in headers (configured via `gallery.cache_ttl`)
+- Consider CDN for production
 
 ### Optimization
 
--   Images are automatically resized to configured sizes
--   Use `lazy` loading attribute on `<img>` tags
--   Implement `srcset` for responsive images
--   Consider WebP format for modern browsers (future enhancement)
+- Images are automatically resized to configured sizes
+- Use `lazy` loading attribute on `<img>` tags
+- Implement `srcset` for responsive images
+- Consider WebP format for modern browsers (future enhancement)
 
 ### Database
 
--   Gallery images are indexed on `imageable_type`, `imageable_id`, `order`, and `is_cover`
--   Use eager loading to prevent N+1 queries:
+- Gallery images are indexed on `imageable_type`, `imageable_id`, `order`, and `is_cover`
+- Use eager loading to prevent N+1 queries:
 
     ```php
     News::with('gallery')->get();
@@ -289,11 +289,11 @@ If using `GALLERY_QUEUE_PROCESSING=true`:
 
 ## Future Enhancements
 
--   [ ] Support for additional image formats (PNG, WebP)
--   [ ] Automatic WebP conversion
--   [ ] Image cropping UI
--   [ ] Bulk operations
--   [ ] CDN integration
--   [ ] EXIF data preservation options
--   [ ] Watermarking
--   [ ] Image optimization tools integration
+- [ ] Support for additional image formats (PNG, WebP)
+- [ ] Automatic WebP conversion
+- [ ] Image cropping UI
+- [ ] Bulk operations
+- [ ] CDN integration
+- [ ] EXIF data preservation options
+- [ ] Watermarking
+- [ ] Image optimization tools integration

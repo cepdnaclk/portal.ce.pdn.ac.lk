@@ -13,7 +13,7 @@ use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
  */
 class ResetPasswordController
 {
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
     |--------------------------------------------------------------------------
@@ -24,56 +24,56 @@ class ResetPasswordController
     |
     */
 
-    use ResetsPasswords;
+  use ResetsPasswords;
 
-    /**
-     * Where to redirect users after resetting their password.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
+  /**
+   * Where to redirect users after resetting their password.
+   *
+   * @var string
+   */
+  protected $redirectTo = RouteServiceProvider::HOME;
 
-    /**
-     * @return string
-     */
-    public function redirectPath()
-    {
-        return route(homeRoute());
-    }
+  /**
+   * @return string
+   */
+  public function redirectPath()
+  {
+    return route(homeRoute());
+  }
 
-    /**
-     * Get the password reset validation rules.
-     *
-     * @return array
-     */
-    protected function rules()
-    {
-        return [
-            'token' => ['required'],
-            'email' => ['required', 'max:255', 'email'],
-            'password' => array_merge(
-                [
-                    'max:100',
-                    new UnusedPassword(request('email')),
-                ],
-                PasswordRules::changePassword(request('email'))
-            ),
-        ];
-    }
+  /**
+   * Get the password reset validation rules.
+   *
+   * @return array
+   */
+  protected function rules()
+  {
+    return [
+      'token' => ['required'],
+      'email' => ['required', 'max:255', 'email'],
+      'password' => array_merge(
+        [
+          'max:100',
+          new UnusedPassword(request('email')),
+        ],
+        PasswordRules::changePassword(request('email'))
+      ),
+    ];
+  }
 
-    /**
-     * Display the password reset view for the given token.
-     *
-     * If no token is present, display the link request form.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string|null  $token
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function showResetForm(Request $request, $token = null)
-    {
-        return view('frontend.auth.passwords.reset')
-            ->withToken($token)
-            ->withEmail($request->email);
-    }
+  /**
+   * Display the password reset view for the given token.
+   *
+   * If no token is present, display the link request form.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  string|null  $token
+   * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+   */
+  public function showResetForm(Request $request, $token = null)
+  {
+    return view('frontend.auth.passwords.reset')
+      ->withToken($token)
+      ->withEmail($request->email);
+  }
 }

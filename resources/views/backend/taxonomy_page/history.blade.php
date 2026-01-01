@@ -56,4 +56,3 @@
         </x-backend.card>
     </div>
 @endsection
-

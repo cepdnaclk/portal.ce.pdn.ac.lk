@@ -11,6 +11,14 @@ trait AnnouncementScope
 {
   /**
    * @param $query
+   * @return mixed
+   */
+  public function scopeEnabled($query)
+  {
+    return $query->whereEnabled(true);
+  }
+  /**
+   * @param $query
    * @param $tenant
    * @return mixed
    */
@@ -30,14 +38,7 @@ trait AnnouncementScope
   {
     return $query->whereIn('tenant_id', $tenantIds);
   }
-  /**
-   * @param $query
-   * @return mixed
-   */
-  public function scopeEnabled($query)
-  {
-    return $query->whereEnabled(true);
-  }
+
 
   /**
    * @param $query

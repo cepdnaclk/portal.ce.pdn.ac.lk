@@ -13,83 +13,83 @@ use Illuminate\Database\Seeder;
  */
 class PermissionRoleSeeder extends Seeder
 {
-    use DisableForeignKeys;
+  use DisableForeignKeys;
 
-    /**
-     * Run the database seed.
-     */
-    public function run()
-    {
-        $this->disableForeignKeys();
-
-
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        // Create Roles
-        Role::firstOrCreate([
-            'type' => User::TYPE_ADMIN,
-            'name' => 'Administrator',
-        ]);
-
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        // Non Grouped Permissions
+  /**
+   * Run the database seed.
+   */
+  public function run()
+  {
+    $this->disableForeignKeys();
 
 
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        // Grouped permissions
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // Create Roles
+    Role::firstOrCreate([
+      'type' => User::TYPE_ADMIN,
+      'name' => 'Administrator',
+    ]);
 
-        // Role: User
-        $users = Permission::firstOrCreate([
-            'type' => User::TYPE_ADMIN,
-            'name' => 'admin.access.user',
-            'description' => 'All User Permissions',
-        ]);
-        $users->children()->saveMany([
-            new Permission([
-                'type' => User::TYPE_ADMIN,
-                'name' => 'admin.access.user.list',
-                'description' => 'View Users',
-            ]),
-            new Permission([
-                'type' => User::TYPE_ADMIN,
-                'name' => 'admin.access.user.deactivate',
-                'description' => 'Deactivate Users',
-                'sort' => 2,
-            ]),
-            new Permission([
-                'type' => User::TYPE_ADMIN,
-                'name' => 'admin.access.user.reactivate',
-                'description' => 'Reactivate Users',
-                'sort' => 3,
-            ]),
-            new Permission([
-                'type' => User::TYPE_ADMIN,
-                'name' => 'admin.access.user.clear-session',
-                'description' => 'Clear User Sessions',
-                'sort' => 4,
-            ]),
-            new Permission([
-                'type' => User::TYPE_ADMIN,
-                'name' => 'admin.access.user.impersonate',
-                'description' => 'Impersonate Users',
-                'sort' => 5,
-            ]),
-            new Permission([
-                'type' => User::TYPE_ADMIN,
-                'name' => 'admin.access.user.change-password',
-                'description' => 'Change User Passwords',
-                'sort' => 6,
-            ]),
-        ]);
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // Non Grouped Permissions
 
 
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // Grouped permissions
 
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        // Assign Permissions to Roles
+    // Role: User
+    $users = Permission::firstOrCreate([
+      'type' => User::TYPE_ADMIN,
+      'name' => 'admin.access.user',
+      'description' => 'All User Permissions',
+    ]);
+    $users->children()->saveMany([
+      new Permission([
+        'type' => User::TYPE_ADMIN,
+        'name' => 'admin.access.user.list',
+        'description' => 'View Users',
+      ]),
+      new Permission([
+        'type' => User::TYPE_ADMIN,
+        'name' => 'admin.access.user.deactivate',
+        'description' => 'Deactivate Users',
+        'sort' => 2,
+      ]),
+      new Permission([
+        'type' => User::TYPE_ADMIN,
+        'name' => 'admin.access.user.reactivate',
+        'description' => 'Reactivate Users',
+        'sort' => 3,
+      ]),
+      new Permission([
+        'type' => User::TYPE_ADMIN,
+        'name' => 'admin.access.user.clear-session',
+        'description' => 'Clear User Sessions',
+        'sort' => 4,
+      ]),
+      new Permission([
+        'type' => User::TYPE_ADMIN,
+        'name' => 'admin.access.user.impersonate',
+        'description' => 'Impersonate Users',
+        'sort' => 5,
+      ]),
+      new Permission([
+        'type' => User::TYPE_ADMIN,
+        'name' => 'admin.access.user.change-password',
+        'description' => 'Change User Passwords',
+        'sort' => 6,
+      ]),
+    ]);
 
-        Role::findByName('Administrator')->givePermissionTo([
-            'admin.access.user',
-        ]);
 
-        $this->enableForeignKeys();
-    }
+
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // Assign Permissions to Roles
+
+    Role::findByName('Administrator')->givePermissionTo([
+      'admin.access.user',
+    ]);
+
+    $this->enableForeignKeys();
+  }
 }

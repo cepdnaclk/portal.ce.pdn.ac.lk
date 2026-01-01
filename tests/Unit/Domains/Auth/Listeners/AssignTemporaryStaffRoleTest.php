@@ -13,95 +13,95 @@ use Tests\TestCase;
 
 class AssignTemporaryStaffRoleTest extends TestCase
 {
-    use RefreshDatabase;
+  use RefreshDatabase;
 
-    /** @test */
-    public function it_assigns_temporary_academic_staff_role()
-    {
-        Cache::flush();
+  /** @test */
+  public function it_assigns_temporary_academic_staff_role()
+  {
+    Cache::flush();
 
-        Role::factory()->create([
-            'name' => 'Temporary Academic Staff',
-            'type' => User::TYPE_USER,
-        ]);
+    Role::factory()->create([
+      'name' => 'Temporary Academic Staff',
+      'type' => User::TYPE_USER,
+    ]);
 
-        $user = User::factory()->user()->create([
-            'email' => 'temp.staff@example.com',
-        ]);
+    $user = User::factory()->user()->create([
+      'email' => 'temp.staff@example.com',
+    ]);
 
-        Http::fake([
-            config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
-                [
-                    'email' => 'temp.staff@example.com',
-                    'designation' => 'Temporary Academic Staff',
-                ],
-            ]),
-            config('constants.department_data.base_url') . '/people/v1/students/all/' => Http::response([]),
-        ]);
+    Http::fake([
+      config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
+        [
+          'email' => 'temp.staff@example.com',
+          'designation' => 'Temporary Academic Staff',
+        ],
+      ]),
+      config('constants.department_data.base_url') . '/people/v1/students/all/' => Http::response([]),
+    ]);
 
-        $listener = new UserEventListener();
-        $listener->onCreated(new UserCreated($user));
+    $listener = new UserEventListener();
+    $listener->onCreated(new UserCreated($user));
 
-        $this->assertTrue($user->hasRole('Temporary Academic Staff'));
-    }
+    $this->assertTrue($user->hasRole('Temporary Academic Staff'));
+  }
 
-    /** @test */
-    public function it_assigns_temporary_academic_staff_role_for_temporary_lecturer()
-    {
-        Cache::flush();
+  /** @test */
+  public function it_assigns_temporary_academic_staff_role_for_temporary_lecturer()
+  {
+    Cache::flush();
 
-        Role::factory()->create([
-            'name' => 'Temporary Academic Staff',
-            'type' => User::TYPE_USER,
-        ]);
+    Role::factory()->create([
+      'name' => 'Temporary Academic Staff',
+      'type' => User::TYPE_USER,
+    ]);
 
-        $user = User::factory()->user()->create([
-            'email' => 'temp.lecturer@example.com',
-        ]);
+    $user = User::factory()->user()->create([
+      'email' => 'temp.lecturer@example.com',
+    ]);
 
-        Http::fake([
-            config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
-                [
-                    'email' => 'temp.lecturer@example.com',
-                    'designation' => 'Temporary Lecturer',
-                ],
-            ]),
-            config('constants.department_data.base_url') . '/people/v1/students/all/' => Http::response([]),
-        ]);
+    Http::fake([
+      config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
+        [
+          'email' => 'temp.lecturer@example.com',
+          'designation' => 'Temporary Lecturer',
+        ],
+      ]),
+      config('constants.department_data.base_url') . '/people/v1/students/all/' => Http::response([]),
+    ]);
 
-        $listener = new UserEventListener();
-        $listener->onCreated(new UserCreated($user));
+    $listener = new UserEventListener();
+    $listener->onCreated(new UserCreated($user));
 
-        $this->assertTrue($user->hasRole('Temporary Academic Staff'));
-    }
+    $this->assertTrue($user->hasRole('Temporary Academic Staff'));
+  }
 
-    /** @test */
-    public function it_assigns_temporary_academic_staff_role_for_visiting_lecturer()
-    {
-        Cache::flush();
+  /** @test */
+  public function it_assigns_temporary_academic_staff_role_for_visiting_lecturer()
+  {
+    Cache::flush();
 
-        Role::factory()->create([
-            'name' => 'Temporary Academic Staff',
-            'type' => User::TYPE_USER,
-        ]);
+    Role::factory()->create([
+      'name' => 'Temporary Academic Staff',
+      'type' => User::TYPE_USER,
+    ]);
 
-        $user = User::factory()->user()->create([
-            'email' => 'visiting.lecturer@example.com',
-        ]);
+    $user = User::factory()->user()->create([
+      'email' => 'visiting.lecturer@example.com',
+    ]);
 
-        Http::fake([
-            config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
-                [
-                    'email' => 'visiting.lecturer@example.com',
-                    'designation' => 'Visiting Lecturer',
-                ],
-            ]),
-            config('constants.department_data.base_url') . '/people/v1/students/all/' => Http::response([]),
-        ]);
+    Http::fake([
+      config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
+        [
+          'email' => 'visiting.lecturer@example.com',
+          'designation' => 'Visiting Lecturer',
+        ],
+      ]),
+      config('constants.department_data.base_url') . '/people/v1/students/all/' => Http::response([]),
+    ]);
 
-        $listener = new UserEventListener();
-        $listener->onCreated(new UserCreated($user));
+    $listener = new UserEventListener();
+    $listener->onCreated(new UserCreated($user));
 
-        $this->assertTrue($user->hasRole('Temporary Academic Staff'));
-    }
+    $this->assertTrue($user->hasRole('Temporary Academic Staff'));
+  }
 }

@@ -12,29 +12,29 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
  */
 class RolesTable extends PersistentStateDataTable
 {
-    /**
-     * @return Builder
-     */
-    public function query(): Builder
-    {
-        return Role::with('permissions:id,name,description')
-            ->withCount('users')
-            ->when($this->getFilter('search'), fn ($query, $term) => $query->search($term));
-    }
+  /**
+   * @return Builder
+   */
+  public function query(): Builder
+  {
+    return Role::with('permissions:id,name,description')
+      ->withCount('users')
+      ->when($this->getFilter('search'), fn($query, $term) => $query->search($term));
+  }
 
-    public function columns(): array
-    {
-        return [
-            Column::make(__('Type'))->sortable(),
-            Column::make(__('Name'))->sortable(),
-            Column::make(__('Permissions')),
-            Column::make(__('Number of Users'), 'users_count')->sortable(),
-            Column::make(__('Actions')),
-        ];
-    }
+  public function columns(): array
+  {
+    return [
+      Column::make(__('Type'))->sortable(),
+      Column::make(__('Name'))->sortable(),
+      Column::make(__('Permissions')),
+      Column::make(__('Number of Users'), 'users_count')->sortable(),
+      Column::make(__('Actions')),
+    ];
+  }
 
-    public function rowView(): string
-    {
-        return 'backend.auth.role.includes.row';
-    }
+  public function rowView(): string
+  {
+    return 'backend.auth.role.includes.row';
+  }
 }

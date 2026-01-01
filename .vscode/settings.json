@@ -18,7 +18,7 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "vscode.json-language-features"
     },
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -36,6 +36,19 @@
     // pnpm --------------------------------------------------------------------------------------
     "npm.packageManager": "pnpm",
     "npm.scriptRunner": "pnpm",
-    "cSpell.words": ["Imageable"]
+    "cSpell.words": ["Imageable"],
+    "formatFiles.excludedFolders": [
+        "node_modules",
+        ".vscode",
+        ".git",
+        "dist",
+        ".chrome",
+        "public/css",
+        "vendor",
+        "bootstrap/cache",
+        "public/js",
+        "public/storage",
+        "storage"
+    ]
     //
 }

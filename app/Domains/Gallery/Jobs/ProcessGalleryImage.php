@@ -12,31 +12,31 @@ use Illuminate\Queue\SerializesModels;
 
 class ProcessGalleryImage implements ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+  use Dispatchable;
+  use InteractsWithQueue;
+  use Queueable;
+  use SerializesModels;
 
-    public $galleryImage;
+  public $galleryImage;
 
-    /**
-     * Create a new job instance.
-     *
-     * @param GalleryImage $galleryImage
-     */
-    public function __construct(GalleryImage $galleryImage)
-    {
-        $this->galleryImage = $galleryImage;
-    }
+  /**
+   * Create a new job instance.
+   *
+   * @param GalleryImage $galleryImage
+   */
+  public function __construct(GalleryImage $galleryImage)
+  {
+    $this->galleryImage = $galleryImage;
+  }
 
-    /**
-     * Execute the job.
-     *
-     * @param GalleryService $galleryService
-     * @return void
-     */
-    public function handle(GalleryService $galleryService)
-    {
-        $galleryService->generateImageSizes($this->galleryImage);
-    }
+  /**
+   * Execute the job.
+   *
+   * @param GalleryService $galleryService
+   * @return void
+   */
+  public function handle(GalleryService $galleryService)
+  {
+    $galleryService->generateImageSizes($this->galleryImage);
+  }
 }

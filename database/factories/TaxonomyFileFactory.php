@@ -13,19 +13,19 @@ use App\Domains\Auth\Models\User;
 
 class TaxonomyFileFactory extends Factory
 {
-    protected $model = TaxonomyFile::class;
+  protected $model = TaxonomyFile::class;
 
-    public function definition(): array
-    {
-        $fileName = $this->faker->word . '.pdf';
-        UploadedFile::fake()->create($fileName);
+  public function definition(): array
+  {
+    $fileName = $this->faker->word . '.pdf';
+    UploadedFile::fake()->create($fileName);
 
-        return [
-            'file_name' => $fileName,
-            'file_path' => "taxonomy_files/$fileName",
-            'taxonomy_id' => $this->faker->boolean ? Taxonomy::factory() : null,
-            'metadata' => ['file_size' => $this->faker->numberBetween(100, 5000)],
-            'created_by' => User::factory(),
-        ];
-    }
+    return [
+      'file_name' => $fileName,
+      'file_path' => "taxonomy_files/$fileName",
+      'taxonomy_id' => $this->faker->boolean ? Taxonomy::factory() : null,
+      'metadata' => ['file_size' => $this->faker->numberBetween(100, 5000)],
+      'created_by' => User::factory(),
+    ];
+  }
 }

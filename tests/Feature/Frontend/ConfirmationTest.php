@@ -10,13 +10,13 @@ use Tests\TestCase;
  */
 class ConfirmationTest extends TestCase
 {
-    /** @test */
-    public function a_user_can_access_the_confirm_password_page()
-    {
-        $user = User::factory()->user()->create();
+  /** @test */
+  public function a_user_can_access_the_confirm_password_page()
+  {
+    $user = User::factory()->user()->create();
 
-        $this->actingAs($user);
+    $this->actingAs($user);
 
-        $this->get('/password/confirm')->assertOk();
-    }
+    $this->get('/password/confirm')->assertOk();
+  }
 }

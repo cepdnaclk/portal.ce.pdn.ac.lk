@@ -14,25 +14,25 @@ use Spatie\Permission\Models\Role as SpatieRole;
  */
 class Role extends SpatieRole
 {
-    use HasFactory,
-        RoleAttribute,
-        RoleMethod,
-        RoleScope;
+  use HasFactory,
+    RoleAttribute,
+    RoleMethod,
+    RoleScope;
 
-    /**
-     * @var string[]
-     */
-    protected $with = [
-        'permissions',
-    ];
+  /**
+   * @var string[]
+   */
+  protected $with = [
+    'permissions',
+  ];
 
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    protected static function newFactory()
-    {
-        return RoleFactory::new();
-    }
+  /**
+   * Create a new factory instance for the model.
+   *
+   * @return \Illuminate\Database\Eloquent\Factories\Factory
+   */
+  protected static function newFactory()
+  {
+    return RoleFactory::new();
+  }
 }

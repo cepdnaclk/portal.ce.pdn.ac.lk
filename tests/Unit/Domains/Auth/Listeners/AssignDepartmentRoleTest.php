@@ -13,63 +13,63 @@ use Tests\TestCase;
 
 class AssignDepartmentRoleTest extends TestCase
 {
-    use RefreshDatabase;
+  use RefreshDatabase;
 
-    /** @test */
-    public function it_assigns_roles_based_on_department_email()
-    {
-        Cache::flush();
+  /** @test */
+  public function it_assigns_roles_based_on_department_email()
+  {
+    Cache::flush();
 
-        Role::factory()->create([
-            'name' => 'Lecturer',
-            'type' => User::TYPE_USER,
-        ]);
+    Role::factory()->create([
+      'name' => 'Lecturer',
+      'type' => User::TYPE_USER,
+    ]);
 
-        $user = User::factory()->user()->create([
-            'email' => 'staff@example.com',
-        ]);
+    $user = User::factory()->user()->create([
+      'email' => 'staff@example.com',
+    ]);
 
-        Http::fake([
-            config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
-                [
-                    'email' => 'staff@example.com',
-                    'designation' => 'Lecturer',
-                ],
-            ]),
-        ]);
+    Http::fake([
+      config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
+        [
+          'email' => 'staff@example.com',
+          'designation' => 'Lecturer',
+        ],
+      ]),
+    ]);
 
-        $listener = new UserEventListener();
-        $listener->onCreated(new UserCreated($user));
+    $listener = new UserEventListener();
+    $listener->onCreated(new UserCreated($user));
 
-        $this->assertTrue($user->hasRole('Lecturer'));
-    }
+    $this->assertTrue($user->hasRole('Lecturer'));
+  }
 
-    /** @test */
-    public function it_does_not_assign_role_for_non_staff_email()
-    {
-        Cache::flush();
+  /** @test */
+  public function it_does_not_assign_role_for_non_staff_email()
+  {
+    Cache::flush();
 
-        Role::factory()->create([
-            'name' => 'Lecturer',
-            'type' => User::TYPE_USER,
-        ]);
+    Role::factory()->create([
+      'name' => 'Lecturer',
+      'type' => User::TYPE_USER,
+    ]);
 
-        $user = User::factory()->user()->create([
-            'email' => 'other@example.com',
-        ]);
+    $user = User::factory()->user()->create([
+      'email' => 'other@example.com',
+    ]);
 
-        Http::fake([
-            config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
-                [
-                    'email' => 'staff1@eng.pdn.ac.lk',
-                    'designation' => 'Lecturer',
-                ],
-            ]),
-        ]);
+    Http::fake([
+      config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response([
+        [
+          'email' => 'staff1@eng.pdn.ac.lk',
+          'designation' => 'Lecturer',
+        ],
+      ]),
+    ]);
 
-        $listener = new UserEventListener();
-        $listener->onCreated(new UserCreated($user));
+    $listener = new UserEventListener();
+    $listener->onCreated(new UserCreated($user));
 
-        $this->assertFalse($user->hasRole('Lecturer'));
-    }
+    $this->assertFalse($user->hasRole('Lecturer'));
+  }
 }

@@ -9,19 +9,19 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaxonomyPageFactory extends Factory
 {
-    protected $model = TaxonomyPage::class;
+  protected $model = TaxonomyPage::class;
 
-    public function definition(): array
-    {
-        $htmlContent = '<div>' . $this->faker->paragraphs(3, true) . '</div>';
+  public function definition(): array
+  {
+    $htmlContent = '<div>' . $this->faker->paragraphs(3, true) . '</div>';
 
-        return [
-            'slug' => $this->faker->unique()->slug,
-            'html' => $htmlContent,
-            'taxonomy_id' => $this->faker->boolean ? Taxonomy::factory()->create()->id : null,
-            'metadata' => [],
-            'created_by' => User::factory(),
+    return [
+      'slug' => $this->faker->unique()->slug,
+      'html' => $htmlContent,
+      'taxonomy_id' => $this->faker->boolean ? Taxonomy::factory()->create()->id : null,
+      'metadata' => [],
+      'created_by' => User::factory(),
 
-        ];
-    }
+    ];
+  }
 }

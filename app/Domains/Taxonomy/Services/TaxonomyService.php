@@ -10,13 +10,13 @@ use App\Services\BaseService;
  */
 class TaxonomyService extends BaseService
 {
-    /**
-     * TaxonomyService constructor.
-     *
-     * @param  Taxonomy  $taxonomy
-     */
-    public function __construct(Taxonomy $taxonomy)
-    {
-        $this->model = $taxonomy;
-    }
+  /**
+   * TaxonomyService constructor.
+   *
+   * @param  Taxonomy  $taxonomy
+   */
+  public function __construct(Taxonomy $taxonomy)
+  {
+    $this->model = $taxonomy;
+  }
 }
