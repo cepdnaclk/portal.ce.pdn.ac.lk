@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use App\Domains\ContentManagement\Models\Event;
 use App\Http\Controllers\Controller;
 use App\Domains\Gallery\Services\GalleryService;
+use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class EventController extends Controller
 {
+  public function __construct(private TenantResolver $tenantResolver) {}
   /**
    * Show the form for creating a new resource.
    *
@@ -20,7 +22,10 @@ class EventController extends Controller
   public function create()
   {
     try {
-      return view('backend.event.create');
+      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+      $selectedTenantId = $tenants->count() === 1 ? $tenants->first()->id : null;
+
+      return view('backend.event.create', compact('tenants', 'selectedTenantId'));
     } catch (\Exception $ex) {
       Log::error('Failed to load event creation page', ['error' => $ex->getMessage()]);
       return abort(500);
@@ -35,6 +40,10 @@ class EventController extends Controller
    */
   public function store(Request $request)
   {
+    $tenantId = $this->resolveTenantId($request);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
 
     $data = request()->validate([
       'title' => 'string|required',
@@ -48,6 +57,7 @@ class EventController extends Controller
       'start_at' => 'required|date_format:Y-m-d\\TH:i',
       'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
       'location' => 'string|required',
+      'tenant_id' => ['required', 'exists:tenants,id'],
     ]);
 
     // if ($request->hasFile('image')) {
@@ -59,6 +69,7 @@ class EventController extends Controller
       $event->enabled = ($request->enabled != null);
       $event->url =  urlencode(str_replace(" ", "-", $request->url));
       $event->created_by = Auth::user()->id;
+      $event->tenant_id = $data['tenant_id'];
       $event->save();
 
       if (config('gallery.enabled')) {
@@ -79,7 +90,10 @@ class EventController extends Controller
    */
   public function edit(Event $event)
   {
-    return view('backend.event.edit', compact('event'));
+    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+    $selectedTenantId = $event->tenant_id;
+
+    return view('backend.event.edit', compact('event', 'tenants', 'selectedTenantId'));
   }
 
   /**
@@ -91,6 +105,10 @@ class EventController extends Controller
    */
   public function update(Request $request, Event $event)
   {
+    $tenantId = $this->resolveTenantId($request);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
 
     $data = request()->validate([
       'title' => ['required'],
@@ -104,6 +122,7 @@ class EventController extends Controller
       'start_at' => 'required|date_format:Y-m-d\\TH:i',
       'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
       'location' => 'string|required',
+      'tenant_id' => ['required', 'exists:tenants,id'],
     ]);
 
     try {
@@ -111,6 +130,7 @@ class EventController extends Controller
 
       $event->enabled = ($request->enabled != null);
       $event->url =  urlencode(str_replace(" ", "-", $request->url));
+      $event->tenant_id = $data['tenant_id'];
       $event->save();
 
       return redirect()->route('dashboard.event.index')->with('Success', 'Event was updated !');
@@ -150,5 +170,20 @@ class EventController extends Controller
       Log::error('Failed to delete event', ['event_id' => $event->id, 'error' => $ex->getMessage()]);
       return abort(500);
     }
+  }
+
+  private function resolveTenantId(Request $request): ?int
+  {
+    if ($request->filled('tenant_id')) {
+      return (int) $request->input('tenant_id');
+    }
+
+    $tenants = $this->tenantResolver->availableTenantsForUser($request->user());
+
+    if ($tenants->count() === 1) {
+      return (int) $tenants->first()->id;
+    }
+
+    return null;
   }
 }

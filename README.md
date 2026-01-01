@@ -70,6 +70,22 @@ php artisan serve --host=0.0.0.0 --port=8000
 pnpm run watch
 ```
 
+#### Tenants (multi-site content)
+
+- Define tenants in `config/tenants.php` with `slug`, `url`, `description`.
+- The `default` tenant slug controls the content returned by v1 APIs.
+- Sync tenants from config with:
+
+```bash
+php artisan tenants:sync
+```
+
+##### API examples (v2 tenant-aware)
+
+- News: `GET /api/v2/{tenant_slug}/news`
+- Events: `GET /api/v2/{tenant_slug}/events`
+- For unknown tenant slugs, v2 returns `404 Tenant not found`.
+
 #### Cache and optimization
 
 ```bash

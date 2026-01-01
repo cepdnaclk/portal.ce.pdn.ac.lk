@@ -5,15 +5,27 @@ namespace App\Http\Controllers\API;
 use App\Domains\ContentManagement\Models\Event;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
+use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class EventApiController extends Controller
 {
+  public function __construct(private TenantResolver $tenantResolver) {}
+
   public function index(Request $request)
   {
     try {
-      $query = Event::with('gallery')->where('enabled', 1)->orderBy('start_at', 'desc');
+      $tenant = $this->tenantResolver->resolveDefault();
+
+      if (! $tenant) {
+        return EventResource::collection(collect());
+      }
+
+      $query = Event::with('gallery')
+        ->where('enabled', 1)
+        ->forTenant($tenant)
+        ->orderBy('start_at', 'desc');
 
       if ($request->has('event_type')) {
 
@@ -39,8 +51,14 @@ class EventApiController extends Controller
   public function upcoming()
   {
     try {
+      $tenant = $this->tenantResolver->resolveDefault();
+      if (! $tenant) {
+        return response()->json(['message' => 'Events not found'], 404);
+      }
+
       $perPage = 20;
       $event = Event::with('gallery')
+        ->forTenant($tenant)
         ->getUpcomingEvents()
         ->orderBy('start_at', 'asc')
         ->paginate($perPage);
@@ -59,8 +77,14 @@ class EventApiController extends Controller
   public function past()
   {
     try {
+      $tenant = $this->tenantResolver->resolveDefault();
+      if (! $tenant) {
+        return response()->json(['message' => 'Events not found'], 404);
+      }
+
       $perPage = 20;
       $event = Event::with('gallery')
+        ->forTenant($tenant)
         ->getPastEvents()
         ->orderBy('start_at', 'desc')
         ->paginate($perPage);
@@ -79,7 +103,12 @@ class EventApiController extends Controller
   public function show($id)
   {
     try {
-      $event = Event::with('gallery')->find($id);
+      $tenant = $this->tenantResolver->resolveDefault();
+      if (! $tenant) {
+        return response()->json(['message' => 'Event not found'], 404);
+      }
+
+      $event = Event::with('gallery')->forTenant($tenant)->find($id);
 
       if ($event) {
         return new EventResource($event);
