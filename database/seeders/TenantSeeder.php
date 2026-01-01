@@ -33,7 +33,6 @@ class TenantSeeder extends Seeder
       // Admins will be assigned all Tenants
       $adminIds = User::query()
         ->where('type', User::TYPE_ADMIN)
-        ->whereDoesntHave('tenants')
         ->pluck('id');
       if ($adminIds->isNotEmpty()) {
         $rows = $adminIds->map(fn($userId) => [
