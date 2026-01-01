@@ -3,9 +3,11 @@
 namespace App\Domains\Announcement\Models;
 
 use App\Domains\Announcement\Models\Traits\Scope\AnnouncementScope;
+use App\Domains\Tenant\Models\Tenant;
 use Database\Factories\AnnouncementFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
@@ -33,6 +35,7 @@ class Announcement extends Model
     'enabled',
     'starts_at',
     'ends_at',
+    'tenant_id',
   ];
 
   /**
@@ -49,6 +52,11 @@ class Announcement extends Model
   protected $casts = [
     'enabled' => 'boolean',
   ];
+
+  public function tenant(): BelongsTo
+  {
+    return $this->belongsTo(Tenant::class);
+  }
 
   public static function areas()
   {

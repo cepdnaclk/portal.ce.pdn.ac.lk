@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\ContentManagement\Models\News;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
@@ -36,6 +37,7 @@ class NewsFactory extends Factory
       'link_caption' => $this->faker->words(3, true),
       'url' => urlencode($this->faker->name),
       'published_at' => now()->subWeek(),
+      'tenant_id' => Tenant::defaultId() ?? Tenant::factory(),
 
     ];
   }

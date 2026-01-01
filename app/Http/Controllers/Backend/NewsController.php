@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Domains\ContentManagement\Models\News;
 use App\Domains\Gallery\Services\GalleryService;
+use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
+  public function __construct(private TenantResolver $tenantResolver) {}
   /**
    * Show the form for creating a new resource.
    *
@@ -20,7 +22,10 @@ class NewsController extends Controller
   public function create()
   {
     try {
-      return view('backend.news.create');
+      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+      $selectedTenantId = $tenants->count() === 1 ? $tenants->first()->id : null;
+
+      return view('backend.news.create', compact('tenants', 'selectedTenantId'));
     } catch (\Exception $ex) {
       Log::error('Failed to load news creation page', ['error' => $ex->getMessage()]);
       return abort(500);
@@ -34,6 +39,10 @@ class NewsController extends Controller
    */
   public function store(Request $request)
   {
+    $tenantId = $this->resolveTenantId($request);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
 
     $data = request()->validate([
       'title' => 'required',
@@ -43,6 +52,7 @@ class NewsController extends Controller
       'enabled' => 'nullable',
       'link_url' => 'nullable|url',
       'link_caption' => 'nullable|string',
+      'tenant_id' => ['required', 'exists:tenants,id'],
     ]);
 
     // if ($request->hasFile('image')) {
@@ -76,7 +86,10 @@ class NewsController extends Controller
   public function edit(News $news)
   {
     try {
-      return view('backend.news.edit', ['news' => $news]);
+      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+      $selectedTenantId = $news->tenant_id;
+
+      return view('backend.news.edit', compact('news', 'tenants', 'selectedTenantId'));
     } catch (\Exception $ex) {
       Log::error('Failed to load news edit page', ['error' => $ex->getMessage()]);
       return abort(500);
@@ -91,6 +104,10 @@ class NewsController extends Controller
    */
   public function update(Request $request, News $news)
   {
+    $tenantId = $this->resolveTenantId($request);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
 
     $data = request()->validate([
       'title' => ['required'],
@@ -100,6 +117,7 @@ class NewsController extends Controller
       'enabled' => 'nullable',
       'link_url' => 'nullable|url',
       'link_caption' => 'nullable|string',
+      'tenant_id' => ['required', 'exists:tenants,id'],
     ]);
 
     try {
@@ -147,5 +165,20 @@ class NewsController extends Controller
       Log::error('Failed to delete news', ['news_id' => $news->id, 'error' => $ex->getMessage()]);
       return abort(500);
     }
+  }
+
+  private function resolveTenantId(Request $request): ?int
+  {
+    if ($request->filled('tenant_id')) {
+      return (int) $request->input('tenant_id');
+    }
+
+    $tenants = $this->tenantResolver->availableTenantsForUser($request->user());
+
+    if ($tenants->count() === 1) {
+      return (int) $tenants->first()->id;
+    }
+
+    return null;
   }
 }

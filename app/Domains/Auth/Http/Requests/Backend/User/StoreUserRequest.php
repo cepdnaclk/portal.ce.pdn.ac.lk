@@ -41,6 +41,8 @@ class StoreUserRequest extends FormRequest
       'roles.*' => [Rule::exists('roles', 'id')->where('type', $this->type)],
       'permissions' => ['sometimes', 'array'],
       'permissions.*' => [Rule::exists('permissions', 'id')->where('type', $this->type)],
+      'tenants' => ['sometimes', 'array'],
+      'tenants.*' => [Rule::exists('tenants', 'id')],
     ];
   }
 
@@ -52,6 +54,7 @@ class StoreUserRequest extends FormRequest
     return [
       'roles.*.exists' => __('One or more roles were not found or are not allowed to be associated with this user type.'),
       'permissions.*.exists' => __('One or more permissions were not found or are not allowed to be associated with this user type.'),
+      'tenants.*.exists' => __('One or more tenants were not found or are not allowed to be associated with this user.'),
     ];
   }
 }

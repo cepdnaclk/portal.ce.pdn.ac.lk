@@ -4,6 +4,7 @@ namespace Tests\Feature\Backend\Announcements;
 
 use App\Domains\Auth\Models\User;
 use App\Domains\Announcement\Models\Announcement;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -41,7 +42,7 @@ class AnnouncementTest extends TestCase
   {
     $this->loginAsAdmin();
     $response = $this->post('/dashboard/announcements');
-    $response->assertSessionHasErrors(['area', 'type', 'message', 'starts_at', 'ends_at']);
+    $response->assertSessionHasErrors(['area', 'type', 'message', 'starts_at', 'ends_at', 'tenant_id']);
   }
 
   /** @test */
@@ -51,13 +52,15 @@ class AnnouncementTest extends TestCase
     $announcement = Announcement::factory()->create();
 
     $response = $this->put("/dashboard/announcements/{$announcement->id}", []);
-    $response->assertSessionHasErrors(['area', 'type', 'message', 'starts_at', 'ends_at']);
+    $response->assertSessionHasErrors(['area', 'type', 'message', 'starts_at', 'ends_at', 'tenant_id']);
   }
 
   /** @test */
   public function an_announcement_can_be_created()
   {
     $this->loginAsAdmin();
+    $tenantId = Tenant::defaultId();
+
     $response = $this->post('/dashboard/announcements/', [
       'area' => Announcement::TYPE_BACKEND,
       'type' => array_keys(Announcement::types())[0],
@@ -65,6 +68,7 @@ class AnnouncementTest extends TestCase
       'enabled' => 'true',
       'starts_at' => '2023-01-01T00:00',
       'ends_at' => '2023-01-02T00:00',
+      'tenant_id' => $tenantId,
     ]);
 
     $response->assertStatus(302);
@@ -78,11 +82,13 @@ class AnnouncementTest extends TestCase
   {
     $this->actingAs(User::factory()->admin()->create());
     $announcement = Announcement::factory()->create();
+    $tenantId = Tenant::defaultId();
 
     $announcement->message = 'This can be updated';
     $announcement_array = $announcement->toArray();
     $announcement_array['starts_at'] = date("Y-m-d\\TH:i");
     $announcement_array['ends_at'] = date("Y-m-d\\TH:i");
+    $announcement_array['tenant_id'] = $tenantId;
 
     $response = $this->put("/dashboard/announcements/{$announcement->id}", $announcement_array);
     $response->assertStatus(302);

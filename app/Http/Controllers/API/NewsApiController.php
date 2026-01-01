@@ -5,15 +5,28 @@ namespace App\Http\Controllers\API;
 use App\Http\Resources\NewsResource;
 use App\Http\Controllers\Controller;
 use App\Domains\ContentManagement\Models\News;
+use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Support\Facades\Log;
 
 class NewsApiController extends Controller
 {
+  public function __construct(private TenantResolver $tenantResolver) {}
+
   public function index()
   {
     try {
       $perPage = 20;
-      $news = News::with('gallery')->latest()->where('enabled', 1)->paginate($perPage);
+      $tenant = $this->tenantResolver->resolveDefault();
+
+      if (! $tenant) {
+        return NewsResource::collection(collect());
+      }
+
+      $news = News::with('gallery')
+        ->latest()
+        ->where('enabled', 1)
+        ->forTenant($tenant)
+        ->paginate($perPage);
 
       return NewsResource::collection($news);
     } catch (\Exception $e) {
@@ -25,7 +38,12 @@ class NewsApiController extends Controller
   public function show($id)
   {
     try {
-      $news = News::with('gallery')->find($id);
+      $tenant = $this->tenantResolver->resolveDefault();
+      if (! $tenant) {
+        return response()->json(['message' => 'News not found'], 404);
+      }
+
+      $news = News::with('gallery')->forTenant($tenant)->find($id);
       if ($news) {
         return new NewsResource($news);
       } else {

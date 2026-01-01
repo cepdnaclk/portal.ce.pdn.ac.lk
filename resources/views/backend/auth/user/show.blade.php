@@ -91,6 +91,17 @@
                     <th>@lang('Additional Permissions')</th>
                     <td>{!! $user->permissions_label !!}</td>
                 </tr>
+
+                <tr>
+                    <th>@lang('Tenants')</th>
+                    <td>
+                        @if ($user->tenants->count())
+                            {{ $user->tenants->pluck('name')->implode(', ') }}
+                        @else
+                            @lang('None')
+                        @endif
+                    </td>
+                </tr>
             </table>
         </x-slot>
 

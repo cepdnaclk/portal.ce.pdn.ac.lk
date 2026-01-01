@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\Announcement\Models\Announcement;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -31,6 +32,7 @@ class AnnouncementFactory extends Factory
       'enabled' => $this->faker->boolean,
       'starts_at' => $this->faker->dateTime(),
       'ends_at' => $this->faker->dateTime(),
+      'tenant_id' => Tenant::defaultId() ?? Tenant::factory(),
     ];
   }
 

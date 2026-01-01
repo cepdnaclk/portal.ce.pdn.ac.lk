@@ -30,6 +30,10 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->tenant?->name ?? '-' }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     @if ($row->start_at && $row->end_at)
         From: {{ $row->start_at }}
     @else

@@ -9,6 +9,7 @@ use App\Domains\Auth\Http\Requests\Backend\Role\UpdateRoleRequest;
 use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Services\PermissionService;
 use App\Domains\Auth\Services\RoleService;
+use App\Domains\Tenant\Services\TenantResolver;
 
 /**
  * Class RoleController.
@@ -26,15 +27,22 @@ class RoleController
   protected $permissionService;
 
   /**
+   * @var TenantResolver
+   */
+  protected $tenantResolver;
+
+  /**
    * RoleController constructor.
    *
    * @param  RoleService  $roleService
    * @param  PermissionService  $permissionService
+   * @param  TenantResolver  $tenantResolver
    */
-  public function __construct(RoleService $roleService, PermissionService $permissionService)
+  public function __construct(RoleService $roleService, PermissionService $permissionService, TenantResolver $tenantResolver)
   {
     $this->roleService = $roleService;
     $this->permissionService = $permissionService;
+    $this->tenantResolver = $tenantResolver;
   }
 
   /**
@@ -50,9 +58,12 @@ class RoleController
    */
   public function create()
   {
+    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+
     return view('backend.auth.role.create')
       ->withCategories($this->permissionService->getCategorizedPermissions())
-      ->withGeneral($this->permissionService->getUncategorizedPermissions());
+      ->withGeneral($this->permissionService->getUncategorizedPermissions())
+      ->withTenants($tenants);
   }
 
   /**
@@ -76,11 +87,15 @@ class RoleController
    */
   public function edit(EditRoleRequest $request, Role $role)
   {
+    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+
     return view('backend.auth.role.edit')
       ->withCategories($this->permissionService->getCategorizedPermissions())
       ->withGeneral($this->permissionService->getUncategorizedPermissions())
       ->withRole($role)
-      ->withUsedPermissions($role->permissions->modelKeys());
+      ->withUsedPermissions($role->permissions->modelKeys())
+      ->withTenants($tenants)
+      ->withUsedTenants($role->tenants->modelKeys());
   }
 
   /**

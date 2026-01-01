@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\EventController;
 use App\Http\Controllers\Backend\GalleryEventController;
 
-Route::group(['middleware' => ['permission:user.access.editor.events']], function () {
+Route::group(['middleware' => ['permission:user.access.editor.events', 'tenant.access']], function () {
 
   Route::get('events', function () {
     return view('backend.event.index');

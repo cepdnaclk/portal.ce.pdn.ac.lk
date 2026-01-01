@@ -4,6 +4,7 @@ namespace Tests\Feature\Backend\Event;
 
 use App\Domains\Auth\Models\User;
 use App\Domains\ContentManagement\Models\Event;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
@@ -41,6 +42,7 @@ class EventTest extends TestCase
   public function event_can_be_created()
   {
     $user = $this->loginAsEditor();
+    $tenantId = Tenant::defaultId();
 
     $response = $this->post('/dashboard/events/', [
       'title' => 'test event',
@@ -55,6 +57,7 @@ class EventTest extends TestCase
       'url' => 'https://ce.pdn.ac.lk/news/2004-10-10',
       'published_at' => '2024-10-10',
       'location' => 'zoom',
+      'tenant_id' => $tenantId,
     ]);
 
     $response->assertStatus(302);
@@ -69,6 +72,7 @@ class EventTest extends TestCase
   {
     $user = $this->loginAsEditor();
     $event = Event::factory()->create();
+    $tenantId = Tenant::defaultId();
 
     $updateData = [
       'title' => 'Updated Event',
@@ -84,6 +88,7 @@ class EventTest extends TestCase
       'location' => 'zoom',
       'url' => 'www.uniqueurl1.com',
       'published_at' => '2024-01-10',
+      'tenant_id' => $tenantId,
     ];
 
     $response = $this->put("/dashboard/events/{$event->id}", $updateData);

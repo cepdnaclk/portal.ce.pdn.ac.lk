@@ -33,6 +33,8 @@ class StoreRoleRequest extends FormRequest
       'name' => ['required', 'max:100', Rule::unique('roles')],
       'permissions' => ['sometimes', 'array'],
       'permissions.*' => [Rule::exists('permissions', 'id')->where('type', $this->type)],
+      'tenants' => ['sometimes', 'array'],
+      'tenants.*' => [Rule::exists('tenants', 'id')],
     ];
   }
 
@@ -43,6 +45,7 @@ class StoreRoleRequest extends FormRequest
   {
     return [
       'permissions.*.exists' => __('One or more permissions were not found or are not allowed to be associated with this role type.'),
+      'tenants.*.exists' => __('One or more tenants were not found or are not allowed to be associated with this role.'),
     ];
   }
 }

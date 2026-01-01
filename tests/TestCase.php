@@ -5,6 +5,7 @@ namespace Tests;
 use App\Domains\Auth\Http\Middleware\TwoFactorAuthenticationStatus;
 use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Auth\Middleware\RequirePassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -54,6 +55,7 @@ abstract class TestCase extends BaseTestCase
     $newsEditorRole = Role::where('name', 'Editor')->first();
     $user = User::factory()->admin()->create(['name' => 'Test Editor']);
     $user->assignRole($newsEditorRole->name);
+    $this->assignDefaultTenant($user);
     $this->actingAs($user);
 
     return $user;
@@ -64,9 +66,19 @@ abstract class TestCase extends BaseTestCase
     $courseManagerRole = Role::where('name', 'Course Manager')->first();
     $user = User::factory()->user()->create(['name' => 'Test Course Manager']);
     $user->assignRole($courseManagerRole->name);
+    $this->assignDefaultTenant($user);
     $this->actingAs($user);
 
     return $user;
+  }
+
+  protected function assignDefaultTenant(User $user): void
+  {
+    $defaultTenantId = Tenant::defaultId();
+
+    if ($defaultTenantId) {
+      $user->tenants()->sync([$defaultTenantId]);
+    }
   }
 
 

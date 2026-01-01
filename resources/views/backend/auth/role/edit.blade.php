@@ -40,6 +40,8 @@
                         </div>
                     </div><!--form-group-->
 
+                    @include('backend.auth.includes.tenants')
+
                     @include('backend.auth.includes.permissions')
                 </div>
             </x-slot>

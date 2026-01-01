@@ -30,6 +30,21 @@
                     </div>
                 </div>
 
+                <!-- Tenant -->
+                <div class="form-group row">
+                    {!! Form::label('tenant_id', 'Tenant*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        {!! Form::select('tenant_id', $tenants->pluck('name', 'id'), $selectedTenantId, [
+                            'class' => 'form-select',
+                            'required' => true,
+                            'placeholder' => '',
+                        ]) !!}
+                        @error('tenant_id')
+                            <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
                 <!-- Published At -->
                 <div class="form-group row">
                     {!! Form::label('published_at', 'Publish at*', ['class' => 'col-md-2 col-form-label']) !!}

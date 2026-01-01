@@ -131,6 +131,8 @@ class UserService extends BaseService
       if (! config('boilerplate.access.user.only_roles')) {
         $user->syncPermissions($data['permissions'] ?? []);
       }
+
+      $user->tenants()->sync($data['tenants'] ?? []);
     } catch (Exception $e) {
       DB::rollBack();
 
@@ -174,6 +176,8 @@ class UserService extends BaseService
         if (! config('boilerplate.access.user.only_roles')) {
           $user->syncPermissions($data['permissions'] ?? []);
         }
+
+        $user->tenants()->sync($data['tenants'] ?? []);
       }
     } catch (Exception $e) {
       DB::rollBack();

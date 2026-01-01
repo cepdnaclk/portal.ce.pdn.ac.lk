@@ -42,6 +42,22 @@
                     </div>
                 </div>
 
+                <!-- Tenant -->
+                <div class="form-group row">
+                    {!! Form::label('tenant_id', 'Tenant*', ['class' => 'col-md-2 col-form-label']) !!}
+
+                    <div class="col-md-10">
+                        {!! Form::select('tenant_id', $tenants->pluck('name', 'id'), $selectedTenantId, [
+                            'class' => 'form-select',
+                            'required' => true,
+                            'placeholder' => '',
+                        ]) !!}
+                        @error('tenant_id')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
                 <!-- Message -->
                 <div class="form-group row">
                     {!! Form::label('message', 'Display Message*', ['class' => 'col-md-2 col-form-label']) !!}

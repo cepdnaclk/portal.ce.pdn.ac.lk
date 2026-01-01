@@ -27,6 +27,10 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->tenant?->name ?? '-' }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     {{ $row->starts_at }}
 </x-livewire-tables::table.cell>
 

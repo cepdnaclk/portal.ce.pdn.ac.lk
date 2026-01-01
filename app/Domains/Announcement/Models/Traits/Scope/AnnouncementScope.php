@@ -2,6 +2,8 @@
 
 namespace App\Domains\Announcement\Models\Traits\Scope;
 
+use App\Domains\Tenant\Models\Tenant;
+
 /**
  * Class AnnouncementScope.
  */
@@ -15,6 +17,28 @@ trait AnnouncementScope
   {
     return $query->whereEnabled(true);
   }
+  /**
+   * @param $query
+   * @param $tenant
+   * @return mixed
+   */
+  public function scopeForTenant($query, $tenant)
+  {
+    $tenantId = $tenant instanceof Tenant ? $tenant->id : $tenant;
+
+    return $tenantId ? $query->where('tenant_id', $tenantId) : $query;
+  }
+
+  /**
+   * @param $query
+   * @param array $tenantIds
+   * @return mixed
+   */
+  public function scopeForTenants($query, array $tenantIds)
+  {
+    return $query->whereIn('tenant_id', $tenantIds);
+  }
+
 
   /**
    * @param $query

@@ -6,6 +6,7 @@ use Database\Seeders\Traits\DisableForeignKeys;
 use Database\Seeders\Traits\TruncateTable;
 use Illuminate\Database\Seeder;
 use App\Domains\ContentManagement\Models\Event;
+use App\Domains\Tenant\Models\Tenant;
 
 class EventSeeder extends Seeder
 {
@@ -19,6 +20,7 @@ class EventSeeder extends Seeder
     $this->truncateMultiple([
       'events',
     ]);
+    $defaultTenantId = Tenant::defaultId();
     // Create some sample event
     $events = [
       [
@@ -99,6 +101,9 @@ class EventSeeder extends Seeder
     ];
 
     foreach ($events as $item) {
+      if ($defaultTenantId) {
+        $item['tenant_id'] = $defaultTenantId;
+      }
       Event::firstOrCreate($item);
     }
 
