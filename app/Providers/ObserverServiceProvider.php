@@ -11,19 +11,19 @@ use Illuminate\Support\ServiceProvider;
  */
 class ObserverServiceProvider extends ServiceProvider
 {
-    /**
-     * Register bindings in the container.
-     */
-    public function boot()
-    {
-        User::observe(UserObserver::class);
-    }
+  /**
+   * Register bindings in the container.
+   */
+  public function boot()
+  {
+    User::observe(UserObserver::class);
+  }
 
-    /**
-     * Register the service provider.
-     */
-    public function register()
-    {
-        //
-    }
+  /**
+   * Register the service provider.
+   */
+  public function register()
+  {
+    //
+  }
 }

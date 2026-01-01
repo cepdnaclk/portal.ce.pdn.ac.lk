@@ -9,11 +9,11 @@ use App\Domains\Auth\Models\PasswordHistory;
  */
 trait UserRelationship
 {
-    /**
-     * @return mixed
-     */
-    public function passwordHistories()
-    {
-        return $this->morphMany(PasswordHistory::class, 'model');
-    }
+  /**
+   * @return mixed
+   */
+  public function passwordHistories()
+  {
+    return $this->morphMany(PasswordHistory::class, 'model');
+  }
 }

@@ -8,7 +8,7 @@
             @include('backend.auth.includes.partials.permission-type', ['type' => $model::TYPE_ADMIN])
         </div>
 
-        <div x-show="userType === '{{ $model::TYPE_USER}}'">
+        <div x-show="userType === '{{ $model::TYPE_USER }}'">
             @include('backend.auth.includes.partials.permission-type', ['type' => $model::TYPE_USER])
         </div>
     </div>

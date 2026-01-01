@@ -10,15 +10,8 @@
             <label for="code" class="col-md-4 col-form-label text-md-right">@lang('Authorization Code')</label>
 
             <div class="col-md-6">
-                <input
-                    type="text"
-                    id="code"
-                    wire:model.lazy="code"
-                    minlength="6"
-                    class="form-control"
-                    placeholder="{{ __('Authorization Code') }}"
-                    required
-                    autofocus />
+                <input type="text" id="code" wire:model.lazy="code" minlength="6" class="form-control"
+                    placeholder="{{ __('Authorization Code') }}" required autofocus />
             </div>
         </div><!--form-group-->
 

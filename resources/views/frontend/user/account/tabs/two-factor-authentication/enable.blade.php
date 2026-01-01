@@ -30,7 +30,7 @@
                             </div><!--col-->
                         </div><!--row-->
 
-                        <hr/>
+                        <hr />
 
                         <h5><strong>@lang('Step 2: Enter a 2FA code')</strong></h5>
 

@@ -7,16 +7,16 @@ namespace App\Http\Controllers;
  */
 class LocaleController
 {
-    /**
-     * @param $locale
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function change($locale)
-    {
-        app()->setLocale($locale);
+  /**
+   * @param $locale
+   * @return \Illuminate\Http\RedirectResponse
+   */
+  public function change($locale)
+  {
+    app()->setLocale($locale);
 
-        session()->put('locale', $locale);
+    session()->put('locale', $locale);
 
-        return redirect()->back();
-    }
+    return redirect()->back();
+  }
 }

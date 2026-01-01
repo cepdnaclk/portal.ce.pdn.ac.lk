@@ -9,19 +9,19 @@ use Illuminate\Support\Collection;
  */
 trait RoleMethod
 {
-    /**
-     * @return mixed
-     */
-    public function isAdmin(): bool
-    {
-        return $this->name === config('boilerplate.access.role.admin');
-    }
+  /**
+   * @return mixed
+   */
+  public function isAdmin(): bool
+  {
+    return $this->name === config('boilerplate.access.role.admin');
+  }
 
-    /**
-     * @return Collection
-     */
-    public function getPermissionDescriptions(): Collection
-    {
-        return $this->permissions->pluck('description');
-    }
+  /**
+   * @return Collection
+   */
+  public function getPermissionDescriptions(): Collection
+  {
+    return $this->permissions->pluck('description');
+  }
 }

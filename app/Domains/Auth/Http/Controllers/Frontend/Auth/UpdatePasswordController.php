@@ -10,31 +10,31 @@ use App\Domains\Auth\Services\UserService;
  */
 class UpdatePasswordController
 {
-    /**
-     * @var UserService
-     */
-    protected $userService;
+  /**
+   * @var UserService
+   */
+  protected $userService;
 
-    /**
-     * ChangePasswordController constructor.
-     *
-     * @param  UserService  $userService
-     */
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
-    }
+  /**
+   * ChangePasswordController constructor.
+   *
+   * @param  UserService  $userService
+   */
+  public function __construct(UserService $userService)
+  {
+    $this->userService = $userService;
+  }
 
-    /**
-     * @param  UpdatePasswordRequest  $request
-     * @return mixed
-     *
-     * @throws \Throwable
-     */
-    public function update(UpdatePasswordRequest $request)
-    {
-        $this->userService->updatePassword($request->user(), $request->validated());
+  /**
+   * @param  UpdatePasswordRequest  $request
+   * @return mixed
+   *
+   * @throws \Throwable
+   */
+  public function update(UpdatePasswordRequest $request)
+  {
+    $this->userService->updatePassword($request->user(), $request->validated());
 
-        return redirect()->route('intranet.user.account', ['#password'])->withFlashSuccess(__('Password successfully updated.'));
-    }
+    return redirect()->route('intranet.user.account', ['#password'])->withFlashSuccess(__('Password successfully updated.'));
+  }
 }

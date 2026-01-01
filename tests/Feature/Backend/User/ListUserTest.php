@@ -11,39 +11,39 @@ use Tests\TestCase;
  */
 class ListUserTest extends TestCase
 {
-    use RefreshDatabase;
+  use RefreshDatabase;
 
-    /** @test */
-    public function only_a_user_with_correct_permissions_can_list_users()
-    {
-        $this->actingAs($user = User::factory()->admin()->create());
+  /** @test */
+  public function only_a_user_with_correct_permissions_can_list_users()
+  {
+    $this->actingAs($user = User::factory()->admin()->create());
 
-        $user->syncPermissions(['admin.access.user.list']);
+    $user->syncPermissions(['admin.access.user.list']);
 
-        $this->get('/dashboard/auth/user')->assertOk();
+    $this->get('/dashboard/auth/user')->assertOk();
 
-        $user->syncPermissions([]);
+    $user->syncPermissions([]);
 
-        $response = $this->get('/dashboard/auth/user');
+    $response = $this->get('/dashboard/auth/user');
 
-        $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
-    }
+    $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
+  }
 
-    /** @test */
-    public function only_a_user_with_correct_permissions_can_view_an_individual_user()
-    {
-        $this->actingAs($user = User::factory()->admin()->create());
+  /** @test */
+  public function only_a_user_with_correct_permissions_can_view_an_individual_user()
+  {
+    $this->actingAs($user = User::factory()->admin()->create());
 
-        $user->syncPermissions(['admin.access.user.list']);
+    $user->syncPermissions(['admin.access.user.list']);
 
-        $newUser = User::factory()->create();
+    $newUser = User::factory()->create();
 
-        $this->get('/dashboard/auth/user/' . $newUser->id)->assertOk();
+    $this->get('/dashboard/auth/user/' . $newUser->id)->assertOk();
 
-        $user->syncPermissions([]);
+    $user->syncPermissions([]);
 
-        $response = $this->get('/dashboard/auth/user/' . $newUser->id);
+    $response = $this->get('/dashboard/auth/user/' . $newUser->id);
 
-        $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
-    }
+    $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
+  }
 }

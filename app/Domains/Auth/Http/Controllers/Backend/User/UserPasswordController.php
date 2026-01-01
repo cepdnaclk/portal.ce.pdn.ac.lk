@@ -12,43 +12,43 @@ use App\Domains\Auth\Services\UserService;
  */
 class UserPasswordController
 {
-    /**
-     * @var UserService
-     */
-    protected $userService;
+  /**
+   * @var UserService
+   */
+  protected $userService;
 
-    /**
-     * UserPasswordController constructor.
-     *
-     * @param  UserService  $userService
-     */
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
-    }
+  /**
+   * UserPasswordController constructor.
+   *
+   * @param  UserService  $userService
+   */
+  public function __construct(UserService $userService)
+  {
+    $this->userService = $userService;
+  }
 
-    /**
-     * @param  EditUserPasswordRequest  $request
-     * @param  User  $user
-     * @return mixed
-     */
-    public function edit(EditUserPasswordRequest $request, User $user)
-    {
-        return view('backend.auth.user.change-password')
-            ->withUser($user);
-    }
+  /**
+   * @param  EditUserPasswordRequest  $request
+   * @param  User  $user
+   * @return mixed
+   */
+  public function edit(EditUserPasswordRequest $request, User $user)
+  {
+    return view('backend.auth.user.change-password')
+      ->withUser($user);
+  }
 
-    /**
-     * @param  UpdateUserPasswordRequest  $request
-     * @param  User  $user
-     * @return mixed
-     *
-     * @throws \Throwable
-     */
-    public function update(UpdateUserPasswordRequest $request, User $user)
-    {
-        $this->userService->updatePassword($user, $request->validated());
+  /**
+   * @param  UpdateUserPasswordRequest  $request
+   * @param  User  $user
+   * @return mixed
+   *
+   * @throws \Throwable
+   */
+  public function update(UpdateUserPasswordRequest $request, User $user)
+  {
+    $this->userService->updatePassword($user, $request->validated());
 
-        return redirect()->route('dashboard.auth.user.index')->withFlashSuccess(__('The user\'s password was successfully updated.'));
-    }
+    return redirect()->route('dashboard.auth.user.index')->withFlashSuccess(__('The user\'s password was successfully updated.'));
+  }
 }

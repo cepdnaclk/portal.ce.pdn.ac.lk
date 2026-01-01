@@ -11,23 +11,23 @@ use Illuminate\Database\Seeder;
  */
 class UserRoleSeeder extends Seeder
 {
-    use DisableForeignKeys;
+  use DisableForeignKeys;
 
-    /**
-     * Run the database seed.
-     */
-    public function run()
-    {
-        $this->disableForeignKeys();
+  /**
+   * Run the database seed.
+   */
+  public function run()
+  {
+    $this->disableForeignKeys();
 
-        // Admin user
-        User::first()->assignRole('Administrator');
+    // Admin user
+    User::first()->assignRole('Administrator');
 
-        // Only for the local testings
-        if (app()->environment(['local', 'testing'])) {
-            // Nothing to do here for now
-        }
-
-        $this->enableForeignKeys();
+    // Only for the local testings
+    if (app()->environment(['local', 'testing'])) {
+      // Nothing to do here for now
     }
+
+    $this->enableForeignKeys();
+  }
 }

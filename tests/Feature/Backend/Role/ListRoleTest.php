@@ -11,23 +11,23 @@ use Tests\TestCase;
  */
 class ListRoleTest extends TestCase
 {
-    use RefreshDatabase;
+  use RefreshDatabase;
 
-    /** @test */
-    public function an_admin_can_access_the_role_index_page()
-    {
-        $this->loginAsAdmin();
+  /** @test */
+  public function an_admin_can_access_the_role_index_page()
+  {
+    $this->loginAsAdmin();
 
-        $this->get('/dashboard/auth/role')->assertOk();
-    }
+    $this->get('/dashboard/auth/role')->assertOk();
+  }
 
-    /** @test */
-    public function only_admin_can_view_roles()
-    {
-        $this->actingAs(User::factory()->admin()->create());
+  /** @test */
+  public function only_admin_can_view_roles()
+  {
+    $this->actingAs(User::factory()->admin()->create());
 
-        $response = $this->get('/dashboard/auth/role');
+    $response = $this->get('/dashboard/auth/role');
 
-        $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
-    }
+    $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
+  }
 }

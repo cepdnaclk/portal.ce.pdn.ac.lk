@@ -15,27 +15,24 @@
                         <p>@lang('To continue, open up your Authenticator app and issue your 2FA code.')</p>
 
                         <x-forms.post :action="$action">
-                            @foreach((array)$credentials as $name => $value)
+                            @foreach ((array) $credentials as $name => $value)
                                 <input type="hidden" name="{{ $name }}" value="{{ $value }}">
                             @endforeach
 
-                            @if($remember)
+                            @if ($remember)
                                 <input type="hidden" name="remember" value="on">
                             @endif
 
                             <div class="form-group row">
-                                <label for="{{ $input }}" class="col-md-4 col-form-label text-md-right">@lang('Authentication Code')</label>
+                                <label for="{{ $input }}"
+                                    class="col-md-4 col-form-label text-md-right">@lang('Authentication Code')</label>
 
                                 <div class="col-md-6">
-                                    <input type="text"
-                                           name="{{ $input }}"
-                                           id="{{ $input }}"
-                                           class="form-control {{ $error ? 'is-invalid' : '' }}"
-                                           placeholder="123456"
-                                           minlength="6"
-                                           required />
+                                    <input type="text" name="{{ $input }}" id="{{ $input }}"
+                                        class="form-control {{ $error ? 'is-invalid' : '' }}" placeholder="123456"
+                                        minlength="6" required />
 
-                                    @if($error)
+                                    @if ($error)
                                         <div class="invalid-feedback">
                                             {{ trans('laraguard::validation.totp_code') }}
                                         </div>
