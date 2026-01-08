@@ -5,7 +5,7 @@ namespace App\Domains\ContentManagement\Models\Traits\Scope;
 use App\Domains\Tenant\Models\Tenant;
 
 /**
- * Class AnnouncementScope.
+ * Class EventScope.
  */
 trait EventScope
 {
@@ -30,6 +30,7 @@ trait EventScope
   {
     return $query->whereIn('tenant_id', $tenantIds);
   }
+
   /**
    * @param $query
    * @return mixed
@@ -38,7 +39,6 @@ trait EventScope
   {
     return $query->whereEnabled(true);
   }
-
 
   /**
    * @param $query

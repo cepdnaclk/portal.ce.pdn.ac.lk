@@ -5,7 +5,7 @@ namespace App\Domains\ContentManagement\Models\Traits\Scope;
 use App\Domains\Tenant\Models\Tenant;
 
 /**
- * Class AnnouncementScope.
+ * Class NewsScope.
  */
 trait NewsScope
 {

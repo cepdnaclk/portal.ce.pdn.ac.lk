@@ -17,16 +17,16 @@ trait AnnouncementScope
   {
     return $query->whereEnabled(true);
   }
+
   /**
    * @param $query
    * @param $tenant
    * @return mixed
    */
-  public function scopeForTenant($query, $tenant)
+  public function scopeForTenant($query)
   {
-    $tenantId = $tenant instanceof Tenant ? $tenant->id : $tenant;
-
-    return $tenantId ? $query->where('tenant_id', $tenantId) : $query;
+    $tenantId = Tenant::default()->id;
+    return $query->where('tenant_id', $tenantId);
   }
 
   /**
@@ -38,7 +38,6 @@ trait AnnouncementScope
   {
     return $query->whereIn('tenant_id', $tenantIds);
   }
-
 
   /**
    * @param $query
