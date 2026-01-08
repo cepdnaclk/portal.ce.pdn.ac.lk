@@ -102,15 +102,14 @@ class NewsTable extends PersistentStateDataTable
         ->select(['' => 'Any'] + $tenants->pluck('name', 'id')->toArray());
     }
 
-    return [
-      ...$filters,
+    return array_merge($filters, [
       'enabled' => Filter::make('Enabled')
         ->select([
           '' => 'Any',
           1 => 'Enabled',
           0 => 'Not Enabled',
         ]),
-    ];
+    ]);
   }
 
   public function rowView(): string

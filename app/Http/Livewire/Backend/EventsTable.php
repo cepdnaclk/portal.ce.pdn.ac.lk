@@ -109,8 +109,7 @@ class EventsTable extends PersistentStateDataTable
         ->select(['' => 'Any'] + $tenants->pluck('name', 'id')->toArray());
     }
 
-    return [
-      ...$filters,
+    return array_merge($filters, [
       'enabled' => Filter::make('Enabled')
         ->select([
           '' => 'Any',
@@ -125,7 +124,7 @@ class EventsTable extends PersistentStateDataTable
         ]),
       'event_type' => Filter::make("Event Type")
         ->select(array_merge(['' => 'Any'], Event::eventTypeMap()))
-    ];
+    ]);
   }
 
   public function rowView(): string

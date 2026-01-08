@@ -21,7 +21,8 @@ class ListTenantTest extends TestCase
   /** @test */
   public function only_admin_can_view_tenants()
   {
-    $this->actingAs(User::factory()->admin()->create());
+    $nonAdminUser = User::factory()->createOne();
+    $this->actingAs($nonAdminUser);
 
     $response = $this->get('/dashboard/tenants');
 

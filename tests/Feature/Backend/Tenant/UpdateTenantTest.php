@@ -55,7 +55,8 @@ class UpdateTenantTest extends TestCase
   /** @test */
   public function only_admin_can_update_tenants()
   {
-    $this->actingAs(User::factory()->admin()->create());
+    $nonAdminUser = User::factory()->createOne();
+    $this->actingAs($nonAdminUser);
 
     $tenant = Tenant::factory()->create();
 

@@ -100,13 +100,13 @@ class AnnouncementTable extends DataTableComponent
       $area[$key] = $value;
     }
 
-    return [
-      ...$filters,
+
+    return array_merge($filters, [
       'area' => Filter::make('Display Area')
         ->select($area),
       'type' => Filter::make('Type')
         ->select($type),
-    ];
+    ]);
   }
 
   public function rowView(): string

@@ -44,7 +44,8 @@ class DeleteTenantTest extends TestCase
   /** @test */
   public function only_admin_can_delete_tenants()
   {
-    $this->actingAs(User::factory()->admin()->create());
+    $nonAdminUser = User::factory()->createOne();
+    $this->actingAs($nonAdminUser);
 
     $tenant = Tenant::factory()->create();
 
