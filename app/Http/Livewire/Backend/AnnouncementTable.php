@@ -69,6 +69,8 @@ class AnnouncementTable extends DataTableComponent
 
   public function toggleEnable($announcementId)
   {
+    abort_unless(auth()->user()?->can('user.access.editor.announcements'), 403);
+
     $tenantIds = $this->getAvailableTenantIds();
     $announcement = Announcement::query()
       ->when(! auth()->user()?->hasAllAccess(), function ($query) use ($tenantIds) {

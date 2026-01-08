@@ -61,7 +61,7 @@
                     {!! Form::label('url', 'URL*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         <div class="d-inline-flex align-items-center flex-nowrap w-100">
-                            <span class="me-2" id="url_hint">https://www.ce.pdn.ac.lk/events/{yyyy-mm-dd}-</span>
+                            <span class="me-2" id="url_hint">/events/{yyyy-mm-dd}-</span>
                             <span class="flex-grow-1"> {!! Form::text('url', '', ['class' => 'form-control']) !!}</span>
                         </div>
                         @error('url')
@@ -187,7 +187,7 @@
     <script>
         document.getElementById('published_at').addEventListener('change', function() {
             document.getElementById('url_hint').textContent =
-                `https://www.ce.pdn.ac.lk/events/${this.value.toLowerCase() ?? 'yyyy-mm-dd'}-`;
+                `/events/${this.value.toLowerCase() ?? 'yyyy-mm-dd'}-`;
         });
     </script>
 @endsection

@@ -45,6 +45,7 @@ class AnnouncementController extends Controller
       $request->merge(['tenant_id' => $tenantId]);
     }
 
+    $availableTenantIds = $this->availableTenantIds($request);
     $data = request()->validate([
       'area' => ['required', Rule::in(array_keys(Announcement::areas()))],
       'type' => ['required', Rule::in(array_keys(Announcement::types()))],
@@ -52,7 +53,7 @@ class AnnouncementController extends Controller
       'enabled' => 'nullable',
       'starts_at' => 'required|date_format:Y-m-d\\TH:i',
       'ends_at' => 'required|date_format:Y-m-d\\TH:i', // TODO: Test ends>starts
-      'tenant_id' => ['required', 'exists:tenants,id'],
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     try {
@@ -102,6 +103,7 @@ class AnnouncementController extends Controller
       $request->merge(['tenant_id' => $tenantId]);
     }
 
+    $availableTenantIds = $this->availableTenantIds($request);
     $data = request()->validate([
       'area' => ['required', Rule::in(array_keys(Announcement::areas()))],
       'type' => ['required', Rule::in(array_keys(Announcement::types()))],
@@ -109,7 +111,7 @@ class AnnouncementController extends Controller
       'enabled' => 'nullable',
       'starts_at' => 'required|date_format:Y-m-d\\TH:i',
       'ends_at' => 'required|date_format:Y-m-d\\TH:i', // TODO: Test ends>starts
-      'tenant_id' => ['required', 'exists:tenants,id'],
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     try {
@@ -164,5 +166,13 @@ class AnnouncementController extends Controller
     }
 
     return null;
+  }
+
+  private function availableTenantIds(Request $request): array
+  {
+    return $this->tenantResolver
+      ->availableTenantsForUser($request->user())
+      ->pluck('id')
+      ->all();
   }
 }

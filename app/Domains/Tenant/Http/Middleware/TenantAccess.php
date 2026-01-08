@@ -25,7 +25,6 @@ class TenantAccess
     }
 
     $request->attributes->set('tenant', $tenant);
-
     $user = $request->user();
 
     if ($user && $explicitTenant && ! $user->hasAllAccess()) {

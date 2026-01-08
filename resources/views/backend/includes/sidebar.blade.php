@@ -17,7 +17,7 @@
             <li class="c-sidebar-nav-title">@lang('System')</li>
 
             <li
-                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.auth.user.*') || Route::is('dashboard.auth.role.*'), 'c-open c-show') }}">
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.auth.user.*') || Route::is('dashboard.auth.role.*') || Route::is('dashboard.tenants.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-user" class="c-sidebar-nav-dropdown-toggle"
                     :text="__('Access')" />
 
@@ -41,6 +41,10 @@
                             <x-utils.link :href="route('dashboard.auth.role.index')" class="c-sidebar-nav-link" :text="__('Role Management')"
                                 :active="activeClass(Route::is('dashboard.auth.role.*'), 'c-active')" />
                         </li>
+                        <li class="c-sidebar-nav-item">
+                            <x-utils.link :href="route('dashboard.tenants.index')" class="c-sidebar-nav-link" :text="__('Tenant Management')"
+                                :active="activeClass(Route::is('dashboard.tenants.*'), 'c-active')" />
+                        </li>
                     @endif
                 </ul>
             </li>
@@ -63,7 +67,7 @@
         @endif
 
         {{-- Announcements --}}
-        @if ($logged_in_user->hasAllAccess())
+        @if ($logged_in_user->hasAllAccess() || $logged_in_user->hasPermissionTo('user.access.editor.announcements'))
             <li
                 class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.announcements.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-bullhorn"

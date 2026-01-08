@@ -2,11 +2,15 @@
 
 namespace App\Domains\Tenant\Models;
 
+use App\Domains\Announcement\Models\Announcement;
 use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
+use App\Domains\ContentManagement\Models\Event;
+use App\Domains\ContentManagement\Models\News;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Tenant extends Model
@@ -39,6 +43,21 @@ class Tenant extends Model
   public function roles(): BelongsToMany
   {
     return $this->belongsToMany(Role::class, 'tenant_role');
+  }
+
+  public function news(): HasMany
+  {
+    return $this->hasMany(News::class);
+  }
+
+  public function events(): HasMany
+  {
+    return $this->hasMany(Event::class);
+  }
+
+  public function announcements(): HasMany
+  {
+    return $this->hasMany(Announcement::class);
   }
 
   public static function default(): ?self

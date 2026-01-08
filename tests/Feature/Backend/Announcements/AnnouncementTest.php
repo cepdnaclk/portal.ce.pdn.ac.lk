@@ -23,6 +23,28 @@ class AnnouncementTest extends TestCase
   }
 
   /** @test */
+  public function a_user_without_announcement_permissions_cannot_access_the_list_page()
+  {
+    $this->actingAs($user = User::factory()->admin()->create());
+
+    $user->syncPermissions([]);
+
+    $response = $this->get('/dashboard/announcements');
+
+    $response->assertSessionHas('flash_danger', __('You do not have access to do that.'));
+  }
+
+  /** @test */
+  public function a_user_with_announcement_permissions_can_access_the_list_page()
+  {
+    $this->actingAs($user = User::factory()->admin()->create());
+
+    $user->syncPermissions(['user.access.editor.announcements']);
+
+    $this->get('/dashboard/announcements')->assertOk();
+  }
+
+  /** @test */
   public function an_admin_can_access_the_create_announcement_page()
   {
     $this->loginAsAdmin();
@@ -42,7 +64,7 @@ class AnnouncementTest extends TestCase
   {
     $this->loginAsAdmin();
     $response = $this->post('/dashboard/announcements');
-    $response->assertSessionHasErrors(['area', 'type', 'message', 'starts_at', 'ends_at', 'tenant_id']);
+    $response->assertSessionHasErrors(['area', 'type', 'message', 'starts_at', 'ends_at']);
   }
 
   /** @test */
@@ -52,7 +74,7 @@ class AnnouncementTest extends TestCase
     $announcement = Announcement::factory()->create();
 
     $response = $this->put("/dashboard/announcements/{$announcement->id}", []);
-    $response->assertSessionHasErrors(['area', 'type', 'message', 'starts_at', 'ends_at', 'tenant_id']);
+    $response->assertSessionHasErrors(['area', 'type', 'message', 'starts_at', 'ends_at']);
   }
 
   /** @test */
@@ -80,15 +102,19 @@ class AnnouncementTest extends TestCase
   /** @test */
   public function an_component_can_be_updated()
   {
-    $this->actingAs(User::factory()->admin()->create());
-    $announcement = Announcement::factory()->create();
-    $tenantId = Tenant::defaultId();
+    $user = User::factory()->admin()->create();
+    $user->syncPermissions(['user.access.editor.announcements']);
+    $tenant = Tenant::factory()->create();
+    $user->tenants()->sync([$tenant->id]);
+    $this->actingAs($user);
+
+    $announcement = Announcement::factory()->create(['tenant_id' => $tenant->id]);
 
     $announcement->message = 'This can be updated';
     $announcement_array = $announcement->toArray();
     $announcement_array['starts_at'] = date("Y-m-d\\TH:i");
     $announcement_array['ends_at'] = date("Y-m-d\\TH:i");
-    $announcement_array['tenant_id'] = $tenantId;
+    $announcement_array['tenant_id'] = $tenant->id;
 
     $response = $this->put("/dashboard/announcements/{$announcement->id}", $announcement_array);
     $response->assertStatus(302);
@@ -101,8 +127,13 @@ class AnnouncementTest extends TestCase
   /** @test */
   public function delete_announcement()
   {
-    $this->actingAs(User::factory()->admin()->create());
-    $announcement = Announcement::factory()->create();
+    $user = User::factory()->admin()->create();
+    $user->syncPermissions(['user.access.editor.announcements']);
+    $tenant = Tenant::factory()->create();
+    $user->tenants()->sync([$tenant->id]);
+    $this->actingAs($user);
+
+    $announcement = Announcement::factory()->create(['tenant_id' => $tenant->id]);
     $this->delete('/dashboard/announcements/' . $announcement->id);
     $this->assertDatabaseMissing('announcements', ['id' => $announcement->id]);
   }

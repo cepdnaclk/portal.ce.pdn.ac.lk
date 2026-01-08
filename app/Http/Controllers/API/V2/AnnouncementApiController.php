@@ -22,22 +22,20 @@ class AnnouncementApiController extends Controller
         return response()->json(['message' => 'Tenant not found'], 404);
       }
 
-      $area = $request->query('area', Announcement::TYPE_FRONTEND);
-      $validAreas = [Announcement::TYPE_FRONTEND, Announcement::TYPE_BACKEND];
-      if (! in_array($area, $validAreas, true)) {
-        $area = Announcement::TYPE_FRONTEND;
-      }
-
       $announcements = Announcement::query()
         ->enabled()
         ->forTenant($tenant)
-        ->forArea($area)
         ->inTimeFrame()
         ->orderBy('starts_at', 'desc')
-        ->orderBy('created_at', 'desc')
-        ->get();
+        ->orderBy('created_at', 'desc');
 
-      return AnnouncementResource::collection($announcements);
+      // Optionally filter by area
+      $area = $request->query('area');
+      if ($area && in_array($area, [Announcement::TYPE_FRONTEND, Announcement::TYPE_BACKEND], true)) {
+        $announcements = $announcements->forArea($area);
+      }
+
+      return AnnouncementResource::collection($announcements->get());
     } catch (\Exception $e) {
       Log::error('Error in V2 AnnouncementApiController@index', ['error' => $e->getMessage()]);
       return response()->json(['message' => 'An error occurred while fetching announcements'], 500);

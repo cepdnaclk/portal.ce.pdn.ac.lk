@@ -85,24 +85,25 @@ class TenantResolver
     if ($model instanceof News || $model instanceof Event || $model instanceof Announcement) {
       return $model->tenant;
     }
+    $url = $request->route()->uri();
 
-    if (is_numeric($model)) {
-      $news = News::find($model);
-      if ($news) {
-        return $news->tenant;
-      }
-
-      $event = Event::find($model);
-      if ($event) {
-        return $event->tenant;
-      }
-
-      $announcement = Announcement::find($model);
-      if ($announcement) {
-        return $announcement->tenant;
-      }
+    if (! is_numeric($model)) {
+      return null;
     }
 
+    // Find by URL segments
+    $lookups = [
+      'news' => News::class,
+      'events' => Event::class,
+      'announcements' => Announcement::class,
+    ];
+
+    foreach ($lookups as $segment => $class) {
+      if (! Str::contains($url, $segment)) {
+        continue;
+      }
+      return $class::find($model)?->tenant;
+    }
     return null;
   }
 

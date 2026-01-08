@@ -36,6 +36,10 @@ class EditorRoleSeeder extends Seeder
         'name' => 'user.access.editor.events',
         'description' => 'Manage Event Articles',
       ],
+      [
+        'name' => 'user.access.editor.announcements',
+        'description' => 'Manage Announcements',
+      ],
     ];
 
     foreach ($permissions as $permissionData) {
