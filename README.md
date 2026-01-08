@@ -74,10 +74,10 @@ pnpm run watch
 
 - Define tenants in `config/tenants.php` with `slug`, `name`, `url`, `description`.
 - The `default` tenant slug controls the content returned by v1 APIs.
-- Sync tenants from config with:
+- Seed tenants from config with:
 
 ```bash
-php artisan tenants:sync
+php artisan db:seed --class=Database\\Seeders\\TenantSeeder
 ```
 
 ##### API examples (v2 tenant-aware APIs)

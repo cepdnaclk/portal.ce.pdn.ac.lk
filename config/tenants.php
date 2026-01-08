@@ -1,5 +1,8 @@
 <?php
 
+// This can be used to define the tenants for the application at the config level.
+// (Can be configured later at the GUI level as well).
+
 return [
   'default' => 'cepdnaclk',
 
