@@ -6,6 +6,7 @@
                 icon="c-sidebar-nav-icon fa fa-tachometer" :text="__('Dashboard')" />
         </li>
 
+        {{-- Access Control --}}
         @if (
             $logged_in_user->hasAllAccess() ||
                 ($logged_in_user->can('admin.access.user.list') ||
@@ -50,6 +51,7 @@
             </li>
         @endif
 
+        {{-- Logs --}}
         @if ($logged_in_user->hasAllAccess())
             <li class="c-sidebar-nav-dropdown">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-list" class="c-sidebar-nav-dropdown-toggle"
@@ -60,36 +62,33 @@
                         <x-utils.link :href="route('log-viewer::dashboard')" class="c-sidebar-nav-link" :text="__('Dashboard')" />
                     </li>
                     <li class="c-sidebar-nav-item">
-                        <x-utils.link :href="route('log-viewer::logs.list')" class="c-sidebar-nav-link" :text="__('Logs')" />
+                        <x-utils.link :href="route('log-viewer::logs.list')" class="c-sidebar-nav-link" :text="__('Log Records')" />
                     </li>
                 </ul>
             </li>
         @endif
 
-        {{-- Announcements --}}
-        @if ($logged_in_user->hasAllAccess() || $logged_in_user->hasPermissionTo('user.access.editor.announcements'))
-            <li
-                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.announcements.*'), 'c-open c-show') }}">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-bullhorn"
-                    class="c-sidebar-nav-dropdown-toggle" :text="__('Announcements')"></x-utils.link>
-
-                <ul class="c-sidebar-nav-dropdown-items">
-                    <li class="c-sidebar-nav-item">
-                        <x-utils.link :href="route('dashboard.announcements.index')" class="c-sidebar-nav-link" :text="__('Manage')"
-                            :active="activeClass(Route::is('dashboard.announcements.*'), 'c-active')"></x-utils.link>
-                    </li>
-                </ul>
-            </li>
-        @endif
-
-        {{-- News and Events --}}
-        @if ($logged_in_user->hasAnyPermission(['user.access.editor.news', 'user.access.editor.events']))
+        {{-- Content Management --}}
+        @if (
+            $logged_in_user->hasAnyPermission([
+                'user.access.editor.news',
+                'user.access.editor.events',
+                'user.access.editor.announcements',
+            ]))
             <li
                 class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.news.*') || Route::is('dashboard.event.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-newspaper-o"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Content Management')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
+                    @if ($logged_in_user->hasPermissionTo('user.access.editor.announcements'))
+                        {{-- Announcements --}}
+                        <li class="c-sidebar-nav-item">
+                            <x-utils.link :href="route('dashboard.announcements.index')" class="c-sidebar-nav-link" :text="__('Announcements')"
+                                :active="activeClass(Route::is('dashboard.announcements.*'), 'c-active')"></x-utils.link>
+                        </li>
+                    @endif
+
                     @if ($logged_in_user->hasPermissionTo('user.access.editor.news'))
                         {{-- News --}}
                         <li class="c-sidebar-nav-item">
