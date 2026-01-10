@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Http\Livewire\Components\PersistentStateDataTable;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Illuminate\Support\Facades\Cache;
 
 class EventsTable extends PersistentStateDataTable
 {
@@ -51,6 +52,7 @@ class EventsTable extends PersistentStateDataTable
     $tenantIds = $this->getAvailableTenantIds();
 
     if (! $tenantIds) {
+      // No events if no access to any tenant
       return Event::query()->whereRaw('1 = 0');
     }
 
@@ -134,10 +136,14 @@ class EventsTable extends PersistentStateDataTable
 
   private function getAvailableTenants()
   {
-    return app(TenantResolver::class)
-      ->availableTenantsForUser(auth()->user())
-      ->sortBy('slug')
-      ->values();
+    $cacheKey = 'events_table.tenants.user.' . (auth()->id() ?? 'guest');
+
+    return Cache::remember($cacheKey, 60, function () {
+      return app(TenantResolver::class)
+        ->availableTenantsForUser(auth()->user())
+        ->sortBy('slug')
+        ->values();
+    });
   }
 
   private function getAvailableTenantIds(): array

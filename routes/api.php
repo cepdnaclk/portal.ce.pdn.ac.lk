@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Tenant\Models\Tenant;
 use App\Http\Controllers\API\NewsApiController;
 use App\Http\Controllers\API\EventApiController;
 use App\Http\Controllers\API\V2\EventApiController as EventApiV2Controller;
@@ -41,9 +42,29 @@ Route::group(['prefix' => 'taxonomy/v1/', 'as' => 'api.taxonomy.'], function () 
 
 // V2 API Routes
 Route::group(['as' => 'api.v2.'], function () {
+  // Tenants Endpoints ------------------------------------
+  Route::get('/tenants/v2', function () {
+    $tenants = Tenant::all(['name', 'slug', 'url', 'description']);
+    return response()->json($tenants);
+  });
+
+  // News Endpoints ---------------------------------------
+  Route::get('/news/v2', function () {
+    // Redirect to default tenant news endpoint
+    $defaultTenant = Tenant::default()->slug ?? 'default';
+    return redirect()->to("/api/news/v2/{$defaultTenant}");
+  });
+
   Route::group(['prefix' => 'news/v2/{tenant_slug}', 'as' => 'news.'], function () {
     Route::get('/', [NewsApiV2Controller::class, 'index']);
     Route::get('/{id}', [NewsApiV2Controller::class, 'show']);
+  });
+
+  // Events Endpoints -------------------------------------
+  Route::get('/events/v2', function () {
+    // Redirect to default tenant news endpoint
+    $defaultTenant = Tenant::default()->slug ?? 'default';
+    return redirect()->to("/api/events/v2/{$defaultTenant}");
   });
 
   Route::group(['prefix' => 'events/v2/{tenant_slug}', 'as' => 'events.'], function () {
@@ -51,6 +72,13 @@ Route::group(['as' => 'api.v2.'], function () {
     Route::get('/upcoming', [EventApiV2Controller::class, 'upcoming']);
     Route::get('/past', [EventApiV2Controller::class, 'past']);
     Route::get('/{id}', [EventApiV2Controller::class, 'show']);
+  });
+
+  // Announcements Endpoints ------------------------------
+  Route::get('/announcements/v2', function () {
+    // Redirect to default tenant news endpoint
+    $defaultTenant = Tenant::default()->slug ?? 'default';
+    return redirect()->to("/api/announcements/v2/{$defaultTenant}");
   });
 
   Route::group(['prefix' => 'announcements/v2/{tenant_slug}', 'as' => 'announcements.'], function () {

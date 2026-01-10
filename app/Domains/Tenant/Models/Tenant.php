@@ -62,11 +62,7 @@ class Tenant extends Model
 
   public static function default(): ?self
   {
-    $defaultSlug = config('tenants.default');
-
-    return static::query()
-      ->where('slug', $defaultSlug)
-      ->first() ?? static::query()->where('is_default', true)->first() ?? static::query()->first();
+    return static::query()->where('is_default', true)->first();
   }
 
   public static function defaultId(): ?int

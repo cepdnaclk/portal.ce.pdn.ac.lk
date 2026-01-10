@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Illuminate\Support\Facades\Cache;
 
 class AnnouncementTable extends DataTableComponent
 {
@@ -116,10 +117,14 @@ class AnnouncementTable extends DataTableComponent
 
   private function getAvailableTenants()
   {
-    return app(TenantResolver::class)
-      ->availableTenantsForUser(auth()->user())
-      ->sortBy('slug')
-      ->values();
+    $cacheKey = 'announcements_table.tenants.user.' . (auth()->id() ?? 'guest');
+
+    return Cache::remember($cacheKey, 60, function () {
+      return app(TenantResolver::class)
+        ->availableTenantsForUser(auth()->user())
+        ->sortBy('slug')
+        ->values();
+    });
   }
 
   private function getAvailableTenantIds(): array

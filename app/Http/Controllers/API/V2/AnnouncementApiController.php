@@ -24,7 +24,7 @@ class AnnouncementApiController extends Controller
 
       $announcements = Announcement::query()
         ->enabled()
-        ->forTenant($tenant)
+        ->where('tenant_id', $tenant->id)
         ->inTimeFrame()
         ->orderBy('starts_at', 'desc')
         ->orderBy('created_at', 'desc');

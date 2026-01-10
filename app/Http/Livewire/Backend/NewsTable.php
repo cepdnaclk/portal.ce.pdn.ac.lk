@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Http\Livewire\Components\PersistentStateDataTable;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Illuminate\Support\Facades\Cache;
 
 class NewsTable extends PersistentStateDataTable
 {
@@ -58,12 +59,13 @@ class NewsTable extends PersistentStateDataTable
     $tenantIds = $this->getAvailableTenantIds();
 
     if (! $tenantIds) {
+      // No news items if no access to any tenant
       return News::query()->whereRaw('1 = 0');
     }
 
     return News::query()
       ->with('tenant')
-      ->when(! auth()->user()?->hasAllAccess(), function ($query) use ($tenantIds) {
+      ->when(!auth()->user()->hasAllAccess(), function ($query) use ($tenantIds) {
         $query->whereIn('tenant_id', $tenantIds);
       })
       ->when($this->getFilter('tenant'), function ($query, $tenantId) {
@@ -119,10 +121,14 @@ class NewsTable extends PersistentStateDataTable
 
   private function getAvailableTenants()
   {
-    return app(TenantResolver::class)
-      ->availableTenantsForUser(auth()->user())
-      ->sortBy('slug')
-      ->values();
+    $cacheKey = 'news_table.tenants.user.' . (auth()->id() ?? 'guest');
+
+    return Cache::remember($cacheKey, 60, function () {
+      return app(TenantResolver::class)
+        ->availableTenantsForUser(auth()->user())
+        ->sortBy('slug')
+        ->values();
+    });
   }
 
   private function getAvailableTenantIds(): array
