@@ -13,6 +13,10 @@ class AddBothToAnnouncementAreaEnum extends Migration
    */
   public function up()
   {
+    if (DB::getDriverName() === 'sqlite') {
+      return;
+    }
+
     DB::statement("ALTER TABLE announcements MODIFY area ENUM('" . Announcement::TYPE_FRONTEND . "', '" . Announcement::TYPE_BACKEND . "', '" . Announcement::TYPE_BOTH . "') NULL");
   }
 
@@ -23,6 +27,10 @@ class AddBothToAnnouncementAreaEnum extends Migration
    */
   public function down()
   {
+    if (DB::getDriverName() === 'sqlite') {
+      return;
+    }
+
     DB::statement("ALTER TABLE announcements MODIFY area ENUM('" . Announcement::TYPE_FRONTEND . "', '" . Announcement::TYPE_BACKEND . "') NULL");
   }
 }
