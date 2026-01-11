@@ -10,6 +10,7 @@ use App\Domains\Auth\Models\User;
 use App\Domains\Auth\Services\PermissionService;
 use App\Domains\Auth\Services\RoleService;
 use App\Domains\Auth\Services\UserService;
+use App\Domains\Tenant\Services\TenantResolver;
 
 /**
  * Class UserController.
@@ -32,17 +33,23 @@ class UserController
   protected $permissionService;
 
   /**
+   * @var TenantResolver
+   */
+  protected $tenantResolver;
+
+  /**
    * UserController constructor.
    *
    * @param  UserService  $userService
    * @param  RoleService  $roleService
    * @param  PermissionService  $permissionService
    */
-  public function __construct(UserService $userService, RoleService $roleService, PermissionService $permissionService)
+  public function __construct(UserService $userService, RoleService $roleService, PermissionService $permissionService, TenantResolver $tenantResolver)
   {
     $this->userService = $userService;
     $this->roleService = $roleService;
     $this->permissionService = $permissionService;
+    $this->tenantResolver = $tenantResolver;
   }
 
   /**
@@ -58,10 +65,13 @@ class UserController
    */
   public function create()
   {
+    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user());
+
     return view('backend.auth.user.create')
       ->withRoles($this->roleService->get())
       ->withCategories($this->permissionService->getCategorizedPermissions())
-      ->withGeneral($this->permissionService->getUncategorizedPermissions());
+      ->withGeneral($this->permissionService->getUncategorizedPermissions())
+      ->withTenants($tenants);
   }
 
   /**
@@ -95,12 +105,16 @@ class UserController
    */
   public function edit(EditUserRequest $request, User $user)
   {
+    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user());
+
     return view('backend.auth.user.edit')
       ->withUser($user)
       ->withRoles($this->roleService->get())
       ->withCategories($this->permissionService->getCategorizedPermissions())
       ->withGeneral($this->permissionService->getUncategorizedPermissions())
-      ->withUsedPermissions($user->permissions->modelKeys());
+      ->withUsedPermissions($user->permissions->modelKeys())
+      ->withTenants($tenants)
+      ->withUsedTenants($user->tenants->modelKeys());
   }
 
   /**

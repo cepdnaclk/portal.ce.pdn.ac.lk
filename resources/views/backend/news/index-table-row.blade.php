@@ -27,6 +27,10 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->tenant?->name ?? '-' }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     {{ User::find($row->created_by)->name }}
 </x-livewire-tables::table.cell>
 

@@ -107,6 +107,8 @@
                         </div>
                     </div>
 
+                    @include('backend.auth.includes.tenants')
+
                     @include('backend.auth.includes.roles')
 
                     @if (!config('boilerplate.access.user.only_roles'))

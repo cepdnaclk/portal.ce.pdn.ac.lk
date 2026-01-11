@@ -4,7 +4,12 @@
 
 @section('content')
     {{-- Media Management --}}
-    @if ($logged_in_user->hasAnyPermission(['user.access.editor.news', 'user.access.editor.events']))
+    @if (
+        $logged_in_user->hasAnyPermission([
+            'user.access.editor.news',
+            'user.access.editor.events',
+            'user.access.editor.announcements',
+        ]) || $logged_in_user->hasAllAccess())
         <x-backend.card>
             <x-slot name="header">
                 @lang('Media')
@@ -13,7 +18,7 @@
             <x-slot name="body" style="min-height: 20vh;" class="container-fluid overflow-auto">
                 <div class="row g-3">
                     {{-- Announcements --}}
-                    @if ($logged_in_user->hasAllAccess())
+                    @if ($logged_in_user->hasAllAccess() || $logged_in_user->hasPermissionTo('user.access.editor.announcements'))
                         <x-backend.shortcut-card route="{{ route('dashboard.announcements.index') }}" label="Announcements"
                             icon="fa-bullhorn" color="danger" />
                     @endif
@@ -119,6 +124,8 @@
                         icon="fa-users" color="primary" />
                     <x-backend.shortcut-card route="{{ route('dashboard.auth.role.index') }}" label="Roles"
                         icon="fa-address-card" color="info" />
+                    <x-backend.shortcut-card route="{{ route('dashboard.tenants.index') }}" label="Tenants"
+                        icon="fa-building" color="warning" />
                     <x-backend.shortcut-card route="{{ route('log-viewer::logs.list') }}" label="Logs" icon="fa-list"
                         color="secondary" />
                 </div>

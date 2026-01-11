@@ -4,6 +4,7 @@ namespace App\Domains\ContentManagement\Models;
 
 use App\Domains\Auth\Models\User;
 use App\Domains\Gallery\Models\GalleryImage;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -54,6 +55,11 @@ abstract class BaseContent extends Model
   public function user(): BelongsTo
   {
     return $this->belongsTo(User::class, 'created_by');
+  }
+
+  public function tenant(): BelongsTo
+  {
+    return $this->belongsTo(Tenant::class);
   }
 
   /**

@@ -4,6 +4,7 @@ namespace Tests\Feature\Backend\News;
 
 use App\Domains\ContentManagement\Models\News;
 use App\Domains\Auth\Models\User;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
@@ -38,6 +39,8 @@ class NewsTest extends TestCase
   public function news_can_be_created()
   {
     $this->loginAsEditor();
+    $tenantId = Tenant::defaultId();
+
     $response = $this->post('/dashboard/news/', [
       'title' => 'test News',
       'description' => 'This is a sample news description.',
@@ -46,6 +49,7 @@ class NewsTest extends TestCase
       'link_caption' => 'Example Link',
       'url' => 'https://ce.pdn.ac.lk/news/2004-10-10',
       'published_at' => '2024-12-12',
+      'tenant_id' => $tenantId,
 
     ]);
 
@@ -60,6 +64,7 @@ class NewsTest extends TestCase
   {
     $this->loginAsEditor();
     $news = News::factory()->create();
+    $tenantId = Tenant::defaultId();
 
     $updateData = [
       'title' => 'Updated News',
@@ -69,6 +74,7 @@ class NewsTest extends TestCase
       'link_caption' => 'Sample caption',
       'url' => 'https://ce.pdn.ac.lk/news/2004-11-11',
       'published_at' => '2024-12-24',
+      'tenant_id' => $tenantId,
     ];
 
     $response = $this->put("/dashboard/news/{$news->id}", $updateData);

@@ -7,6 +7,7 @@ use Database\Seeders\Roles\EditorRoleSeeder;
 use Database\Seeders\Roles\TaxonomyRoleSeeder;
 use Database\Seeders\Roles\UserTypeRoleSeeder;
 use Database\Seeders\Traits\TruncateTable;
+use Database\Seeders\TenantSeeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
@@ -37,6 +38,7 @@ class DatabaseSeeder extends Seeder
     $this->call(AcademicRoleSeeder::class);
     $this->call(TaxonomyRoleSeeder::class);
     $this->call(UserTypeRoleSeeder::class);
+    $this->call(TenantSeeder::class);
 
     // This seed data are required to function the site correctly
     $this->call(TaxonomySeeder::class);

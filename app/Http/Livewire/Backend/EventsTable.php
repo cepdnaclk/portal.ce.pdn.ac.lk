@@ -3,16 +3,26 @@
 namespace App\Http\Livewire\Backend;
 
 use App\Domains\ContentManagement\Models\Event;
+use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Livewire\Components\PersistentStateDataTable;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Illuminate\Support\Facades\Cache;
 
 class EventsTable extends PersistentStateDataTable
 {
   public array $perPageAccepted = [5, 10, 20, 50];
   public bool $perPageAll = true;
   public int $perPage = 10;
+
+  public function mount(): void
+  {
+    $tenantIds = $this->getAvailableTenantIds();
+    if (count($tenantIds) === 1 && empty($this->filters['tenant'])) {
+      $this->filters['tenant'] = $tenantIds[0];
+    }
+  }
 
   public function columns(): array
   {
@@ -27,6 +37,8 @@ class EventsTable extends PersistentStateDataTable
         ->format(function (Event $event) {
           return view('backend.event.enabled-toggle', ['event' => $event]);
         }),
+      Column::make("Tenant", "tenant.slug")
+        ->sortable(),
       Column::make("Time"),
       Column::make("Location", "location")
         ->searchable(),
@@ -37,7 +49,21 @@ class EventsTable extends PersistentStateDataTable
 
   public function query(): Builder
   {
+    $tenantIds = $this->getAvailableTenantIds();
+
+    if (! $tenantIds) {
+      // No events if no access to any tenant
+      return Event::query()->whereRaw('1 = 0');
+    }
+
     return Event::query()
+      ->with('tenant')
+      ->when(! auth()->user()?->hasAllAccess(), function ($query) use ($tenantIds) {
+        $query->whereIn('tenant_id', $tenantIds);
+      })
+      ->when($this->getFilter('tenant'), function ($query, $tenantId) {
+        $query->where('tenant_id', $tenantId);
+      })
       ->when($this->getFilter('status') !== null, function ($query) {
         $status = $this->getFilter('status');
         if ($status === 1) {
@@ -65,14 +91,27 @@ class EventsTable extends PersistentStateDataTable
   }
   public function toggleEnable($eventId)
   {
-    $event = Event::findOrFail($eventId);
+    $tenantIds = $this->getAvailableTenantIds();
+    $event = Event::query()
+      ->when(! auth()->user()?->hasAllAccess(), function ($query) use ($tenantIds) {
+        $query->whereIn('tenant_id', $tenantIds);
+      })
+      ->findOrFail($eventId);
     $event->enabled = !$event->enabled;
     $event->save();
   }
 
   public function filters(): array
   {
-    return [
+    $tenants = $this->getAvailableTenants();
+    $filters = [];
+
+    if ($tenants->count() > 1) {
+      $filters['tenant'] = Filter::make('Tenant')
+        ->select(['' => 'Any'] + $tenants->pluck('name', 'id')->toArray());
+    }
+
+    return array_merge($filters, [
       'enabled' => Filter::make('Enabled')
         ->select([
           '' => 'Any',
@@ -87,11 +126,28 @@ class EventsTable extends PersistentStateDataTable
         ]),
       'event_type' => Filter::make("Event Type")
         ->select(array_merge(['' => 'Any'], Event::eventTypeMap()))
-    ];
+    ]);
   }
 
   public function rowView(): string
   {
     return 'backend.event.index-table-row';
+  }
+
+  private function getAvailableTenants()
+  {
+    $cacheKey = 'events_table.tenants.user.' . (auth()->id() ?? 'guest');
+
+    return Cache::remember($cacheKey, 60, function () {
+      return app(TenantResolver::class)
+        ->availableTenantsForUser(auth()->user())
+        ->sortBy('slug')
+        ->values();
+    });
+  }
+
+  private function getAvailableTenantIds(): array
+  {
+    return $this->getAvailableTenants()->pluck('id')->all();
   }
 }

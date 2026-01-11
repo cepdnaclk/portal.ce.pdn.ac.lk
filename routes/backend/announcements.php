@@ -4,7 +4,7 @@ use Tabuna\Breadcrumbs\Trail;
 use App\Http\Controllers\Backend\AnnouncementController;
 use Illuminate\Support\Facades\Route;
 
-Route::group([], function () {
+Route::group(['middleware' => ['permission:user.access.editor.announcements', 'tenant.access']], function () {
 
   Route::get('announcements', function () {
     return view('backend.announcements.index');

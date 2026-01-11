@@ -5,6 +5,7 @@
 - Purpose: Define the taxonomy-driven extensions delivered in phase 3.
 - Scope: Dashboard CRUD for taxonomies, terms, files, pages, and lists; download/alias endpoints; history logging; permission hardening; and integration with prior phases (content + academics).
 - Out of scope: New academic/course features beyond taxonomy reuse.
+- Multi-tenant support: Inherits tenant context from authenticated dashboard users; taxonomy data is tenant-specific.
 
 ## 2. References
 

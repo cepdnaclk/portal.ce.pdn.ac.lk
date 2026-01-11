@@ -2,6 +2,8 @@
 
 namespace App\Domains\Announcement\Models\Traits\Scope;
 
+use App\Domains\Tenant\Models\Tenant;
+
 /**
  * Class AnnouncementScope.
  */
@@ -14,6 +16,38 @@ trait AnnouncementScope
   public function scopeEnabled($query)
   {
     return $query->whereEnabled(true);
+  }
+
+  /**
+   * @param $query
+   * @param $tenant
+   * @return mixed
+   */
+  public function scopeForTenant($query, $tenant = null)
+  {
+    if ($tenant instanceof Tenant) {
+      $tenantId = $tenant->id;
+    } elseif (is_int($tenant) || is_string($tenant)) {
+      $tenantId = $tenant;
+    } else {
+      $defaultTenant = Tenant::default();
+      dd($defaultTenant);
+      if ($defaultTenant === null) {
+        throw new \RuntimeException('No default tenant configured.');
+      }
+      $tenantId = $defaultTenant->id;
+    }
+    return $query->where('tenant_id', $tenantId);
+  }
+
+  /**
+   * @param $query
+   * @param array $tenantIds
+   * @return mixed
+   */
+  public function scopeForTenants($query, array $tenantIds)
+  {
+    return $query->whereIn('tenant_id', $tenantIds);
   }
 
   /**

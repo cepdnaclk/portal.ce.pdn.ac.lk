@@ -3,6 +3,7 @@
 namespace App\Domains\Announcement\Services;
 
 use App\Domains\Announcement\Models\Announcement;
+use App\Domains\Tenant\Services\TenantResolver;
 use App\Services\BaseService;
 
 /**
@@ -15,7 +16,7 @@ class AnnouncementService extends BaseService
    *
    * @param  Announcement  $announcement
    */
-  public function __construct(Announcement $announcement)
+  public function __construct(Announcement $announcement, private TenantResolver $tenantResolver)
   {
     $this->model = $announcement;
   }
@@ -32,8 +33,11 @@ class AnnouncementService extends BaseService
    */
   public function getForFrontend()
   {
+    $tenant = $this->tenantResolver->resolveFromRequest(request());
+
     return $this->model::enabled()
       ->forArea($this->model::TYPE_FRONTEND)
+      ->forTenant($tenant)
       ->inTimeFrame()
       ->get();
   }
@@ -50,8 +54,11 @@ class AnnouncementService extends BaseService
    */
   public function getForBackend()
   {
+    $tenant = $this->tenantResolver->resolveFromRequest(request());
+
     return $this->model::enabled()
       ->forArea($this->model::TYPE_BACKEND)
+      ->forTenant($tenant)
       ->inTimeFrame()
       ->get();
   }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\ContentManagement\Models\Event;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
@@ -40,6 +41,7 @@ class EventFactory extends Factory
       'start_at' => Carbon::now()->subWeek()->format('Y-m-d\TH:i'),
       'end_at' => Carbon::now()->subDay()->format('Y-m-d\TH:i'),
       'location' => $this->faker->company,
+      'tenant_id' => Tenant::defaultId() ?? Tenant::factory(),
     ];
   }
 

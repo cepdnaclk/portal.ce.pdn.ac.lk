@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Domains\Announcement\Models\Announcement;
+use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 
 class AnnouncementController extends Controller
 {
+  public function __construct(private TenantResolver $tenantResolver) {}
   /**
    * Show the form for creating a new resource.
    *
@@ -20,7 +22,10 @@ class AnnouncementController extends Controller
     try {
       $areas = Announcement::areas();
       $types = Announcement::types();
-      return view('backend.announcements.create', compact('areas', 'types'));
+      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+      $selectedTenantId = $tenants->count() === 1 ? $tenants->first()->id : null;
+
+      return view('backend.announcements.create', compact('areas', 'types', 'tenants', 'selectedTenantId'));
     } catch (\Exception $ex) {
       Log::error('Failed to load announcement creation page', ['error' => $ex->getMessage()]);
       return abort(500);
@@ -35,6 +40,12 @@ class AnnouncementController extends Controller
    */
   public function store(Request $request)
   {
+    $tenantId = $this->resolveTenantId($request);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
+    $availableTenantIds = $this->availableTenantIds($request);
     $data = request()->validate([
       'area' => ['required', Rule::in(array_keys(Announcement::areas()))],
       'type' => ['required', Rule::in(array_keys(Announcement::types()))],
@@ -42,6 +53,7 @@ class AnnouncementController extends Controller
       'enabled' => 'nullable',
       'starts_at' => 'required|date_format:Y-m-d\\TH:i',
       'ends_at' => 'required|date_format:Y-m-d\\TH:i', // TODO: Test ends>starts
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     try {
@@ -67,7 +79,10 @@ class AnnouncementController extends Controller
     try {
       $areas = Announcement::areas();
       $types = Announcement::types();
-      return view('backend.announcements.edit', compact('announcement', 'areas', 'types'));
+      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+      $selectedTenantId = $announcement->tenant_id;
+
+      return view('backend.announcements.edit', compact('announcement', 'areas', 'types', 'tenants', 'selectedTenantId'));
     } catch (\Exception $ex) {
       Log::error('Failed to load announcement edit page', ['announcement_id' => $announcement->id, 'error' => $ex->getMessage()]);
       return abort(500);
@@ -83,6 +98,12 @@ class AnnouncementController extends Controller
    */
   public function update(Request $request, Announcement $announcement)
   {
+    $tenantId = $this->resolveTenantId($request);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
+    $availableTenantIds = $this->availableTenantIds($request);
     $data = request()->validate([
       'area' => ['required', Rule::in(array_keys(Announcement::areas()))],
       'type' => ['required', Rule::in(array_keys(Announcement::types()))],
@@ -90,6 +111,7 @@ class AnnouncementController extends Controller
       'enabled' => 'nullable',
       'starts_at' => 'required|date_format:Y-m-d\\TH:i',
       'ends_at' => 'required|date_format:Y-m-d\\TH:i', // TODO: Test ends>starts
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     try {
@@ -129,5 +151,28 @@ class AnnouncementController extends Controller
       Log::error('Failed to delete announcement', ['announcement_id' => $announcement->id, 'error' => $ex->getMessage()]);
       return abort(500);
     }
+  }
+
+  private function resolveTenantId(Request $request): ?int
+  {
+    if ($request->filled('tenant_id')) {
+      return (int) $request->input('tenant_id');
+    }
+
+    $tenants = $this->tenantResolver->availableTenantsForUser($request->user());
+
+    if ($tenants->count() === 1) {
+      return (int) $tenants->first()->id;
+    }
+
+    return null;
+  }
+
+  private function availableTenantIds(Request $request): array
+  {
+    return $this->tenantResolver
+      ->availableTenantsForUser($request->user())
+      ->pluck('id')
+      ->all();
   }
 }
