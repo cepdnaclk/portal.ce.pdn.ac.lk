@@ -58,28 +58,15 @@ trait AnnouncementScope
    */
   public function scopeForArea($query, $area)
   {
-    return $query->where(function ($query) use ($area) {
-      if ($area === Announcement::TYPE_FRONTEND) {
-        $query->whereArea(Announcement::TYPE_FRONTEND)
-          ->orWhere('area', Announcement::TYPE_BOTH)
-          ->orWhereNull('area');
-        return;
-      }
+    $areas = match ($area) {
+      Announcement::TYPE_FRONTEND => [Announcement::TYPE_FRONTEND, Announcement::TYPE_BOTH],
+      Announcement::TYPE_BACKEND => [Announcement::TYPE_BACKEND, Announcement::TYPE_BOTH],
+      Announcement::TYPE_BOTH => [Announcement::TYPE_BOTH],
+      default => [$area],
+    };
 
-      if ($area === Announcement::TYPE_BACKEND) {
-        $query->whereArea(Announcement::TYPE_BACKEND)
-          ->orWhere('area', Announcement::TYPE_BOTH)
-          ->orWhereNull('area');
-        return;
-      }
-
-      if ($area === Announcement::TYPE_BOTH) {
-        $query->whereArea(Announcement::TYPE_BOTH)
-          ->orWhereNull('area');
-        return;
-      }
-
-      $query->whereArea($area)
+    return $query->where(function ($query) use ($areas) {
+      $query->whereIn('area', $areas)
         ->orWhereNull('area');
     });
   }

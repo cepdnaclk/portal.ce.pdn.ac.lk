@@ -96,7 +96,7 @@ class AnnouncementTable extends DataTableComponent
     foreach (Announcement::types() as $key => $value) {
       $type[$key] = $value;
     }
-    $area = ["" => "Any"];
+    $area = [];
     foreach (Announcement::areas() as $key => $value) {
       $area[$key] = $value;
     }
