@@ -41,8 +41,7 @@ class NewsTable extends PersistentStateDataTable
         ->format(function (News $news) {
           return view('backend.news.enabled-toggle', ['news' => $news]);
         }),
-      Column::make("Tenant", "tenant.slug")
-        ->sortable(),
+      Column::make("Tenant", "tenant.name"),
       Column::make("Author", "user.name")
         ->sortable()
         ->searchable(),

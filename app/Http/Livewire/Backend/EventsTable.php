@@ -37,8 +37,7 @@ class EventsTable extends PersistentStateDataTable
         ->format(function (Event $event) {
           return view('backend.event.enabled-toggle', ['event' => $event]);
         }),
-      Column::make("Tenant", "tenant.slug")
-        ->sortable(),
+      Column::make("Tenant", "tenant.name"),
       Column::make("Time"),
       Column::make("Location", "location")
         ->searchable(),
