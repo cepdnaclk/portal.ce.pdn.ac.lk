@@ -343,27 +343,25 @@ class TaxonomySeeder extends Seeder
           [
             'code' => 'course_project',
             'name' => 'Course',
-            'metadata' => '[{"code": "code", "value": null}, {"code": "title", "value": null}, {"code": "cover_image", "value": null}, {"code": "thumbnail_image", "value": null}, {"code": "type", "value": null}, {"code": "description", "value": null}, {"code": "repo_template", "value": null}, {"code": "filter", "value": null}, {"code": "naming_convention", "value": null}, {"code": "contact", "value": null}]'
           ],
           [
             'code' => 'general_project',
             'name' => 'General',
-            'metadata' => '[{"code": "code", "value": null}, {"code": "title", "value": null}, {"code": "cover_image", "value": null}, {"code": "thumbnail_image", "value": null}, {"code": "type", "value": null}, {"code": "description", "value": null}, {"code": "repo_template", "value": null}, {"code": "filter", "value": null}, {"code": "naming_convention", "value": null}, {"code": "contact", "value": null}]',
             'terms' => [
               [
                 'code' => '2yp',
                 'name' => 'Software Systems Design Project',
-                'metadata' => '[{"code": "course_code", "value": "CO227, CO2060"}, {"code": "cover_image", "value": "93"}, {"code": "thumbnail_image", "value": "94"}, {"code": "description", "value": "Software systems designed and developed by second year Computer Engineering Students as part of coursework"}, {"code": "repo_template", "value": "https://github.com/cepdnaclk/eYY-CO2060-project-template"}, {"code": "filter", "value": "^e(\\\\d{2})-{co227|co2060}-(.+)$"}, {"code": "naming_convention", "value": "https://github.com/cepdnaclk/eYY-co2060-TITLE"}, {"code": "contact", "value": null}, {"code": "further_details", "value": null}, {"code": "active", "value": true}]'
+                'metadata' => '[{"code": "course_code", "value": "CO227, CO2060"}, {"code": "description", "value": "Software systems designed and developed by second year Computer Engineering Students as part of coursework"}, {"code": "repo_template", "value": "https://github.com/cepdnaclk/eYY-CO2060-project-template"}, {"code": "filter", "value": "^e(\\\\d{2})-{co227|co2060}-(.+)$"}, {"code": "naming_convention", "value": "https://github.com/cepdnaclk/eYY-co2060-TITLE"}, {"code": "contact", "value": null}, {"code": "further_details", "value": null}, {"code": "active", "value": true}]'
               ],
               [
                 'code' => '3yp',
                 'name' => 'Cyber-Physical Systems Projects',
-                'metadata' => '[{"code": "course_code", "value": "CO3060"}, {"code": "cover_image", "value": null}, {"code": "thumbnail_image", "value": null}, {"code": "description", "value": "Cyber-Physical Systems designed and implemented by 3rd year Computer Engineering Students as part of coursework. These projects contain modern embedded hardware and software, cloud-deployed web back-end/front-end software and modern networking and communication for integration"}, {"code": "repo_template", "value": "https://github.com/cepdnaclk/eYY-3yp-project-template"}, {"code": "filter", "value": "^e(\\\\d{2})-3yp-(.+)$"}, {"code": "naming_convention", "value": "https://github.com/cepdnaclk/eYY-3yp-TITLE"}, {"code": "contact", "value": "isurun@eng.pdn.ac.lk"}, {"code": "further_details", "value": "25"}, {"code": "active", "value": true}]'
+                'metadata' => '[{"code": "course_code", "value": "CO3060"}, {"code": "description", "value": "Cyber-Physical Systems designed and implemented by 3rd year Computer Engineering Students as part of coursework. These projects contain modern embedded hardware and software, cloud-deployed web back-end/front-end software and modern networking and communication for integration"}, {"code": "repo_template", "value": "https://github.com/cepdnaclk/eYY-3yp-project-template"}, {"code": "filter", "value": "^e(\\\\d{2})-3yp-(.+)$"}, {"code": "naming_convention", "value": "https://github.com/cepdnaclk/eYY-3yp-TITLE"}, {"code": "contact", "value": "isurun@eng.pdn.ac.lk"}, {"code": "further_details", "value": "25"}, {"code": "active", "value": true}]'
               ],
               [
                 'code' => '4yp',
                 'name' => 'Computer Engineering Research Project',
-                'metadata' => '[{"code": "course_code", "value": "CO4060, CO421, CO425"}, {"code": "cover_image", "value": null}, {"code": "thumbnail_image", "value": null}, {"code": "description", "value": "Final Year Research Project for Computer Engineering Undergraduates"}, {"code": "repo_template", "value": "https://github.com/cepdnaclk/eYY-4yp-project-template/"}, {"code": "filter", "value": "^e(\\\\d{2})-4yp-(.+)$"}, {"code": "naming_convention", "value": "https://github.com/cepdnaclk/eYY-4yp-TITLE"}, {"code": "contact", "value": null}, {"code": "further_details", "value": null}, {"code": "active", "value": true}]'
+                'metadata' => '[{"code": "course_code", "value": "CO4060, CO421, CO425"}, {"code": "description", "value": "Final Year Research Project for Computer Engineering Undergraduates"}, {"code": "repo_template", "value": "https://github.com/cepdnaclk/eYY-4yp-project-template/"}, {"code": "filter", "value": "^e(\\\\d{2})-4yp-(.+)$"}, {"code": "naming_convention", "value": "https://github.com/cepdnaclk/eYY-4yp-TITLE"}, {"code": "contact", "value": null}, {"code": "further_details", "value": null}, {"code": "active", "value": true}]'
               ]
             ]
           ],
