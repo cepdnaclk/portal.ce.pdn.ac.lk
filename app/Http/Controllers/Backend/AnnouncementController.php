@@ -22,7 +22,7 @@ class AnnouncementController extends Controller
     try {
       $areas = Announcement::areas();
       $types = Announcement::types();
-      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('name');
       $selectedTenantId = $tenants->count() === 1 ? $tenants->first()->id : null;
 
       return view('backend.announcements.create', compact('areas', 'types', 'tenants', 'selectedTenantId'));
@@ -79,7 +79,7 @@ class AnnouncementController extends Controller
     try {
       $areas = Announcement::areas();
       $types = Announcement::types();
-      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('name');
       $selectedTenantId = $announcement->tenant_id;
 
       return view('backend.announcements.edit', compact('announcement', 'areas', 'types', 'tenants', 'selectedTenantId'));

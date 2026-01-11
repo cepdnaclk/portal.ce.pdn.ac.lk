@@ -23,11 +23,11 @@ class ComposerServiceProvider extends ServiceProvider
     });
 
     View::composer(['frontend.index', 'frontend.layouts.app'], function ($view) use ($announcementService) {
-      $view->with('announcements', $announcementService->getForFrontend());
+      $view->with('announcements', $announcementService->getForFrontend('portal'));
     });
 
     View::composer(['backend.layouts.app'], function ($view) use ($announcementService) {
-      $view->with('announcements', $announcementService->getForBackend());
+      $view->with('announcements', $announcementService->getForBackend('portal'));
     });
   }
 }
