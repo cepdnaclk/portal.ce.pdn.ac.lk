@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Domains\Announcement\Models\Announcement;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AnnouncementResource extends JsonResource
@@ -16,7 +17,7 @@ class AnnouncementResource extends JsonResource
   {
     return [
       'id' => $this->id,
-      'area' => $this->area,
+      'area' => $this->area ?? Announcement::TYPE_BOTH,
       'type' => $this->type,
       'message' => $this->message,
       'starts_at' => $this->starts_at,

@@ -31,7 +31,7 @@ class AnnouncementApiController extends Controller
 
       // Optionally filter by area
       $area = $request->query('area');
-      if ($area && in_array($area, [Announcement::TYPE_FRONTEND, Announcement::TYPE_BACKEND], true)) {
+      if ($area && in_array($area, [Announcement::TYPE_FRONTEND, Announcement::TYPE_BACKEND, Announcement::TYPE_BOTH], true)) {
         $announcements = $announcements->forArea($area);
       }
 

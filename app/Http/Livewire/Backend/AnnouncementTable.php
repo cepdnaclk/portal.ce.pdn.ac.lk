@@ -64,7 +64,7 @@ class AnnouncementTable extends DataTableComponent
         $query->whereIn('tenant_id', $tenantIds);
       })
       ->when($this->getFilter('tenant'), fn($query, $tenantId) => $query->where('tenant_id', $tenantId))
-      ->when($this->getFilter('area'), fn($query, $status) => $query->where('area', $status))
+      ->when($this->getFilter('area'), fn($query, $area) => $query->forArea($area))
       ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type));
   }
 
