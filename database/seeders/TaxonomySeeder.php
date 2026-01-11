@@ -320,6 +320,53 @@ class TaxonomySeeder extends Seeder
               ],
             ]
           ]
+        ],
+      ],
+      'project-categories' => [
+        'code' => 'project-categories',
+        'name' => 'Project Categories',
+        'description' => 'This will manage the list of Project Categories shown in the https://projects.ce.pdn.ac.lk/.\n\ncourse_code: Course code, or list of related codes (comma separated)\nfilter: A regex filter that defines the repository naming convention\nnaming_convention: A representative way of naming the projects\ncontact: Contact Person / Course Coordinator email\nfurther_details: A page with additional information\nactive: Boolean flag to indicate project category is active or not.',
+        'visibility' => '1',
+        'properties' => [
+          ["code" => "course_code", "name" => "Course Code", "data_type" => "string"],
+          ["code" => "cover_image", "name" => "Cover Image", "data_type" => "file"],
+          ["code" => "thumbnail_image", "name" => "Thumbnail Image", "data_type" => "file"],
+          ["code" => "description", "name" => "Description", "data_type" => "string"],
+          ["code" => "repo_template", "name" => "GitHub Repo Template URL", "data_type" => "url"],
+          ["code" => "filter", "name" => "Regex Filter", "data_type" => "string"],
+          ["code" => "naming_convention", "name" => "Naming Convention for Repositories", "data_type" => "string"],
+          ["code" => "contact", "name" => "Contact Person", "data_type" => "email"],
+          ["code" => "further_details", "name" => "Further Details", "data_type" => "page"],
+          ["code" => "active", "name" => "Active Category", "data_type" => "boolean"],
+        ],
+        'terms' => [
+          [
+            'code' => 'course_project',
+            'name' => 'Course',
+            'metadata' => '[{"code": "code", "value": null}, {"code": "title", "value": null}, {"code": "cover_image", "value": null}, {"code": "thumbnail_image", "value": null}, {"code": "type", "value": null}, {"code": "description", "value": null}, {"code": "repo_template", "value": null}, {"code": "filter", "value": null}, {"code": "naming_convention", "value": null}, {"code": "contact", "value": null}]'
+          ],
+          [
+            'code' => 'general_project',
+            'name' => 'General',
+            'metadata' => '[{"code": "code", "value": null}, {"code": "title", "value": null}, {"code": "cover_image", "value": null}, {"code": "thumbnail_image", "value": null}, {"code": "type", "value": null}, {"code": "description", "value": null}, {"code": "repo_template", "value": null}, {"code": "filter", "value": null}, {"code": "naming_convention", "value": null}, {"code": "contact", "value": null}]',
+            'terms' => [
+              [
+                'code' => '2yp',
+                'name' => 'Software Systems Design Project',
+                'metadata' => '[{"code": "course_code", "value": "CO227, CO2060"}, {"code": "cover_image", "value": "93"}, {"code": "thumbnail_image", "value": "94"}, {"code": "description", "value": "Software systems designed and developed by second year Computer Engineering Students as part of coursework"}, {"code": "repo_template", "value": "https://github.com/cepdnaclk/eYY-CO2060-project-template"}, {"code": "filter", "value": "^e(\\\\d{2})-{co227|co2060}-(.+)$"}, {"code": "naming_convention", "value": "https://github.com/cepdnaclk/eYY-co2060-TITLE"}, {"code": "contact", "value": null}, {"code": "further_details", "value": null}, {"code": "active", "value": true}]'
+              ],
+              [
+                'code' => '3yp',
+                'name' => 'Cyber-Physical Systems Projects',
+                'metadata' => '[{"code": "course_code", "value": "CO3060"}, {"code": "cover_image", "value": null}, {"code": "thumbnail_image", "value": null}, {"code": "description", "value": "Cyber-Physical Systems designed and implemented by 3rd year Computer Engineering Students as part of coursework. These projects contain modern embedded hardware and software, cloud-deployed web back-end/front-end software and modern networking and communication for integration"}, {"code": "repo_template", "value": "https://github.com/cepdnaclk/eYY-3yp-project-template"}, {"code": "filter", "value": "^e(\\\\d{2})-3yp-(.+)$"}, {"code": "naming_convention", "value": "https://github.com/cepdnaclk/eYY-3yp-TITLE"}, {"code": "contact", "value": "isurun@eng.pdn.ac.lk"}, {"code": "further_details", "value": "25"}, {"code": "active", "value": true}]'
+              ],
+              [
+                'code' => '4yp',
+                'name' => 'Computer Engineering Research Project',
+                'metadata' => '[{"code": "course_code", "value": "CO4060, CO421, CO425"}, {"code": "cover_image", "value": null}, {"code": "thumbnail_image", "value": null}, {"code": "description", "value": "Final Year Research Project for Computer Engineering Undergraduates"}, {"code": "repo_template", "value": "https://github.com/cepdnaclk/eYY-4yp-project-template/"}, {"code": "filter", "value": "^e(\\\\d{2})-4yp-(.+)$"}, {"code": "naming_convention", "value": "https://github.com/cepdnaclk/eYY-4yp-TITLE"}, {"code": "contact", "value": null}, {"code": "further_details", "value": null}, {"code": "active", "value": true}]'
+              ]
+            ]
+          ],
         ]
       ]
     ];
@@ -329,6 +376,7 @@ class TaxonomySeeder extends Seeder
 
     // Create taxonomies and their terms
     foreach ($taxonomies as $key => $taxonomy) {
+
       // print("\nCreating taxonomy: {$taxonomy['code']}\n");
 
       $taxonomyRecord = Taxonomy::firstOrCreate([
@@ -343,7 +391,6 @@ class TaxonomySeeder extends Seeder
         $this->createTaxonomyTerms($taxonomyRecord, $taxonomy['terms']);
       }
     }
-
 
     $this->enableForeignKeys();
   }
