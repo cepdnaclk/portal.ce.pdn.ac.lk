@@ -23,9 +23,20 @@ trait AnnouncementScope
    * @param $tenant
    * @return mixed
    */
-  public function scopeForTenant($query)
+  public function scopeForTenant($query, $tenant = null)
   {
-    $tenantId = Tenant::default()->id;
+    if ($tenant instanceof Tenant) {
+      $tenantId = $tenant->id;
+    } elseif (is_int($tenant) || is_string($tenant)) {
+      $tenantId = $tenant;
+    } else {
+      $defaultTenant = Tenant::default();
+      dd($defaultTenant);
+      if ($defaultTenant === null) {
+        throw new \RuntimeException('No default tenant configured.');
+      }
+      $tenantId = $defaultTenant->id;
+    }
     return $query->where('tenant_id', $tenantId);
   }
 
