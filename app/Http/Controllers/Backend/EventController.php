@@ -22,7 +22,7 @@ class EventController extends Controller
   public function create()
   {
     try {
-      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+      $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('name');
       $selectedTenantId = $tenants->count() === 1 ? $tenants->first()->id : null;
 
       return view('backend.event.create', compact('tenants', 'selectedTenantId'));
@@ -89,7 +89,7 @@ class EventController extends Controller
    */
   public function edit(Event $event)
   {
-    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('name');
     $selectedTenantId = $event->tenant_id;
 
     return view('backend.event.edit', compact('event', 'tenants', 'selectedTenantId'));

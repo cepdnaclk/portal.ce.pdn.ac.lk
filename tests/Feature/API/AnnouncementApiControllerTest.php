@@ -37,26 +37,39 @@ class AnnouncementApiControllerTest extends TestCase
       ->noDates()
       ->create(['tenant_id' => $tenant->id, 'message' => 'backend-message']);
 
-
+    $both = Announcement::factory()
+      ->enabled()
+      ->both()
+      ->noDates()
+      ->create(['tenant_id' => $tenant->id, 'message' => 'both-message']);
 
     // Check for frontend area
     $response_frontend = $this->getJson('/api/announcements/v2/' . $tenant->slug . '?area=frontend');
     $response_frontend->assertOk()
-      ->assertJsonCount(1, 'data')
-      ->assertJsonFragment(['message' => $frontend->message]);
+      ->assertJsonCount(2, 'data')
+      ->assertJsonFragment(['message' => $frontend->message])
+      ->assertJsonFragment(['message' => $both->message]);
 
     // Check for backend area
     $response_backend = $this->getJson('/api/announcements/v2/' . $tenant->slug . '?area=backend');
     $response_backend->assertOk()
+      ->assertJsonCount(2, 'data')
+      ->assertJsonFragment(['message' => $backend->message])
+      ->assertJsonFragment(['message' => $both->message]);
+
+    // Check for both area
+    $response_both = $this->getJson('/api/announcements/v2/' . $tenant->slug . '?area=both');
+    $response_both->assertOk()
       ->assertJsonCount(1, 'data')
-      ->assertJsonFragment(['message' => $backend->message]);
+      ->assertJsonFragment(['message' => $both->message]);
 
     // Check for invalid area type
     $response_invalid = $this->getJson('/api/announcements/v2/' . $tenant->slug . '?area=invalid');
     $response_invalid->assertOk()
-      ->assertJsonCount(2, 'data')
+      ->assertJsonCount(3, 'data')
       ->assertJsonFragment(['message' => $frontend->message])
-      ->assertJsonFragment(['message' => $backend->message]);
+      ->assertJsonFragment(['message' => $backend->message])
+      ->assertJsonFragment(['message' => $both->message]);
   }
 
   /** @test */

@@ -14,6 +14,12 @@ return [
       'description' => 'Department of Computer Engineering',
     ],
     [
+      'slug' => 'portal',
+      'name' => 'portal.ce.pdn.ac.lk',
+      'url' => 'https://portal.ce.pdn.ac.lk',
+      'description' => 'CE Portal',
+    ],
+    [
       'slug' => 'pera-swarm',
       'name' => 'pera-swarm.ce.pdn.ac.lk',
       'url' => 'https://pera-swarm.ce.pdn.ac.lk',

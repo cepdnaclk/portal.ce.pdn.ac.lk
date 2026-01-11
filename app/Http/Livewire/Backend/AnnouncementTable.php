@@ -29,10 +29,9 @@ class AnnouncementTable extends DataTableComponent
   public function columns(): array
   {
     return [
-      Column::make("Display Area", "area")
+      Column::make("Display", "area")
         ->sortable(),
-      Column::make("Type", "type")
-        ->sortable(),
+      Column::make("Type", "type"),
       Column::make("Message", "message")
         ->searchable(),
       Column::make("Enabled", "enabled")
@@ -40,8 +39,7 @@ class AnnouncementTable extends DataTableComponent
         ->format(function (Announcement $announcement) {
           return view('backend.announcement.enabled-toggle', ['announcement' => $announcement]);
         }),
-      Column::make("Tenant", "tenant.slug")
-        ->sortable(),
+      Column::make("Tenant", "tenant.name"),
       Column::make("Start", "starts_at")
         ->sortable(),
       Column::make("End", "ends_at")
@@ -64,7 +62,7 @@ class AnnouncementTable extends DataTableComponent
         $query->whereIn('tenant_id', $tenantIds);
       })
       ->when($this->getFilter('tenant'), fn($query, $tenantId) => $query->where('tenant_id', $tenantId))
-      ->when($this->getFilter('area'), fn($query, $status) => $query->where('area', $status))
+      ->when($this->getFilter('area'), fn($query, $area) => $query->forArea($area))
       ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type));
   }
 
@@ -96,7 +94,7 @@ class AnnouncementTable extends DataTableComponent
     foreach (Announcement::types() as $key => $value) {
       $type[$key] = $value;
     }
-    $area = ["" => "Any"];
+    $area = [];
     foreach (Announcement::areas() as $key => $value) {
       $area[$key] = $value;
     }

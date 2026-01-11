@@ -2,6 +2,7 @@
 
 namespace App\Domains\Announcement\Models\Traits\Scope;
 
+use App\Domains\Announcement\Models\Announcement;
 use App\Domains\Tenant\Models\Tenant;
 
 /**
@@ -57,8 +58,15 @@ trait AnnouncementScope
    */
   public function scopeForArea($query, $area)
   {
-    return $query->where(function ($query) use ($area) {
-      $query->whereArea($area)
+    $areas = match ($area) {
+      Announcement::TYPE_FRONTEND => [Announcement::TYPE_FRONTEND, Announcement::TYPE_BOTH],
+      Announcement::TYPE_BACKEND => [Announcement::TYPE_BACKEND, Announcement::TYPE_BOTH],
+      Announcement::TYPE_BOTH => [Announcement::TYPE_BOTH],
+      default => [$area],
+    };
+
+    return $query->where(function ($query) use ($areas) {
+      $query->whereIn('area', $areas)
         ->orWhereNull('area');
     });
   }

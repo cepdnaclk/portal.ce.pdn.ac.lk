@@ -23,7 +23,11 @@
                     {!! Form::label('area', 'Area*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::select('area', $areas, null, ['class' => 'form-select', 'required' => true, 'placeholder' => '']) !!}
+                        {!! Form::select('area', $areas, App\Domains\Announcement\Models\Announcement::TYPE_BOTH, [
+                            'class' => 'form-select',
+                            'required' => true,
+                            'placeholder' => '',
+                        ]) !!}
                         @error('area')
                             <strong>{{ $message }}</strong>
                         @enderror

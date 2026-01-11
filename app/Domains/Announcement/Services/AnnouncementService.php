@@ -29,14 +29,19 @@ class AnnouncementService extends BaseService
    * if there is only a start date, make sure the current time is past that or
    * if there is only an end date, make sure the current time is before that.
    *
+   * @param tenantSlug string|null
    * @return mixed
    */
-  public function getForFrontend()
+  public function getForFrontend(?string $tenantSlug = null)
   {
-    $tenant = $this->tenantResolver->resolveFromRequest(request());
+    $tenant = $this->resolveTenant($tenantSlug);
+
+    if (! $tenant) {
+      return collect();
+    }
 
     return $this->model::enabled()
-      ->forArea($this->model::TYPE_FRONTEND)
+      ->forArea(Announcement::TYPE_FRONTEND)
       ->forTenant($tenant)
       ->inTimeFrame()
       ->get();
@@ -50,16 +55,36 @@ class AnnouncementService extends BaseService
    * if there is only a start date, make sure the current time is past that or
    * if there is only an end date, make sure the current time is before that.
    *
+   * @param  string|null  $tenantSlug
    * @return mixed
    */
-  public function getForBackend()
+  public function getForBackend(?string $tenantSlug = null)
   {
-    $tenant = $this->tenantResolver->resolveFromRequest(request());
+    $tenant = $this->resolveTenant($tenantSlug);
+
+    if (! $tenant) {
+      return collect();
+    }
 
     return $this->model::enabled()
-      ->forArea($this->model::TYPE_BACKEND)
+      ->forArea(Announcement::TYPE_BACKEND)
       ->forTenant($tenant)
       ->inTimeFrame()
       ->get();
+  }
+
+  /**
+   * Resolve tenant by slug or get default tenant
+   *
+   * @param  string|null  $tenantSlug
+   * @return mixed
+   */
+  private function resolveTenant(?string $tenantSlug)
+  {
+    if ($tenantSlug !== null) {
+      return $this->tenantResolver->resolveBySlug($tenantSlug);
+    }
+
+    return $this->tenantResolver->resolveDefault();
   }
 }

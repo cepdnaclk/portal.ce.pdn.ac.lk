@@ -9,7 +9,20 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ App\Domains\Announcement\Models\Announcement::types()[$row->type] }}
+    @php
+        $typeConfig = [
+            'info' => ['class' => 'text-info', 'icon' => 'fa-info-circle'],
+            'danger' => ['class' => 'text-danger', 'icon' => 'fa-exclamation-circle'],
+            'warning' => ['class' => 'text-warning', 'icon' => 'fa-exclamation-triangle'],
+            'success' => ['class' => 'text-success', 'icon' => 'fa-check-circle'],
+        ];
+        $typeLabel = App\Domains\Announcement\Models\Announcement::types()[$row->type] ?? 'Unknown';
+        $typeMeta = $typeConfig[$row->type] ?? ['class' => 'text-secondary', 'icon' => 'fa-circle'];
+    @endphp
+
+    <i class="fas {{ $typeMeta['icon'] }} {{ $typeMeta['class'] }}" title="{{ $typeLabel }}"
+        aria-label="{{ $typeLabel }}"></i>
+
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

@@ -58,7 +58,7 @@ class RoleController
    */
   public function create()
   {
-    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('name');
 
     return view('backend.auth.role.create')
       ->withCategories($this->permissionService->getCategorizedPermissions())
@@ -87,7 +87,7 @@ class RoleController
    */
   public function edit(EditRoleRequest $request, Role $role)
   {
-    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('slug');
+    $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('name');
 
     return view('backend.auth.role.edit')
       ->withCategories($this->permissionService->getCategorizedPermissions())
