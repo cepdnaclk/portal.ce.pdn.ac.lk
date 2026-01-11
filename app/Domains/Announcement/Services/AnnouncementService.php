@@ -29,6 +29,7 @@ class AnnouncementService extends BaseService
    * if there is only a start date, make sure the current time is past that or
    * if there is only an end date, make sure the current time is before that.
    *
+   * @param tenantSlug string|null
    * @return mixed
    */
   public function getForFrontend(?string $tenantSlug = null)
@@ -54,6 +55,7 @@ class AnnouncementService extends BaseService
    * if there is only a start date, make sure the current time is past that or
    * if there is only an end date, make sure the current time is before that.
    *
+   * @param  string|null  $tenantSlug
    * @return mixed
    */
   public function getForBackend(?string $tenantSlug = null)
@@ -71,6 +73,12 @@ class AnnouncementService extends BaseService
       ->get();
   }
 
+  /**
+   * Resolve tenant by slug or get default tenant
+   *
+   * @param  string|null  $tenantSlug
+   * @return mixed
+   */
   private function resolveTenant(?string $tenantSlug)
   {
     if ($tenantSlug !== null) {
