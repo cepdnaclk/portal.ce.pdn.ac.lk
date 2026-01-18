@@ -54,6 +54,8 @@
                     </div><!--form-group-->
 
                     @if (!$user->isMasterAdmin())
+                        @include('backend.auth.includes.tenants')
+
                         @include('backend.auth.includes.roles')
 
                         @if (!config('boilerplate.access.user.only_roles'))

@@ -23,7 +23,11 @@
                     {!! Form::label('area', 'Area*', ['class' => 'col-md-2 col-form-label']) !!}
 
                     <div class="col-md-10">
-                        {!! Form::select('area', $areas, null, ['class' => 'form-select', 'required' => true, 'placeholder' => '']) !!}
+                        {!! Form::select('area', $areas, App\Domains\Announcement\Models\Announcement::TYPE_BOTH, [
+                            'class' => 'form-select',
+                            'required' => true,
+                            'placeholder' => '',
+                        ]) !!}
                         @error('area')
                             <strong>{{ $message }}</strong>
                         @enderror
@@ -37,6 +41,22 @@
                     <div class="col-md-10">
                         {!! Form::select('type', $types, null, ['class' => 'form-select', 'required' => true, 'placeholder' => '']) !!}
                         @error('type')
+                            <strong>{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Tenant -->
+                <div class="form-group row">
+                    {!! Form::label('tenant_id', 'Tenant*', ['class' => 'col-md-2 col-form-label']) !!}
+
+                    <div class="col-md-10">
+                        {!! Form::select('tenant_id', $tenants->pluck('name', 'id'), $selectedTenantId, [
+                            'class' => 'form-select',
+                            'required' => true,
+                            'placeholder' => '',
+                        ]) !!}
+                        @error('tenant_id')
                             <strong>{{ $message }}</strong>
                         @enderror
                     </div>

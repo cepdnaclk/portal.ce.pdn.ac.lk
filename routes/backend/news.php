@@ -6,7 +6,7 @@ use App\Http\Controllers\Backend\GalleryNewsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\NewsController;
 
-Route::group(['middleware' => ['permission:user.access.editor.news']], function () {
+Route::group(['middleware' => ['permission:user.access.editor.news', 'tenant.access']], function () {
 
   Route::get('/news', function () {
     return view('backend.news.index');

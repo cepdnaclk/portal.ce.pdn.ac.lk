@@ -3,9 +3,11 @@
 namespace App\Domains\Announcement\Models;
 
 use App\Domains\Announcement\Models\Traits\Scope\AnnouncementScope;
+use App\Domains\Tenant\Models\Tenant;
 use Database\Factories\AnnouncementFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
@@ -19,6 +21,7 @@ class Announcement extends Model
 
   public const TYPE_FRONTEND = 'frontend';
   public const TYPE_BACKEND = 'backend';
+  public const TYPE_BOTH = 'both';
 
   protected static $logFillable = true;
   protected static $logOnlyDirty = true;
@@ -33,6 +36,7 @@ class Announcement extends Model
     'enabled',
     'starts_at',
     'ends_at',
+    'tenant_id',
   ];
 
   /**
@@ -50,11 +54,17 @@ class Announcement extends Model
     'enabled' => 'boolean',
   ];
 
+  public function tenant(): BelongsTo
+  {
+    return $this->belongsTo(Tenant::class);
+  }
+
   public static function areas()
   {
     return [
-      'frontend' => 'Frontend',
-      'backend' => 'Backend'
+      self::TYPE_FRONTEND => 'Frontend',
+      self::TYPE_BACKEND => 'Backend',
+      self::TYPE_BOTH => 'Both',
     ];
   }
 

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\Announcement\Models\Announcement;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,12 +26,13 @@ class AnnouncementFactory extends Factory
   public function definition()
   {
     return [
-      'area' => $this->faker->randomElement(['frontend', 'backend']),
+      'area' => $this->faker->randomElement([Announcement::TYPE_FRONTEND, Announcement::TYPE_BACKEND, Announcement::TYPE_BOTH]),
       'type' => $this->faker->randomElement(['info', 'danger', 'warning', 'success']),
       'message' => $this->faker->text,
       'enabled' => $this->faker->boolean,
       'starts_at' => $this->faker->dateTime(),
       'ends_at' => $this->faker->dateTime(),
+      'tenant_id' => Tenant::defaultId() ?? Tenant::factory(),
     ];
   }
 
@@ -65,7 +67,7 @@ class AnnouncementFactory extends Factory
   {
     return $this->state(function (array $attributes) {
       return [
-        'area' => 'frontend',
+        'area' => Announcement::TYPE_FRONTEND,
       ];
     });
   }
@@ -77,7 +79,19 @@ class AnnouncementFactory extends Factory
   {
     return $this->state(function (array $attributes) {
       return [
-        'area' => 'backend',
+        'area' => Announcement::TYPE_BACKEND,
+      ];
+    });
+  }
+
+  /**
+   * @return AnnouncementFactory
+   */
+  public function both()
+  {
+    return $this->state(function (array $attributes) {
+      return [
+        'area' => Announcement::TYPE_BOTH,
       ];
     });
   }

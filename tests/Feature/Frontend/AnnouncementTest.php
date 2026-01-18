@@ -3,6 +3,7 @@
 namespace Tests\Feature\Frontend;
 
 use App\Domains\Announcement\Models\Announcement;
+use App\Domains\Tenant\Models\Tenant;
 use Tests\TestCase;
 
 /**
@@ -13,7 +14,12 @@ class AnnouncementTest extends TestCase
   /** @test */
   public function announcement_is_only_visible_on_frontend()
   {
-    $announcement = Announcement::factory()->enabled()->frontend()->noDates()->create();
+    $tenant = $this->portalTenant();
+    $announcement = Announcement::factory()
+      ->enabled()
+      ->frontend()
+      ->noDates()
+      ->create(['tenant_id' => $tenant->id]);
 
     $response = $this->get('login');
 
@@ -29,7 +35,12 @@ class AnnouncementTest extends TestCase
   /** @test */
   public function announcement_is_only_visible_on_backend()
   {
-    $announcement = Announcement::factory()->enabled()->backend()->noDates()->create();
+    $tenant = $this->portalTenant();
+    $announcement = Announcement::factory()
+      ->enabled()
+      ->backend()
+      ->noDates()
+      ->create(['tenant_id' => $tenant->id]);
 
     $response = $this->get('login');
 
@@ -45,7 +56,33 @@ class AnnouncementTest extends TestCase
   /** @test */
   public function announcement_is_visible_globally()
   {
-    $announcement = Announcement::factory()->enabled()->global()->noDates()->create();
+    $tenant = $this->portalTenant();
+    $announcement = Announcement::factory()
+      ->enabled()
+      ->both()
+      ->noDates()
+      ->create(['tenant_id' => $tenant->id]);
+
+    $response = $this->get('login');
+
+    $response->assertSee($announcement->message);
+
+    $this->loginAsAdmin();
+
+    $response = $this->get('dashboard/home');
+
+    $response->assertSee($announcement->message);
+  }
+
+  /** @test */
+  public function legacy_global_announcement_is_visible_on_both_areas()
+  {
+    $tenant = $this->portalTenant();
+    $announcement = Announcement::factory()
+      ->enabled()
+      ->global()
+      ->noDates()
+      ->create(['tenant_id' => $tenant->id]);
 
     $response = $this->get('login');
 
@@ -61,7 +98,12 @@ class AnnouncementTest extends TestCase
   /** @test */
   public function a_disabled_announcement_does_not_show()
   {
-    $announcement = Announcement::factory()->disabled()->global()->noDates()->create();
+    $tenant = $this->portalTenant();
+    $announcement = Announcement::factory()
+      ->disabled()
+      ->both()
+      ->noDates()
+      ->create(['tenant_id' => $tenant->id]);
 
     $response = $this->get('login');
 
@@ -71,7 +113,12 @@ class AnnouncementTest extends TestCase
   /** @test */
   public function an_announcement_inside_of_date_range_shows()
   {
-    $announcement = Announcement::factory()->enabled()->global()->insideDateRange()->create();
+    $tenant = $this->portalTenant();
+    $announcement = Announcement::factory()
+      ->enabled()
+      ->both()
+      ->insideDateRange()
+      ->create(['tenant_id' => $tenant->id]);
 
     $response = $this->get('login');
 
@@ -81,10 +128,21 @@ class AnnouncementTest extends TestCase
   /** @test */
   public function an_announcement_outside_of_date_range_doesnt_show()
   {
-    $announcement = Announcement::factory()->enabled()->global()->outsideDateRange()->create();
+    $tenant = $this->portalTenant();
+    $announcement = Announcement::factory()
+      ->enabled()
+      ->both()
+      ->outsideDateRange()
+      ->create(['tenant_id' => $tenant->id]);
 
     $response = $this->get('login');
 
     $response->assertDontSee($announcement->message);
+  }
+
+  private function portalTenant(): Tenant
+  {
+    return Tenant::query()->where('slug', 'portal')->first()
+      ?? Tenant::factory()->create(['slug' => 'portal']);
   }
 }

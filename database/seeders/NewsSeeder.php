@@ -6,6 +6,7 @@ use Database\Seeders\Traits\DisableForeignKeys;
 use Database\Seeders\Traits\TruncateTable;
 use Illuminate\Database\Seeder;
 use App\Domains\ContentManagement\Models\News;
+use App\Domains\Tenant\Models\Tenant;
 
 class NewsSeeder extends Seeder
 {
@@ -19,6 +20,8 @@ class NewsSeeder extends Seeder
     $this->truncateMultiple([
       'news',
     ]);
+
+    $defaultTenantId = Tenant::defaultId();
 
     $news = [
       [
@@ -102,6 +105,9 @@ class NewsSeeder extends Seeder
 
     foreach ($news as $item) {
       $item['description'] = str_replace('\/', '/', $item['description']);
+      if ($defaultTenantId) {
+        $item['tenant_id'] = $defaultTenantId;
+      }
       News::firstOrCreate($item);
     }
 

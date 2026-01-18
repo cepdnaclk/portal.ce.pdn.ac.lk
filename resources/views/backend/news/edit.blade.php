@@ -30,6 +30,21 @@
                     </div>
                 </div>
 
+                <!-- Tenant -->
+                <div class="form-group row">
+                    {!! Form::label('tenant_id', 'Tenant*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        {!! Form::select('tenant_id', $tenants->pluck('name', 'id'), $selectedTenantId, [
+                            'class' => 'form-select',
+                            'required' => true,
+                            'placeholder' => '',
+                        ]) !!}
+                        @error('tenant_id')
+                            <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
                 <!-- Published At -->
                 <div class="form-group row">
                     {!! Form::label('published_at', 'Publish at*', ['class' => 'col-md-2 col-form-label']) !!}
@@ -46,8 +61,7 @@
                     {!! Form::label('url', 'URL*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
                         <div class="d-inline-flex align-items-center flex-nowrap w-100">
-                            <span class="me-2"
-                                id="url_hint">https://www.ce.pdn.ac.lk/news/{{ $news->published_at }}-&nbsp;</span>
+                            <span class="me-2" id="url_hint">/news/{{ $news->published_at }}-&nbsp;</span>
                             <span class="flex-grow-1">{!! Form::text('url', $news->url, ['class' => 'form-control', 'required' => true]) !!}</span>
                         </div>
                         @error('url')
@@ -125,7 +139,7 @@
     <script>
         document.getElementById('published_at').addEventListener('change', function() {
             document.getElementById('url_hint').textContent =
-                `https://www.ce.pdn.ac.lk/news/${this.value ?? 'yyyy-mm-dd'}-`;
+                `/news/${this.value ?? 'yyyy-mm-dd'}-`;
         });
     </script>
 @endsection

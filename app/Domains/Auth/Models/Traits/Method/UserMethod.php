@@ -2,6 +2,7 @@
 
 namespace App\Domains\Auth\Models\Traits\Method;
 
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Support\Collection;
 
 /**
@@ -88,6 +89,33 @@ trait UserMethod
   public function getPermissionDescriptions(): Collection
   {
     return $this->permissions->pluck('description');
+  }
+
+  public function hasTenantAccess($tenant): bool
+  {
+    if ($this->hasAllAccess()) {
+      return true;
+    }
+
+    $tenantId = $tenant instanceof Tenant ? $tenant->id : $tenant;
+
+    if (! $tenantId) {
+      return false;
+    }
+
+    if ($this->isAdmin() && $this->tenants()->count() === 0) {
+      return true;
+    }
+
+    if ($this->tenants->contains('id', $tenantId)) {
+      return true;
+    }
+
+    return $this->roles()
+      ->whereHas('tenants', function ($query) use ($tenantId) {
+        $query->whereKey($tenantId);
+      })
+      ->exists();
   }
 
   /**

@@ -36,7 +36,7 @@
                                     pixels.
                                 </small>
                             </div>
-                            <button type="submit" class="btn btn-primary" id="uploadBtn">
+                            <button type="submit" class="btn btn-primary" id="uploadBtn" disabled="true">
                                 <i class="fas fa-upload"></i> Upload Images
                             </button>
                         </form>
@@ -141,11 +141,33 @@
         document.addEventListener('DOMContentLoaded', function() {
             const uploadForm = document.getElementById('uploadForm');
             const galleryContainer = document.getElementById('galleryContainer');
+            const fileInput = document.getElementById('images');
+            const uploadBtn = document.getElementById('uploadBtn');
             const uploadRoute = "{{ route('dashboard.' . $type . '.gallery.upload', $imageable) }}";
             const reorderRoute = "{{ route('dashboard.' . $type . '.gallery.reorder', $imageable) }}";
             const updateRoute = "{{ route('dashboard.gallery.update', ':id') }}";
             const deleteRoute = "{{ route('dashboard.gallery.destroy', ':id') }}";
             const setCoverRoute = "{{ route('dashboard.' . $type . '.gallery.set-cover', [$imageable, ':id']) }}";
+            const maxImages = {{ (int) $stats['max_images'] }};
+            const totalImages = {{ (int) $stats['total_images'] }};
+
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const uploadStatus = document.getElementById('uploadStatus');
+                    const selectedCount = e.target.files ? e.target.files.length : 0;
+                    const remainingImages = Math.max(0, maxImages - totalImages);
+
+                    if (selectedCount > remainingImages) {
+                        uploadBtn.disabled = true;
+                        uploadStatus.innerHTML =
+                            `<div class="alert alert-danger">You can upload only ${remainingImages} more image(s).</div>`;
+                        return;
+                    } else if (selectedCount > 0) {
+                        uploadBtn.disabled = false;
+                    }
+                    uploadStatus.innerHTML = '';
+                });
+            }
 
             // Upload form handler
             if (uploadForm) {
@@ -153,9 +175,24 @@
                     e.preventDefault();
 
                     const formData = new FormData(uploadForm);
-                    const uploadBtn = document.getElementById('uploadBtn');
+                    const selectedFiles = document.getElementById('images').files;
+                    const remainingImages = Math.max(0, maxImages - totalImages);
+
                     const uploadProgress = document.getElementById('uploadProgress');
                     const uploadStatus = document.getElementById('uploadStatus');
+
+                    if (selectedFiles.length <= 0) {
+                        uploadStatus.innerHTML =
+                            '<div class="alert alert-danger">Please select at least one image to upload.</div>';
+                        return;
+                    }
+
+
+                    if (selectedFiles.length > remainingImages) {
+                        uploadStatus.innerHTML =
+                            `<div class="alert alert-danger">You can upload only ${remainingImages} more image(s).</div>`;
+                        return;
+                    }
 
                     uploadBtn.disabled = true;
                     uploadProgress.style.display = 'block';
@@ -168,7 +205,15 @@
                                 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                             }
                         })
-                        .then(response => response.json())
+                        .then(async response => {
+                            const data = await response.json().catch(() => ({}));
+
+                            if (!response.ok) {
+                                throw new Error(data.message || 'Upload failed.');
+                            }
+
+                            return data;
+                        })
                         .then(data => {
                             if (data.message) {
                                 uploadStatus.innerHTML =
