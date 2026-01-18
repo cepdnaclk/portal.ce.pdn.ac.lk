@@ -35,10 +35,10 @@ echo "Running: Setting permissions"
 sudo chown -R www-data:www-data ./
 
 # Set directory permissions to 751 (rwxr-x--x)
-sudo find ./ -type d -exec chmod 751 {} \;
+sudo find ./ -type d -exec chmod 751 {} +
 
 # Set file permissions to 740 (rwxr-----)
-sudo find ./ -type f -exec chmod 740 {} \;
+sudo find ./ -type f -exec chmod 740 {} +
 
 # Ensure storage and cache directories are writable
 sudo chmod -R 775 ./storage/*
