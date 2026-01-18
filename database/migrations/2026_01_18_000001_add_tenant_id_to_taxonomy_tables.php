@@ -60,9 +60,19 @@ class AddTenantIdToTaxonomyTables extends Migration
 
     DB::table('taxonomies')->whereNull('tenant_id')->update(['tenant_id' => $defaultTenantId]);
 
-    DB::statement('UPDATE taxonomy_files tf LEFT JOIN taxonomies t ON tf.taxonomy_id = t.id SET tf.tenant_id = COALESCE(t.tenant_id, ?) WHERE tf.tenant_id IS NULL', [$defaultTenantId]);
-    DB::statement('UPDATE taxonomy_pages tp LEFT JOIN taxonomies t ON tp.taxonomy_id = t.id SET tp.tenant_id = COALESCE(t.tenant_id, ?) WHERE tp.tenant_id IS NULL', [$defaultTenantId]);
-    DB::statement('UPDATE taxonomy_lists tl LEFT JOIN taxonomies t ON tl.taxonomy_id = t.id SET tl.tenant_id = COALESCE(t.tenant_id, ?) WHERE tl.tenant_id IS NULL', [$defaultTenantId]);
+    if (DB::getDriverName() === 'sqlite') {
+      $taxonomyTenantMap = DB::table('taxonomies')
+        ->pluck('tenant_id', 'id')
+        ->toArray();
+
+      $this->updateTenantIdsForTable('taxonomy_files', $taxonomyTenantMap, $defaultTenantId);
+      $this->updateTenantIdsForTable('taxonomy_pages', $taxonomyTenantMap, $defaultTenantId);
+      $this->updateTenantIdsForTable('taxonomy_lists', $taxonomyTenantMap, $defaultTenantId);
+    } else {
+      DB::statement('UPDATE taxonomy_files tf LEFT JOIN taxonomies t ON tf.taxonomy_id = t.id SET tf.tenant_id = COALESCE(t.tenant_id, ?) WHERE tf.tenant_id IS NULL', [$defaultTenantId]);
+      DB::statement('UPDATE taxonomy_pages tp LEFT JOIN taxonomies t ON tp.taxonomy_id = t.id SET tp.tenant_id = COALESCE(t.tenant_id, ?) WHERE tp.tenant_id IS NULL', [$defaultTenantId]);
+      DB::statement('UPDATE taxonomy_lists tl LEFT JOIN taxonomies t ON tl.taxonomy_id = t.id SET tl.tenant_id = COALESCE(t.tenant_id, ?) WHERE tl.tenant_id IS NULL', [$defaultTenantId]);
+    }
 
     DB::table('taxonomy_files')->whereNull('tenant_id')->update(['tenant_id' => $defaultTenantId]);
     DB::table('taxonomy_pages')->whereNull('tenant_id')->update(['tenant_id' => $defaultTenantId]);
@@ -90,5 +100,19 @@ class AddTenantIdToTaxonomyTables extends Migration
       $table->dropForeign(['tenant_id']);
       $table->dropColumn('tenant_id');
     });
+  }
+
+  private function updateTenantIdsForTable(string $table, array $taxonomyTenantMap, int $defaultTenantId): void
+  {
+    $rows = DB::table($table)
+      ->whereNull('tenant_id')
+      ->get(['id', 'taxonomy_id']);
+
+    foreach ($rows as $row) {
+      $tenantId = $taxonomyTenantMap[$row->taxonomy_id] ?? $defaultTenantId;
+      DB::table($table)
+        ->where('id', $row->id)
+        ->update(['tenant_id' => $tenantId]);
+    }
   }
 }
