@@ -15,11 +15,19 @@ class TaxonomyFileSeeder extends Seeder
    */
   public function run()
   {
+    $taxonomy = Taxonomy::first();
+    $tenantId = $taxonomy?->tenant_id;
+
+    if (! $taxonomy) {
+      return;
+    }
+
     // Insert dummy taxonomy file data
     TaxonomyFile::firstOrCreate([
       'file_name' => 'Sample File 1',
       'file_path' => 'taxonomy_files/sample-1.jpg',
-      'taxonomy_id' => Taxonomy::first()->id,
+      'taxonomy_id' => $taxonomy->id,
+      'tenant_id' => $tenantId,
       'metadata' => ["file_size" => 1],
       'created_by' => 1,
       'created_at' => now(),
@@ -29,7 +37,8 @@ class TaxonomyFileSeeder extends Seeder
     TaxonomyFile::firstOrCreate([
       'file_name' => 'Sample File 2',
       'file_path' => 'taxonomy_files/sample-2.pdf',
-      'taxonomy_id' => Taxonomy::first()->id,
+      'taxonomy_id' => $taxonomy->id,
+      'tenant_id' => $tenantId,
       'metadata' => ["file_size" => 1],
       'created_by' => 1,
       'created_at' => now(),

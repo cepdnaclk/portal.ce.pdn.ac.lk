@@ -9,6 +9,10 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->tenant?->name ?? 'N/A' }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     {{ $row->user_created->name ?? 'N/A' }}
 </x-livewire-tables::table.cell>
 
@@ -26,7 +30,12 @@
 
 <x-livewire-tables::table.cell>
     @if ($row->visibility)
-        <a target="_blank" href="{{ route('api.taxonomy.get', ['taxonomy_code' => $row->code]) }}">
+        <a target="_blank"
+            href="{{ route('api.v2.taxonomy.get_taxonomy', [
+                'taxonomy_code' => $row->code,
+                'tenant_slug' => $row->tenant?->slug,
+                'taxonomy_code' => $row->code,
+            ]) }}">
             /{{ $row->code }}
         </a>
     @else
