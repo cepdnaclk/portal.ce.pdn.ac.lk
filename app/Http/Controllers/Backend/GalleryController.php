@@ -74,6 +74,13 @@ class GalleryController extends Controller
         ], 422);
       }
 
+      $newImagesCount = count($request->file('images', []));
+      if ($stats['total_images'] + $newImagesCount > $stats['max_images']) {
+        return response()->json([
+          'message' => 'Upload exceeds the maximum number of images allowed.',
+        ], 422);
+      }
+
       $images = $this->galleryService->uploadImages(
         $imageable,
         $request->file('images'),
