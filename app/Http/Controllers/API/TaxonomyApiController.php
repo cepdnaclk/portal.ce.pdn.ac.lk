@@ -8,15 +8,25 @@ use App\Http\Resources\TaxonomyResource;
 use App\Http\Resources\TaxonomyTermResource;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Support\Facades\Log;
 
 class TaxonomyApiController extends Controller
 {
+  public function __construct(private TenantResolver $tenantResolver) {}
 
   public function index()
   {
     try {
-      $result = Taxonomy::where('visibility', true)->get();
+      $tenant = $this->tenantResolver->resolveDefault();
+
+      if (! $tenant) {
+        return response()->json(['status' => 'error', 'message' => 'Default tenant not found'], 404);
+      }
+
+      $result = Taxonomy::where('visibility', true)
+        ->where('tenant_id', $tenant->id)
+        ->get();
 
       if ($result) {
         return response()->json(
@@ -37,7 +47,14 @@ class TaxonomyApiController extends Controller
   public function get_taxonomy($taxonomy_code)
   {
     try {
+      $tenant = $this->tenantResolver->resolveDefault();
+
+      if (! $tenant) {
+        return response()->json(['status' => 'error', 'message' => 'Default tenant not found'], 404);
+      }
+
       $result = Taxonomy::where('code', $taxonomy_code)
+        ->where('tenant_id', $tenant->id)
         ->first();
 
       if ($result) {
@@ -63,7 +80,18 @@ class TaxonomyApiController extends Controller
   public function get_term($term_code)
   {
     try {
-      $result = TaxonomyTerm::where('code', $term_code)->first();
+      $tenant = $this->tenantResolver->resolveDefault();
+
+      if (! $tenant) {
+        return response()->json(['status' => 'error', 'message' => 'Default tenant not found'], 404);
+      }
+
+      $result = TaxonomyTerm::where('code', $term_code)
+        ->whereHas('taxonomy', function ($query) use ($tenant) {
+          $query->where('tenant_id', $tenant->id);
+        })
+        ->with('taxonomy')
+        ->first();
 
       if ($result) {
         if ($result->taxonomy && !$result->taxonomy->visibility) {

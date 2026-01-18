@@ -7,6 +7,10 @@ use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
 use App\Domains\ContentManagement\Models\Event;
 use App\Domains\ContentManagement\Models\News;
+use App\Domains\Taxonomy\Models\Taxonomy;
+use App\Domains\Taxonomy\Models\TaxonomyFile;
+use App\Domains\Taxonomy\Models\TaxonomyList;
+use App\Domains\Taxonomy\Models\TaxonomyPage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -58,6 +62,26 @@ class Tenant extends Model
   public function announcements(): HasMany
   {
     return $this->hasMany(Announcement::class);
+  }
+
+  public function taxonomies(): HasMany
+  {
+    return $this->hasMany(Taxonomy::class);
+  }
+
+  public function taxonomyFiles(): HasMany
+  {
+    return $this->hasMany(TaxonomyFile::class);
+  }
+
+  public function taxonomyPages(): HasMany
+  {
+    return $this->hasMany(TaxonomyPage::class);
+  }
+
+  public function taxonomyLists(): HasMany
+  {
+    return $this->hasMany(TaxonomyList::class);
   }
 
   public static function default(): ?self

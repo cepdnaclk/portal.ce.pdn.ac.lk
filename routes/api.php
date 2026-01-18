@@ -9,6 +9,7 @@ use App\Http\Controllers\API\SemesterApiController;
 use App\Http\Controllers\API\TaxonomyApiController;
 use App\Http\Controllers\API\V2\AnnouncementApiController as AnnouncementApiV2Controller;
 use App\Http\Controllers\API\V2\NewsApiController as NewsApiV2Controller;
+use App\Http\Controllers\API\V2\TaxonomyApiController as TaxonomyApiV2Controller;
 
 // V1 API Routes
 Route::group(['prefix' => 'news/v1', 'as' => 'api.news.'], function () {
@@ -83,5 +84,17 @@ Route::group(['as' => 'api.v2.'], function () {
 
   Route::group(['prefix' => 'announcements/v2/{tenant_slug}', 'as' => 'announcements.'], function () {
     Route::get('', [AnnouncementApiV2Controller::class, 'index']);
+  });
+
+  // Taxonomy Endpoints ----------------------------------
+  Route::get('/taxonomy/v2', function () {
+    $defaultTenant = Tenant::default()->slug ?? 'default';
+    return redirect()->to("/api/taxonomy/v2/{$defaultTenant}");
+  });
+
+  Route::group(['prefix' => 'taxonomy/v2/{tenant_slug}', 'as' => 'taxonomy.'], function () {
+    Route::get('/', [TaxonomyApiV2Controller::class, 'index'])->name('index');
+    Route::get('/{taxonomy_code}', [TaxonomyApiV2Controller::class, 'get_taxonomy'])->name('get_taxonomy');
+    Route::get('/term/{term_code}', [TaxonomyApiV2Controller::class, 'get_term'])->name('get_term');
   });
 });

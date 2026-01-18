@@ -15,6 +15,10 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->tenant?->name ?? 'N/A' }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     {{ $row->user_created->name ?? 'N/A' }}
 </x-livewire-tables::table.cell>
 

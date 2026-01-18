@@ -58,6 +58,24 @@
                             </div>
                         </div>
 
+                        {{-- Tenant --}}
+                        <div class="row">
+                            {!! Form::label('tenant_id', 'Tenant*', ['class' => 'col-form-label']) !!}
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                {!! Form::select('tenant_id', $tenants->pluck('name', 'id'), $selectedTenantId, [
+                                    'class' => 'form-select',
+                                    'required' => true,
+                                    'placeholder' => '',
+                                    'id' => 'tenant_id',
+                                ]) !!}
+                                @error('tenant_id')
+                                    <strong class="text-danger">{{ $message }}</strong>
+                                @enderror
+                            </div>
+                        </div>
+
                         {{-- Taxonomy selector --}}
                         @isset($taxonomies)
                             <div class="row">
@@ -65,9 +83,15 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-12">
-                                    {!! Form::select('taxonomy_id', $taxonomies->pluck('name', 'id')->prepend(__('— none —'), ''), null, [
-                                        'class' => 'form-control',
-                                    ]) !!}
+                                    <select name="taxonomy_id" id="taxonomy_id" class="form-control">
+                                        <option value="">{{ __('— none —') }}</option>
+                                        @foreach ($taxonomies as $taxonomy)
+                                            <option value="{{ $taxonomy->id }}" data-tenant="{{ $taxonomy->tenant_id }}"
+                                                {{ old('taxonomy_id') == $taxonomy->id ? 'selected' : '' }}>
+                                                {{ $taxonomy->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('taxonomy_id')
                                         <strong class="text-danger">{{ $message }}</strong>
                                     @enderror
@@ -85,4 +109,30 @@
 
         {!! Form::close() !!}
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tenantSelect = document.getElementById('tenant_id')
+            const taxonomySelect = document.getElementById('taxonomy_id')
+            if (!tenantSelect || !taxonomySelect) {
+                return
+            }
+            const syncTaxonomyOptions = () => {
+                const tenantId = tenantSelect.value
+                Array.from(taxonomySelect.options).forEach((option) => {
+                    if (!option.value) {
+                        option.hidden = false
+                        return
+                    }
+                    const matchesTenant = !tenantId || option.dataset.tenant === tenantId
+                    option.hidden = !matchesTenant
+                    if (!matchesTenant && option.selected) {
+                        option.selected = false
+                    }
+                })
+            }
+            tenantSelect.addEventListener('change', syncTaxonomyOptions)
+            syncTaxonomyOptions()
+        })
+    </script>
 @endsection

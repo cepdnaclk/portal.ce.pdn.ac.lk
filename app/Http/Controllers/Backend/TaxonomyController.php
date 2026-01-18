@@ -10,12 +10,16 @@ use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
+use App\Domains\Tenant\Services\TenantResolver;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Validation\Rule;
 
 class TaxonomyController extends Controller
 {
+  public function __construct(private TenantResolver $tenantResolver) {}
+
   /**
    * Show the form for creating a new resource.
    *
@@ -24,7 +28,10 @@ class TaxonomyController extends Controller
   public function create()
   {
     try {
-      return view('backend.taxonomy.create');
+      $tenants = $this->getAvailableTenants();
+      $selectedTenantId = $this->getSelectedTenantId($tenants);
+
+      return view('backend.taxonomy.create', compact('tenants', 'selectedTenantId'));
     } catch (\Exception $ex) {
       Log::error('Failed to load taxonomy creation page', ['error' => $ex->getMessage()]);
       return abort(500);
@@ -51,18 +58,26 @@ class TaxonomyController extends Controller
    */
   public function store(Request $request)
   {
+    $availableTenantIds = $this->getAvailableTenantIds($request);
+    $tenantId = $this->resolveTenantId($request, $availableTenantIds);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
     $validatedData = $request->validate([
       'code' => 'required|unique:taxonomies',
       'name' => 'required',
       'description' => 'nullable',
       'properties' => 'string',
-      'visibility' => 'nullable|integer'
+      'visibility' => 'nullable|integer',
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     try {
       $taxonomy = new Taxonomy($validatedData);
       $taxonomy->properties = json_decode($request->properties);
       $taxonomy->visibility = ($request->visibility !== null);
+      $taxonomy->tenant_id = $validatedData['tenant_id'];
       $taxonomy->created_by = Auth::user()->id;
       $taxonomy->save();
       return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy created successfully');
@@ -80,8 +95,13 @@ class TaxonomyController extends Controller
   public function edit(Taxonomy $taxonomy)
   {
     try {
+      $tenants = $this->getAvailableTenants();
+      $selectedTenantId = $taxonomy->tenant_id;
+
       return view('backend.taxonomy.edit', [
         'taxonomy' => $taxonomy,
+        'tenants' => $tenants,
+        'selectedTenantId' => $selectedTenantId,
       ]);
     } catch (\Exception $ex) {
       Log::error('Failed to load taxonomy edit page', ['error' => $ex->getMessage()]);
@@ -99,12 +119,19 @@ class TaxonomyController extends Controller
    */
   public function update(Request $request, Taxonomy $taxonomy)
   {
+    $availableTenantIds = $this->getAvailableTenantIds($request);
+    $tenantId = $this->resolveTenantId($request, $availableTenantIds);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
     $data = $request->validate([
       'code' => 'string|required',
       'name' => 'string|required',
       'description' => 'nullable',
       'properties' => 'string',
-      'visibility' => 'nullable|integer'
+      'visibility' => 'nullable|integer',
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
     try {
       $originalProperties = $taxonomy->properties;
@@ -129,6 +156,7 @@ class TaxonomyController extends Controller
       if ($taxonomy->visibility !== $newVisibility) {
         $taxonomy->visibility = $newVisibility;
       }
+      $taxonomy->tenant_id = $data['tenant_id'];
       $taxonomy->updated_by = Auth::user()->id;
       $taxonomy->save();
       return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
@@ -319,10 +347,64 @@ class TaxonomyController extends Controller
   public function alias($code)
   {
     $taxonomy = Taxonomy::where('code', $code)->firstOrFail();
+    $tenantId = $taxonomy->tenant_id;
+    if ($tenantId && auth()->user() && ! auth()->user()->hasTenantAccess($tenantId)) {
+      abort(403, __('You do not have access to that tenant.'));
+    }
     $url = route('dashboard.taxonomy.terms.index', [
       'taxonomy' => $taxonomy,
     ]);
 
     return redirect($url);
+  }
+
+  private function getAvailableTenants()
+  {
+    return $this->tenantResolver
+      ->availableTenantsForUser(auth()->user())
+      ->sortBy('name')
+      ->values();
+  }
+
+  private function getAvailableTenantIds(Request $request): array
+  {
+    return $this->tenantResolver
+      ->availableTenantsForUser($request->user())
+      ->pluck('id')
+      ->all();
+  }
+
+  private function getSelectedTenantId($tenants): ?int
+  {
+    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
+
+    if ($defaultTenantId && $tenants->contains('id', $defaultTenantId)) {
+      return (int) $defaultTenantId;
+    }
+
+    if ($tenants->count() === 1) {
+      return (int) $tenants->first()->id;
+    }
+
+    return null;
+  }
+
+  private function resolveTenantId(Request $request, array $availableTenantIds): ?int
+  {
+    if ($request->filled('tenant_id')) {
+      return (int) $request->input('tenant_id');
+    }
+
+    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
+
+    if ($defaultTenantId && in_array($defaultTenantId, $availableTenantIds, true)) {
+      return (int) $defaultTenantId;
+    }
+
+    if (count($availableTenantIds) === 1) {
+      return (int) $availableTenantIds[0];
+    }
+
+    return null;
   }
 }

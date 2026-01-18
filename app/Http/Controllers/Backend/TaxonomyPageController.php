@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyPage;
+use App\Domains\Tenant\Services\TenantResolver;
 use App\Rules\Slug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,11 +19,19 @@ use Jfcherng\Diff\DiffHelper;
 
 class TaxonomyPageController extends Controller
 {
+  public function __construct(private TenantResolver $tenantResolver) {}
+
   public function create()
   {
     try {
-      $taxonomies = Taxonomy::select('id', 'name')->orderBy('name')->get();
-      return view('backend.taxonomy_page.create', compact('taxonomies'));
+      $tenants = $this->getAvailableTenants();
+      $selectedTenantId = $this->getSelectedTenantId($tenants);
+      $taxonomies = Taxonomy::query()
+        ->select('id', 'name', 'tenant_id')
+        ->whereIn('tenant_id', $this->getAvailableTenantIds(auth()->user()))
+        ->orderBy('name')
+        ->get();
+      return view('backend.taxonomy_page.create', compact('taxonomies', 'tenants', 'selectedTenantId'));
     } catch (\Throwable $ex) {
       Log::error('Failed to load TaxonomyPage create page', [
         'error' => $ex->getMessage(),
@@ -33,8 +42,18 @@ class TaxonomyPageController extends Controller
 
   public function store(Request $request)
   {
+    $availableTenantIds = $this->getAvailableTenantIds($request->user());
+    $tenantId = $this->resolveTenantId($request, $availableTenantIds);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
     $validated = $request->validate([
-      'taxonomy_id'  => 'nullable|exists:taxonomies,id',
+      'taxonomy_id'  => [
+        'nullable',
+        Rule::exists('taxonomies', 'id')
+          ->where(fn($query) => $query->where('tenant_id', $request->input('tenant_id'))),
+      ],
       'slug'         => [
         'string',
         'max:255',
@@ -42,6 +61,7 @@ class TaxonomyPageController extends Controller
         new Slug()
       ],
       'html'         => 'string',
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     try {
@@ -49,6 +69,7 @@ class TaxonomyPageController extends Controller
         'slug'        => $validated['slug'],
         'html'        => $this->sanitizeHtml($validated['html'] ?? ''),
         'taxonomy_id' => $validated['taxonomy_id'] ?? null,
+        'tenant_id' => $validated['tenant_id'],
         'metadata'    => [],
       ]);
       $taxonomyPage->created_by = Auth::user()->id;
@@ -164,8 +185,13 @@ class TaxonomyPageController extends Controller
   public function edit(TaxonomyPage $taxonomyPage)
   {
     try {
-      $taxonomies = Taxonomy::select('id', 'name')->get();
-      return view('backend.taxonomy_page.edit', compact('taxonomyPage', 'taxonomies'));
+      $tenants = $this->getAvailableTenants();
+      $selectedTenantId = $taxonomyPage->tenant_id;
+      $taxonomies = Taxonomy::query()
+        ->select('id', 'name', 'tenant_id')
+        ->whereIn('tenant_id', $this->getAvailableTenantIds(auth()->user()))
+        ->get();
+      return view('backend.taxonomy_page.edit', compact('taxonomyPage', 'taxonomies', 'tenants', 'selectedTenantId'));
     } catch (\Throwable $ex) {
       Log::error('Failed to load TaxonomyPage edit page', [
         'page_id' => $taxonomyPage->id,
@@ -177,8 +203,18 @@ class TaxonomyPageController extends Controller
 
   public function update(Request $request, TaxonomyPage $taxonomyPage)
   {
+    $availableTenantIds = $this->getAvailableTenantIds($request->user());
+    $tenantId = $this->resolveTenantId($request, $availableTenantIds);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
     $validated = $request->validate([
-      'taxonomy_id' => 'nullable|exists:taxonomies,id',
+      'taxonomy_id' => [
+        'nullable',
+        Rule::exists('taxonomies', 'id')
+          ->where(fn($query) => $query->where('tenant_id', $request->input('tenant_id'))),
+      ],
       'slug' => [
         'required',
         'string',
@@ -187,6 +223,7 @@ class TaxonomyPageController extends Controller
         Rule::unique('taxonomy_pages')->ignore($taxonomyPage->slug, 'slug')
       ],
       'html' => 'string',
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     // Ensure HTML content is sanitized
@@ -238,5 +275,55 @@ class TaxonomyPageController extends Controller
   {
     // Allow only safe HTML tags
     return strip_tags($html, '<p><a><b><i><strong><em><ul><ol><li><br><hr><h1><h2><h3><h4><h5><h6><span><div><img><blockquote><pre><code><table><thead><tbody><tfoot><tr><th><td>');
+  }
+
+  private function getAvailableTenants()
+  {
+    return $this->tenantResolver
+      ->availableTenantsForUser(auth()->user())
+      ->sortBy('name')
+      ->values();
+  }
+
+  private function getAvailableTenantIds($user): array
+  {
+    return $this->tenantResolver
+      ->availableTenantsForUser($user)
+      ->pluck('id')
+      ->all();
+  }
+
+  private function getSelectedTenantId($tenants): ?int
+  {
+    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
+
+    if ($defaultTenantId && $tenants->contains('id', $defaultTenantId)) {
+      return (int) $defaultTenantId;
+    }
+
+    if ($tenants->count() === 1) {
+      return (int) $tenants->first()->id;
+    }
+
+    return null;
+  }
+
+  private function resolveTenantId(Request $request, array $availableTenantIds): ?int
+  {
+    if ($request->filled('tenant_id')) {
+      return (int) $request->input('tenant_id');
+    }
+
+    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
+
+    if ($defaultTenantId && in_array($defaultTenantId, $availableTenantIds, true)) {
+      return (int) $defaultTenantId;
+    }
+
+    if (count($availableTenantIds) === 1) {
+      return (int) $availableTenantIds[0];
+    }
+
+    return null;
   }
 }

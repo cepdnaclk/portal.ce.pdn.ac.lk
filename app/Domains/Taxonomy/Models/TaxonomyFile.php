@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Database\Factories\TaxonomyFileFactory;
 use Str;
+use App\Domains\Tenant\Models\Tenant;
 
 class TaxonomyFile extends Model
 {
@@ -21,6 +22,7 @@ class TaxonomyFile extends Model
     'file_name',
     'file_path',
     'taxonomy_id',
+    'tenant_id',
   ];
 
   protected $casts = [
@@ -96,6 +98,11 @@ class TaxonomyFile extends Model
   public function taxonomy()
   {
     return $this->belongsTo(Taxonomy::class);
+  }
+
+  public function tenant()
+  {
+    return $this->belongsTo(Tenant::class);
   }
 
   protected static function newFactory()

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Database\Factories\TaxonomyPageFactory;
+use App\Domains\Tenant\Models\Tenant;
 
 /**
  * Class TaxonomyPage
@@ -23,6 +24,7 @@ class TaxonomyPage extends Model
     'taxonomy_id',
     'slug',
     'html',
+    'tenant_id',
   ];
 
   protected $casts = [
@@ -35,6 +37,11 @@ class TaxonomyPage extends Model
   public function taxonomy()
   {
     return $this->belongsTo(Taxonomy::class);
+  }
+
+  public function tenant()
+  {
+    return $this->belongsTo(Tenant::class);
   }
 
   public function user_created()

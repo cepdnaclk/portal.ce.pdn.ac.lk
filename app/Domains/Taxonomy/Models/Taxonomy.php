@@ -10,6 +10,7 @@ use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Taxonomy\Models\TaxonomyPage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Domains\Taxonomy\Models\Traits\Scope\TaxonomyScope;
+use App\Domains\Tenant\Models\Tenant;
 
 /**
  * Class Taxonomy.
@@ -28,7 +29,8 @@ class Taxonomy extends Model
     'name',
     'description',
     'properties',
-    'visibility'
+    'visibility',
+    'tenant_id',
   ];
 
   public static $propertyType = [
@@ -62,6 +64,11 @@ class Taxonomy extends Model
   public function user()
   {
     return $this->belongsTo(User::class, 'created_by');
+  }
+
+  public function tenant()
+  {
+    return $this->belongsTo(Tenant::class);
   }
 
   public function user_created()

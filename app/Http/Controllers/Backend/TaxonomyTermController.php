@@ -262,6 +262,10 @@ class TaxonomyTermController extends Controller
   public function alias($code)
   {
     $term = TaxonomyTerm::with('taxonomy')->where('code', $code)->firstOrFail();
+    $tenantId = $term->taxonomy?->tenant_id;
+    if ($tenantId && auth()->user() && ! auth()->user()->hasTenantAccess($tenantId)) {
+      abort(403, __('You do not have access to that tenant.'));
+    }
     $url = route('dashboard.taxonomy.terms.index', [
       'taxonomy' => $term->taxonomy,
     ]) . "?filters[taxonomy_term]={$term->id}";
