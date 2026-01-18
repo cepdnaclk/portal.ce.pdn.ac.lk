@@ -32,7 +32,6 @@ trait AnnouncementScope
       $tenantId = $tenant;
     } else {
       $defaultTenant = Tenant::default();
-      dd($defaultTenant);
       if ($defaultTenant === null) {
         throw new \RuntimeException('No default tenant configured.');
       }

@@ -62,7 +62,7 @@ Route::group(['as' => 'api.v2.'], function () {
 
   // Events Endpoints -------------------------------------
   Route::get('/events/v2', function () {
-    // Redirect to default tenant news endpoint
+    // Redirect to default tenant events endpoint
     $defaultTenant = Tenant::default()->slug ?? 'default';
     return redirect()->to("/api/events/v2/{$defaultTenant}");
   });
