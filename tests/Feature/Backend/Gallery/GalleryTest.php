@@ -120,6 +120,31 @@ class GalleryTest extends TestCase
   }
 
   /** @test */
+  public function uploading_images_fails_when_batch_exceeds_remaining_slots()
+  {
+    Storage::fake('public');
+    $this->loginAsEditor();
+    $news = News::factory()->create();
+
+    $maxImages = config('gallery.max_images');
+    GalleryImage::factory()->count($maxImages - 1)->create([
+      'imageable_type' => News::class,
+      'imageable_id' => $news->id,
+    ]);
+
+    $response = $this->post(route('dashboard.news.gallery.upload', $news), [
+      'images' => [
+        UploadedFile::fake()->image('test1.jpg', 400, 400),
+        UploadedFile::fake()->image('test2.jpg', 400, 400),
+      ],
+    ]);
+
+    $response->assertStatus(422);
+    $response->assertJson(['message' => 'Upload exceeds the maximum number of images allowed.']);
+    $this->assertDatabaseCount('gallery_images', $maxImages - 1);
+  }
+
+  /** @test */
   public function an_editor_can_update_image_metadata()
   {
     Storage::fake('public');
