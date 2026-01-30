@@ -5,6 +5,7 @@
 OpenAPI 3.0 JSON documents generated from the current Laravel routes.
 
 - [News](./api/news.json)
+- [Articles](./api/articles.json)
 - [Events](./api/events.json)
 - [Academics](./api/academics.json)
 - [Taxonomy](./api/taxonomy.json)

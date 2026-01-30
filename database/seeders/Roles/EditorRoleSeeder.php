@@ -29,8 +29,12 @@ class EditorRoleSeeder extends Seeder
 
     $permissions = [
       [
+        'name' => 'user.access.editor.articles',
+        'description' => 'Manage Articles',
+      ],
+      [
         'name' => 'user.access.editor.news',
-        'description' => 'Manage News Articles',
+        'description' => 'Manage News Posts',
       ],
       [
         'name' => 'user.access.editor.events',

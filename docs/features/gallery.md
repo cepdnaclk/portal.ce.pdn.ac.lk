@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Gallery feature allows administrators to attach multiple images to News and Event items. Each gallery supports:
+The Gallery feature allows administrators to attach multiple images to Article, News, and Event items. Each gallery supports:
 
 - Multiple image uploads
 - Image reordering via drag-and-drop
@@ -15,7 +15,7 @@ The Gallery feature allows administrators to attach multiple images to News and 
 
 ### Database Schema
 
-The `gallery_images` table uses a polymorphic relationship to support both News and Events:
+The `gallery_images` table uses a polymorphic relationship to support Articles, News, and Events:
 
 ```
 gallery_images
@@ -42,6 +42,7 @@ gallery_images
 ### Models
 
 - **GalleryImage**: Core model representing a gallery image
+- **Article**: Has polymorphic relationship with GalleryImage
 - **News**: Has polymorphic relationship with GalleryImage
 - **Event**: Has polymorphic relationship with GalleryImage
 
@@ -93,8 +94,8 @@ Generated sizes are configured in `config/gallery.php`:
 
 ### Accessing Gallery Management
 
-1. Navigate to News or Events in the admin dashboard
-2. Edit an existing News/Event item
+1. Navigate to Articles, News, or Events in the admin dashboard
+2. Edit an existing item
 3. Click the "Manage Gallery" button at the bottom of the edit form
 4. You'll be redirected to the Gallery Management page
 

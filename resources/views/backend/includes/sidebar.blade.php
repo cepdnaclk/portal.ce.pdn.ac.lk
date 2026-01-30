@@ -71,12 +71,13 @@
         {{-- Content Management --}}
         @if (
             $logged_in_user->hasAnyPermission([
+                'user.access.editor.articles',
                 'user.access.editor.news',
                 'user.access.editor.events',
                 'user.access.editor.announcements',
             ]))
             <li
-                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.news.*') || Route::is('dashboard.event.*'), 'c-open c-show') }}">
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.article.*') || Route::is('dashboard.news.*') || Route::is('dashboard.event.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-newspaper-o"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Content Management')"></x-utils.link>
 
@@ -86,6 +87,14 @@
                         <li class="c-sidebar-nav-item">
                             <x-utils.link :href="route('dashboard.announcements.index')" class="c-sidebar-nav-link" :text="__('Announcements')"
                                 :active="activeClass(Route::is('dashboard.announcements.*'), 'c-active')"></x-utils.link>
+                        </li>
+                    @endif
+
+                    @if ($logged_in_user->hasPermissionTo('user.access.editor.articles'))
+                        {{-- Articles --}}
+                        <li class="c-sidebar-nav-item">
+                            <x-utils.link :href="route('dashboard.article.index')" class="c-sidebar-nav-link" :text="__('Articles')"
+                                :active="activeClass(Route::is('dashboard.article.*'), 'c-active')"></x-utils.link>
                         </li>
                     @endif
 

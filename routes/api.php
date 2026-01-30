@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Tenant\Models\Tenant;
+use App\Http\Controllers\API\ArticleApiController;
 use App\Http\Controllers\API\NewsApiController;
 use App\Http\Controllers\API\EventApiController;
 use App\Http\Controllers\API\V2\EventApiController as EventApiV2Controller;
@@ -8,12 +9,19 @@ use App\Http\Controllers\API\CourseApiController;
 use App\Http\Controllers\API\SemesterApiController;
 use App\Http\Controllers\API\TaxonomyApiController;
 use App\Http\Controllers\API\V2\AnnouncementApiController as AnnouncementApiV2Controller;
+use App\Http\Controllers\API\V2\ArticleApiController as ArticleApiV2Controller;
 use App\Http\Controllers\API\V2\NewsApiController as NewsApiV2Controller;
 
 // V1 API Routes
 Route::group(['prefix' => 'news/v1', 'as' => 'api.news.'], function () {
   Route::get('/', [NewsApiController::class, 'index']);
   Route::get('/{id}', [NewsApiController::class, 'show']);
+});
+
+Route::group(['prefix' => 'articles/v1', 'as' => 'api.articles.'], function () {
+  Route::get('/', [ArticleApiController::class, 'index']);
+  Route::get('/{id}', [ArticleApiController::class, 'show']);
+  Route::get('/category/{category}', [ArticleApiController::class, 'category']);
 });
 
 Route::group(['prefix' => 'events/v1', 'as' => 'api.events.'], function () {
@@ -58,6 +66,19 @@ Route::group(['as' => 'api.v2.'], function () {
   Route::group(['prefix' => 'news/v2/{tenant_slug}', 'as' => 'news.'], function () {
     Route::get('/', [NewsApiV2Controller::class, 'index']);
     Route::get('/{id}', [NewsApiV2Controller::class, 'show']);
+  });
+
+  // Articles Endpoints ---------------------------------------
+  Route::get('/articles/v2', function () {
+    // Redirect to default tenant articles endpoint
+    $defaultTenant = Tenant::default()->slug ?? 'default';
+    return redirect()->to("/api/articles/v2/{$defaultTenant}");
+  });
+
+  Route::group(['prefix' => 'articles/v2/{tenant_slug}', 'as' => 'articles.'], function () {
+    Route::get('/', [ArticleApiV2Controller::class, 'index']);
+    Route::get('/{id}', [ArticleApiV2Controller::class, 'show']);
+    Route::get('/category/{category}', [ArticleApiV2Controller::class, 'category']);
   });
 
   // Events Endpoints -------------------------------------
