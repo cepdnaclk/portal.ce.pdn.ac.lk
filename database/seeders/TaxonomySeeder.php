@@ -370,7 +370,7 @@ class TaxonomySeeder extends Seeder
     ];
 
     // Truncate the taxonomies and terms tables before seeding
-    $this->truncateMultiple(['taxonomies', 'taxonomy_terms']);
+    // $this->truncateMultiple(['taxonomies', 'taxonomy_terms']);
 
     // Create taxonomies and their terms
     foreach ($taxonomies as $key => $taxonomy) {
