@@ -3,10 +3,12 @@
 namespace Tests\Feature\Backend\TaxonomyList;
 
 use App\Domains\Auth\Models\User;
+use App\Domains\ContentManagement\Models\Article;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
 use App\Domains\Taxonomy\Models\TaxonomyList;
 use App\Domains\Taxonomy\Models\TaxonomyPage;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -284,6 +286,8 @@ class TaxonomyListTest extends TestCase
     $taxonomy = Taxonomy::factory()->create();
     $file = TaxonomyFile::factory()->create(['taxonomy_id' => $taxonomy->id]);
     $page = TaxonomyPage::factory()->create(['taxonomy_id' => $taxonomy->id]);
+    $tenant = Tenant::factory()->create();
+    $article = Article::factory()->create(['tenant_id' => $tenant->id]);
 
     $validCases = [
       'string' => [
@@ -309,6 +313,10 @@ class TaxonomyListTest extends TestCase
       'page' => [
         'items' => [$page->id],
         'expected' => [$page->id],
+      ],
+      'article' => [
+        'items' => [$article->id],
+        'expected' => [$article->id],
       ],
     ];
 
