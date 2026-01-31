@@ -24,15 +24,13 @@ class UploadArticleContentImageRequest extends FormRequest
   public function rules()
   {
     $maxSize = config('gallery.max_file_size');
-    $allowedMimes = implode(',', array_map(function ($mime) {
-      return str_replace('image/', '', $mime);
-    }, config('gallery.allowed_mimes')));
-
+    $allowedMimeTypes = config('gallery.allowed_mimes');
+    $allowedMimeTypesRule = 'mimetypes:' . implode(',', $allowedMimeTypes);
     return [
       'image' => [
         'required',
         'file',
-        'mimes:' . $allowedMimes,
+        $allowedMimeTypesRule,
         'max:' . $maxSize,
       ],
       'tenant_id' => ['required', 'exists:tenants,id'],

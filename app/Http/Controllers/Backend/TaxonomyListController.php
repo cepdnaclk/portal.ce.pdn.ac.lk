@@ -76,7 +76,7 @@ class TaxonomyListController extends Controller
     } elseif ($taxonomyList->data_type === 'page' && is_array($taxonomyList->items)) {
       $pageMap = TaxonomyPage::whereIn('id', $taxonomyList->items)->get()->keyBy('id');
     } elseif ($taxonomyList->data_type === 'article' && is_array($taxonomyList->items)) {
-      $articleMap = Article::all()->get()->keyBy('id');
+      $articleMap = Article::whereIn('id', $taxonomyList->items)->get()->keyBy('id');
     }
 
     return view('backend.taxonomy_list.view', [

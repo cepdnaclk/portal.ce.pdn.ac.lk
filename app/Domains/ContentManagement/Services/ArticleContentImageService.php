@@ -34,6 +34,13 @@ class ArticleContentImageService
       $path = $image->path ?? ($image['path'] ?? null);
       $disk = $image->disk ?? ($image['disk'] ?? config('gallery.disk', 'public'));
 
+      if (! $path || ! Str::startsWith($path, 'articles/')) {
+        continue;
+      }
+
+      if (Str::contains($path, '..')) {
+        continue;
+      }
       if ($path && Storage::disk($disk)->exists($path)) {
         Storage::disk($disk)->delete($path);
       }
