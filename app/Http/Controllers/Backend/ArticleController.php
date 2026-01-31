@@ -74,14 +74,6 @@ class ArticleController extends Controller
       $article->created_by = Auth::user()->id;
       $article->save();
 
-      Log::info('Article created', [
-        'article_id' => $article->id,
-        'tenant_id' => $article->tenant_id,
-        'user_id' => Auth::id(),
-        'content_images_json' => $data['content_images_json'],
-        'filtered_images' => $filteredImages,
-      ]);
-
       if (config('gallery.enabled')) {
         return redirect()->route('dashboard.article.gallery.index', $article)->with('Success', 'Article was created !');
       }
@@ -214,12 +206,6 @@ class ArticleController extends Controller
       $galleryService->deleteGalleryForImageable($article);
       $contentImageService->deleteImages($article->content_images_json ?? []);
       $article->delete();
-
-      Log::info('Article deleted', [
-        'article_id' => $article->id,
-        'tenant_id' => $article->tenant_id,
-        'user_id' => Auth::id(),
-      ]);
 
       return redirect()->route('dashboard.article.index')->with('Success', 'Article was deleted !');
     } catch (\Exception $ex) {

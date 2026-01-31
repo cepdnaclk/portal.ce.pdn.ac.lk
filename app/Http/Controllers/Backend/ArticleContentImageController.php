@@ -24,12 +24,6 @@ class ArticleContentImageController extends Controller
     try {
       $image = $this->contentImageService->store($request->file('image'), $tenant->id);
 
-      Log::info('Article content image uploaded', [
-        'tenant_id' => $tenant->id,
-        'user_id' => $request->user()?->id,
-        'image_id' => $image['id'],
-      ]);
-
       $downloadPath = basename($image['path']);
       $location = route('download.article', ['path' => $downloadPath], true);
       return response()->json([
