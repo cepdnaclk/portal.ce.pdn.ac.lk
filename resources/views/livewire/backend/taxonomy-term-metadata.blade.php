@@ -62,6 +62,11 @@
                 <span class="ms-2 text-danger">
                     <i class="fa fa-exclamation-triangle"></i> Make sure to avoid circular dependencies
                 </span>
+            @elseif ($property['data_type'] == 'article' && $logged_in_user->hasPermissionTo('user.access.editor.articles'))
+                {{-- Article --}}
+                <span class="ms-2 text-secondary">
+                    <i class="fa fa-exclamation-triangle"></i> Please edit and compose article before selecting
+                </span>
             @endif
         </label>
     </div>
@@ -179,6 +184,15 @@
                 @else
                     <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($taxonomy_lists)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
                         :placeholder="$taxonomy_lists[''] ?? 'Select a list'" :icon="'fa fa-list'" :inputId="$property['code']" />
+                @endif
+            @break
+
+            @case('article')
+                @if (empty($articles) || count($articles) <= 1)
+                    <p><i>No articles available</i></p>
+                @else
+                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($articles)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                        :placeholder="$articles[''] ?? 'Select a list'" :icon="'fa fa-list'" :inputId="$property['code']" />
                 @endif
             @break
 

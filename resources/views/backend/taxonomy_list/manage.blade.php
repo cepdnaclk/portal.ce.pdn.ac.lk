@@ -48,6 +48,7 @@
                             'items' => $taxonomyList->items,
                             'files' => $files,
                             'pages' => $pages,
+                            'articles' => $articles,
                         ])
                     </div>
                 </div>

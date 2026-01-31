@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Domains\ContentManagement\Models\Article;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
 use App\Domains\Taxonomy\Models\TaxonomyList;
@@ -68,17 +69,21 @@ class TaxonomyListController extends Controller
 
     $fileMap = collect();
     $pageMap = collect();
+    $articleMap = collect();
 
     if ($taxonomyList->data_type === 'file' && is_array($taxonomyList->items)) {
       $fileMap = TaxonomyFile::whereIn('id', $taxonomyList->items)->get()->keyBy('id');
     } elseif ($taxonomyList->data_type === 'page' && is_array($taxonomyList->items)) {
       $pageMap = TaxonomyPage::whereIn('id', $taxonomyList->items)->get()->keyBy('id');
+    } elseif ($taxonomyList->data_type === 'article' && is_array($taxonomyList->items)) {
+      $articleMap = Article::all()->get()->keyBy('id');
     }
 
     return view('backend.taxonomy_list.view', [
       'taxonomyList' => $taxonomyList,
       'fileMap' => $fileMap,
       'pageMap' => $pageMap,
+      'articleMap' => $articleMap,
     ]);
   }
 
@@ -120,10 +125,13 @@ class TaxonomyListController extends Controller
         $pages = TaxonomyPage::orderBy('slug')->get(['id', 'slug']);
       }
 
+      $articles = Article::orderBy('title')->get(['id', 'title']);
+
       return view('backend.taxonomy_list.manage', [
         'taxonomyList' => $taxonomyList,
         'files' => $files,
         'pages' => $pages,
+        'articles' => $articles,
         'dataTypes' => TaxonomyList::DATA_TYPE_LABELS,
       ]);
     } catch (\Throwable $ex) {
