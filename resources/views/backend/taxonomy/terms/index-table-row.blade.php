@@ -38,7 +38,6 @@
     @if ($row->taxonomy->visibility)
         <a target="_blank"
             href="{{ route('api.v2.taxonomy.get_term', [
-                'taxonomy_code' => $row->code,
                 'tenant_slug' => $row->taxonomy->tenant?->slug,
                 'term_code' => $row->code,
             ]) }}">

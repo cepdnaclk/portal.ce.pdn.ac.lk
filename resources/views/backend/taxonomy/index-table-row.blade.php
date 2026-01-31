@@ -34,7 +34,6 @@
             href="{{ route('api.v2.taxonomy.get_taxonomy', [
                 'taxonomy_code' => $row->code,
                 'tenant_slug' => $row->tenant?->slug,
-                'taxonomy_code' => $row->code,
             ]) }}">
             /{{ $row->code }}
         </a>

@@ -4,12 +4,17 @@ namespace Tests\Feature\API\V2;
 
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Domains\Tenant\Models\Tenant;
 use Tests\TestCase;
 
 class TaxonomyApiControllerTest extends TestCase
 {
-  /** @test */
+  use RefreshDatabase;
+
+  /** @test
+   *
+   */
   public function test_v2_taxonomy_index_filters_by_tenant()
   {
     $tenant = Tenant::factory()->create(['slug' => 'tenant-a']);
