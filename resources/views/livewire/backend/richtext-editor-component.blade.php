@@ -39,6 +39,8 @@
             menubar: false,
             height: 500,
             branding: false,
+
+            toolbar_mode: 'sliding',
             toolbar: [{
                     name: 'history',
                     items: ['undo', 'redo']
@@ -56,6 +58,10 @@
                     items: ['link']
                 },
                 {
+                    name: "tools",
+                    items: uploadUrl ? ['image'] : []
+                },
+                {
                     name: 'alignment',
                     items: ['alignleft', 'aligncenter', 'alignright', 'alignjustify']
                 },
@@ -69,14 +75,16 @@
                 },
                 {
                     name: "tools",
-                    items: uploadUrl ? ['table', 'hr', 'removeformat', 'code', 'preview', 'image'] : ['table',
-                        'hr', 'removeformat', 'code', 'preview'
-                    ]
+                    items: ['table', 'hr', 'removeformat', 'code', 'preview', ]
                 }
             ],
-            toolbar_mode: 'sliding',
-            images_file_types: [{}],
+            images_file_types: "jpeg,jpg,jpe",
             file_picker_types: 'image',
+            block_unsupported_drop: true,
+            documents_file_types: [{
+                extensions: ['jpeg', 'jpg'],
+                mimeType: 'image/jpeg',
+            }],
 
             // URL management
             relative_urls: false,
