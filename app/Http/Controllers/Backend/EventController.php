@@ -71,7 +71,7 @@ class EventController extends Controller
       $event->created_by = Auth::user()->id;
       $event->save();
 
-      if (config('gallery.enabled')) {
+      if (config('gallery.enabled_models.event')) {
         return redirect()->route('dashboard.event.gallery.index', $event)->with('Success', 'Event was created !');
       } else {
         return redirect()->route('dashboard.event.index', $event)->with('Success', 'Event was created !');

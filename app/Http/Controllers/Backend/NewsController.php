@@ -67,7 +67,7 @@ class NewsController extends Controller
       $news->save();
 
 
-      if (config('gallery.enabled')) {
+      if (config('gallery.enabled_models.news')) {
         return redirect()->route('dashboard.news.gallery.index', $news)->with('Success', 'News was created !');
       } else {
         return redirect()->route('dashboard.news.index', $news)->with('Success', 'News was created !');

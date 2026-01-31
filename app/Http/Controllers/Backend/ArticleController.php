@@ -74,7 +74,7 @@ class ArticleController extends Controller
       $article->created_by = Auth::user()->id;
       $article->save();
 
-      if (config('gallery.enabled')) {
+      if (config('gallery.enabled_models.article')) {
         return redirect()->route('dashboard.article.gallery.index', $article)->with('Success', 'Article was created !');
       }
 

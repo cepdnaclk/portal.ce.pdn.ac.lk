@@ -146,4 +146,17 @@ return [
     */
   'dummy_thumb' => '/dummy/item_thumbnail.jpg',
 
+  /*
+    |--------------------------------------------------------------------------
+    | Enabled Models
+    |--------------------------------------------------------------------------
+    |
+    | List of models that have gallery functionality enabled.
+    |
+    */
+  'enabled_models' => [
+    'article' => FALSE,
+    'news' => TRUE,
+    'event' => TRUE,
+  ]
 ];
