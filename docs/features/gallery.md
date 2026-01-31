@@ -1,4 +1,4 @@
-# Gallery Feature Documentation
+# Gallery
 
 ## Overview
 

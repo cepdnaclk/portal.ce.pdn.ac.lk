@@ -19,3 +19,4 @@ OpenAPI 3.0 JSON documents generated from the current Laravel routes.
 ## Other Documentations
 
 - [Gallery](./features/gallery.md) - Visual assets overview.
+- [Articles](./features/articles.md) - Tenant-scoped rich-text content items with image embedding support.
