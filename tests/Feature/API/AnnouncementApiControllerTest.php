@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\API;
+namespace Tests\Feature\Api;
 
 use App\Domains\Announcement\Models\Announcement;
 use App\Domains\Tenant\Models\Tenant;

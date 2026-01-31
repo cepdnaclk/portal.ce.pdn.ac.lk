@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\API;
+namespace Tests\Feature\Api;
 
 use App\Domains\AcademicProgram\Course\Models\Course;
 use App\Domains\Auth\Models\User;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\API;
+namespace Tests\Feature\Api;
 
 use App\Domains\Taxonomy\Models\Taxonomy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
