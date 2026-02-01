@@ -14,7 +14,7 @@ The portal supports multiple tenants (departments or sites) and resolves the act
 Relationships:
 
 - `users` and `roles` (pivot tables `tenant_user` and `tenant_role`)
-- `news`, `events`, and `announcements`
+- `news`, `events`, `articles`, and `announcements`
 
 ### Default tenant
 
@@ -25,7 +25,7 @@ Relationships:
 `App\Domains\Tenant\Services\TenantResolver` resolves tenants in this order:
 
 1. Route parameter `tenant_slug` or `tenant_id` (API v2 routes or query/body).
-2. Route model binding for `News`, `Event`, or `Announcement`.
+2. Route model binding for `News`, `Event`, `Article`, or `Announcement`.
 3. Request host match against the tenant `url` host.
 4. Default tenant fallback.
 

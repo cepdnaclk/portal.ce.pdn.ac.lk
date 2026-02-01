@@ -2,7 +2,7 @@
 
 ## Overview
 
-- Articles are tenant-scoped content items with rich-text body, categories, optional gallery images, and embedded content images.
+- Articles are tenant-scoped content items with rich-text body, categories, optional gallery images (when enabled for articles), and embedded content images.
 - Content authoring is done in the backend dashboard with a TinyMCE editor and a preview screen.
 - API endpoints expose articles with author, categories, content images, and gallery payloads when enabled.
 
@@ -32,7 +32,7 @@
 - Edit flow:
   - Same fields as create, with current content and categories prefilled.
   - Rich-text editor preserves embedded images and updates the content image list.
-  - When gallery is enabled, a “Manage Gallery” action is available from edit screens.
+  - When gallery is enabled for articles, a “Manage Gallery” action is available from edit screens.
 - Preview:
   - A standalone preview route renders the article content for review.
   - Reading time is derived from word count in the preview view.
@@ -44,12 +44,12 @@
 - The editor maintains a hidden `content_images_json` payload that tracks uploaded image metadata.
 - On save, the system:
   - Filters the content image list to only images referenced in the HTML.
-  - Deletes unused images from storage.
+  - Deletes unused images from storage (restricted to `articles/` paths and skips path traversal attempts).
   - Stores the filtered list on the article for API and future edits.
 
 ## Gallery Integration
 
-- Articles can have a full gallery alongside embedded content images.
+- Articles can have a full gallery alongside embedded content images when `config('gallery.enabled_models.article')` is true.
 - Gallery management (upload, cover selection, reorder) is available through dedicated routes.
 - Article deletion removes both gallery images and content-embedded images.
 
@@ -59,7 +59,7 @@
 - Categories are parsed from comma-separated input and normalized to unique values.
 - Content HTML is sanitized to a safe allowlist of tags before persistence.
 - Content image uploads enforce:
-  - MIME type checks (JPEG only)
+  - MIME type checks using the configured `allowed_mimes` list (defaults to JPEG)
   - Size limits based on gallery configuration
   - Minimum dimension rules
 
