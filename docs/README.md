@@ -17,4 +17,9 @@ OpenAPI 3.0 JSON documents generated from the current Laravel routes.
 
 ## Other Documentations
 
+- [Authentication](./features/authentication.md) - Frontend auth and admin access control.
+- [Tenancy](./features/tenancy.md) - Multi-tenant resolution and access rules.
+- [Content Management](./features/content-management.md) - News, events, and announcements.
+- [Academic Programs](./features/academic-programs.md) - Courses and semesters.
+- [Taxonomy](./features/taxonomy.md) - Taxonomy data model and APIs.
 - [Gallery](./features/gallery.md) - Visual assets overview.
