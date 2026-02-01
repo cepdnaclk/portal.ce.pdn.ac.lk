@@ -2,7 +2,7 @@
 
 ## Overview
 
-The taxonomy system is a Graph Data storage provides structured vocabularies and metadata for the portal, powering various data structures to manage the CE domain data. It supports nested terms, typed properties, and API access for public taxonomies.
+The taxonomy system is a graph data store that provides structured vocabularies and metadata for the portal, powering various data structures used to manage CE domain data. It supports nested terms, typed properties, and API access for public taxonomies.
 
 ## Taxonomy model
 
