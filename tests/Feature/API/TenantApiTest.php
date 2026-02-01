@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api;
+namespace Tests\Feature\API;
 
 use App\Domains\ContentManagement\Models\Event;
 use App\Domains\ContentManagement\Models\News;

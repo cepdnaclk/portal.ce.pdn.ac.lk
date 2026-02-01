@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Rules;
 
 use App\Rules\Slug;
 use Validator;
