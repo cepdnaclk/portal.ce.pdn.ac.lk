@@ -30,6 +30,7 @@ class Article extends BaseContent
     'gallery_json',
     'content_images_json',
     'tenant_id',
+    'enabled',
   ];
 
   /**
@@ -40,6 +41,7 @@ class Article extends BaseContent
     'categories_json' => 'array',
     'gallery_json' => 'array',
     'content_images_json' => 'array',
+    'enabled' => 'boolean',
   ];
 
   /**
@@ -86,5 +88,14 @@ class Article extends BaseContent
     }
 
     return $query->whereJsonContains('categories_json', $category);
+  }
+
+  /**
+   * @param $query
+   * @return mixed
+   */
+  public function scopeEnabled($query)
+  {
+    return $query->whereEnabled(true);
   }
 }

@@ -24,6 +24,7 @@ class ArticleApiController extends Controller
       $perPage = 20;
       $articles = Article::with(['gallery', 'user'])
         ->latest()
+        ->enabled()
         ->forTenant($tenant)
         ->paginate($perPage);
 
@@ -43,7 +44,10 @@ class ArticleApiController extends Controller
         return response()->json(['message' => 'Tenant not found'], 404);
       }
 
-      $article = Article::with(['gallery', 'user'])->forTenant($tenant)->find($id);
+      $article = Article::with(['gallery', 'user'])
+        ->enabled()
+        ->forTenant($tenant)
+        ->find($id);
       if ($article) {
         return new ArticleResource($article);
       }
@@ -67,6 +71,7 @@ class ArticleApiController extends Controller
       $perPage = 20;
       $articles = Article::with(['gallery', 'user'])
         ->latest()
+        ->enabled()
         ->forTenant($tenant)
         ->withCategory($category)
         ->paginate($perPage);

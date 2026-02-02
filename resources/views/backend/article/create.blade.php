@@ -58,6 +58,20 @@
                     </div>
                 </div>
 
+                <!-- Enabled -->
+                <div class="form-group row">
+                    {!! Form::label('enabled', 'Enabled*', ['class' => 'col-md-2 form-check-label']) !!}
+
+                    <div class="col-md-4 form-check form-switch mx-4">
+                        <input type="checkbox" id="checkEnable" name="enabled" value="1"
+                            class="form-check-input checkbox-lg" checked />
+                        <label class="form-check-label" for="checkEnable">&nbsp;</label>
+                        @error('enabled')
+                            <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
                 <input type="hidden" id="content_images_json" name="content_images_json"
                     value="{{ old('content_images_json', json_encode([])) }}" />
 

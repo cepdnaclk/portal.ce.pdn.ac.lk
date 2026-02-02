@@ -22,6 +22,10 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    @include('components.backend.enabled_toggle')
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     {{ $row->tenant?->name ?? '-' }}
 </x-livewire-tables::table.cell>
 

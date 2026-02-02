@@ -34,6 +34,11 @@ class ArticleTable extends PersistentStateDataTable
         ->searchable(),
       Column::make('Categories'),
       Column::make('Content'),
+      Column::make('Enabled', 'enabled')
+        ->sortable()
+        ->format(function (Article $article) {
+          return view('components.backend.enabled_toggle', ['row' => $article]);
+        }),
       Column::make('Tenant', 'tenant.name'),
       Column::make('Author', 'user.name')
         ->sortable()
@@ -60,7 +65,27 @@ class ArticleTable extends PersistentStateDataTable
       ->when($this->getFilter('tenant'), function ($query, $tenantId) {
         $query->where('tenant_id', $tenantId);
       })
+      ->when($this->getFilter('enabled') !== null, function ($query) {
+        $enabled = $this->getFilter('enabled');
+        if ($enabled === 1) {
+          $query->where('enabled', true);
+        } elseif ($enabled === 0) {
+          $query->where('enabled', false);
+        }
+      })
       ->orderBy('published_at', 'desc');
+  }
+
+  public function toggleEnable($articleId)
+  {
+    $tenantIds = $this->getAvailableTenantIds();
+    $article = Article::query()
+      ->when(! auth()->user()?->hasAllAccess(), function ($query) use ($tenantIds) {
+        $query->whereIn('tenant_id', $tenantIds);
+      })
+      ->findOrFail($articleId);
+    $article->enabled = ! $article->enabled;
+    $article->save();
   }
 
   public function filters(): array
@@ -73,7 +98,14 @@ class ArticleTable extends PersistentStateDataTable
         ->select(['' => 'Any'] + $tenants->pluck('name', 'id')->toArray());
     }
 
-    return $filters;
+    return array_merge($filters, [
+      'enabled' => Filter::make('Enabled')
+        ->select([
+          '' => 'Any',
+          1 => 'Enabled',
+          0 => 'Not Enabled',
+        ]),
+    ]);
   }
 
   public function rowView(): string

@@ -23,8 +23,9 @@ class ArticleApiTest extends TestCase
     ]);
     $otherTenant = Tenant::factory()->create();
 
-    $defaultArticle = Article::factory()->create(['tenant_id' => $defaultTenant->id]);
-    Article::factory()->create(['tenant_id' => $otherTenant->id]);
+    $defaultArticle = Article::factory()->enabled()->create(['tenant_id' => $defaultTenant->id]);
+    Article::factory()->enabled()->create(['tenant_id' => $otherTenant->id]);
+    Article::factory()->disabled()->create(['tenant_id' => $defaultTenant->id]);
 
     $response = $this->getJson('/api/articles/v1');
 
@@ -45,8 +46,9 @@ class ArticleApiTest extends TestCase
     ]);
     $otherTenant = Tenant::factory()->create(['slug' => 'other.example.test']);
 
-    $otherArticle = Article::factory()->create(['tenant_id' => $otherTenant->id]);
-    Article::factory()->create(['tenant_id' => $defaultTenant->id]);
+    $otherArticle = Article::factory()->enabled()->create(['tenant_id' => $otherTenant->id]);
+    Article::factory()->enabled()->create(['tenant_id' => $defaultTenant->id]);
+    Article::factory()->disabled()->create(['tenant_id' => $otherTenant->id]);
 
     $response = $this->getJson('/api/articles/v2/' . $otherTenant->slug . '/');
 
@@ -66,13 +68,17 @@ class ArticleApiTest extends TestCase
       'is_default' => true,
     ]);
 
-    $matchingArticle = Article::factory()->create([
+    $matchingArticle = Article::factory()->enabled()->create([
       'tenant_id' => $defaultTenant->id,
       'categories_json' => ['research', 'awards'],
     ]);
-    Article::factory()->create([
+    Article::factory()->enabled()->create([
       'tenant_id' => $defaultTenant->id,
       'categories_json' => ['alumni'],
+    ]);
+    Article::factory()->disabled()->create([
+      'tenant_id' => $defaultTenant->id,
+      'categories_json' => ['research'],
     ]);
 
     $response = $this->getJson('/api/articles/v1/category/research');
@@ -80,5 +86,24 @@ class ArticleApiTest extends TestCase
     $response->assertOk();
     $response->assertJsonCount(1, 'data');
     $response->assertJsonPath('data.0.id', $matchingArticle->id);
+  }
+
+  /** @test */
+  public function v1_article_show_hides_disabled_articles()
+  {
+    Article::query()->delete();
+
+    $defaultTenant = Tenant::default() ?? Tenant::factory()->create([
+      'slug' => config('tenants.default'),
+      'url' => 'https://' . config('tenants.default'),
+      'is_default' => true,
+    ]);
+
+    $disabledArticle = Article::factory()->disabled()->create(['tenant_id' => $defaultTenant->id]);
+
+    $response = $this->getJson('/api/articles/v1/' . $disabledArticle->id);
+
+    $response->assertStatus(404);
+    $response->assertJsonFragment(['message' => 'Article not found']);
   }
 }

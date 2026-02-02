@@ -44,6 +44,7 @@ class ArticleTest extends TestCase
       'content' => '<p>Article content</p>',
       'categories' => 'research, alumni',
       'content_images_json' => json_encode([]),
+      'enabled' => 1,
       'tenant_id' => $tenantId,
     ]);
 
@@ -65,6 +66,7 @@ class ArticleTest extends TestCase
       'content' => '<p>Updated article content</p>',
       'categories' => 'awards',
       'content_images_json' => json_encode([]),
+      'enabled' => 0,
       'tenant_id' => $tenantId,
     ];
 

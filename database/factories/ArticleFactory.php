@@ -32,9 +32,34 @@ class ArticleFactory extends Factory
       'categories_json' => [$this->faker->word, $this->faker->word],
       'gallery_json' => [],
       'content_images_json' => [],
+      'enabled' => true,
       'created_by' => 3,
       'updated_by' => null,
       'tenant_id' => Tenant::defaultId() ?? Tenant::factory(),
     ];
+  }
+
+  /**
+   * @return ArticleFactory
+   */
+  public function enabled()
+  {
+    return $this->state(function (array $attributes) {
+      return [
+        'enabled' => true,
+      ];
+    });
+  }
+
+  /**
+   * @return ArticleFactory
+   */
+  public function disabled()
+  {
+    return $this->state(function (array $attributes) {
+      return [
+        'enabled' => false,
+      ];
+    });
   }
 }

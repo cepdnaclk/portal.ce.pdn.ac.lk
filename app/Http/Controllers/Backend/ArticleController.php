@@ -52,6 +52,7 @@ class ArticleController extends Controller
       'content' => 'string|required',
       'categories' => 'nullable|string',
       'content_images_json' => 'nullable|string',
+      'enabled' => 'nullable',
       'tenant_id' => ['required', 'exists:tenants,id'],
     ]);
 
@@ -71,6 +72,7 @@ class ArticleController extends Controller
 
     try {
       $article = new Article($data);
+      $article->enabled = ($request->enabled == 1);
       $article->created_by = Auth::user()->id;
       $article->save();
 
@@ -124,6 +126,7 @@ class ArticleController extends Controller
       'content' => 'string|required',
       'categories' => 'nullable|string',
       'content_images_json' => 'nullable|string',
+      'enabled' => 'nullable',
       'tenant_id' => ['required', 'exists:tenants,id'],
     ]);
 
@@ -171,6 +174,7 @@ class ArticleController extends Controller
 
     try {
       $article->update($data);
+      $article->enabled = ($request->enabled != null);
       $article->updated_by = Auth::user()->id;
       $article->save();
 

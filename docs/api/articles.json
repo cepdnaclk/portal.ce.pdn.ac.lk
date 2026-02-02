@@ -19,7 +19,7 @@
     "/articles/v1": {
       "get": {
         "summary": "List published articles (v1)",
-        "description": "Returns the latest articles for the default tenant, paginated in batches of 20.",
+        "description": "Returns the latest enabled articles for the default tenant, paginated in batches of 20.",
         "tags": ["Articles V1"],
         "responses": {
           "200": {
@@ -44,7 +44,7 @@
     "/articles/v1/{id}": {
       "get": {
         "summary": "Get an article (v1)",
-        "description": "Returns a single article by numeric identifier in the default tenant.",
+        "description": "Returns a single enabled article by numeric identifier in the default tenant.",
         "tags": ["Articles V1"],
         "parameters": [
           {
@@ -85,7 +85,7 @@
     "/articles/v1/category/{category}": {
       "get": {
         "summary": "List articles by category (v1)",
-        "description": "Returns articles that include the given category tag in the default tenant.",
+        "description": "Returns enabled articles that include the given category tag in the default tenant.",
         "tags": ["Articles V1"],
         "parameters": [
           {
@@ -135,7 +135,7 @@
     "/articles/v2/{tenant_slug}": {
       "get": {
         "summary": "List published articles (v2)",
-        "description": "Returns the latest articles for the specified tenant, paginated in batches of 20.",
+        "description": "Returns the latest enabled articles for the specified tenant, paginated in batches of 20.",
         "tags": ["Articles V2"],
         "parameters": [
           {
@@ -176,7 +176,7 @@
     "/articles/v2/{tenant_slug}/{id}": {
       "get": {
         "summary": "Get an article (v2)",
-        "description": "Returns a single article by numeric identifier for the specified tenant.",
+        "description": "Returns a single enabled article by numeric identifier for the specified tenant.",
         "tags": ["Articles V2"],
         "parameters": [
           {
@@ -223,7 +223,7 @@
     "/articles/v2/{tenant_slug}/category/{category}": {
       "get": {
         "summary": "List articles by category (v2)",
-        "description": "Returns articles that include the given category tag for the specified tenant.",
+        "description": "Returns enabled articles that include the given category tag for the specified tenant.",
         "tags": ["Articles V2"],
         "parameters": [
           {

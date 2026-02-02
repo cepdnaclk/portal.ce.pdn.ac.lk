@@ -11,6 +11,7 @@
 - Stored in the `articles` table with tenant ownership and author tracking.
 - Key fields:
   - `title`, `content`, `published_at`
+  - `enabled` flag to control API visibility
   - `categories_json` for comma-separated tags stored as JSON
   - `content_images_json` for rich-text embedded images
   - `gallery_json` for gallery metadata (kept in sync through gallery services)
@@ -27,10 +28,12 @@
 
 - Create flow:
   - Enter title, select tenant, optionally add comma-separated categories.
+  - Toggle the **Enabled** switch to control API visibility.
   - Compose content in TinyMCE; embedded images upload directly from the editor.
   - On save, `published_at` is set and content HTML is sanitized.
 - Edit flow:
   - Same fields as create, with current content and categories prefilled.
+  - Enabled switch is persisted and can be toggled without deleting content.
   - Rich-text editor preserves embedded images and updates the content image list.
   - When gallery is enabled for articles, a “Manage Gallery” action is available from edit screens.
 - Preview:
@@ -68,9 +71,11 @@
 - API v1:
   - Uses a default tenant resolver; returns paginated results.
   - Supports list, single item, and category filter.
+  - Only enabled articles are returned; disabled items respond with not found for show.
 - API v2:
   - Tenant slug is required in the path; returns tenant-scoped data.
   - Supports list, single item, and category filter.
+  - Only enabled articles are returned; disabled items respond with not found for show.
 - Article resource payloads include:
   - Author metadata
   - Categories
