@@ -111,7 +111,7 @@ class ArticleContentImageService
 
     $dom = new \DOMDocument();
     libxml_use_internal_errors(true);
-    $dom->loadHTML($content);
+    $dom->loadHTML('<html><body>' . $content . '</body></html>');
     libxml_clear_errors();
 
     $urls = [];
