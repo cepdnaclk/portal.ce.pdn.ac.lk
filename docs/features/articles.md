@@ -50,6 +50,8 @@
   - Deletes unused images from storage (restricted to `articles/` paths and skips path traversal attempts).
   - Stores the filtered list on the article for API and future edits.
 
+**Note**: for now only JPEG images are allowed, due to validation and security considerations. Support for additional formats may be added in the future.
+
 ## Gallery Integration
 
 - Articles can have a full gallery alongside embedded content images when `config('gallery.enabled_models.article')` is true.

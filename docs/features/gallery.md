@@ -72,6 +72,8 @@ GALLERY_QUEUE_PROCESSING=false
 | `queue_processing` | Queue image processing           | `false`          |
 | `enabled_models`   | Per-model enablement flags       | see below        |
 
+**Note**: for now only JPEG images are allowed, due to validation and security considerations. Support for additional formats may be added in the future.
+
 ### Model-Specific Enablement
 
 Gallery support can be toggled per model in `config/gallery.php`:
