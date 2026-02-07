@@ -39,6 +39,10 @@ composer update
 php artisan migrate
 ```
 
+#### Content author attribution
+
+News, Events, and Articles now track attribution via `author_id` (added in the 2026-02-07 migration). Run `php artisan migrate` after pulling the latest changes.
+
 #### Prepare for the first run
 
 First you need to copy `.env.example` and save as `.env` in the root folder, and change the `Admin` and `User` credentials, `Database` configurations.

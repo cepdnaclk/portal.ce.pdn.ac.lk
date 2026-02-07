@@ -22,7 +22,7 @@ class ArticleApiController extends Controller
         return ArticleResource::collection(collect());
       }
 
-      $articles = Article::with(['gallery', 'user'])
+      $articles = Article::with(['gallery', 'author'])
         ->latest()
         ->enabled()
         ->forTenant($tenant)
@@ -43,7 +43,7 @@ class ArticleApiController extends Controller
         return response()->json(['message' => 'Article not found'], 404);
       }
 
-      $article = Article::with(['gallery', 'user'])
+      $article = Article::with(['gallery', 'author'])
         ->enabled()
         ->forTenant($tenant)
         ->find($id);
@@ -68,7 +68,7 @@ class ArticleApiController extends Controller
         return ArticleResource::collection(collect());
       }
 
-      $articles = Article::with(['gallery', 'user'])
+      $articles = Article::with(['gallery', 'author'])
         ->latest()
         ->enabled()
         ->forTenant($tenant)

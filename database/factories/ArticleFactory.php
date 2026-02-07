@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\ContentManagement\Models\Article;
+use App\Domains\Auth\Models\User;
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -33,7 +34,10 @@ class ArticleFactory extends Factory
       'gallery_json' => [],
       'content_images_json' => [],
       'enabled' => true,
-      'created_by' => 3,
+      'created_by' => User::factory(),
+      'author_id' => function (array $attributes) {
+        return $attributes['created_by'];
+      },
       'updated_by' => null,
       'tenant_id' => Tenant::defaultId() ?? Tenant::factory(),
     ];

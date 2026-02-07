@@ -11,7 +11,7 @@ The content management domain handles News, Events, and Announcements. News and 
 - `gallery()` polymorphic relation to `GalleryImage`.
 - `coverImage()` relation with a convenience `cover_image` accessor.
 - `thumbURL()` helper to return a cover thumbnail or fallback image.
-- `user()` and `tenant()` relationships.
+- `user()`/`author()` and `tenant()` relationships.
 - Activity logging via `spatie/laravel-activitylog`.
 
 ### News model
@@ -100,7 +100,7 @@ Query params:
 
 News and Event responses include:
 
-- `author` from `created_by`.
+- `author` from `author_id` (`name`, `email`, `profile_url`).
 - `image` using the cover thumbnail URL.
 - `gallery` when the gallery feature is enabled.
 

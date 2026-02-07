@@ -48,6 +48,21 @@
                     </div>
                 </div>
 
+                <!-- Author -->
+                <div class="form-group row">
+                    {!! Form::label('author_id', 'Author*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        {!! Form::select('author_id', $authorOptions, $event->author_id ?? $event->created_by, [
+                            'class' => 'form-select',
+                            'required' => true,
+                            'placeholder' => '',
+                        ]) !!}
+                        @error('author_id')
+                            <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
                 <!-- Published At -->
                 <div class="form-group row">
                     {!! Form::label('published_at', 'Publish at*', ['class' => 'col-md-2 col-form-label']) !!}
@@ -105,8 +120,9 @@
                     {!! Form::label('enabled', 'Enabled', ['class' => 'col-md-2 form-check-label']) !!}
 
                     <div class="col-md-4 form-check form-switch mx-4">
-                        <input type="checkbox" id="checkEnable" name="enabled" value={{ $event->enable ? 'checked' : '""' }}
-                            class="form-check-input checkbox-lg" {{ $event->enabled == 1 ? 'checked' : '' }} />
+                        <input type="checkbox" id="checkEnable" name="enabled"
+                            value={{ $event->enable ? 'checked' : '""' }} class="form-check-input checkbox-lg"
+                            {{ $event->enabled == 1 ? 'checked' : '' }} />
                         <label class="form-check-label" for="checkEnable">&nbsp;</label>
                         @error('enabled')
                             <strong class="text-danger">{{ $message }}</strong>

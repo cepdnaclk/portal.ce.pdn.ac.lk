@@ -54,6 +54,22 @@ abstract class BaseContent extends Model
    */
   public function user(): BelongsTo
   {
+    return $this->belongsTo(User::class, 'author_id');
+  }
+
+  /**
+   * Author relationship (explicit alias).
+   */
+  public function author(): BelongsTo
+  {
+    return $this->belongsTo(User::class, 'author_id');
+  }
+
+  /**
+   * Creator relationship for audit history.
+   */
+  public function createdBy(): BelongsTo
+  {
     return $this->belongsTo(User::class, 'created_by');
   }
 

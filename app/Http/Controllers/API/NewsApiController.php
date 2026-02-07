@@ -22,7 +22,7 @@ class NewsApiController extends Controller
         return NewsResource::collection(collect());
       }
 
-      $news = News::with('gallery')
+      $news = News::with(['gallery', 'author'])
         ->latest()
         ->where('enabled', 1)
         ->forTenant($tenant)
@@ -43,7 +43,7 @@ class NewsApiController extends Controller
         return response()->json(['message' => 'News not found'], 404);
       }
 
-      $news = News::with('gallery')->forTenant($tenant)->find($id);
+      $news = News::with(['gallery', 'author'])->forTenant($tenant)->find($id);
       if ($news) {
         return new NewsResource($news);
       } else {

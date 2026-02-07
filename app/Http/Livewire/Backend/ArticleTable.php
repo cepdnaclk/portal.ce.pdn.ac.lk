@@ -40,7 +40,7 @@ class ArticleTable extends PersistentStateDataTable
           return view('components.backend.enabled_toggle', ['row' => $article]);
         }),
       Column::make('Tenant', 'tenant.name'),
-      Column::make('Author', 'user.name')
+      Column::make('Author', 'author.name')
         ->sortable()
         ->searchable(),
       Column::make('Published at', 'published_at')
@@ -58,7 +58,7 @@ class ArticleTable extends PersistentStateDataTable
     }
 
     return Article::query()
-      ->with(['tenant', 'user'])
+      ->with(['tenant', 'author'])
       ->when(! auth()->user()->hasAllAccess(), function ($query) use ($tenantIds) {
         $query->whereIn('tenant_id', $tenantIds);
       })

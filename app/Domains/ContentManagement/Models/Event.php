@@ -33,6 +33,7 @@ class Event extends BaseContent
     'created_at',
     'updated_at',
     'tenant_id',
+    'author_id',
   ];
 
   /**

@@ -15,7 +15,7 @@
   - `categories_json` for comma-separated tags stored as JSON
   - `content_images_json` for rich-text embedded images
   - `gallery_json` for gallery metadata (kept in sync through gallery services)
-  - `created_by` and `updated_by` for audit
+  - `author_id` for attribution, `created_by` and `updated_by` for audit
 - JSON fields are cast to arrays in the model to simplify backend/UI usage.
 
 ## Permissions & Tenancy
@@ -77,7 +77,7 @@
   - Supports list, single item, and category filter.
   - Only enabled articles are returned; disabled items respond with not found for show.
 - Article resource payloads include:
-  - Author metadata
+  - Author metadata (`name`, `email`, `profile_url`)
   - Categories
   - Embedded content images (`id`, `url`)
   - Gallery items (when gallery is enabled)

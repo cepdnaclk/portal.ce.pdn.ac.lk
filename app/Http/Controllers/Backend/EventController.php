@@ -40,7 +40,7 @@ class EventController extends Controller
    */
   public function store(Request $request)
   {
-    $tenantId = $this->resolveTenantId($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
     if ($tenantId) {
       $request->merge(['tenant_id' => $tenantId]);
     }
@@ -69,6 +69,7 @@ class EventController extends Controller
       $event->enabled = ($request->enabled != null);
       $event->url =  urlencode(str_replace(" ", "-", $request->url));
       $event->created_by = Auth::user()->id;
+      $event->author_id = Auth::user()->id;
       $event->save();
 
       if (config('gallery.enabled_models.event')) {
@@ -92,7 +93,9 @@ class EventController extends Controller
     $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('name');
     $selectedTenantId = $event->tenant_id;
 
-    return view('backend.event.edit', compact('event', 'tenants', 'selectedTenantId'));
+    $authorOptions = $this->getAuthorOptions();
+
+    return view('backend.event.edit', compact('event', 'tenants', 'selectedTenantId', 'authorOptions'));
   }
 
   /**
@@ -104,7 +107,7 @@ class EventController extends Controller
    */
   public function update(Request $request, Event $event)
   {
-    $tenantId = $this->resolveTenantId($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
     if ($tenantId) {
       $request->merge(['tenant_id' => $tenantId]);
     }
@@ -122,6 +125,7 @@ class EventController extends Controller
       'end_at' => 'nullable|date_format:Y-m-d\\TH:i',
       'location' => 'string|required',
       'tenant_id' => ['required', 'exists:tenants,id'],
+      'author_id' => ['required', 'exists:users,id'],
     ]);
 
     try {
@@ -170,18 +174,4 @@ class EventController extends Controller
     }
   }
 
-  private function resolveTenantId(Request $request): ?int
-  {
-    if ($request->filled('tenant_id')) {
-      return (int) $request->input('tenant_id');
-    }
-
-    $tenants = $this->tenantResolver->availableTenantsForUser($request->user());
-
-    if ($tenants->count() === 1) {
-      return (int) $tenants->first()->id;
-    }
-
-    return null;
-  }
 }

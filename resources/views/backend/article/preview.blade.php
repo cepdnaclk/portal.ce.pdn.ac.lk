@@ -16,9 +16,13 @@
                 <span class="text-muted">{{ $article->published_at }} &middot; </span>
             @endif
 
-            @if ($article->user)
+            @if ($article->author)
                 <span class="text-muted">
-                    {{ $article->user->name }} &middot;
+                    {{ $article->author->name }}
+                    @if ($article->author->email)
+                        ({{ $article->author->email }})
+                    @endif
+                    &middot;
                 </span>
             @endif
 

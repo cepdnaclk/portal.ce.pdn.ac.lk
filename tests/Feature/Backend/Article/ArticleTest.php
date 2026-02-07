@@ -6,6 +6,7 @@ use App\Domains\ContentManagement\Models\Article;
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use  App\Domains\Auth\Models\User;
 
 class ArticleTest extends TestCase
 {
@@ -36,7 +37,8 @@ class ArticleTest extends TestCase
   /** @test */
   public function article_can_be_created()
   {
-    $this->loginAsEditor();
+    $editor = $this->loginAsEditor();
+    $otherAuthor = User::factory()->create();
     $tenantId = Tenant::defaultId();
 
     $response = $this->post('/dashboard/articles/', [
@@ -46,12 +48,13 @@ class ArticleTest extends TestCase
       'content_images_json' => json_encode([]),
       'enabled' => 1,
       'tenant_id' => $tenantId,
+      'author_id' => $otherAuthor->id,
     ]);
 
     $response->assertStatus(302);
-    $this->assertDatabaseHas('articles', [
-      'title' => 'test Article',
-    ]);
+    $article = Article::where('title', 'test Article')->first();
+    $this->assertNotNull($article);
+    $this->assertSame($editor->id, $article->author_id);
   }
 
   /** @test */
@@ -60,6 +63,7 @@ class ArticleTest extends TestCase
     $this->loginAsEditor();
     $article = Article::factory()->create();
     $tenantId = Tenant::defaultId();
+    $author = \App\Domains\Auth\Models\User::factory()->create();
 
     $updateData = [
       'title' => 'Updated Article',
@@ -68,6 +72,7 @@ class ArticleTest extends TestCase
       'content_images_json' => json_encode([]),
       'enabled' => 0,
       'tenant_id' => $tenantId,
+      'author_id' => $author->id,
     ];
 
     $response = $this->put("/dashboard/articles/{$article->id}", $updateData);
@@ -75,6 +80,7 @@ class ArticleTest extends TestCase
 
     $this->assertDatabaseHas('articles', [
       'title' => 'Updated Article',
+      'author_id' => $author->id,
     ]);
   }
 
