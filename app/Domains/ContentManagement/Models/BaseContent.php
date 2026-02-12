@@ -50,14 +50,6 @@ abstract class BaseContent extends Model
   }
 
   /**
-   * Author relationship shared across content models.
-   */
-  public function user(): BelongsTo
-  {
-    return $this->belongsTo(User::class, 'author_id');
-  }
-
-  /**
    * Author relationship (explicit alias).
    */
   public function author(): BelongsTo

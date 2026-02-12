@@ -6,7 +6,7 @@ use App\Domains\ContentManagement\Models\Article;
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use  App\Domains\Auth\Models\User;
+use App\Domains\Auth\Models\User;
 
 class ArticleTest extends TestCase
 {
