@@ -3,7 +3,7 @@
        dataType: @js($type),
        files: @js($files ?? []),
        pages: @js($pages ?? []),
-       articles: @js($articles ?? ['xxx']),
+       articles: @js($articles ?? []),
        userInput: '',
        selectedItem: null,
        editIndex: null,

@@ -155,8 +155,8 @@ return [
     |
     */
   'enabled_models' => [
-    'article' => FALSE,
-    'news' => TRUE,
-    'event' => TRUE,
+    'article' => false,
+    'news' => true,
+    'event' => true,
   ]
 ];
