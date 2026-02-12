@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Backend;
 
+use App\Domains\ContentManagement\Models\Article;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyList;
 use Livewire\Component;
@@ -16,6 +17,7 @@ class TaxonomyTermMetadata extends Component
   public $taxonomy_pages = [];
   public $taxonomy_terms = [];
   public $taxonomy_lists = [];
+  public $articles = [];
 
   public function mount($property, $term = null, $taxonomy = null)
   {
@@ -41,6 +43,12 @@ class TaxonomyTermMetadata extends Component
       foreach ($taxonomy->lists()->toArray() as $key => $listName) {
         $this->taxonomy_lists[$key] = $listName;
       }
+
+      $this->articles = ['' => 'Select an Article'];
+      foreach (Article::all()->pluck('title', 'id')->toArray() as $key => $article) {
+        $this->articles[$key] = $article;
+      }
+
       // Load Non-related Taxonomy Lists
       // foreach (TaxonomyList::whereNull('taxonomy_id')->orderBy('name')->get(['id', 'name']) as $globalList) {
       //     $this->taxonomy_lists[$globalList->id] = $globalList->name;

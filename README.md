@@ -83,6 +83,7 @@ php artisan db:seed --class=Database\\Seeders\\TenantSeeder
 ##### API examples (v2 tenant-aware APIs)
 
 - News: `GET /api/news/v2/{tenant_slug}`
+- Articles: `GET /api/articles/v2/{tenant_slug}`
 - Events: `GET /api/events/v2/{tenant_slug}`
 - For unknown tenant slugs, v2 returns `404 Tenant not found`.
 

@@ -7,8 +7,8 @@ return [
     | Gallery Feature Enabled
     |--------------------------------------------------------------------------
     |
-    | This option controls whether the gallery feature is enabled for News
-    | and Events. When disabled, gallery functionality will be hidden.
+    | This option controls whether the gallery feature is enabled for Articles,
+    | News, and Events. When disabled, gallery functionality will be hidden.
     |
     */
 
@@ -31,8 +31,8 @@ return [
     | Maximum Images Per Item
     |--------------------------------------------------------------------------
     |
-    | The maximum number of images allowed in a gallery for each News or
-    | Event item. This helps prevent abuse and manage storage.
+    | The maximum number of images allowed in a gallery for each Article,
+    | News, or Event item. This helps prevent abuse and manage storage.
     |
     */
 
@@ -146,4 +146,17 @@ return [
     */
   'dummy_thumb' => '/dummy/item_thumbnail.jpg',
 
+  /*
+    |--------------------------------------------------------------------------
+    | Enabled Models
+    |--------------------------------------------------------------------------
+    |
+    | List of models that have gallery functionality enabled.
+    |
+    */
+  'enabled_models' => [
+    'article' => FALSE,
+    'news' => TRUE,
+    'event' => TRUE,
+  ]
 ];

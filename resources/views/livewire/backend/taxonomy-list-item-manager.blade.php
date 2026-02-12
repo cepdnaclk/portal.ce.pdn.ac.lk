@@ -3,6 +3,7 @@
        dataType: @js($type),
        files: @js($files ?? []),
        pages: @js($pages ?? []),
+       articles: @js($articles ?? ['xxx']),
        userInput: '',
        selectedItem: null,
        editIndex: null,
@@ -110,6 +111,12 @@
                        return null;
                    }
                    return Number(value);
+               case 'article':
+                   if (value === '' || value === null) {
+                       this.errorMessage = 'Please select an Article.';
+                       return null;
+                   }
+                   return Number(value);
                default:
                    return value;
            }
@@ -157,6 +164,11 @@
                return page ? page.slug : `Missing page (#${item})`;
            }
    
+           if (this.dataType === 'article') {
+               const articleId = Number(item);
+               const article = this.articles.find((entry) => Number(entry.id) === articleId);
+               return article ? article.title : `Missing Article (#${item})`;
+           }
            return typeof item === 'string' ? item : String(item);
        }
    }" x-cloak x-init="$dispatch('items-changed', items)" x-effect="$dispatch('items-changed', items)">
@@ -223,6 +235,15 @@
                                </template>
                            </select>
                        </template>
+                       <template x-if="dataType === 'article'">
+                           <select class="form-select w-100" x-model.number="userInput" autofocus
+                               @change="hasValidationError = false; errorMessage = ''">
+                               <option value="">Select an Article</option>
+                               <template x-for="article in articles" :key="article.id">
+                                   <option :value="article.id" x-text="article.title"></option>
+                               </template>
+                           </select>
+                       </template>
                        <p class="text-danger mt-2" x-show="errorMessage" x-text="errorMessage"></p>
                    </div>
                    <div class="modal-footer">
@@ -252,7 +273,8 @@
                                    class="btn btn-sm btn-secondary me-1 me-md-2 rounded" @click.stop="moveUp()">
                                    <i class="fas fa-chevron-up"></i>
                                </button>
-                               <button type="button" x-show="items.length > 1" :disabled="index === items.length - 1"
+                               <button type="button" x-show="items.length > 1"
+                                   :disabled="index === items.length - 1"
                                    class="btn btn-sm btn-secondary me-1 me-md-2 rounded" @click.stop="moveDown()">
                                    <i class="fas fa-chevron-down"></i>
                                </button>

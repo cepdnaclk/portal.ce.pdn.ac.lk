@@ -1,0 +1,394 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Articles API",
+    "version": "1.1.0",
+    "description": "Public endpoints that expose published articles (v1 and v2)."
+  },
+  "servers": [
+    {
+      "url": "https://portal.ce.pdn.ac.lk/api",
+      "description": "API base"
+    }
+  ],
+  "tags": [
+    { "name": "Articles V1" },
+    { "name": "Articles V2" }
+  ],
+  "paths": {
+    "/articles/v1": {
+      "get": {
+        "summary": "List published articles (v1)",
+        "description": "Returns the latest enabled articles for the default tenant, paginated in batches of 20.",
+        "tags": ["Articles V1"],
+        "responses": {
+          "200": {
+            "description": "Paginated list of articles",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedArticles" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/v1/{id}": {
+      "get": {
+        "summary": "Get an article (v1)",
+        "description": "Returns a single enabled article by numeric identifier in the default tenant.",
+        "tags": ["Articles V1"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Article" }
+              }
+            }
+          },
+          "404": {
+            "description": "Article not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/v1/category/{category}": {
+      "get": {
+        "summary": "List articles by category (v1)",
+        "description": "Returns enabled articles that include the given category tag in the default tenant.",
+        "tags": ["Articles V1"],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of articles",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedArticles" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/v2": {
+      "get": {
+        "summary": "Redirect to default tenant (v2)",
+        "description": "Redirects to /articles/v2/{tenant_slug} using the default tenant slug.",
+        "tags": ["Articles V2"],
+        "responses": {
+          "302": {
+            "description": "Redirect to tenant-scoped endpoint",
+            "headers": {
+              "Location": {
+                "schema": { "type": "string", "format": "uri" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/v2/{tenant_slug}": {
+      "get": {
+        "summary": "List published articles (v2)",
+        "description": "Returns the latest enabled articles for the specified tenant, paginated in batches of 20.",
+        "tags": ["Articles V2"],
+        "parameters": [
+          {
+            "name": "tenant_slug",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of articles",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedArticles" }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/v2/{tenant_slug}/{id}": {
+      "get": {
+        "summary": "Get an article (v2)",
+        "description": "Returns a single enabled article by numeric identifier for the specified tenant.",
+        "tags": ["Articles V2"],
+        "parameters": [
+          {
+            "name": "tenant_slug",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Article" }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant or article not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/v2/{tenant_slug}/category/{category}": {
+      "get": {
+        "summary": "List articles by category (v2)",
+        "description": "Returns enabled articles that include the given category tag for the specified tenant.",
+        "tags": ["Articles V2"],
+        "parameters": [
+          {
+            "name": "tenant_slug",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of articles",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedArticles" }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaginatedArticles": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Article" }
+          },
+          "links": { "$ref": "#/components/schemas/PaginationLinks" },
+          "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+        }
+      },
+      "Article": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "author": { "$ref": "#/components/schemas/Author" },
+          "published_at": { "type": "string", "format": "date-time" },
+          "categories": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "content_images": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ContentImage" }
+          },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "gallery": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/GalleryImage" }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "content",
+          "author",
+          "published_at",
+          "categories",
+          "content_images",
+          "created_at",
+          "updated_at",
+          "gallery"
+        ]
+      },
+      "Author": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "nullable": true },
+          "name": { "type": "string", "nullable": true }
+        }
+      },
+      "ContentImage": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "nullable": true },
+          "url": { "type": "string", "format": "uri", "nullable": true }
+        }
+      },
+      "GalleryImage": {
+        "type": "object",
+        "properties": {
+          "filename": { "type": "string" },
+          "order": { "type": "integer", "nullable": true },
+          "is_cover": { "type": "boolean" },
+          "alt_text": { "type": "string", "nullable": true },
+          "caption": { "type": "string", "nullable": true },
+          "credit": { "type": "string", "nullable": true },
+          "urls": { "$ref": "#/components/schemas/GalleryUrls" },
+          "metadata": { "$ref": "#/components/schemas/GalleryMetadata" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "GalleryUrls": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "GalleryMetadata": {
+        "type": "object",
+        "properties": {
+          "width": { "type": "integer", "nullable": true },
+          "height": { "type": "integer", "nullable": true },
+          "file_size": { "type": "integer", "nullable": true },
+          "mime_type": { "type": "string", "nullable": true }
+        }
+      },
+      "PaginationLinks": {
+        "type": "object",
+        "properties": {
+          "first": { "type": "string", "format": "uri" },
+          "last": { "type": "string", "format": "uri" },
+          "prev": { "type": "string", "format": "uri", "nullable": true },
+          "next": { "type": "string", "format": "uri", "nullable": true }
+        }
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "current_page": { "type": "integer" },
+          "from": { "type": "integer", "nullable": true },
+          "last_page": { "type": "integer" },
+          "path": { "type": "string", "format": "uri" },
+          "per_page": { "type": "integer" },
+          "to": { "type": "integer", "nullable": true },
+          "total": { "type": "integer" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

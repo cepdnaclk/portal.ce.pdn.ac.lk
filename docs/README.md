@@ -5,6 +5,7 @@
 OpenAPI 3.0 JSON documents generated from the current Laravel routes.
 
 - [News](./api/news.json)
+- [Articles](./api/articles.json)
 - [Events](./api/events.json)
 - [Academics](./api/academics.json)
 - [Taxonomy](./api/taxonomy.json)
@@ -23,3 +24,4 @@ OpenAPI 3.0 JSON documents generated from the current Laravel routes.
 - [Academic Programs](./features/academic-programs.md) - Courses and semesters.
 - [Taxonomy](./features/taxonomy.md) - Taxonomy data model and APIs.
 - [Gallery](./features/gallery.md) - Visual assets overview.
+- [Articles](./features/articles.md) - Tenant-scoped rich-text content items with image embedding support.

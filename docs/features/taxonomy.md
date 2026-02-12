@@ -41,7 +41,9 @@ The validator `TaxonomyTermMetadataValidator` enforces type-aware rules for each
 
 ### Taxonomy lists
 
-`TaxonomyList` stores an ordered JSON array of items with a `data_type` (string/date/url/email/file/page). Items are stored as JSON and are returned in API responses when referenced by terms.
+`TaxonomyList` stores an ordered JSON array of items with a `data_type` (string/date/url/email/file/page/article). Items are stored as JSON and are returned in API responses when referenced by terms.
+
+When `data_type` is `article`, items store Article IDs and are surfaced by resolving those IDs to `App\Domains\ContentManagement\Models\Article` records.
 
 ### Taxonomy pages
 

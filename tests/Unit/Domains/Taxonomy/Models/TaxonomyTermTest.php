@@ -5,6 +5,9 @@ namespace Tests\Unit\Domains\Taxonomy\Models;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Domains\ContentManagement\Models\Article;
+use App\Domains\Tenant\Models\Tenant;
+use App\Http\Resources\ArticleResource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
@@ -315,5 +318,60 @@ class TaxonomyTermTest extends TestCase
     // 3. Assert
     $this->assertArrayNotHasKey('document_file', $formattedMetadata);
     $this->assertEmpty($formattedMetadata); // Expect empty array as the only property was a missing file
+  }
+
+  public function test_get_formatted_metadata_attribute_handles_article_type()
+  {
+    $taxonomy = Taxonomy::factory()->create([
+      'properties' => [
+        ['code' => 'featured_article', 'name' => 'Featured Article', 'data_type' => 'article'],
+      ],
+    ]);
+
+    $tenant = Tenant::factory()->create(['slug' => 'sample-tenant.test']);
+    $article = Article::factory()->create(['tenant_id' => $tenant->id, 'title' => 'Sample Article']);
+
+    $term = TaxonomyTerm::factory()->create([
+      'taxonomy_id' => $taxonomy->id,
+      'metadata' => [
+        ['code' => 'featured_article', 'value' => $article->id],
+      ],
+    ]);
+
+    $cacheKey = 'taxonomy_' . (int)$taxonomy->id . '_article_' . (int)$article->id;
+    Cache::forget($cacheKey);
+
+    $formattedMetadata = $term->getFormattedMetadataAttribute();
+
+    $this->assertArrayHasKey('featured_article', $formattedMetadata);
+    $this->assertInstanceOf(ArticleResource::class, $formattedMetadata['featured_article']);
+
+    $payload = $formattedMetadata['featured_article']->resolve();
+    $this->assertSame($article->id, $payload['id']);
+    $this->assertSame('Sample Article', $payload['title']);
+  }
+
+  public function test_get_formatted_metadata_attribute_skips_missing_article()
+  {
+    $taxonomy = Taxonomy::factory()->create([
+      'properties' => [
+        ['code' => 'featured_article', 'name' => 'Featured Article', 'data_type' => 'article'],
+      ],
+    ]);
+
+    $missingArticleId = 123456;
+    $term = TaxonomyTerm::factory()->create([
+      'taxonomy_id' => $taxonomy->id,
+      'metadata' => [
+        ['code' => 'featured_article', 'value' => $missingArticleId],
+      ],
+    ]);
+
+    $cacheKey = 'taxonomy_' . (int)$taxonomy->id . '_article_' . (int)$missingArticleId;
+    Cache::forget($cacheKey);
+
+    $formattedMetadata = $term->getFormattedMetadataAttribute();
+
+    $this->assertArrayNotHasKey('featured_article', $formattedMetadata);
   }
 }

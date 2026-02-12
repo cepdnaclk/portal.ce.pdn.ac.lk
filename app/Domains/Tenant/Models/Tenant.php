@@ -5,6 +5,7 @@ namespace App\Domains\Tenant\Models;
 use App\Domains\Announcement\Models\Announcement;
 use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
+use App\Domains\ContentManagement\Models\Article;
 use App\Domains\ContentManagement\Models\Event;
 use App\Domains\ContentManagement\Models\News;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,6 +49,11 @@ class Tenant extends Model
   public function news(): HasMany
   {
     return $this->hasMany(News::class);
+  }
+
+  public function articles(): HasMany
+  {
+    return $this->hasMany(Article::class);
   }
 
   public function events(): HasMany
