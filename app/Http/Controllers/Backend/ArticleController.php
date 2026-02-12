@@ -42,7 +42,7 @@ class ArticleController extends Controller
    */
   public function store(Request $request, ArticleContentImageService $contentImageService)
   {
-    $tenantId = $this->resolveTenantId($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
     if ($tenantId) {
       $request->merge(['tenant_id' => $tenantId]);
     }
@@ -74,6 +74,7 @@ class ArticleController extends Controller
       $article = new Article($data);
       $article->enabled = ($request->enabled == 1);
       $article->created_by = Auth::user()->id;
+      $article->author_id = Auth::user()->id;
       $article->save();
 
       if (config('gallery.enabled_models.article')) {
@@ -99,7 +100,9 @@ class ArticleController extends Controller
       $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('name');
       $selectedTenantId = $article->tenant_id;
 
-      return view('backend.article.edit', compact('article', 'tenants', 'selectedTenantId'));
+      $authorOptions = $this->getAuthorOptions();
+
+      return view('backend.article.edit', compact('article', 'tenants', 'selectedTenantId', 'authorOptions'));
     } catch (\Exception $ex) {
       Log::error('Failed to load article edit page', ['error' => $ex->getMessage()]);
       return abort(500);
@@ -116,7 +119,7 @@ class ArticleController extends Controller
    */
   public function update(Request $request, Article $article, ArticleContentImageService $contentImageService)
   {
-    $tenantId = $this->resolveTenantId($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
     if ($tenantId) {
       $request->merge(['tenant_id' => $tenantId]);
     }
@@ -128,6 +131,7 @@ class ArticleController extends Controller
       'content_images_json' => 'nullable|string',
       'enabled' => 'nullable',
       'tenant_id' => ['required', 'exists:tenants,id'],
+      'author_id' => ['required', 'exists:users,id'],
     ]);
 
     $data['content'] = $this->sanitizeHtml($data['content']);
@@ -216,21 +220,6 @@ class ArticleController extends Controller
       Log::error('Failed to delete article', ['article_id' => $article->id, 'error' => $ex->getMessage()]);
       return abort(500);
     }
-  }
-
-  private function resolveTenantId(Request $request): ?int
-  {
-    if ($request->filled('tenant_id')) {
-      return (int) $request->input('tenant_id');
-    }
-
-    $tenants = $this->tenantResolver->availableTenantsForUser($request->user());
-
-    if ($tenants->count() === 1) {
-      return (int) $tenants->first()->id;
-    }
-
-    return null;
   }
 
   private function sanitizeHtml($html): string

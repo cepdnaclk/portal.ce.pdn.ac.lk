@@ -41,7 +41,9 @@ class EventsTable extends PersistentStateDataTable
       Column::make("Time"),
       Column::make("Location", "location")
         ->searchable(),
-      Column::make("Author"),
+      Column::make("Author", "author.name")
+        ->sortable()
+        ->searchable(),
       Column::make("Actions")
     ];
   }
@@ -56,7 +58,7 @@ class EventsTable extends PersistentStateDataTable
     }
 
     return Event::query()
-      ->with('tenant')
+      ->with(['tenant', 'author'])
       ->when(! auth()->user()?->hasAllAccess(), function ($query) use ($tenantIds) {
         $query->whereIn('tenant_id', $tenantIds);
       })

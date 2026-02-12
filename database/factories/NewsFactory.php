@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\ContentManagement\Models\News;
+use App\Domains\Auth\Models\User;
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -30,7 +31,10 @@ class NewsFactory extends Factory
       'title' => $this->faker->sentence,
       'description' => $this->faker->paragraph,
       'url' => urlencode($this->faker->firstName()),
-      'created_by' => 3,
+      'created_by' => User::factory(),
+      'author_id' => function (array $attributes) {
+        return $attributes['created_by'];
+      },
       'image' => $this->faker->imageUrl(),
       'enabled' => $this->faker->boolean,
       'link_url' => $this->faker->url,

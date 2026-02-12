@@ -25,6 +25,7 @@ class News extends BaseContent
     'link_caption',
     'published_at',
     'tenant_id',
+    'author_id',
   ];
 
   /**

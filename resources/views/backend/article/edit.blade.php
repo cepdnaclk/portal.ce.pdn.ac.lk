@@ -45,6 +45,21 @@
                     </div>
                 </div>
 
+                <!-- Author -->
+                <div class="form-group row">
+                    {!! Form::label('author_id', 'Author*', ['class' => 'col-md-2 col-form-label']) !!}
+                    <div class="col-md-10">
+                        {!! Form::select('author_id', $authorOptions, $article->author_id ?? $article->created_by, [
+                            'class' => 'form-select',
+                            'required' => true,
+                            'placeholder' => '',
+                        ]) !!}
+                        @error('author_id')
+                            <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+                </div>
+
                 <!-- Categories -->
                 <div class="form-group row">
                     {!! Form::label('categories', 'Categories', ['class' => 'col-md-2 col-form-label']) !!}

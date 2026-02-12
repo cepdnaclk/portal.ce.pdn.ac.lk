@@ -255,7 +255,7 @@
             "format": "uri"
           },
           "author": {
-            "type": "string"
+            "$ref": "#/components/schemas/Author"
           },
           "image": {
             "type": "string",
@@ -320,6 +320,25 @@
           "published_at",
           "created_at",
           "updated_at"
+        ]
+      },
+      "Author": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "profile_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "profile_url"
         ]
       },
       "PaginationLinks": {

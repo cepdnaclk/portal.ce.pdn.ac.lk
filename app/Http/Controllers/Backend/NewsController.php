@@ -39,7 +39,7 @@ class NewsController extends Controller
    */
   public function store(Request $request)
   {
-    $tenantId = $this->resolveTenantId($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
     if ($tenantId) {
       $request->merge(['tenant_id' => $tenantId]);
     }
@@ -64,6 +64,7 @@ class NewsController extends Controller
       $news->enabled = ($request->enabled == 1);
       $news->url =  urlencode(str_replace(" ", "-", $request->url)); // TODO other corrections
       $news->created_by = Auth::user()->id;
+      $news->author_id = Auth::user()->id;
       $news->save();
 
 
@@ -89,7 +90,9 @@ class NewsController extends Controller
       $tenants = $this->tenantResolver->availableTenantsForUser(auth()->user())->sortBy('name');
       $selectedTenantId = $news->tenant_id;
 
-      return view('backend.news.edit', compact('news', 'tenants', 'selectedTenantId'));
+      $authorOptions = $this->getAuthorOptions();
+
+      return view('backend.news.edit', compact('news', 'tenants', 'selectedTenantId', 'authorOptions'));
     } catch (\Exception $ex) {
       Log::error('Failed to load news edit page', ['error' => $ex->getMessage()]);
       return abort(500);
@@ -104,7 +107,7 @@ class NewsController extends Controller
    */
   public function update(Request $request, News $news)
   {
-    $tenantId = $this->resolveTenantId($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
     if ($tenantId) {
       $request->merge(['tenant_id' => $tenantId]);
     }
@@ -118,6 +121,7 @@ class NewsController extends Controller
       'link_url' => 'nullable|url',
       'link_caption' => 'nullable|string',
       'tenant_id' => ['required', 'exists:tenants,id'],
+      'author_id' => ['required', 'exists:users,id'],
     ]);
 
     try {
@@ -167,18 +171,4 @@ class NewsController extends Controller
     }
   }
 
-  private function resolveTenantId(Request $request): ?int
-  {
-    if ($request->filled('tenant_id')) {
-      return (int) $request->input('tenant_id');
-    }
-
-    $tenants = $this->tenantResolver->availableTenantsForUser($request->user());
-
-    if ($tenants->count() === 1) {
-      return (int) $tenants->first()->id;
-    }
-
-    return null;
-  }
 }

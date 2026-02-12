@@ -19,8 +19,9 @@ class ArticleResource extends JsonResource
       'title' => $this->title,
       'content' => $this->content,
       'author' => [
-        'id' => $this->user?->id ?? $this->created_by,
-        'name' => $this->user?->name,
+        'name' => $this->author?->name ?? '',
+        'email' => $this->author?->email ?? '',
+        'profile_url' => '#',
       ],
       'published_at' => $this->published_at,
       'categories' => $this->categories_json ?? [],

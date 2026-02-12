@@ -30,7 +30,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->user?->name ?? '-' }}
+    {{ $row->author?->name ?? '-' }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

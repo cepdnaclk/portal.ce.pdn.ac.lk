@@ -22,7 +22,7 @@ class EventApiController extends Controller
         return response()->json(['message' => 'Tenant not found'], 404);
       }
 
-      $query = Event::with('gallery')
+      $query = Event::with(['gallery', 'author'])
         ->where('enabled', 1)
         ->forTenant($tenant)
         ->orderBy('start_at', 'desc');
@@ -57,7 +57,7 @@ class EventApiController extends Controller
       }
 
       $perPage = 20;
-      $event = Event::with('gallery')
+      $event = Event::with(['gallery', 'author'])
         ->forTenant($tenant)
         ->getUpcomingEvents()
         ->orderBy('start_at', 'asc')
@@ -84,7 +84,7 @@ class EventApiController extends Controller
       }
 
       $perPage = 20;
-      $event = Event::with('gallery')
+      $event = Event::with(['gallery', 'author'])
         ->forTenant($tenant)
         ->getPastEvents()
         ->orderBy('start_at', 'desc')
@@ -110,7 +110,7 @@ class EventApiController extends Controller
         return response()->json(['message' => 'Tenant not found'], 404);
       }
 
-      $event = Event::with('gallery')->forTenant($tenant)->find($id);
+      $event = Event::with(['gallery', 'author'])->forTenant($tenant)->find($id);
 
       if ($event) {
         return new EventResource($event);

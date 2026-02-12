@@ -15,7 +15,8 @@
   - `categories_json` for comma-separated tags stored as JSON
   - `content_images_json` for rich-text embedded images
   - `gallery_json` for gallery metadata (kept in sync through gallery services)
-  - `created_by` and `updated_by` for audit
+  - `author_id` for attribution, `created_by` and `updated_by` for audit
+
 - JSON fields are cast to arrays in the model to simplify backend/UI usage.
 
 ## Permissions & Tenancy
@@ -50,6 +51,8 @@
   - Deletes unused images from storage (restricted to `articles/` paths and skips path traversal attempts).
   - Stores the filtered list on the article for API and future edits.
 
+**Note**: for now only JPEG images are allowed, due to validation and security considerations. Support for additional formats may be added in the future.
+
 ## Gallery Integration
 
 - Articles can have a full gallery alongside embedded content images when `config('gallery.enabled_models.article')` is true.
@@ -77,7 +80,7 @@
   - Supports list, single item, and category filter.
   - Only enabled articles are returned; disabled items respond with not found for show.
 - Article resource payloads include:
-  - Author metadata
+  - Author metadata (`name`, `email`, `profile_url`)
   - Categories
   - Embedded content images (`id`, `url`)
   - Gallery items (when gallery is enabled)

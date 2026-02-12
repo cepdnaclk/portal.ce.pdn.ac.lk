@@ -31,6 +31,7 @@ class Article extends BaseContent
     'content_images_json',
     'tenant_id',
     'enabled',
+    'author_id',
   ];
 
   /**
