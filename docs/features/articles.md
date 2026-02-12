@@ -16,6 +16,7 @@
   - `content_images_json` for rich-text embedded images
   - `gallery_json` for gallery metadata (kept in sync through gallery services)
   - `author_id` for attribution, `created_by` and `updated_by` for audit
+
 - JSON fields are cast to arrays in the model to simplify backend/UI usage.
 
 ## Permissions & Tenancy
