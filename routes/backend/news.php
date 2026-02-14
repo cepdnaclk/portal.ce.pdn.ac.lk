@@ -80,10 +80,4 @@ Route::group(['middleware' => ['permission:user.access.editor.news', 'tenant.acc
 
   Route::post('news/{news}/gallery/reorder', [GalleryNewsController::class, 'reorder'])
     ->name('news.gallery.reorder');
-
-  Route::put('gallery/{image}', [GalleryNewsController::class, 'update'])
-    ->name('gallery.update');
-
-  Route::delete('gallery/{image}', [GalleryNewsController::class, 'destroy'])
-    ->name('gallery.destroy');
 });

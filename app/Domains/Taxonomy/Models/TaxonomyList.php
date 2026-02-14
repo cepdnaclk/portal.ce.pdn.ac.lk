@@ -17,6 +17,7 @@ class TaxonomyList extends Model
     'email',
     'file',
     'page',
+    'article',
   ];
 
   public const DATA_TYPE_LABELS = [
@@ -26,6 +27,7 @@ class TaxonomyList extends Model
     'email' => 'Email',
     'file' => 'File',
     'page' => 'Page',
+    'article' => 'Article',
   ];
 
   use HasFactory;

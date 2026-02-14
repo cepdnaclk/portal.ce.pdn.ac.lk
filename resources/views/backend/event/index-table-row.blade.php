@@ -52,7 +52,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ App\Domains\Auth\Models\User::find($row->created_by)->name }}
+    {{ $row->author?->name ?? '-' }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

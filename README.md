@@ -39,6 +39,10 @@ composer update
 php artisan migrate
 ```
 
+#### Content author attribution
+
+News, Events, and Articles now track attribution via `author_id` (added in the 2026-02-07 migration). Run `php artisan migrate` after pulling the latest changes.
+
 #### Prepare for the first run
 
 First you need to copy `.env.example` and save as `.env` in the root folder, and change the `Admin` and `User` credentials, `Database` configurations.
@@ -83,6 +87,7 @@ php artisan db:seed --class=Database\\Seeders\\TenantSeeder
 ##### API examples (v2 tenant-aware APIs)
 
 - News: `GET /api/news/v2/{tenant_slug}`
+- Articles: `GET /api/articles/v2/{tenant_slug}`
 - Events: `GET /api/events/v2/{tenant_slug}`
 - For unknown tenant slugs, v2 returns `404 Tenant not found`.
 

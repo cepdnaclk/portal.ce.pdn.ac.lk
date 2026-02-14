@@ -3,6 +3,7 @@
 namespace App\Domains\Tenant\Services;
 
 use App\Domains\Announcement\Models\Announcement;
+use App\Domains\ContentManagement\Models\Article;
 use App\Domains\ContentManagement\Models\Event;
 use App\Domains\ContentManagement\Models\News;
 use App\Domains\Tenant\Models\Tenant;
@@ -80,9 +81,12 @@ class TenantResolver
 
   public function resolveFromRouteModel(Request $request): ?Tenant
   {
-    $model = $request->route('news') ?? $request->route('event') ?? $request->route('announcement');
+    $model = $request->route('news')
+      ?? $request->route('event')
+      ?? $request->route('article')
+      ?? $request->route('announcement');
 
-    if ($model instanceof News || $model instanceof Event || $model instanceof Announcement) {
+    if ($model instanceof News || $model instanceof Event || $model instanceof Article || $model instanceof Announcement) {
       return $model->tenant;
     }
     $url = $request->route()->uri();
@@ -95,6 +99,7 @@ class TenantResolver
     $lookups = [
       'news' => News::class,
       'events' => Event::class,
+      'articles' => Article::class,
       'announcements' => Announcement::class,
     ];
 

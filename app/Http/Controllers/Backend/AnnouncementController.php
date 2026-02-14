@@ -40,7 +40,7 @@ class AnnouncementController extends Controller
    */
   public function store(Request $request)
   {
-    $tenantId = $this->resolveTenantId($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
     if ($tenantId) {
       $request->merge(['tenant_id' => $tenantId]);
     }
@@ -98,7 +98,7 @@ class AnnouncementController extends Controller
    */
   public function update(Request $request, Announcement $announcement)
   {
-    $tenantId = $this->resolveTenantId($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
     if ($tenantId) {
       $request->merge(['tenant_id' => $tenantId]);
     }
@@ -151,21 +151,6 @@ class AnnouncementController extends Controller
       Log::error('Failed to delete announcement', ['announcement_id' => $announcement->id, 'error' => $ex->getMessage()]);
       return abort(500);
     }
-  }
-
-  private function resolveTenantId(Request $request): ?int
-  {
-    if ($request->filled('tenant_id')) {
-      return (int) $request->input('tenant_id');
-    }
-
-    $tenants = $this->tenantResolver->availableTenantsForUser($request->user());
-
-    if ($tenants->count() === 1) {
-      return (int) $tenants->first()->id;
-    }
-
-    return null;
   }
 
   private function availableTenantIds(Request $request): array

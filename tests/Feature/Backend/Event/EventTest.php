@@ -42,6 +42,7 @@ class EventTest extends TestCase
   public function event_can_be_created()
   {
     $user = $this->loginAsEditor();
+    $otherAuthor = User::factory()->create();
     $tenantId = Tenant::defaultId();
 
     $response = $this->post('/dashboard/events/', [
@@ -49,7 +50,6 @@ class EventTest extends TestCase
       'description' => 'Nostrum qui qui ut deserunt dolores quaerat. Est quos sed ea quo placeat maxime. Sequi temporibus alias atque assumenda facere modi deleniti. Recusandae autem quia officia iste laudantium veritatis aut.',
       'event_type' => ['0', '1'],
       'image' => UploadedFile::fake()->image('sample.jpg'),
-      'created_by' => $user->id,
       'link_url' => 'http://runolfsdottir.biz/quia-provident-ut-ipsa-atque-et',
       'link_caption' => 'fugiat accusantium sit',
       'start_at' => '2024-10-06T18:04',
@@ -58,21 +58,23 @@ class EventTest extends TestCase
       'published_at' => '2024-10-10',
       'location' => 'zoom',
       'tenant_id' => $tenantId,
+      'author_id' => $otherAuthor->id,
     ]);
 
     $response->assertStatus(302);
 
-    $this->assertDatabaseHas('events', [
-      'title' => 'test event',
-    ]);
+    $event = Event::where('title', 'test event')->first();
+    $this->assertNotNull($event);
+    $this->assertSame($user->id, $event->author_id);
   }
 
   /** @test */
   public function event_can_be_updated()
   {
-    $user = $this->loginAsEditor();
+    $this->loginAsEditor();
     $event = Event::factory()->create();
     $tenantId = Tenant::defaultId();
+    $author = User::factory()->create();
 
     $updateData = [
       'title' => 'Updated Event',
@@ -80,7 +82,6 @@ class EventTest extends TestCase
       'event_type' => ['0', '2'],
 
       'image' => UploadedFile::fake()->image('sample.jpg'),
-      'created_by' => $user->id,
       'link_url' => 'http://example.com',
       'link_caption' => 'eaque excepturi velit',
       'start_at' => '2024-09-06T18:04',
@@ -89,6 +90,7 @@ class EventTest extends TestCase
       'url' => 'www.uniqueurl1.com',
       'published_at' => '2024-01-10',
       'tenant_id' => $tenantId,
+      'author_id' => $author->id,
     ];
 
     $response = $this->put("/dashboard/events/{$event->id}", $updateData);
@@ -96,6 +98,7 @@ class EventTest extends TestCase
 
     $this->assertDatabaseHas('events', [
       'title' => 'Updated Event',
+      'author_id' => $author->id,
     ]);
   }
 

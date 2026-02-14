@@ -13,7 +13,7 @@ use Intervention\Image\Facades\Image;
 class GalleryService
 {
   /**
-   * Upload and attach images to an imageable model (News or Event).
+   * Upload and attach images to an imageable model (Article, News, or Event).
    *
    * @param mixed $imageable
    * @param array|UploadedFile $files

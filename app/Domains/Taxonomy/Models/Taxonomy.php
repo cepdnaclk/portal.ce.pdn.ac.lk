@@ -43,7 +43,8 @@ class Taxonomy extends Model
     'file' => 'File',
     'page' => 'Page',
     'list' => 'List',
-    'taxonomy_term' => 'Taxonomy Term'
+    'taxonomy_term' => 'Taxonomy Term',
+    'article' => 'Article'
   ];
 
   protected $casts = [

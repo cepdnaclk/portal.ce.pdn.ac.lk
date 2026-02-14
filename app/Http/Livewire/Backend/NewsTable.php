@@ -42,7 +42,7 @@ class NewsTable extends PersistentStateDataTable
           return view('backend.news.enabled-toggle', ['news' => $news]);
         }),
       Column::make("Tenant", "tenant.name"),
-      Column::make("Author", "user.name")
+      Column::make("Author", "author.name")
         ->sortable()
         ->searchable(),
       Column::make("Published at", "published_at")
@@ -63,7 +63,7 @@ class NewsTable extends PersistentStateDataTable
     }
 
     return News::query()
-      ->with('tenant')
+      ->with(['tenant', 'author'])
       ->when(!auth()->user()->hasAllAccess(), function ($query) use ($tenantIds) {
         $query->whereIn('tenant_id', $tenantIds);
       })

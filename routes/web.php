@@ -6,8 +6,8 @@ use App\Http\Controllers\Backend\GalleryNewsController;
 use App\Http\Controllers\Backend\TaxonomyFileController;
 use App\Http\Controllers\Backend\TaxonomyPageController;
 use App\Http\Controllers\LocaleController;
-use App\Http\Controllers\Media\LegacyImageController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\ArticleContentImageController;
 
 /*
  * Global Routes
@@ -56,5 +56,9 @@ Route::group(
     Route::get('gallery/{path}', [GalleryController::class, 'download'])
       ->where('path', '.*')
       ->name('gallery');
+
+    Route::get('article/{path}', [ArticleContentImageController::class, 'download'])
+      ->where('path', '.*')
+      ->name('article');
   }
 );

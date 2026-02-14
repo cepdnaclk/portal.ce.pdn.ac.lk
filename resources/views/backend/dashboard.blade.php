@@ -6,6 +6,7 @@
     {{-- Media Management --}}
     @if (
         $logged_in_user->hasAnyPermission([
+            'user.access.editor.articles',
             'user.access.editor.news',
             'user.access.editor.events',
             'user.access.editor.announcements',
@@ -33,6 +34,12 @@
                     @if ($logged_in_user->hasPermissionTo('user.access.editor.events'))
                         <x-backend.shortcut-card route="{{ route('dashboard.event.index') }}" label="Events"
                             icon="fa-calendar" color="info" />
+                    @endif
+
+                    {{-- Articles --}}
+                    @if ($logged_in_user->hasPermissionTo('user.access.editor.articles'))
+                        <x-backend.shortcut-card route="{{ route('dashboard.article.index') }}" label="Articles"
+                            icon="fa-file-text-o" color="primary" />
                     @endif
 
                     {{-- Intranet Links --}}

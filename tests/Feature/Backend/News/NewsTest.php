@@ -38,7 +38,8 @@ class NewsTest extends TestCase
   /** @test */
   public function news_can_be_created()
   {
-    $this->loginAsEditor();
+    $editor = $this->loginAsEditor();
+    $otherAuthor = User::factory()->create();
     $tenantId = Tenant::defaultId();
 
     $response = $this->post('/dashboard/news/', [
@@ -50,13 +51,14 @@ class NewsTest extends TestCase
       'url' => 'https://ce.pdn.ac.lk/news/2004-10-10',
       'published_at' => '2024-12-12',
       'tenant_id' => $tenantId,
+      'author_id' => $otherAuthor->id,
 
     ]);
 
     $response->assertStatus(302);
-    $this->assertDatabaseHas('news', [
-      'title' => 'test News',
-    ]);
+    $news = News::where('title', 'test News')->first();
+    $this->assertNotNull($news);
+    $this->assertSame($editor->id, $news->author_id);
   }
 
   /** @test */
@@ -65,6 +67,7 @@ class NewsTest extends TestCase
     $this->loginAsEditor();
     $news = News::factory()->create();
     $tenantId = Tenant::defaultId();
+    $author = User::factory()->create();
 
     $updateData = [
       'title' => 'Updated News',
@@ -75,6 +78,7 @@ class NewsTest extends TestCase
       'url' => 'https://ce.pdn.ac.lk/news/2004-11-11',
       'published_at' => '2024-12-24',
       'tenant_id' => $tenantId,
+      'author_id' => $author->id,
     ];
 
     $response = $this->put("/dashboard/news/{$news->id}", $updateData);
@@ -82,6 +86,7 @@ class NewsTest extends TestCase
 
     $this->assertDatabaseHas('news', [
       'title' => 'Updated News',
+      'author_id' => $author->id,
     ]);
   }
 
