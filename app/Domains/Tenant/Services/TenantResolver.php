@@ -15,10 +15,13 @@ use App\Domains\Tenant\Models\Tenant;
 use App\Domains\Auth\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class TenantResolver
 {
+  private const AVAILABLE_TENANTS_CACHE_MINUTES = 10;
+
   public function resolveDefault(): ?Tenant
   {
     return Tenant::default();
@@ -170,5 +173,32 @@ class TenantResolver
       ->merge($roleTenants)
       ->unique('id')
       ->values();
+  }
+
+  public function cachedAvailableTenantsForUser(?User $user, string $sortBy = 'name'): Collection
+  {
+    $cacheKey = $this->availableTenantsCacheKey($user, $sortBy);
+
+    return Cache::remember($cacheKey, now()->addMinutes(self::AVAILABLE_TENANTS_CACHE_MINUTES), function () use ($user, $sortBy) {
+      return $this->availableTenantsForUser($user)
+        ->sortBy($sortBy)
+        ->values();
+    });
+  }
+
+  public function forgetCachedAvailableTenantsForUser(?User $user): void
+  {
+    foreach (['name', 'slug'] as $sortBy) {
+      Cache::forget($this->availableTenantsCacheKey($user, $sortBy));
+    }
+  }
+
+  private function availableTenantsCacheKey(?User $user, string $sortBy): string
+  {
+    return sprintf(
+      'tenant_resolver.available_tenants.user.%s.sort.%s',
+      $user?->getAuthIdentifier() ?? 'guest',
+      $sortBy
+    );
   }
 }

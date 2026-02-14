@@ -9,6 +9,7 @@ use App\Domains\Taxonomy\Models\TaxonomyList;
 use App\Domains\Taxonomy\Models\TaxonomyPage;
 use App\Domains\Tenant\Services\TenantResolver;
 use App\Http\Controllers\Controller;
+use App\Support\Concerns\ResolvesAvailableTenants;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,8 @@ use Spatie\Activitylog\Models\Activity;
 
 class TaxonomyListController extends Controller
 {
+  use ResolvesAvailableTenants;
+
   public function __construct(private TenantResolver $tenantResolver) {}
 
   public function index()
@@ -420,36 +423,5 @@ class TaxonomyListController extends Controller
     return is_array($value)
       ? json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
       : (string)($value ?? '');
-  }
-
-  private function getAvailableTenants()
-  {
-    return $this->tenantResolver
-      ->availableTenantsForUser(auth()->user())
-      ->sortBy('name')
-      ->values();
-  }
-
-  private function getAvailableTenantIds($user): array
-  {
-    return $this->tenantResolver
-      ->availableTenantsForUser($user)
-      ->pluck('id')
-      ->all();
-  }
-
-  private function getSelectedTenantId($tenants): ?int
-  {
-    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
-
-    if ($defaultTenantId && $tenants->contains('id', $defaultTenantId)) {
-      return (int) $defaultTenantId;
-    }
-
-    if ($tenants->count() === 1) {
-      return (int) $tenants->first()->id;
-    }
-
-    return null;
   }
 }

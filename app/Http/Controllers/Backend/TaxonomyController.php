@@ -11,6 +11,7 @@ use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
 use App\Domains\Tenant\Services\TenantResolver;
+use App\Support\Concerns\ResolvesAvailableTenants;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Spatie\Activitylog\Models\Activity;
@@ -18,6 +19,8 @@ use Illuminate\Validation\Rule;
 
 class TaxonomyController extends Controller
 {
+  use ResolvesAvailableTenants;
+
   public function __construct(private TenantResolver $tenantResolver) {}
 
   /**
@@ -356,36 +359,5 @@ class TaxonomyController extends Controller
     ]);
 
     return redirect($url);
-  }
-
-  private function getAvailableTenants()
-  {
-    return $this->tenantResolver
-      ->availableTenantsForUser(auth()->user())
-      ->sortBy('name')
-      ->values();
-  }
-
-  private function getAvailableTenantIds(Request $request): array
-  {
-    return $this->tenantResolver
-      ->availableTenantsForUser($request->user())
-      ->pluck('id')
-      ->all();
-  }
-
-  private function getSelectedTenantId($tenants): ?int
-  {
-    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
-
-    if ($defaultTenantId && $tenants->contains('id', $defaultTenantId)) {
-      return (int) $defaultTenantId;
-    }
-
-    if ($tenants->count() === 1) {
-      return (int) $tenants->first()->id;
-    }
-
-    return null;
   }
 }

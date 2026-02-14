@@ -2,16 +2,19 @@
 
 namespace App\Http\Livewire\Backend;
 
+use App\Support\Concerns\ResolvesAvailableTenants;
 use App\Domains\Taxonomy\Models\Taxonomy;
-use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Cache;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class TaxonomyTable extends DataTableComponent
 {
+  use ResolvesAvailableTenants;
+
+  protected string $tenantSortColumn = 'slug';
+
   public array $perPageAccepted = [10, 25, 50, 100];
   public int $perPage = 25;
   public bool $perPageAll = true;
@@ -97,22 +100,5 @@ class TaxonomyTable extends DataTableComponent
   public function rowView(): string
   {
     return 'backend.taxonomy.index-table-row';
-  }
-
-  private function getAvailableTenants()
-  {
-    $cacheKey = 'taxonomy_table.tenants.user.' . (auth()->id() ?? 'guest');
-
-    return Cache::remember($cacheKey, 60, function () {
-      return app(TenantResolver::class)
-        ->availableTenantsForUser(auth()->user())
-        ->sortBy('slug')
-        ->values();
-    });
-  }
-
-  private function getAvailableTenantIds(): array
-  {
-    return $this->getAvailableTenants()->pluck('id')->all();
   }
 }

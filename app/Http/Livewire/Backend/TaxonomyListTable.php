@@ -2,17 +2,20 @@
 
 namespace App\Http\Livewire\Backend;
 
+use App\Support\Concerns\ResolvesAvailableTenants;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyList;
-use App\Domains\Tenant\Services\TenantResolver;
 use App\Http\Livewire\Components\PersistentStateDataTable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Cache;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class TaxonomyListTable extends PersistentStateDataTable
 {
+  use ResolvesAvailableTenants;
+
+  protected string $tenantSortColumn = 'slug';
+
   public array $perPageAccepted = [10, 25, 50, 100];
   public int $perPage = 100;
   public bool $perPageAll = true;
@@ -86,22 +89,5 @@ class TaxonomyListTable extends PersistentStateDataTable
   public function rowView(): string
   {
     return 'backend.taxonomy_list.index-table-row';
-  }
-
-  private function getAvailableTenants()
-  {
-    $cacheKey = 'taxonomy_list_table.tenants.user.' . (auth()->id() ?? 'guest');
-
-    return Cache::remember($cacheKey, 60, function () {
-      return app(TenantResolver::class)
-        ->availableTenantsForUser(auth()->user())
-        ->sortBy('slug')
-        ->values();
-    });
-  }
-
-  private function getAvailableTenantIds(): array
-  {
-    return $this->getAvailableTenants()->pluck('id')->all();
   }
 }

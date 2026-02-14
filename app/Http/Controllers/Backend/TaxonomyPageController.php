@@ -7,6 +7,7 @@ use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyPage;
 use App\Domains\Tenant\Services\TenantResolver;
 use App\Rules\Slug;
+use App\Support\Concerns\ResolvesAvailableTenants;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -19,6 +20,8 @@ use Jfcherng\Diff\DiffHelper;
 
 class TaxonomyPageController extends Controller
 {
+  use ResolvesAvailableTenants;
+
   public function __construct(private TenantResolver $tenantResolver) {}
 
   public function create()
@@ -275,36 +278,5 @@ class TaxonomyPageController extends Controller
   {
     // Allow only safe HTML tags
     return strip_tags($html, '<p><a><b><i><strong><em><ul><ol><li><br><hr><h1><h2><h3><h4><h5><h6><span><div><img><blockquote><pre><code><table><thead><tbody><tfoot><tr><th><td>');
-  }
-
-  private function getAvailableTenants()
-  {
-    return $this->tenantResolver
-      ->availableTenantsForUser(auth()->user())
-      ->sortBy('name')
-      ->values();
-  }
-
-  private function getAvailableTenantIds($user): array
-  {
-    return $this->tenantResolver
-      ->availableTenantsForUser($user)
-      ->pluck('id')
-      ->all();
-  }
-
-  private function getSelectedTenantId($tenants): ?int
-  {
-    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
-
-    if ($defaultTenantId && $tenants->contains('id', $defaultTenantId)) {
-      return (int) $defaultTenantId;
-    }
-
-    if ($tenants->count() === 1) {
-      return (int) $tenants->first()->id;
-    }
-
-    return null;
   }
 }
