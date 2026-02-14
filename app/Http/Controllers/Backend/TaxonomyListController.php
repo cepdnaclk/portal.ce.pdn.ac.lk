@@ -54,8 +54,8 @@ class TaxonomyListController extends Controller
   public function store(Request $request)
   {
     $availableTenantIds = $this->getAvailableTenantIds($request->user());
-    $tenantId = $this->resolveTenantId($request, $availableTenantIds);
-    if ($tenantId) {
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
+    if ($tenantId && in_array($tenantId, $availableTenantIds, true)) {
       $request->merge(['tenant_id' => $tenantId]);
     }
 
@@ -180,8 +180,8 @@ class TaxonomyListController extends Controller
   public function update(Request $request, TaxonomyList $taxonomyList)
   {
     $availableTenantIds = $this->getAvailableTenantIds($request->user());
-    $tenantId = $this->resolveTenantId($request, $availableTenantIds);
-    if ($tenantId) {
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
+    if ($tenantId && in_array($tenantId, $availableTenantIds, true)) {
       $request->merge(['tenant_id' => $tenantId]);
     }
 
@@ -420,5 +420,36 @@ class TaxonomyListController extends Controller
     return is_array($value)
       ? json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
       : (string)($value ?? '');
+  }
+
+  private function getAvailableTenants()
+  {
+    return $this->tenantResolver
+      ->availableTenantsForUser(auth()->user())
+      ->sortBy('name')
+      ->values();
+  }
+
+  private function getAvailableTenantIds($user): array
+  {
+    return $this->tenantResolver
+      ->availableTenantsForUser($user)
+      ->pluck('id')
+      ->all();
+  }
+
+  private function getSelectedTenantId($tenants): ?int
+  {
+    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
+
+    if ($defaultTenantId && $tenants->contains('id', $defaultTenantId)) {
+      return (int) $defaultTenantId;
+    }
+
+    if ($tenants->count() === 1) {
+      return (int) $tenants->first()->id;
+    }
+
+    return null;
   }
 }
