@@ -11,14 +11,16 @@ class TaxonomyListItemManager extends Component
   public $title;
   public $files = [];
   public $pages = [];
+  public $articles = [];
 
-  public function mount($type, $title, $items, $files = [], $pages = [])
+  public function mount($type, $title, $items, $files = [], $pages = [], $articles = [])
   {
     $this->items = $items ?? [];
     $this->type = $type;
     $this->title = $title;
     $this->files = $files;
     $this->pages = $pages;
+    $this->articles = $articles;
   }
 
   public function render()

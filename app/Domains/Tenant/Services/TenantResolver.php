@@ -3,6 +3,7 @@
 namespace App\Domains\Tenant\Services;
 
 use App\Domains\Announcement\Models\Announcement;
+use App\Domains\ContentManagement\Models\Article;
 use App\Domains\ContentManagement\Models\Event;
 use App\Domains\ContentManagement\Models\News;
 use App\Domains\Taxonomy\Models\Taxonomy;
@@ -88,6 +89,7 @@ class TenantResolver
     $model = $request->route('news')
       ?? $request->route('event')
       ?? $request->route('announcement')
+      ?? $request->route('article')
       ?? $request->route('taxonomy')
       ?? $request->route('taxonomyList')
       ?? $request->route('taxonomyFile')
@@ -98,6 +100,7 @@ class TenantResolver
       $model instanceof News
       || $model instanceof Event
       || $model instanceof Announcement
+      || $model instanceof Article
       || $model instanceof Taxonomy
       || $model instanceof TaxonomyFile
       || $model instanceof TaxonomyPage
@@ -119,6 +122,7 @@ class TenantResolver
     $lookups = [
       'news' => News::class,
       'events' => Event::class,
+      'articles' => Article::class,
       'announcements' => Announcement::class,
       'taxonomy' => Taxonomy::class,
       'taxonomy-files' => TaxonomyFile::class,

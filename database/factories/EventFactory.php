@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\ContentManagement\Models\Event;
+use App\Domains\Auth\Models\User;
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
@@ -33,7 +34,10 @@ class EventFactory extends Factory
       'url' => urlencode($this->faker->firstName()),
       'event_type' => [$this->faker->randomElement(array_keys(Event::eventTypeMap()))],
       'image' => $this->faker->imageUrl(),
-      'created_by' => 4,
+      'created_by' => User::factory(),
+      'author_id' => function (array $attributes) {
+        return $attributes['created_by'];
+      },
       'enabled' => $this->faker->boolean,
       'link_url' => $this->faker->url,
       'link_caption' => $this->faker->words(3, true),

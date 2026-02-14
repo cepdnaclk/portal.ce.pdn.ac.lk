@@ -3,6 +3,8 @@
 namespace App\Domains\Taxonomy\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Domains\ContentManagement\Models\Article;
+use App\Http\Resources\ArticleResource;
 use App\Http\Resources\TaxonomyListItemResource;
 use App\Http\Resources\TaxonomyTermResource;
 use Database\Factories\TaxonomyTermFactory;
@@ -96,6 +98,16 @@ class TaxonomyTerm extends Model
 
             if ($taxonomyListResource) {
               $response[$code] = $taxonomyListResource;
+            }
+          } elseif ($taxonomyCode == 'article') {
+            $articleCacheKey = 'taxonomy_' . (int)$this->taxonomy_id . '_article_' . (int)$metadataValue;
+            $taxonomyArticleResource = cache()->remember($articleCacheKey, 300, function () use ($metadataValue) {
+              $taxonomyArticle = Article::find($metadataValue);
+              return $taxonomyArticle ? ArticleResource::make($taxonomyArticle) : null;
+            });
+
+            if ($taxonomyArticleResource) {
+              $response[$code] = $taxonomyArticleResource;
             }
           } elseif ($taxonomyCode == 'datetime') {
             $timestamp = false;

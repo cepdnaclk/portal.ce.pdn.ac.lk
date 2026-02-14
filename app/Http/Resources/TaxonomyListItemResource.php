@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Domains\ContentManagement\Models\Article;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
 use App\Domains\Taxonomy\Models\TaxonomyPage;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,6 +24,9 @@ class TaxonomyListItemResource extends JsonResource
         break;
       case 'page':
         $items = $this->mapPageItems($items);
+        break;
+      case 'article':
+        $items = $this->mapArticleItems($items);
         break;
       default:
         // Keep the items as stored for other types (string, date, url, email)
@@ -87,6 +91,32 @@ class TaxonomyListItemResource extends JsonResource
         'id' => $page->id,
         'slug' => $page->slug,
         'url' => route('download.taxonomy-page', ['slug' => $page->slug]),
+      ];
+    })->all();
+  }
+
+  private function mapArticleItems(array $itemIds): array
+  {
+    if (empty($itemIds)) {
+      return [];
+    }
+
+    $articles = Article::whereIn('id', $itemIds)->get()->keyBy('id');
+
+    return collect($itemIds)->map(function ($id) use ($articles) {
+      $article = $articles->get($id);
+
+      if (!$article) {
+        return [
+          'id' => $id,
+          'missing' => true,
+        ];
+      }
+
+      return [
+        'id' => $article->id,
+        'slug' => $article->title,
+        'url' => route('api.v2.articles.show', ['id' => $article->id, 'tenant_slug' => $article->tenant->slug], true),
       ];
     })->all();
   }

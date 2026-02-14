@@ -1,8 +1,8 @@
-# Gallery Feature Documentation
+# Gallery
 
 ## Overview
 
-The Gallery feature allows administrators to attach multiple images to News and Event items. Each gallery supports:
+The Gallery feature allows administrators to attach multiple images to Article, News, and Event items when enabled. Each gallery supports:
 
 - Multiple image uploads
 - Image reordering via drag-and-drop
@@ -15,7 +15,7 @@ The Gallery feature allows administrators to attach multiple images to News and 
 
 ### Database Schema
 
-The `gallery_images` table uses a polymorphic relationship to support both News and Events:
+The `gallery_images` table uses a polymorphic relationship to support Articles, News, and Events:
 
 ```
 gallery_images
@@ -42,6 +42,7 @@ gallery_images
 ### Models
 
 - **GalleryImage**: Core model representing a gallery image
+- **Article**: Has polymorphic relationship with GalleryImage
 - **News**: Has polymorphic relationship with GalleryImage
 - **Event**: Has polymorphic relationship with GalleryImage
 
@@ -69,6 +70,23 @@ GALLERY_QUEUE_PROCESSING=false
 | `min_width`        | Minimum image width              | `200`            |
 | `min_height`       | Minimum image height             | `200`            |
 | `queue_processing` | Queue image processing           | `false`          |
+| `enabled_models`   | Per-model enablement flags       | see below        |
+
+**Note**: for now only JPEG images are allowed, due to validation and security considerations. Support for additional formats may be added in the future.
+
+### Model-Specific Enablement
+
+Gallery support can be toggled per model in `config/gallery.php`:
+
+```php
+'enabled_models' => [
+    'article' => false,
+    'news' => true,
+    'event' => true,
+],
+```
+
+`enabled` must be true and the model flag must also be true for gallery routes and UI actions to be exposed.
 
 ### Image Sizes
 
@@ -93,8 +111,8 @@ Generated sizes are configured in `config/gallery.php`:
 
 ### Accessing Gallery Management
 
-1. Navigate to News or Events in the admin dashboard
-2. Edit an existing News/Event item
+1. Navigate to Articles, News, or Events in the admin dashboard (only models enabled in `enabled_models` expose gallery actions)
+2. Edit an existing item
 3. Click the "Manage Gallery" button at the bottom of the edit form
 4. You'll be redirected to the Gallery Management page
 

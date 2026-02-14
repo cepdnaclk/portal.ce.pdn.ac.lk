@@ -104,6 +104,9 @@ class EventSeeder extends Seeder
       if ($defaultTenantId) {
         $item['tenant_id'] = $defaultTenantId;
       }
+      if (! isset($item['author_id']) && isset($item['created_by'])) {
+        $item['author_id'] = $item['created_by'];
+      }
       Event::firstOrCreate($item);
     }
 

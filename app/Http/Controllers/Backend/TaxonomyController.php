@@ -388,23 +388,4 @@ class TaxonomyController extends Controller
 
     return null;
   }
-
-  private function resolveTenantId(Request $request, array $availableTenantIds): ?int
-  {
-    if ($request->filled('tenant_id')) {
-      return (int) $request->input('tenant_id');
-    }
-
-    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
-
-    if ($defaultTenantId && in_array($defaultTenantId, $availableTenantIds, true)) {
-      return (int) $defaultTenantId;
-    }
-
-    if (count($availableTenantIds) === 1) {
-      return (int) $availableTenantIds[0];
-    }
-
-    return null;
-  }
 }

@@ -30,7 +30,7 @@ class GalleryController extends Controller
   }
 
   /**
-   * Show the gallery management page for a News or Event item.
+   * Show the gallery management page for an Article, News, or Event item.
    *
    * @param News|Event $news_or_event
    * @return \Illuminate\Contracts\View\View
@@ -86,6 +86,14 @@ class GalleryController extends Controller
         $request->file('images'),
         $request->input('metadata', [])
       );
+
+      Log::info('Gallery images uploaded', [
+        'imageable_type' => get_class($imageable),
+        'imageable_id' => $imageable->id,
+        'tenant_id' => $imageable->tenant_id ?? null,
+        'user_id' => $request->user()?->id,
+        'count' => count($images),
+      ]);
 
       return response()->json([
         'message' => 'Images uploaded successfully',

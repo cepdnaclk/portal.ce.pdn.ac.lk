@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Domains\ContentManagement\Models\Article;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
 use App\Domains\Taxonomy\Models\TaxonomyList;
@@ -91,17 +92,21 @@ class TaxonomyListController extends Controller
 
     $fileMap = collect();
     $pageMap = collect();
+    $articleMap = collect();
 
     if ($taxonomyList->data_type === 'file' && is_array($taxonomyList->items)) {
       $fileMap = TaxonomyFile::whereIn('id', $taxonomyList->items)->get()->keyBy('id');
     } elseif ($taxonomyList->data_type === 'page' && is_array($taxonomyList->items)) {
       $pageMap = TaxonomyPage::whereIn('id', $taxonomyList->items)->get()->keyBy('id');
+    } elseif ($taxonomyList->data_type === 'article' && is_array($taxonomyList->items)) {
+      $articleMap = Article::whereIn('id', $taxonomyList->items)->get()->keyBy('id');
     }
 
     return view('backend.taxonomy_list.view', [
       'taxonomyList' => $taxonomyList,
       'fileMap' => $fileMap,
       'pageMap' => $pageMap,
+      'articleMap' => $articleMap,
     ]);
   }
 
@@ -154,10 +159,13 @@ class TaxonomyListController extends Controller
         $pages = TaxonomyPage::where('tenant_id', $tenantId)->orderBy('slug')->get(['id', 'slug']);
       }
 
+      $articles = Article::orderBy('title')->get(['id', 'title']);
+
       return view('backend.taxonomy_list.manage', [
         'taxonomyList' => $taxonomyList,
         'files' => $files,
         'pages' => $pages,
+        'articles' => $articles,
         'dataTypes' => TaxonomyList::DATA_TYPE_LABELS,
       ]);
     } catch (\Throwable $ex) {
@@ -412,55 +420,5 @@ class TaxonomyListController extends Controller
     return is_array($value)
       ? json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
       : (string)($value ?? '');
-  }
-
-  private function getAvailableTenants()
-  {
-    return $this->tenantResolver
-      ->availableTenantsForUser(auth()->user())
-      ->sortBy('name')
-      ->values();
-  }
-
-  private function getAvailableTenantIds($user): array
-  {
-    return $this->tenantResolver
-      ->availableTenantsForUser($user)
-      ->pluck('id')
-      ->all();
-  }
-
-  private function getSelectedTenantId($tenants): ?int
-  {
-    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
-
-    if ($defaultTenantId && $tenants->contains('id', $defaultTenantId)) {
-      return (int) $defaultTenantId;
-    }
-
-    if ($tenants->count() === 1) {
-      return (int) $tenants->first()->id;
-    }
-
-    return null;
-  }
-
-  private function resolveTenantId(Request $request, array $availableTenantIds): ?int
-  {
-    if ($request->filled('tenant_id')) {
-      return (int) $request->input('tenant_id');
-    }
-
-    $defaultTenantId = $this->tenantResolver->resolveDefault()?->id;
-
-    if ($defaultTenantId && in_array($defaultTenantId, $availableTenantIds, true)) {
-      return (int) $defaultTenantId;
-    }
-
-    if (count($availableTenantIds) === 1) {
-      return (int) $availableTenantIds[0];
-    }
-
-    return null;
   }
 }
