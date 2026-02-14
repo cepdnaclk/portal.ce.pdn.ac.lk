@@ -140,9 +140,9 @@ class TaxonomyController extends Controller
     if (isset($data['tenant_id']) && $taxonomy->tenant_id !== (int) $data['tenant_id']) {
       // Use exists() to efficiently check for any related resources without loading them
       $hasRelatedResources = $taxonomy->terms()->exists() ||
-        $taxonomy->hasMany(TaxonomyFile::class, 'taxonomy_id')->exists() ||
-        $taxonomy->hasMany(TaxonomyPage::class, 'taxonomy_id')->exists() ||
-        $taxonomy->hasMany(TaxonomyList::class, 'taxonomy_id')->exists();
+        TaxonomyFile::where('taxonomy_id', $taxonomy->id)->exists() ||
+        TaxonomyPage::where('taxonomy_id', $taxonomy->id)->exists() ||
+        TaxonomyList::where('taxonomy_id', $taxonomy->id)->exists();
 
       if ($hasRelatedResources) {
         return redirect()
