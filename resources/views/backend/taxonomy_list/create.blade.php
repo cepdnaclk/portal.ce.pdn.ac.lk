@@ -86,29 +86,5 @@
 
     {!! Form::close() !!}
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const tenantSelect = document.getElementById('tenant_id')
-            const taxonomySelect = document.getElementById('taxonomy_id')
-            if (!tenantSelect || !taxonomySelect) {
-                return
-            }
-            const syncTaxonomyOptions = () => {
-                const tenantId = tenantSelect.value
-                Array.from(taxonomySelect.options).forEach((option) => {
-                    if (!option.value) {
-                        option.hidden = false
-                        return
-                    }
-                    const matchesTenant = !tenantId || option.dataset.tenant === tenantId
-                    option.hidden = !matchesTenant
-                    if (!matchesTenant && option.selected) {
-                        option.selected = false
-                    }
-                })
-            }
-            tenantSelect.addEventListener('change', syncTaxonomyOptions)
-            syncTaxonomyOptions()
-        })
-    </script>
+    <x-backend.tenant-taxonomy-filter />
 @endsection
