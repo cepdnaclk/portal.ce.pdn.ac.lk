@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
+use App\Domains\Taxonomy\Models\TaxonomyPage;
+use App\Domains\Taxonomy\Models\TaxonomyList;
 use App\Domains\Tenant\Services\TenantResolver;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
@@ -133,6 +135,21 @@ class TaxonomyController extends Controller
       'visibility' => 'nullable|integer',
       'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
+
+    // Prevent tenant_id changes when taxonomy has related resources
+    if (isset($data['tenant_id']) && $taxonomy->tenant_id !== (int) $data['tenant_id']) {
+      $hasTerms = $taxonomy->terms()->exists();
+      $hasFiles = TaxonomyFile::where('taxonomy_id', $taxonomy->id)->exists();
+      $hasPages = TaxonomyPage::where('taxonomy_id', $taxonomy->id)->exists();
+      $hasLists = TaxonomyList::where('taxonomy_id', $taxonomy->id)->exists();
+
+      if ($hasTerms || $hasFiles || $hasPages || $hasLists) {
+        return redirect()
+          ->back()
+          ->withInput()
+          ->withErrors(['tenant_id' => 'Cannot change the tenant of a taxonomy that has associated terms, files, pages, or lists. Please remove or reassign those resources first.']);
+      }
+    }
     try {
       $originalProperties = $taxonomy->properties;
       $updatedProperties = json_decode($request->properties);
