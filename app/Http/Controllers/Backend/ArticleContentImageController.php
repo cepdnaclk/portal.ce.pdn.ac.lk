@@ -15,14 +15,8 @@ class ArticleContentImageController extends Controller
 
   public function upload(UploadArticleContentImageRequest $request)
   {
-    $tenant = $request->attributes->get('tenant');
-
-    if (! $tenant || (int) $request->input('tenant_id') !== (int) $tenant->id) {
-      return response()->json(['message' => 'Tenant not found'], 404);
-    }
-
     try {
-      $image = $this->contentImageService->store($request->file('image'), $tenant->id);
+      $image = $this->contentImageService->store($request->file('image'));
 
       $downloadPath = basename($image['path']);
       $location = route('download.article', ['path' => $downloadPath], true);
@@ -35,7 +29,6 @@ class ArticleContentImageController extends Controller
       ], 201);
     } catch (\Exception $ex) {
       Log::error('Failed to upload article content image', [
-        'tenant_id' => $tenant?->id,
         'user_id' => $request->user()?->id,
         'error' => $ex->getMessage(),
       ]);

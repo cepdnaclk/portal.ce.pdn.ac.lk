@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class ArticleContentImageService
 {
-  public function store(UploadedFile $file, int $tenantId): array
+  public function store(UploadedFile $file): array
   {
     $disk = config('gallery.disk', 'public');
     $extension = $file->getClientOriginalExtension() ?: $file->extension();
