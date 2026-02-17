@@ -33,8 +33,7 @@
     <label for="description" class="col-md-2 col-form-label">@lang('Description')</label>
 
     <div class="col-md-10">
-        <textarea name="description" class="form-control" rows="3" maxlength="255"
-            placeholder="{{ __('Description') }}">{{ old('description', $tenant?->description) }}</textarea>
+        <textarea name="description" class="form-control" rows="3" maxlength="255" placeholder="{{ __('Description') }}">{{ old('description', $tenant?->description) }}</textarea>
     </div>
 </div>
 
@@ -51,3 +50,20 @@
         </div>
     </div>
 </div>
+
+@if (!$tenant)
+    <div class="form-group row">
+        <label for="create_manager_role" class="col-md-2 col-form-label">@lang('Manager Role')</label>
+
+        <div class="col-md-10">
+            <input type="hidden" name="create_manager_role" value="0" />
+            <div class="form-check">
+                <input type="checkbox" name="create_manager_role" id="create_manager_role" value="1"
+                    class="form-check-input" {{ old('create_manager_role', true) ? 'checked' : '' }} />
+                <label class="form-check-label" for="create_manager_role">
+                    @lang('Create a "{tenant.name} Manager" role and grant access to this tenant')
+                </label>
+            </div>
+        </div>
+    </div>
+@endif
