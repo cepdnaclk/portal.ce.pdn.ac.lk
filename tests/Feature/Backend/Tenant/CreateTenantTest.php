@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Backend\Tenant;
 
+use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -64,6 +65,56 @@ class CreateTenantTest extends TestCase
       'url' => 'https://new-tenant.example.test',
       'description' => 'Tenant description',
       'is_default' => true,
+    ]);
+  }
+
+  /** @test */
+  public function creating_a_tenant_creates_a_manager_role_by_default()
+  {
+    $this->loginAsAdmin();
+
+    $this->post('/dashboard/tenants', [
+      'slug' => 'ece-tenant',
+      'name' => 'ECE',
+      'url' => 'https://ece.example.test',
+    ]);
+
+    $tenant = Tenant::query()->where('slug', 'ece-tenant')->firstOrFail();
+
+    $this->assertDatabaseHas('roles', [
+      'name' => 'ECE Manager',
+      'type' => User::TYPE_USER,
+      'guard_name' => config('auth.defaults.guard', 'web'),
+    ]);
+
+    $role = Role::query()->where('name', 'ECE Manager')->firstOrFail();
+
+    $this->assertDatabaseHas('tenant_role', [
+      'tenant_id' => $tenant->id,
+      'role_id' => $role->id,
+    ]);
+  }
+
+  /** @test */
+  public function creating_a_tenant_can_skip_manager_role_creation()
+  {
+    $this->loginAsAdmin();
+
+    $this->post('/dashboard/tenants', [
+      'slug' => 'civil-tenant',
+      'name' => 'Civil',
+      'url' => 'https://civil.example.test',
+      'create_manager_role' => 0,
+    ]);
+
+    $tenant = Tenant::query()->where('slug', 'civil-tenant')->firstOrFail();
+
+    $this->assertDatabaseMissing('roles', [
+      'name' => 'Civil Manager',
+    ]);
+
+    $this->assertDatabaseMissing('tenant_role', [
+      'tenant_id' => $tenant->id,
     ]);
   }
 

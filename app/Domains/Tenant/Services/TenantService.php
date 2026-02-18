@@ -2,6 +2,8 @@
 
 namespace App\Domains\Tenant\Services;
 
+use App\Domains\Auth\Models\Role;
+use App\Domains\Auth\Models\User;
 use App\Domains\Tenant\Models\Tenant;
 use App\Exceptions\GeneralException;
 use App\Services\BaseService;
@@ -28,6 +30,7 @@ class TenantService extends BaseService
   {
     $data = $this->validateStore($data);
     $data['is_default'] = (bool) ($data['is_default'] ?? false);
+    $data['create_manager_role'] = (bool) ($data['create_manager_role'] ?? true);
 
     DB::beginTransaction();
 
@@ -45,9 +48,17 @@ class TenantService extends BaseService
           ->where('id', '!=', $tenant->id)
           ->update(['is_default' => false]);
       }
+
+      if ($data['create_manager_role']) {
+        $role = Role::firstOrCreate([
+          'type' => User::TYPE_USER,
+          'name' => "{$tenant->name} Manager",
+        ]);
+
+        $role->tenants()->syncWithoutDetaching([$tenant->id]);
+      }
     } catch (Exception $e) {
       DB::rollBack();
-
       throw new GeneralException(__('There was a problem creating the tenant.'));
     }
 
@@ -123,6 +134,7 @@ class TenantService extends BaseService
       'url' => ['required', 'max:255', 'url'],
       'description' => ['nullable', 'max:255'],
       'is_default' => ['sometimes', 'boolean'],
+      'create_manager_role' => ['sometimes', 'boolean'],
     ]);
   }
 
