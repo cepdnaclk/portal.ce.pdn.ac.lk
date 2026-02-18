@@ -3,7 +3,7 @@
 @endphp
 
 <div class="form-group row">
-    <label for="slug" class="col-md-2 col-form-label">@lang('Slug')</label>
+    <label for="slug" class="col-md-2 col-form-label">@lang('Slug')*</label>
 
     <div class="col-md-10">
         <input type="text" name="slug" class="form-control" placeholder="{{ __('Slug') }}"
@@ -12,7 +12,7 @@
 </div>
 
 <div class="form-group row">
-    <label for="name" class="col-md-2 col-form-label">@lang('Name')</label>
+    <label for="name" class="col-md-2 col-form-label">@lang('Name')*</label>
 
     <div class="col-md-10">
         <input type="text" name="name" class="form-control" placeholder="{{ __('Name') }}"
@@ -21,7 +21,7 @@
 </div>
 
 <div class="form-group row">
-    <label for="url" class="col-md-2 col-form-label">@lang('URL')</label>
+    <label for="url" class="col-md-2 col-form-label">@lang('URL')*</label>
 
     <div class="col-md-10">
         <input type="text" name="url" class="form-control" placeholder="{{ __('https://example.com') }}"
@@ -61,7 +61,7 @@
                 <input type="checkbox" name="create_manager_role" id="create_manager_role" value="1"
                     class="form-check-input" {{ old('create_manager_role', true) ? 'checked' : '' }} />
                 <label class="form-check-label" for="create_manager_role">
-                    @lang('Create a "{tenant.name} Manager" role and grant access to this tenant')
+                    @lang('Create a Manager role and grant access to this tenant')
                 </label>
             </div>
         </div>
