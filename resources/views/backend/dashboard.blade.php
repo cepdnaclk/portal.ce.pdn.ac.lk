@@ -43,13 +43,17 @@
                     @endif
 
                     {{-- Intranet Links --}}
-                    @if ($logged_in_user->hasAnyPermission(['user.access.taxonomy.data.editor', 'user.access.taxonomy.data.viewer']))
+                    @if (
+                        $logged_in_user->hasAnyPermission(['user.access.taxonomy.data.editor', 'user.access.taxonomy.data.viewer']) &&
+                            $tenants->contains($defaultTenant))
                         <x-backend.shortcut-card route="{{ route('dashboard.taxonomy.alias', ['code' => 'intranet']) }}"
                             label="Intranet" icon="fa-list" color="warning" />
                     @endif
 
                     {{-- projects.ce.pdn.ac.lk --}}
-                    @if ($logged_in_user->hasAnyPermission(['user.access.taxonomy.data.editor', 'user.access.taxonomy.data.viewer']))
+                    @if (
+                        $logged_in_user->hasAnyPermission(['user.access.taxonomy.data.editor', 'user.access.taxonomy.data.viewer']) &&
+                            $tenants->contains($defaultTenant))
                         <x-backend.shortcut-card
                             route="{{ route('dashboard.taxonomy.alias', ['code' => 'project-categories']) }}"
                             label="CE Projects Site" icon="fa-sitemap" color="info" />
@@ -84,8 +88,10 @@
         </x-backend.card>
     @endif
 
-    {{-- Student/Staff Management --}}
-    @if ($logged_in_user->hasAnyPermission(['user.access.taxonomy.data.editor', 'user.access.taxonomy.data.viewer']))
+    {{-- Student/Staff Management: Only available for the default tenant --}}
+    @if (
+        $logged_in_user->hasAnyPermission(['user.access.taxonomy.data.editor', 'user.access.taxonomy.data.viewer']) &&
+            $tenants->contains($defaultTenant))
         <x-backend.card>
             <x-slot name="header">
                 @lang('Student/Staff Management')
