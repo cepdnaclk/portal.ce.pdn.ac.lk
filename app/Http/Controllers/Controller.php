@@ -35,18 +35,37 @@ class Controller extends BaseController
   }
 
   /**
-   * Resolve tenant id, defaulting when a user only has one tenant.
+   * Resolve tenant id, defaulting when a user has only one available tenant.
+   *
+   * Supports both call patterns:
+   * - resolveTenantId($request, $tenantResolver)
+   * - resolveTenantId($request, $availableTenantIds)
+   *
+   * @param TenantResolver|array<int, int|string> $tenantResolverOrAllowedIds
    */
-  protected function resolveTenantId(Request $request, TenantResolver $tenantResolver): ?int
+  protected function resolveTenantId(Request $request, $tenantResolverOrAllowedIds): ?int
   {
     if ($request->filled('tenant_id')) {
       return (int) $request->input('tenant_id');
     }
 
-    $tenants = $tenantResolver->availableTenantsForUser($request->user());
+    if ($tenantResolverOrAllowedIds instanceof TenantResolver) {
+      $tenants = $tenantResolverOrAllowedIds->availableTenantsForUser($request->user());
+      $defaultTenantId = $tenantResolverOrAllowedIds->resolveDefault()?->id;
 
-    if ($tenants->count() === 1) {
-      return (int) $tenants->first()->id;
+      if ($defaultTenantId && $tenants->contains('id', $defaultTenantId)) {
+        return (int) $defaultTenantId;
+      }
+
+      if ($tenants->count() === 1) {
+        return (int) $tenants->first()->id;
+      }
+
+      return null;
+    }
+
+    if (is_array($tenantResolverOrAllowedIds) && count($tenantResolverOrAllowedIds) === 1) {
+      return (int) array_values($tenantResolverOrAllowedIds)[0];
     }
 
     return null;

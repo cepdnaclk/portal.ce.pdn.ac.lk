@@ -50,6 +50,23 @@
 
                         </div>
 
+                        <!-- Tenant -->
+                        <div class="row">
+                            {!! Form::label('tenant_id', 'Tenant*', ['class' => 'col-form-label']) !!}
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                {!! Form::select('tenant_id', $tenants->pluck('name', 'id'), $selectedTenantId, [
+                                    'class' => 'form-select',
+                                    'required' => true,
+                                    'placeholder' => '',
+                                ]) !!}
+                                @error('tenant_id')
+                                    <strong class="text-danger">{{ $message }}</strong>
+                                @enderror
+                            </div>
+                        </div>
+
                         <!-- Taxonomy Description -->
                         <div class="row">
                             {!! Form::label('description', 'Taxonomy Description*', ['class' => 'col-form-label']) !!}

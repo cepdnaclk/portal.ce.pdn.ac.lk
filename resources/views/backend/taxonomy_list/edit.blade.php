@@ -29,15 +29,31 @@
                         @enderror
                     </div>
 
+                    <div class="mb-3">
+                        {!! Form::label('tenant_id', 'Tenant*', ['class' => 'form-label']) !!}
+                        {!! Form::select('tenant_id', $tenants->pluck('name', 'id'), $selectedTenantId, [
+                            'class' => 'form-select',
+                            'required' => true,
+                            'placeholder' => '',
+                            'id' => 'tenant_id',
+                        ]) !!}
+                        @error('tenant_id')
+                            <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+
                     @isset($taxonomies)
                         <div class="mb-3">
                             {!! Form::label('taxonomy_id', 'Related Taxonomy (Optional)', ['class' => 'form-label']) !!}
-                            {!! Form::select(
-                                'taxonomy_id',
-                                $taxonomies->pluck('name', 'id')->prepend(__('— none —'), ''),
-                                $taxonomyList->taxonomy_id,
-                                ['class' => 'form-select'],
-                            ) !!}
+                            <select name="taxonomy_id" id="taxonomy_id" class="form-select">
+                                <option value="">{{ __('— none —') }}</option>
+                                @foreach ($taxonomies as $taxonomy)
+                                    <option value="{{ $taxonomy->id }}" data-tenant="{{ $taxonomy->tenant_id }}"
+                                        {{ old('taxonomy_id', $taxonomyList->taxonomy_id) == $taxonomy->id ? 'selected' : '' }}>
+                                        {{ $taxonomy->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                             @error('taxonomy_id')
                                 <strong class="text-danger">{{ $message }}</strong>
                             @enderror
@@ -76,4 +92,6 @@
     </x-backend.card>
 
     {!! Form::close() !!}
+
+    <x-backend.tenant-taxonomy-filter />
 @endsection

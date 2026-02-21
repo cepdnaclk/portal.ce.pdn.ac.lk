@@ -5,19 +5,32 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
+use App\Domains\Tenant\Services\TenantResolver;
+use App\Support\Concerns\ResolvesAvailableTenants;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class TaxonomyFileController extends Controller
 {
+  use ResolvesAvailableTenants;
+
+  public function __construct(private TenantResolver $tenantResolver) {}
+
   public function create()
   {
     try {
-      $taxonomies = Taxonomy::select('id', 'name')->orderBy('name')->get();
+      $tenants = $this->getAvailableTenants();
+      $selectedTenantId = $this->getSelectedTenantId($tenants);
+      $taxonomies = Taxonomy::query()
+        ->select('id', 'name', 'tenant_id')
+        ->whereIn('tenant_id', $this->getAvailableTenantIds(auth()->user()))
+        ->orderBy('name')
+        ->get();
       $supportedExtensions = implode(', ', TaxonomyFile::$supportedExtensions);
-      return view('backend.taxonomy_file.create', compact('taxonomies', 'supportedExtensions'));
+      return view('backend.taxonomy_file.create', compact('taxonomies', 'supportedExtensions', 'tenants', 'selectedTenantId'));
     } catch (\Throwable $ex) {
       Log::error('Failed to load taxonomy-file creation page', [
         'error' => $ex->getMessage(),
@@ -28,11 +41,22 @@ class TaxonomyFileController extends Controller
 
   public function store(Request $request)
   {
+    $availableTenantIds = $this->getAvailableTenantIds($request->user());
+    $tenantId = $this->resolveTenantId($request, $availableTenantIds);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
     $supportedExtensions = TaxonomyFile::$supportedExtensions;
     $validated = $request->validate([
       'file'         => 'nullable|file|mimes:' . implode(',', $supportedExtensions) . '|max:10240',
       'file_name'    => 'string|max:255|unique:taxonomy_files,file_name',
-      'taxonomy_id'  => 'nullable|exists:taxonomies,id',
+      'taxonomy_id'  => [
+        'nullable',
+        Rule::exists('taxonomies', 'id')
+          ->where(fn($query) => $query->where('tenant_id', $request->input('tenant_id'))),
+      ],
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     try {
@@ -55,6 +79,7 @@ class TaxonomyFileController extends Controller
         'file_name'   => $validated['file_name'],
         'file_path'   => $relativePath,
         'taxonomy_id' => $validated['taxonomy_id'] ?? null,
+        'tenant_id' => $validated['tenant_id'],
       ]);
 
       $taxonomyFile->metadata = ['file_size' => $fileSize];
@@ -101,10 +126,15 @@ class TaxonomyFileController extends Controller
   public function edit(TaxonomyFile $taxonomyFile)
   {
     try {
-      $taxonomies = Taxonomy::select('id', 'name')->get();
+      $tenants = $this->getAvailableTenants();
+      $selectedTenantId = $taxonomyFile->tenant_id;
+      $taxonomies = Taxonomy::query()
+        ->select('id', 'name', 'tenant_id')
+        ->whereIn('tenant_id', $this->getAvailableTenantIds(auth()->user()))
+        ->get();
       $supportedExtensions = implode(', ', TaxonomyFile::$supportedExtensions);
 
-      return view('backend.taxonomy_file.edit', compact('taxonomyFile', 'taxonomies', 'supportedExtensions'));
+      return view('backend.taxonomy_file.edit', compact('taxonomyFile', 'taxonomies', 'supportedExtensions', 'tenants', 'selectedTenantId'));
     } catch (\Throwable $ex) {
       Log::error('Failed to load taxonomy-file edit page', [
         'file_id' => $taxonomyFile->id,
@@ -117,14 +147,28 @@ class TaxonomyFileController extends Controller
 
   public function update(Request $request, TaxonomyFile $taxonomyFile)
   {
+    $availableTenantIds = $this->getAvailableTenantIds($request->user());
+    $tenantId = $this->resolveTenantId($request, $availableTenantIds);
+    if ($tenantId) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
     $supportedExtensions = TaxonomyFile::$supportedExtensions;
     $validated = $request->validate([
       'file'         => 'nullable|file|mimes:' . implode(',', $supportedExtensions) . '|max:10240',
       'file_name'    => 'required|string|max:255|unique:taxonomy_files,file_name,' . $taxonomyFile->id,
-      'taxonomy_id'  => 'nullable|exists:taxonomies,id',
+      'taxonomy_id'  => [
+        'nullable',
+        Rule::exists('taxonomies', 'id')
+          ->where(fn($query) => $query->where('tenant_id', $request->input('tenant_id'))),
+      ],
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     try {
+      $taxonomyFile->taxonomy_id = $validated['taxonomy_id'] ?? null;
+      $taxonomyFile->tenant_id = $validated['tenant_id'];
+
       if ($request->hasFile('file')) {
         Storage::disk('public')->delete($taxonomyFile->file_path);
 
@@ -141,6 +185,8 @@ class TaxonomyFileController extends Controller
         $metadata = $taxonomyFile->metadata ?? [];
         $metadata['file_size'] = $fileSize;
         $taxonomyFile->metadata = $metadata;
+      } else {
+        $taxonomyFile->file_name = $validated['file_name'];
       }
 
       $taxonomyFile->updated_by = Auth::user()->id;

@@ -6,14 +6,22 @@ use App\Domains\Announcement\Models\Announcement;
 use App\Domains\ContentManagement\Models\Article;
 use App\Domains\ContentManagement\Models\Event;
 use App\Domains\ContentManagement\Models\News;
+use App\Domains\Taxonomy\Models\Taxonomy;
+use App\Domains\Taxonomy\Models\TaxonomyFile;
+use App\Domains\Taxonomy\Models\TaxonomyList;
+use App\Domains\Taxonomy\Models\TaxonomyPage;
+use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Tenant\Models\Tenant;
 use App\Domains\Auth\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class TenantResolver
 {
+  private const AVAILABLE_TENANTS_CACHE_MINUTES = 10;
+
   public function resolveDefault(): ?Tenant
   {
     return Tenant::default();
@@ -83,11 +91,29 @@ class TenantResolver
   {
     $model = $request->route('news')
       ?? $request->route('event')
+      ?? $request->route('announcement')
       ?? $request->route('article')
-      ?? $request->route('announcement');
+      ?? $request->route('taxonomy')
+      ?? $request->route('taxonomyList')
+      ?? $request->route('taxonomyFile')
+      ?? $request->route('taxonomyPage')
+      ?? $request->route('term');
 
-    if ($model instanceof News || $model instanceof Event || $model instanceof Article || $model instanceof Announcement) {
+    if (
+      $model instanceof News
+      || $model instanceof Event
+      || $model instanceof Announcement
+      || $model instanceof Article
+      || $model instanceof Taxonomy
+      || $model instanceof TaxonomyFile
+      || $model instanceof TaxonomyPage
+      || $model instanceof TaxonomyList
+    ) {
       return $model->tenant;
+    }
+
+    if ($model instanceof TaxonomyTerm) {
+      return $model->taxonomy?->tenant;
     }
     $url = $request->route()->uri();
 
@@ -101,11 +127,19 @@ class TenantResolver
       'events' => Event::class,
       'articles' => Article::class,
       'announcements' => Announcement::class,
+      'taxonomy' => Taxonomy::class,
+      'taxonomy-files' => TaxonomyFile::class,
+      'taxonomy-pages' => TaxonomyPage::class,
+      'taxonomy-lists' => TaxonomyList::class,
+      'terms' => TaxonomyTerm::class,
     ];
 
     foreach ($lookups as $segment => $class) {
       if (! Str::contains($url, $segment)) {
         continue;
+      }
+      if ($class === TaxonomyTerm::class) {
+        return $class::find($model)?->taxonomy?->tenant;
       }
       return $class::find($model)?->tenant;
     }
@@ -139,5 +173,32 @@ class TenantResolver
       ->merge($roleTenants)
       ->unique('id')
       ->values();
+  }
+
+  public function cachedAvailableTenantsForUser(?User $user, string $sortBy = 'name'): Collection
+  {
+    $cacheKey = $this->availableTenantsCacheKey($user, $sortBy);
+
+    return Cache::remember($cacheKey, now()->addMinutes(self::AVAILABLE_TENANTS_CACHE_MINUTES), function () use ($user, $sortBy) {
+      return $this->availableTenantsForUser($user)
+        ->sortBy($sortBy)
+        ->values();
+    });
+  }
+
+  public function forgetCachedAvailableTenantsForUser(?User $user): void
+  {
+    foreach (['name', 'slug'] as $sortBy) {
+      Cache::forget($this->availableTenantsCacheKey($user, $sortBy));
+    }
+  }
+
+  private function availableTenantsCacheKey(?User $user, string $sortBy): string
+  {
+    return sprintf(
+      'tenant_resolver.available_tenants.user.%s.sort.%s',
+      $user?->getAuthIdentifier() ?? 'guest',
+      $sortBy
+    );
   }
 }

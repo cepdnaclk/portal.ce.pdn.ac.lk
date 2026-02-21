@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 
 // Taxonomy Data
-Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user.access.taxonomy.data.viewer']], function () {
+Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user.access.taxonomy.data.viewer', 'tenant.access']], function () {
   // Index
   Route::get('taxonomy', function () {
     return view('backend.taxonomy.index');
@@ -167,7 +167,7 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.data.editor|user
 });
 
 // Taxonomy Files
-Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer']], function () {
+Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user.access.taxonomy.file.viewer', 'tenant.access']], function () {
   // Index
   Route::get('taxonomy-files', function () {
     return view('backend.taxonomy_file.index');
@@ -235,7 +235,7 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.file.editor|user
 });
 
 // Taxonomy Lists
-Route::group(['middleware' => ['permission:user.access.taxonomy.list.editor|user.access.taxonomy.list.viewer']], function () {
+Route::group(['middleware' => ['permission:user.access.taxonomy.list.editor|user.access.taxonomy.list.viewer', 'tenant.access']], function () {
   Route::get('taxonomy-lists', function () {
     return view('backend.taxonomy_list.index');
   })
@@ -313,7 +313,7 @@ Route::group(['middleware' => ['permission:user.access.taxonomy.list.editor|user
 });
 
 // Taxonomy Pages
-Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor|user.access.taxonomy.page.viewer']], function () {
+Route::group(['middleware' => ['permission:user.access.taxonomy.page.editor|user.access.taxonomy.page.viewer', 'tenant.access']], function () {
   // Index
   Route::get('taxonomy-pages', function () {
     return view('backend.taxonomy_page.index');

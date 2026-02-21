@@ -51,7 +51,7 @@ class TenantAccess
 
   private function handleForbidden(Request $request)
   {
-    $message = __('You do not have access to that tenant.');
+    $message = __('You do not have access to that Tenant.');
 
     if ($request->expectsJson()) {
       return response()->json(['message' => $message], 403);

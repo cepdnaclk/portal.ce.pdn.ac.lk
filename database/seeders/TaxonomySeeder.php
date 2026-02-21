@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Domains\Tenant\Models\Tenant;
+use RuntimeException;
 use Carbon\Carbon;
 
 use Database\Seeders\Traits\DisableForeignKeys;
@@ -372,6 +374,12 @@ class TaxonomySeeder extends Seeder
     // Truncate the taxonomies and terms tables before seeding
     // $this->truncateMultiple(['taxonomies', 'taxonomy_terms']);
 
+    $defaultTenantId = Tenant::defaultId() ?? Tenant::query()->value('id');
+
+    if (! $defaultTenantId) {
+      throw new RuntimeException('Default tenant not found. Please ensure at least one tenant exists before running TaxonomySeeder.');
+    }
+
     // Create taxonomies and their terms
     foreach ($taxonomies as $key => $taxonomy) {
 
@@ -382,6 +390,7 @@ class TaxonomySeeder extends Seeder
         'name' => $taxonomy['name'],
         'description' => $taxonomy['description'],
         'properties' => $taxonomy['properties'],
+        'tenant_id' => $defaultTenantId,
       ]);
 
       if (isset($taxonomy['terms']) && sizeof($taxonomy['terms']) > 0) {

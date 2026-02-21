@@ -2,16 +2,19 @@
 
 namespace App\Http\Livewire\Backend;
 
+use App\Support\Concerns\ResolvesAvailableTenants;
 use App\Domains\Announcement\Models\Announcement;
-use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
-use Illuminate\Support\Facades\Cache;
 
 class AnnouncementTable extends DataTableComponent
 {
+  use ResolvesAvailableTenants;
+
+  protected string $tenantSortColumn = 'slug';
+
   public array $perPageAccepted = [25, 50, 100];
   public bool $perPageAll = true;
 
@@ -111,22 +114,5 @@ class AnnouncementTable extends DataTableComponent
   public function rowView(): string
   {
     return 'backend.announcements.index-table-row';
-  }
-
-  private function getAvailableTenants()
-  {
-    $cacheKey = 'announcements_table.tenants.user.' . (auth()->id() ?? 'guest');
-
-    return Cache::remember($cacheKey, 60, function () {
-      return app(TenantResolver::class)
-        ->availableTenantsForUser(auth()->user())
-        ->sortBy('slug')
-        ->values();
-    });
-  }
-
-  private function getAvailableTenantIds(): array
-  {
-    return $this->getAvailableTenants()->pluck('id')->all();
   }
 }
