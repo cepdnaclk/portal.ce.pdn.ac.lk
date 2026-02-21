@@ -7,8 +7,8 @@ use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Tenant\Services\TenantResolver;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TaxonomyListResource;
-use App\Http\Resources\TaxonomyResource;
 use App\Http\Resources\TaxonomyTermResource;
+use App\Http\Resources\TaxonomyResource;
 use Illuminate\Support\Facades\Log;
 
 class TaxonomyApiController extends Controller
@@ -28,7 +28,10 @@ class TaxonomyApiController extends Controller
         ->where('tenant_id', $tenant->id)
         ->get();
 
-      return TaxonomyListResource::collection($taxonomies);
+      return response()->json([
+        'status' => 'success',
+        'data' => TaxonomyListResource::collection($taxonomies)
+      ]);
     } catch (\Exception $e) {
       Log::error('Error in V2 TaxonomyApiController@index', ['error' => $e->getMessage()]);
       return response()->json(['message' => 'An error occurred while fetching taxonomies'], 500);
@@ -46,17 +49,23 @@ class TaxonomyApiController extends Controller
 
       $taxonomy = Taxonomy::where('code', $taxonomy_code)
         ->where('tenant_id', $tenant->id)
+        ->where('visibility', true)
         ->first();
 
-      if (! $taxonomy) {
+      if (!$taxonomy) {
         return response()->json(['message' => 'Taxonomy not found'], 404);
       }
 
-      if (! $taxonomy->visibility) {
+      if (!$taxonomy->visibility) {
         return response()->json(['message' => 'Taxonomy not available'], 404);
       }
 
-      return new TaxonomyResource($taxonomy);
+      return response()->json(
+        [
+          'status' => 'success',
+          'data' => TaxonomyResource::collection([$taxonomy])->resolve()[0]
+        ]
+      );
     } catch (\Exception $e) {
       Log::error('Error in V2 TaxonomyApiController@get_taxonomy', ['error' => $e->getMessage()]);
       return response()->json(['message' => 'An error occurred while fetching a taxonomy'], 500);
@@ -90,7 +99,10 @@ class TaxonomyApiController extends Controller
       $data = TaxonomyTermResource::make($term)->resolve();
       $data['taxonomy'] = $term->taxonomy->code;
 
-      return response()->json($data);
+      return response()->json([
+        'status' => 'success',
+        'data' => $data
+      ]);
     } catch (\Exception $e) {
       Log::error('Error in V2 TaxonomyApiController@get_term', ['error' => $e->getMessage()]);
       return response()->json(['message' => 'An error occurred while fetching a taxonomy term'], 500);
