@@ -8,6 +8,10 @@
     </x-livewire-tables::table.cell>
 
     <x-livewire-tables::table.cell>
+        {{ $row->tenant?->name ?? 'N/A' }}
+    </x-livewire-tables::table.cell>
+
+    <x-livewire-tables::table.cell>
         {{ $row::DATA_TYPE_LABELS[$row->data_type] ?? ucfirst($row->data_type) }}
     </x-livewire-tables::table.cell>
 

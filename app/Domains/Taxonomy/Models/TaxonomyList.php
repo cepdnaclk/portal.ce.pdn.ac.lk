@@ -7,6 +7,7 @@ use Database\Factories\TaxonomyListFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Domains\Tenant\Models\Tenant;
 
 class TaxonomyList extends Model
 {
@@ -41,6 +42,7 @@ class TaxonomyList extends Model
     'taxonomy_id',
     'data_type',
     'items',
+    'tenant_id',
   ];
 
   protected $casts = [
@@ -56,6 +58,11 @@ class TaxonomyList extends Model
   public function taxonomy()
   {
     return $this->belongsTo(Taxonomy::class);
+  }
+
+  public function tenant()
+  {
+    return $this->belongsTo(Tenant::class);
   }
 
   public function user_created()

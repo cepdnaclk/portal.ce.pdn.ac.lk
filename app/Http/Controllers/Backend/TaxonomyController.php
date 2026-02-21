@@ -10,12 +10,21 @@ use App\Http\Controllers\Controller;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Domains\Taxonomy\Models\TaxonomyFile;
+use App\Domains\Taxonomy\Models\TaxonomyPage;
+use App\Domains\Taxonomy\Models\TaxonomyList;
+use App\Domains\Tenant\Services\TenantResolver;
+use App\Support\Concerns\ResolvesAvailableTenants;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Validation\Rule;
 
 class TaxonomyController extends Controller
 {
+  use ResolvesAvailableTenants;
+
+  public function __construct(private TenantResolver $tenantResolver) {}
+
   /**
    * Show the form for creating a new resource.
    *
@@ -24,7 +33,10 @@ class TaxonomyController extends Controller
   public function create()
   {
     try {
-      return view('backend.taxonomy.create');
+      $tenants = $this->getAvailableTenants();
+      $selectedTenantId = $this->getSelectedTenantId($tenants);
+
+      return view('backend.taxonomy.create', compact('tenants', 'selectedTenantId'));
     } catch (\Exception $ex) {
       Log::error('Failed to load taxonomy creation page', ['error' => $ex->getMessage()]);
       return abort(500);
@@ -51,18 +63,26 @@ class TaxonomyController extends Controller
    */
   public function store(Request $request)
   {
+    $availableTenantIds = $this->getAvailableTenantIds($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
+    if ($tenantId && in_array($tenantId, $availableTenantIds, true)) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
     $validatedData = $request->validate([
       'code' => 'required|unique:taxonomies',
       'name' => 'required',
       'description' => 'nullable',
       'properties' => 'string',
-      'visibility' => 'nullable|integer'
+      'visibility' => 'nullable|integer',
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
 
     try {
       $taxonomy = new Taxonomy($validatedData);
       $taxonomy->properties = json_decode($request->properties);
       $taxonomy->visibility = ($request->visibility !== null);
+      $taxonomy->tenant_id = $validatedData['tenant_id'];
       $taxonomy->created_by = Auth::user()->id;
       $taxonomy->save();
       return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy created successfully');
@@ -80,8 +100,13 @@ class TaxonomyController extends Controller
   public function edit(Taxonomy $taxonomy)
   {
     try {
+      $tenants = $this->getAvailableTenants();
+      $selectedTenantId = $taxonomy->tenant_id;
+
       return view('backend.taxonomy.edit', [
         'taxonomy' => $taxonomy,
+        'tenants' => $tenants,
+        'selectedTenantId' => $selectedTenantId,
       ]);
     } catch (\Exception $ex) {
       Log::error('Failed to load taxonomy edit page', ['error' => $ex->getMessage()]);
@@ -99,13 +124,36 @@ class TaxonomyController extends Controller
    */
   public function update(Request $request, Taxonomy $taxonomy)
   {
+    $availableTenantIds = $this->getAvailableTenantIds($request);
+    $tenantId = $this->resolveTenantId($request, $this->tenantResolver);
+    if ($tenantId && in_array($tenantId, $availableTenantIds, true)) {
+      $request->merge(['tenant_id' => $tenantId]);
+    }
+
     $data = $request->validate([
       'code' => 'string|required',
       'name' => 'string|required',
       'description' => 'nullable',
       'properties' => 'string',
-      'visibility' => 'nullable|integer'
+      'visibility' => 'nullable|integer',
+      'tenant_id' => ['required', Rule::in($availableTenantIds)],
     ]);
+
+    // Prevent tenant_id changes when taxonomy has related resources
+    if (isset($data['tenant_id']) && $taxonomy->tenant_id !== (int) $data['tenant_id']) {
+      // Use exists() to efficiently check for any related resources without loading them
+      $hasRelatedResources = $taxonomy->terms()->exists() ||
+        TaxonomyFile::where('taxonomy_id', $taxonomy->id)->exists() ||
+        TaxonomyPage::where('taxonomy_id', $taxonomy->id)->exists() ||
+        TaxonomyList::where('taxonomy_id', $taxonomy->id)->exists();
+
+      if ($hasRelatedResources) {
+        return redirect()
+          ->back()
+          ->withInput()
+          ->withErrors(['tenant_id' => 'Cannot change the tenant of a taxonomy that has associated terms, files, pages, or lists. Please remove or reassign those resources first.']);
+      }
+    }
     try {
       $originalProperties = $taxonomy->properties;
       $updatedProperties = json_decode($request->properties);
@@ -129,6 +177,7 @@ class TaxonomyController extends Controller
       if ($taxonomy->visibility !== $newVisibility) {
         $taxonomy->visibility = $newVisibility;
       }
+      $taxonomy->tenant_id = $data['tenant_id'];
       $taxonomy->updated_by = Auth::user()->id;
       $taxonomy->save();
       return redirect()->route('dashboard.taxonomy.index')->with('Success', 'Taxonomy updated successfully');
@@ -319,6 +368,10 @@ class TaxonomyController extends Controller
   public function alias($code)
   {
     $taxonomy = Taxonomy::where('code', $code)->firstOrFail();
+    $tenantId = $taxonomy->tenant_id;
+    if ($tenantId && auth()->user() && ! auth()->user()->hasTenantAccess($tenantId)) {
+      abort(403, __('You do not have access to that tenant.'));
+    }
     $url = route('dashboard.taxonomy.terms.index', [
       'taxonomy' => $taxonomy,
     ]);

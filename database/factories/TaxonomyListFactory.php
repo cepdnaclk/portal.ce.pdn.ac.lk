@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Domains\Auth\Models\User;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyList;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaxonomyListFactory extends Factory
@@ -16,6 +17,7 @@ class TaxonomyListFactory extends Factory
     return [
       'name' => $this->faker->unique()->sentence(3),
       'taxonomy_id' => $this->faker->boolean ? Taxonomy::factory() : null,
+      'tenant_id' => Tenant::defaultId() ?? Tenant::factory(),
       'data_type' => 'string',
       'items' => [],
       'created_by' => User::factory(),

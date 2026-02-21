@@ -5,6 +5,10 @@ namespace Tests\Feature\Backend\Taxonomy;
 use App\Domains\Auth\Models\User;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
+use App\Domains\Taxonomy\Models\TaxonomyFile;
+use App\Domains\Taxonomy\Models\TaxonomyPage;
+use App\Domains\Taxonomy\Models\TaxonomyList;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -317,5 +321,149 @@ class TaxonomyTest extends TestCase
     // Destroy action
     $response = $this->delete(route('dashboard.taxonomy.destroy', $taxonomy));
     $response->assertStatus(302);
+  }
+
+  /** @test */
+  public function test_admin_can_change_tenant_when_taxonomy_has_no_related_resources()
+  {
+    $this->loginAsAdmin();
+
+    $tenant1 = Tenant::factory()->create(['slug' => 'tenant-1']);
+    $tenant2 = Tenant::factory()->create(['slug' => 'tenant-2']);
+
+    $taxonomy = Taxonomy::factory()->create(['tenant_id' => $tenant1->id]);
+
+    $updateData = [
+      'code' => $taxonomy->code,
+      'name' => $taxonomy->name,
+      'properties' => json_encode($taxonomy->properties),
+      'tenant_id' => $tenant2->id,
+    ];
+
+    $response = $this->put(route('dashboard.taxonomy.update', $taxonomy), $updateData);
+
+    $response->assertStatus(302);
+    $response->assertRedirect(route('dashboard.taxonomy.index'));
+    $response->assertSessionDoesntHaveErrors();
+
+    $taxonomy->refresh();
+    $this->assertEquals($tenant2->id, $taxonomy->tenant_id);
+  }
+
+  /** @test */
+  public function test_admin_cannot_change_tenant_when_taxonomy_has_terms()
+  {
+    $this->loginAsAdmin();
+
+    $tenant1 = Tenant::factory()->create(['slug' => 'tenant-1']);
+    $tenant2 = Tenant::factory()->create(['slug' => 'tenant-2']);
+
+    $taxonomy = Taxonomy::factory()->create(['tenant_id' => $tenant1->id]);
+    TaxonomyTerm::factory()->create(['taxonomy_id' => $taxonomy->id]);
+
+    $updateData = [
+      'code' => $taxonomy->code,
+      'name' => $taxonomy->name,
+      'properties' => json_encode($taxonomy->properties),
+      'tenant_id' => $tenant2->id,
+    ];
+
+    $response = $this->put(route('dashboard.taxonomy.update', $taxonomy), $updateData);
+
+    $response->assertStatus(302);
+    $response->assertSessionHasErrors(['tenant_id']);
+
+    $taxonomy->refresh();
+    $this->assertEquals($tenant1->id, $taxonomy->tenant_id);
+  }
+
+  /** @test */
+  public function test_admin_cannot_change_tenant_when_taxonomy_has_files()
+  {
+    $this->loginAsAdmin();
+
+    $tenant1 = Tenant::factory()->create(['slug' => 'tenant-1']);
+    $tenant2 = Tenant::factory()->create(['slug' => 'tenant-2']);
+
+    $taxonomy = Taxonomy::factory()->create(['tenant_id' => $tenant1->id]);
+    TaxonomyFile::factory()->create([
+      'taxonomy_id' => $taxonomy->id,
+      'tenant_id' => $tenant1->id,
+    ]);
+
+    $updateData = [
+      'code' => $taxonomy->code,
+      'name' => $taxonomy->name,
+      'properties' => json_encode($taxonomy->properties),
+      'tenant_id' => $tenant2->id,
+    ];
+
+    $response = $this->put(route('dashboard.taxonomy.update', $taxonomy), $updateData);
+
+    $response->assertStatus(302);
+    $response->assertSessionHasErrors(['tenant_id']);
+
+    $taxonomy->refresh();
+    $this->assertEquals($tenant1->id, $taxonomy->tenant_id);
+  }
+
+  /** @test */
+  public function test_admin_cannot_change_tenant_when_taxonomy_has_pages()
+  {
+    $this->loginAsAdmin();
+
+    $tenant1 = Tenant::factory()->create(['slug' => 'tenant-1']);
+    $tenant2 = Tenant::factory()->create(['slug' => 'tenant-2']);
+
+    $taxonomy = Taxonomy::factory()->create(['tenant_id' => $tenant1->id]);
+    TaxonomyPage::factory()->create([
+      'taxonomy_id' => $taxonomy->id,
+      'tenant_id' => $tenant1->id,
+    ]);
+
+    $updateData = [
+      'code' => $taxonomy->code,
+      'name' => $taxonomy->name,
+      'properties' => json_encode($taxonomy->properties),
+      'tenant_id' => $tenant2->id,
+    ];
+
+    $response = $this->put(route('dashboard.taxonomy.update', $taxonomy), $updateData);
+
+    $response->assertStatus(302);
+    $response->assertSessionHasErrors(['tenant_id']);
+
+    $taxonomy->refresh();
+    $this->assertEquals($tenant1->id, $taxonomy->tenant_id);
+  }
+
+  /** @test */
+  public function test_admin_cannot_change_tenant_when_taxonomy_has_lists()
+  {
+    $this->loginAsAdmin();
+
+    $tenant1 = Tenant::factory()->create(['slug' => 'tenant-1']);
+    $tenant2 = Tenant::factory()->create(['slug' => 'tenant-2']);
+
+    $taxonomy = Taxonomy::factory()->create(['tenant_id' => $tenant1->id]);
+    TaxonomyList::factory()->create([
+      'taxonomy_id' => $taxonomy->id,
+      'tenant_id' => $tenant1->id,
+    ]);
+
+    $updateData = [
+      'code' => $taxonomy->code,
+      'name' => $taxonomy->name,
+      'properties' => json_encode($taxonomy->properties),
+      'tenant_id' => $tenant2->id,
+    ];
+
+    $response = $this->put(route('dashboard.taxonomy.update', $taxonomy), $updateData);
+
+    $response->assertStatus(302);
+    $response->assertSessionHasErrors(['tenant_id']);
+
+    $taxonomy->refresh();
+    $this->assertEquals($tenant1->id, $taxonomy->tenant_id);
   }
 }

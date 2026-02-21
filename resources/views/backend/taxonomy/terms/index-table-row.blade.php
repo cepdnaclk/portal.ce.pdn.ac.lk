@@ -36,7 +36,11 @@
 
 <x-livewire-tables::table.cell>
     @if ($row->taxonomy->visibility)
-        <a target="_blank" href="{{ route('api.taxonomy.term.get', ['term_code' => $row->code]) }}">
+        <a target="_blank"
+            href="{{ route('api.v2.taxonomy.get_term', [
+                'tenant_slug' => $row->taxonomy->tenant?->slug,
+                'term_code' => $row->code,
+            ]) }}">
             /{{ $row->code }}
         </a>
     @else

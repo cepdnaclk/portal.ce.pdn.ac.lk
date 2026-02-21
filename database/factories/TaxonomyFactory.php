@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\Taxonomy\Models\Taxonomy;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -46,6 +47,7 @@ class TaxonomyFactory extends Factory
         ]
       ],
       'visibility' => true,
+      'tenant_id' => Tenant::defaultId() ?? Tenant::factory(),
       'created_by' => 1,
       'updated_by' => 1,
       'created_at' => now(),

@@ -2,16 +2,19 @@
 
 namespace App\Http\Livewire\Backend;
 
+use App\Support\Concerns\ResolvesAvailableTenants;
 use App\Domains\ContentManagement\Models\News;
-use App\Domains\Tenant\Services\TenantResolver;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Livewire\Components\PersistentStateDataTable;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
-use Illuminate\Support\Facades\Cache;
 
 class NewsTable extends PersistentStateDataTable
 {
+  use ResolvesAvailableTenants;
+
+  protected string $tenantSortColumn = 'slug';
+
   public array $perPageAccepted = [5, 10, 20, 50];
   public bool $perPageAll = true;
   public int $perPage = 10;
@@ -116,22 +119,5 @@ class NewsTable extends PersistentStateDataTable
   public function rowView(): string
   {
     return 'backend.news.index-table-row';
-  }
-
-  private function getAvailableTenants()
-  {
-    $cacheKey = 'news_table.tenants.user.' . (auth()->id() ?? 'guest');
-
-    return Cache::remember($cacheKey, 60, function () {
-      return app(TenantResolver::class)
-        ->availableTenantsForUser(auth()->user())
-        ->sortBy('slug')
-        ->values();
-    });
-  }
-
-  private function getAvailableTenantIds(): array
-  {
-    return $this->getAvailableTenants()->pluck('id')->all();
   }
 }
