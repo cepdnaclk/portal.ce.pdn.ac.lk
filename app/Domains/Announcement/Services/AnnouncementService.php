@@ -11,6 +11,8 @@ use App\Services\BaseService;
  */
 class AnnouncementService extends BaseService
 {
+  public const PORTAL_TENANT_SLUG = 'portal';
+
   /**
    * AnnouncementService constructor.
    *
@@ -44,6 +46,8 @@ class AnnouncementService extends BaseService
       ->forArea(Announcement::TYPE_FRONTEND)
       ->forTenant($tenant)
       ->inTimeFrame()
+      ->orderBy('starts_at', 'desc')
+      ->orderBy('created_at', 'desc')
       ->get();
   }
 
@@ -70,6 +74,8 @@ class AnnouncementService extends BaseService
       ->forArea(Announcement::TYPE_BACKEND)
       ->forTenant($tenant)
       ->inTimeFrame()
+      ->orderBy('starts_at', 'desc')
+      ->orderBy('created_at', 'desc')
       ->get();
   }
 
