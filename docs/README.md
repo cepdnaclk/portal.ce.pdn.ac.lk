@@ -10,6 +10,15 @@ OpenAPI 3.0 JSON documents generated from the current Laravel routes.
 - [Academics](./api/academics.json)
 - [Taxonomy](./api/taxonomy.json)
 
+OpenAPI 3.0 JSON documents for the tenant-scoped v2 endpoints.
+
+- [Tenants (v2)](./api/v2/tenants.json)
+- [News (v2)](./api/v2/news.json)
+- [Articles (v2)](./api/v2/articles.json)
+- [Events (v2)](./api/v2/events.json)
+- [Taxonomy (v2)](./api/v2/taxonomy.json)
+- [Announcements (v2)](./api/v2/announcements.json)
+
 ## Software Requirements Specifications (SRS) and related documentation
 
 - [Phase 1 - Content Management](./srs/phase-1.md)
