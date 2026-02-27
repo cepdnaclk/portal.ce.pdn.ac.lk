@@ -1,0 +1,91 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Tenants API (V2)",
+    "version": "1.0.0",
+    "description": "Public endpoints that expose tenant metadata (v2)."
+  },
+  "servers": [
+    {
+      "url": "https://portal.ce.pdn.ac.lk/api",
+      "description": "API base"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Tenants"
+    }
+  ],
+  "paths": {
+    "/tenants/v2": {
+      "get": {
+        "summary": "List tenants (v2)",
+        "description": "Returns all tenants with name, slug, url, and description.",
+        "tags": [
+          "Tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "Tenant list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tenant"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Tenant": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "slug"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
