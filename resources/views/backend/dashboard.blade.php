@@ -124,6 +124,22 @@
         </x-backend.card>
     @endif
 
+    {{-- Services --}}
+    @if ($logged_in_user->hasPermissionTo('user.access.services.email'))
+        <x-backend.card>
+            <x-slot name="header">
+                @lang('Services')
+            </x-slot>
+
+            <x-slot name="body" style="min-height: 20vh;" class="container-fluid overflow-auto">
+                <div class="row g-3">
+                    <x-backend.shortcut-card route="{{ route('dashboard.email-service.history') }}" label="Email Service"
+                        icon="fa-envelope" color="info" />
+                </div>
+            </x-slot>
+        </x-backend.card>
+    @endif
+
     {{-- Administration --}}
     @if ($logged_in_user->hasAllAccess())
         <x-backend.card>

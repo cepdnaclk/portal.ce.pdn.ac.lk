@@ -7,7 +7,12 @@
         "source.fixAll.eslint": "explicit",
         "source.fixAll": "always"
     },
+    "files.associations": {
+        "resources/views/backend/email-service/templates/default.blade.php": "markdown",
+        "resources/views/vendor/mail/html/**.php": "markdown"
+    },
     "prettier.configPath": ".prettierrc.json",
+    "prettier.ignorePath": ".prettierignore",
     "[php]": {
         "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
     },
@@ -36,7 +41,7 @@
     // pnpm --------------------------------------------------------------------------------------
     "npm.packageManager": "pnpm",
     "npm.scriptRunner": "pnpm",
-    "cSpell.words": ["Imageable"],
+    "cSpell.words": ["Imageable", "Queueable"],
     "formatFiles.excludedFolders": [
         "node_modules",
         ".vscode",
