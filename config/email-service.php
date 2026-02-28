@@ -14,7 +14,7 @@ return [
   'default_from' => env('EMAIL_SERVICE_FROM', env('MAIL_FROM_ADDRESS', 'portal@ce.pdn.ac.lk')),
 
   // Default Blade template path for email layouts
-  'default_template' => env('EMAIL_SERVICE_TEMPLATE', 'backend.email-service.templates.default'),
+  'default_template' => env('EMAIL_SERVICE_TEMPLATE', 'backend.portal-apps.email-service.templates.default'),
 
   // Support email contact for system notifications
   'support_email' => env('EMAIL_SERVICE_SUPPORT_EMAIL', 'webmaster.github.ce@eng.pdn.ac.lk')

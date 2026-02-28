@@ -35,6 +35,16 @@ class PortalApp extends Model
     return $this->hasMany(ApiKey::class);
   }
 
+  public function activeKeys()
+  {
+    return $this->apiKeys()->whereNull('revoked_at');
+  }
+
+  public function expiredKeys()
+  {
+    return $this->apiKeys()->where('expires_at', '<', now());
+  }
+
   public function deliveryLogs()
   {
     return $this->hasMany(EmailDeliveryLog::class);

@@ -133,7 +133,7 @@
 
             <x-slot name="body" style="min-height: 20vh;" class="container-fluid overflow-auto">
                 <div class="row g-3">
-                    <x-backend.shortcut-card route="{{ route('dashboard.email-service.history') }}" label="Email Service"
+                    <x-backend.shortcut-card route="{{ route('dashboard.services.email.history') }}" label="Email History"
                         icon="fa-envelope" color="info" />
                 </div>
             </x-slot>

@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', __('Email Service'))
+@section('title', __('Portal Apps - Email Service'))
 
 @section('content')
     <x-backend.card>
@@ -8,12 +8,8 @@
             @lang('Email History')
         </x-slot>
 
-        <x-slot name="headerActions">
-            <x-utils.link class="card-header-action" :href="route('dashboard.email-service.senders')" :text="__('Portal Apps')" />
-        </x-slot>
-
         <x-slot name="body">
-            <form method="GET" action="{{ route('dashboard.email-service.history') }}" class="row g-3 mb-4">
+            <form method="GET" action="{{ route('dashboard.services.email.history') }}" class="row g-3 mb-4">
                 <div class="col-md-3">
                     <label class="form-label">@lang('Portal App')</label>
                     <select name="portal_app" class="form-select">
@@ -48,7 +44,8 @@
 
                 <div class="col-md-3 d-flex align-items-end">
                     <button class="btn btn-primary me-2" type="submit">@lang('Filter')</button>
-                    <a class="btn btn-outline-secondary" href="{{ route('dashboard.email-service.history') }}">@lang('Reset')</a>
+                    <a class="btn btn-outline-secondary"
+                        href="{{ route('dashboard.services.email.history') }}">@lang('Reset')</a>
                 </div>
             </form>
 

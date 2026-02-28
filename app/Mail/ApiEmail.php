@@ -37,7 +37,7 @@ class ApiEmail extends Mailable
   public function build()
   {
     $message = $this->markdown(
-      config('email-service.default_template', 'emails.default'),
+      config('email-service.default_template', 'backend.portal-apps.email-service.templates.default'),
       ['body' => $this->body_text, 'subject' => $this->subject, 'support_email' => config('email-service.support_email')]
     )
       ->subject($this->subject);
