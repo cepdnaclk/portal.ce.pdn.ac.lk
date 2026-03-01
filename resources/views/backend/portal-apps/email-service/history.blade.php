@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', __('Portal Apps - Email Service'))
+@section('title', __('Email History'))
 
 @section('content')
     <x-backend.card>

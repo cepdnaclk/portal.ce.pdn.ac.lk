@@ -196,26 +196,28 @@
 
         {{-- Services --}}
         <li class="c-sidebar-nav-title">@lang('Services')</li>
-        @if ($logged_in_user->hasAnyPermission(['user.access.services', 'user.access.services.email']))
+        @if ($logged_in_user->hasAnyPermission(['user.access.services', 'user.access.services.*']))
+            {{-- Apps --}}
             <li
-                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.email-service.*'), 'c-open c-show') }}">
-                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-envelope"
-                    class="c-sidebar-nav-dropdown-toggle" :text="__('Portal Apps')" />
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.services.apps.*'), 'c-open c-show') }}">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-rocket"
+                    class="c-sidebar-nav-dropdown-toggle" :text="__('Apps')"></x-utils.link>
 
                 <ul class="c-sidebar-nav-dropdown-items">
-                    @if ($logged_in_user->hasPermissionTo('user.access.services'))
-                        <li class="c-sidebar-nav-item">
-                            <x-utils.link :href="route('dashboard.services.apps')" class="c-sidebar-nav-link" :text="__('Manage Apps')"
-                                :active="activeClass(Route::is('dashboard.services.apps'), 'c-active')" />
-                        </li>
-                    @endif
+                    {{-- App Management  --}}
+                    <x-utils.link :href="route('dashboard.services.apps')" class="c-sidebar-nav-link" :text="__('App Management')" :active="activeClass(Route::is('dashboard.services.apps'), 'c-active')" />
+                </ul>
+            </li>
 
-                    @if ($logged_in_user->hasPermissionTo('user.access.services.email'))
-                        <li class="c-sidebar-nav-item">
-                            <x-utils.link :href="route('dashboard.services.email.history')" class="c-sidebar-nav-link" :text="__('Email Service')"
-                                :active="activeClass(Route::is('dashboard.services.email.history'), 'c-active')" />
-                        </li>
-                    @endif
+            {{-- Email Service --}}
+            <li
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.services.apps.*'), 'c-open c-show') }}">
+                <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-envelope"
+                    class="c-sidebar-nav-dropdown-toggle" :text="__('Email Service')"></x-utils.link>
+
+                <ul class="c-sidebar-nav-dropdown-items">
+                    {{-- Email History  --}}
+                    <x-utils.link :href="route('dashboard.services.email.history')" class="c-sidebar-nav-link" :text="__('Email History')" :active="activeClass(Route::is('dashboard.services.email.history'), 'c-active')" />
                 </ul>
             </li>
         @endif

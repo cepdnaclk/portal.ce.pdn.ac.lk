@@ -125,7 +125,7 @@
     @endif
 
     {{-- Services --}}
-    @if ($logged_in_user->hasPermissionTo('user.access.services.email'))
+    @if ($logged_in_user->hasPermissionTo('user.access.services.*') || $logged_in_user->hasAllAccess())
         <x-backend.card>
             <x-slot name="header">
                 @lang('Services')
@@ -133,6 +133,11 @@
 
             <x-slot name="body" style="min-height: 20vh;" class="container-fluid overflow-auto">
                 <div class="row g-3">
+                    {{-- App Management --}}
+                    <x-backend.shortcut-card route="{{ route('dashboard.services.apps') }}" label="App Management"
+                        icon="fa-rocket" color="secondary" />
+
+                    {{-- Email History --}}
                     <x-backend.shortcut-card route="{{ route('dashboard.services.email.history') }}" label="Email History"
                         icon="fa-envelope" color="info" />
                 </div>

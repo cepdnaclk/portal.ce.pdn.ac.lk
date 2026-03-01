@@ -1,11 +1,11 @@
 @extends('backend.layouts.app')
 
-@section('title', __('Portal Apps'))
+@section('title', __('App Management'))
 
 @section('content')
     <x-backend.card>
         <x-slot name="header">
-            @lang('Portal Apps & API Keys')
+            @lang('Apps & API Keys')
         </x-slot>
 
         <x-slot name="body">
