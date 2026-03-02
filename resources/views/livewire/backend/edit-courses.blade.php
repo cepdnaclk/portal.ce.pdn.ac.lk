@@ -49,10 +49,10 @@
                                         <div class="col ps-0">
                                             <label for="dropCurriculum">Curriculum*</label>
 
-                                            <x-backend.taxonomy_tooltip
+                                            <x-backend.taxonomy-tooltip
                                                 edit-url="{{ route('dashboard.taxonomy.term.alias', ['code' => 'academic_program']) }}"
                                                 placement="auto" class="float-end">
-                                            </x-backend.taxonomy_tooltip>
+                                            </x-backend.taxonomy-tooltip>
                                         </div>
                                         <select id="dropCurriculum" name="dropCurriculum" class="form-select"
                                             wire:model="version">
@@ -180,8 +180,8 @@
 
                                 <div class="div my-3">
                                     <div class="row">
-                                        <x-backend.time_allocation></x-backend.time_allocation>
-                                        <x-backend.marks_allocation></x-backend.marks_allocation>
+                                        <x-backend.time-allocation></x-backend.time-allocation>
+                                        <x-backend.marks-allocation></x-backend.marks-allocation>
                                     </div>
                                 </div>
                             </div>
@@ -245,7 +245,7 @@
 
                             {{-- Modules --}}
                             <div class="pb-5">
-                                <x-backend.course_module></x-backend.course_module>
+                                <x-backend.course-module></x-backend.course-module>
                             </div>
 
                             {{-- References --}}

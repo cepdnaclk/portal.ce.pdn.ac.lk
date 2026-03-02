@@ -77,6 +77,6 @@ class CourseTable extends PersistentStateDataTable
 
   public function rowView(): string
   {
-    return 'backend.courses.index-table-row';
+    return 'backend.academics.courses.index-table-row';
   }
 }
