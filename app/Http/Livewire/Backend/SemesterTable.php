@@ -67,6 +67,6 @@ class SemesterTable extends PersistentStateDataTable
 
   public function rowView(): string
   {
-    return 'backend.semesters.index-table-row';
+    return 'backend.academics.semesters.index-table-row';
   }
 }
