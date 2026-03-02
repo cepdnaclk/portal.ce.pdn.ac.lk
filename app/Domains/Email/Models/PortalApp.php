@@ -37,12 +37,24 @@ class PortalApp extends Model
 
   public function activeKeys()
   {
-    return $this->apiKeys()->whereNull('revoked_at');
+    return $this->apiKeys()
+      ->whereNull('revoked_at')
+      ->where(function ($query) {
+        $query->whereNull('expires_at')
+          ->orWhere('expires_at', '>=', now());
+      });
   }
 
   public function expiredKeys()
   {
-    return $this->apiKeys()->where('expires_at', '<', now());
+    return $this->apiKeys()
+      ->where('expires_at', '<', now())
+      ->whereNull('revoked_at');
+  }
+
+  public function revokedKeys()
+  {
+    return $this->apiKeys()->whereNotNull('revoked_at');
   }
 
   public function deliveryLogs()

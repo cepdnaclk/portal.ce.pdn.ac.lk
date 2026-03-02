@@ -211,7 +211,7 @@
 
             {{-- Email Service --}}
             <li
-                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.services.apps.*'), 'c-open c-show') }}">
+                class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.services.email.*'), 'c-open c-show') }}">
                 <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-envelope"
                     class="c-sidebar-nav-dropdown-toggle" :text="__('Email Service')"></x-utils.link>
 

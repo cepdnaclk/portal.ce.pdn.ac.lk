@@ -50,7 +50,7 @@ class PortalAppsController extends Controller
     [$apiKey, $plain] = ApiKey::issue($portalApp, $expiresAt);
 
     return redirect()->route('dashboard.services.apps.keys', $portalApp)
-      ->with('Success', 'API key generated. Copy it now; it will not be shown again.')
+      ->withFlashSuccess('API key generated. Copy it now; it will not be shown again.')
       ->with('new_api_key', [
         'portal_app_id' => $portalApp->id,
         'key' => $plain,

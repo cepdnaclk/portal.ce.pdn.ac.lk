@@ -33,9 +33,7 @@ class PortalAppTable extends PersistentStateDataTable
   public function query(): Builder
   {
     return PortalApp::query()
-      ->with(['apiKeys' => function ($query) {
-        $query->orderByDesc('created_at');
-      }])
+      ->withCount(['activeKeys', 'expiredKeys', 'revokedKeys'])
       ->when($this->getFilter('status'), function ($query, $status) {
         $query->where('status', $status);
       });
@@ -55,7 +53,7 @@ class PortalAppTable extends PersistentStateDataTable
 
   public function toggleStatus($portalAppId)
   {
-    abort_unless(auth()->user()?->can('user.access.services.*'), 403);
+    abort_unless(auth()->user()?->can('user.access.services'), 403);
 
     $portalApp = PortalApp::query()->findOrFail($portalAppId);
     $portalApp->status = $portalApp->status === PortalApp::STATUS_ACTIVE

@@ -125,7 +125,9 @@
     @endif
 
     {{-- Services --}}
-    @if ($logged_in_user->hasPermissionTo('user.access.services.*') || $logged_in_user->hasAllAccess())
+    @if (
+        $logged_in_user->hasAnyPermission(['user.access.services', 'user.access.services.email']) ||
+            $logged_in_user->hasAllAccess())
         <x-backend.card>
             <x-slot name="header">
                 @lang('Services')

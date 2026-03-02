@@ -1,9 +1,3 @@
-@php
-    $keyCount = $row->apiKeys()->count();
-    $activeKeyCount = $row->activeKeys()->count();
-    $expiredKeyCount = $row->expiredKeys()->count();
-@endphp
-
 <x-livewire-tables::table.row>
     <x-livewire-tables::table.cell>
         {{ $row->name }}
@@ -16,8 +10,9 @@
     </x-livewire-tables::table.cell>
 
     <x-livewire-tables::table.cell>
-        <div>@lang('Active'): {{ $activeKeyCount ?? 0 }}</div>
-        <div>@lang('Expired'): {{ $expiredKeyCount ?? 0 }}</div>
+        <div>@lang('Active'): {{ $row->active_keys_count ?? 0 }}</div>
+        <div>@lang('Expired'): {{ $row->expired_keys_count ?? 0 }}</div>
+        <div>@lang('Revoked'): {{ $row->revoked_keys_count ?? 0 }}</div>
     </x-livewire-tables::table.cell>
 
     <x-livewire-tables::table.cell>
@@ -36,10 +31,10 @@
 
         {{-- Keys --}}
         <x-utils.link :href="route('dashboard.services.apps.keys', $row)" class="btn btn-primary btn-sm  btn-w-100" icon="fa fa-key"
-            text="{{ _('API Keys') }}" />
+            text="{{ __('API Keys') }}" />
 
         {{-- Delete --}}
-        @if ($activeKeyCount === 0)
+        @if (($row->active_keys_count ?? 0) === 0)
             <x-utils.delete-button :href="route('dashboard.services.apps.destroy', $row)" :text="__('')" />
         @endif
     </x-livewire-tables::table.cell>

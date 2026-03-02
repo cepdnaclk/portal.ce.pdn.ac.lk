@@ -11,7 +11,7 @@ class EmailServiceController extends Controller
 {
   public function history(Request $request)
   {
-    $query = EmailDeliveryLog::query()->with('PortalApp');
+    $query = EmailDeliveryLog::query()->with('portalApp');
 
     if ($request->filled('status')) {
       $query->where('status', $request->input('status'));

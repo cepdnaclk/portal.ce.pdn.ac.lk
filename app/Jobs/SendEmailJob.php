@@ -62,7 +62,7 @@ class SendEmailJob implements ShouldQueue
       // Only one option should be used at a time, to be validated by the Validation layer.
 
       Mail::to($to)
-        ->send(new ApiEmail($body, $subject, $cc, $bcc, $replyTo), [], function ($message) use ($to, $replyTo, $subject, $from, &$providerMessageId) {
+        ->send(new ApiEmail($body, $subject, $cc, $bcc, $replyTo), [], function ($message) use ($to, $cc, $bcc, $replyTo, $subject, $from, &$providerMessageId) {
           $message->from($from)->subject($subject)->to($to);
 
           if (!empty($cc)) {

@@ -208,7 +208,8 @@
         },
         "required": [
           "to",
-          "subject"
+          "subject",
+          "body"
         ]
       },
       "SendEmailResponse": {

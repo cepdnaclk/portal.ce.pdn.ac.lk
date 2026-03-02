@@ -8,8 +8,8 @@
         "source.fixAll": "always"
     },
     "files.associations": {
-        "resources/views/backend/email-service/templates/default.blade.php": "markdown",
-        "resources/views/vendor/mail/html/**.php": "markdown"
+        "resources/views/backend/portal-apps/email-service/templates/default.blade.php": "markdown",
+        "resources/views/vendor/mail/html/**/*.blade.php": "markdown"
     },
     "prettier.configPath": ".prettierrc.json",
     "prettier.ignorePath": ".prettierignore",
