@@ -3,6 +3,9 @@
 echo "Running: Down the site for maintenance"
 php artisan down --refresh=30 --render='errors::503'
 
+echo "Running: Create a backup of the database and storage"
+php artisan portal:backup
+
 echo "Running: Update the branch with latest"
 git reset --hard
 git fetch origin
