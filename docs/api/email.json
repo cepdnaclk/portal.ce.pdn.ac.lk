@@ -170,6 +170,9 @@
               "format": "email"
             }
           },
+          "subject": {
+            "type": "string"
+          },
           "cc": {
             "type": "array",
             "items": {
@@ -187,16 +190,6 @@
           "reply_to": {
             "type": "string",
             "format": "email"
-          },
-          "subject": {
-            "type": "string"
-          },
-          "template": {
-            "type": "string"
-          },
-          "template_data": {
-            "type": "object",
-            "additionalProperties": true
           },
           "body": {
             "type": "string"
