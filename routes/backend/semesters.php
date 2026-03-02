@@ -7,7 +7,7 @@ Route::group(['middleware' => ['permission:user.access.academic.semester']], fun
 
   // Index
   Route::get('/semesters', function () {
-    return view('backend.semesters.index');
+    return view('backend.academics.semesters.index');
   })->name('semesters.index')
     ->breadcrumbs(function (Trail $trail) {
       $trail->push(__('Home'), route('dashboard.home'))
