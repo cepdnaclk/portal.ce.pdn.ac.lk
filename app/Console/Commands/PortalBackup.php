@@ -72,7 +72,7 @@ class PortalBackup extends Command
       }
 
       if (!empty($enabled['storage'])) {
-        $storageFileName = sprintf('portal-public-%s-%s.zip', $env, $dateStamp);
+        $storageFileName = sprintf('portal-storage-%s-%s.zip', $env, $dateStamp);
         $storagePath = rtrim($paths['storage'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $storageFileName;
         $this->guardOverwrite($storagePath, $driveConfig);
         $this->runStep('storage_zip', function () use ($storagePath, $backupConfig) {
@@ -422,7 +422,7 @@ class PortalBackup extends Command
   {
     $filename = basename($path);
 
-    if (strpos($filename, 'portal-public-') === 0) {
+    if (strpos($filename, 'portal-storage-') === 0) {
       return 'storage';
     }
 
