@@ -33,12 +33,24 @@ class ServicesRoleSeeder extends Seeder
       'description' => 'Manage Email Service',
     ]);
 
+    $appsServicePermission = Permission::firstOrCreate([
+      'type' => User::TYPE_USER,
+      'name' => 'user.access.services.apps',
+      'description' => 'Manage Apps',
+    ]);
+
     $servicesPermission->children()->save($emailServicePermission);
+    $servicesPermission->children()->save($appsServicePermission);
 
     // Create Roles -------------------------------------------
     $emailServiceRole = Role::firstOrCreate([
       'type' => User::TYPE_USER,
       'name' => 'Email Service Manager',
+    ]);
+
+    $appsServiceRole = Role::firstOrCreate([
+      'type' => User::TYPE_USER,
+      'name' => 'Apps Manager',
     ]);
 
 
@@ -52,6 +64,7 @@ class ServicesRoleSeeder extends Seeder
     // 'Email Service Manager' will get all permissions related to email service
     $emailServiceRole->givePermissionTo([
       'user.access.services.email',
+      'user.access.services.apps',
     ]);
 
     $this->enableForeignKeys();

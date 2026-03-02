@@ -53,7 +53,7 @@ class PortalAppTable extends PersistentStateDataTable
 
   public function toggleStatus($portalAppId)
   {
-    abort_unless(auth()->user()?->can('user.access.services'), 403);
+    abort_unless(auth()->user()?->can('user.access.services.apps'), 403);
 
     $portalApp = PortalApp::query()->findOrFail($portalAppId);
     $portalApp->status = $portalApp->status === PortalApp::STATUS_ACTIVE
