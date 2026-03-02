@@ -34,3 +34,4 @@ OpenAPI 3.0 JSON documents for the tenant-scoped v2 endpoints.
 - [Taxonomy](./features/taxonomy.md) - Taxonomy data model and APIs.
 - [Gallery](./features/gallery.md) - Visual assets overview.
 - [Articles](./features/articles.md) - Tenant-scoped rich-text content items with image embedding support.
+- [Backups](./features/backups.md) - Backup and restore commands with Google Drive integration.

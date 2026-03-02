@@ -10,6 +10,12 @@ The `portal:backup` Artisan command exports the MySQL database and zips the asse
 php artisan portal:backup
 ```
 
+## Restore Command
+
+```bash
+php artisan portal:restore 2026-03-02
+```
+
 ## Artifacts
 
 - Database export: `backups/database/portal-{env}-{yyyy-mm-dd}.sql`
@@ -55,6 +61,8 @@ PORTAL_BACKUP_VIEWS_SOURCE=public/img
 # mysqldump binary and timeout
 PORTAL_BACKUP_DUMP_BINARY=mysqldump
 PORTAL_BACKUP_DB_TIMEOUT=0
+PORTAL_BACKUP_RESTORE_BINARY=mysql
+PORTAL_BACKUP_DB_RESTORE_TIMEOUT=0
 
 # Cleanup and overwrite behavior
 PORTAL_BACKUP_OVERWRITE=false
