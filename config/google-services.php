@@ -18,7 +18,9 @@ return [
     ],
     'db' => [
       'dump_binary' => env('PORTAL_BACKUP_DUMP_BINARY', 'mysqldump'),
+      'restore_binary' => env('PORTAL_BACKUP_RESTORE_BINARY', 'mysql'),
       'timeout' => env('PORTAL_BACKUP_DB_TIMEOUT', 0),
+      'restore_timeout' => env('PORTAL_BACKUP_DB_RESTORE_TIMEOUT', 0),
     ],
   ],
   'drive' => [
