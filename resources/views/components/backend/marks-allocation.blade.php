@@ -43,10 +43,10 @@
         <div class="div pt-3">
             <label for="drop1">Marks Allocation</label>
 
-            <x-backend.taxonomy_tooltip
+            <x-backend.taxonomy-tooltip
                 edit-url="{{ route('dashboard.taxonomy.term.alias', ['code' => 'mark_allocations']) }}" placement="auto"
                 class="float-end">
-            </x-backend.taxonomy_tooltip>
+            </x-backend.taxonomy-tooltip>
         </div>
         <hr>
         <div class="row pb-2">

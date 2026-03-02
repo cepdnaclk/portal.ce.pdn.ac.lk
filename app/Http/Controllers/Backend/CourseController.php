@@ -19,7 +19,7 @@ class CourseController extends Controller
   {
     try {
       $courses = Course::all();
-      return view('backend.courses.index', compact('courses'));
+      return view('backend.academics.courses.index', compact('courses'));
     } catch (\Exception $e) {
       Log::error('Error fetching courses: ' . $e->getMessage());
       return abort(500);
@@ -34,7 +34,7 @@ class CourseController extends Controller
   public function create()
   {
     try {
-      return view('backend.courses.create');
+      return view('backend.academics.courses.create');
     } catch (\Exception $e) {
       Log::error('Error loading course creation page: ' . $e->getMessage());
       return abort(500);
@@ -51,7 +51,7 @@ class CourseController extends Controller
   public function edit(Course $course)
   {
     try {
-      return view('backend.courses.edit', compact('course'));
+      return view('backend.academics.courses.edit', compact('course'));
     } catch (\Exception $e) {
       Log::error('Error loading course edit page: ' . $e->getMessage());
       return abort(500);
@@ -66,7 +66,7 @@ class CourseController extends Controller
    */
   public function delete(Course $course)
   {
-    return view('backend.courses.delete', compact('course'));
+    return view('backend.academics.courses.delete', compact('course'));
   }
 
   public function destroy(Course $course)
