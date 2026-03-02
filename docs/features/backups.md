@@ -37,7 +37,7 @@ php artisan portal:restore 2026-03-02
    - `client_email` → `GOOGLE_DRIVE_CLIENT_EMAIL`
    - `private_key` → `GOOGLE_DRIVE_PRIVATE_KEY` (keep line breaks as `\n`)
    - `private_key_id` → `GOOGLE_DRIVE_PRIVATE_KEY_ID`
-   - `project_id` → `GOOGLE_DRIVE_PROJECT_ID`
+   - `project_id` → `GOOGLE_DRIVE_PROJECT_ID` (`portal-ce-pdn-ac-lk` for the existing project)
    - `client_id` → `GOOGLE_DRIVE_CLIENT_ID`
 6. Share each target Google Drive folder with the Service Account email.
 
@@ -49,19 +49,12 @@ PORTAL_BACKUP_DB_ENABLED=true
 PORTAL_BACKUP_STORAGE_ENABLED=true
 PORTAL_BACKUP_VIEWS_ENABLED=true
 
-# Backup output locations (optional overrides)
-PORTAL_BACKUP_DB_PATH=backups/database
-PORTAL_BACKUP_STORAGE_PATH=backups/storage
-PORTAL_BACKUP_VIEWS_PATH=backups/views
-
 # Source directories
 PORTAL_BACKUP_STORAGE_SOURCE=storage/app/public
 PORTAL_BACKUP_VIEWS_SOURCE=public/img
 
-# mysqldump binary and timeout
-PORTAL_BACKUP_DUMP_BINARY=mysqldump
+# timeout settings (in seconds, 0 for no timeout)
 PORTAL_BACKUP_DB_TIMEOUT=0
-PORTAL_BACKUP_RESTORE_BINARY=mysql
 PORTAL_BACKUP_DB_RESTORE_TIMEOUT=0
 
 # Cleanup and overwrite behavior
@@ -73,18 +66,12 @@ GOOGLE_DRIVE_ENABLED=true
 GOOGLE_DRIVE_CLIENT_EMAIL=service-account@project.iam.gserviceaccount.com
 GOOGLE_DRIVE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 GOOGLE_DRIVE_PRIVATE_KEY_ID=...
-GOOGLE_DRIVE_PROJECT_ID=...
+GOOGLE_DRIVE_PROJECT_ID="portal-ce-pdn-ac-lk"
 GOOGLE_DRIVE_CLIENT_ID=...
 
 GOOGLE_DRIVE_DB_FOLDER_ID=...
 GOOGLE_DRIVE_STORAGE_FOLDER_ID=...
 GOOGLE_DRIVE_VIEWS_FOLDER_ID=...
-
-# Upload tuning
-GOOGLE_DRIVE_UPLOAD_CHUNK_SIZE=1048576
-GOOGLE_DRIVE_RATE_LIMIT_MS=250
-GOOGLE_DRIVE_SQL_MIME=application/sql
-GOOGLE_DRIVE_ZIP_MIME=application/zip
 
 # Audit logging (optional)
 GOOGLE_DRIVE_AUDIT_LOG=false
