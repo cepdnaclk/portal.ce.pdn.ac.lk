@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use \App\Console\Commands\PortalBackup;
 
 /**
  * Class Kernel.
@@ -16,7 +17,7 @@ class Kernel extends ConsoleKernel
    * @var array
    */
   protected $commands = [
-    //
+    PortalBackup::class,
   ];
 
   /**

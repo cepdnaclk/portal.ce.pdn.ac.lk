@@ -14,6 +14,7 @@
     "darkghosthunter/laraguard": "^3.0",
     "doctrine/dbal": "*",
     "fruitcake/laravel-cors": "^3.0",
+    "google/apiclient": "^2.0",
     "guzzlehttp/guzzle": "^7.0.1",
     "intervention/image": "^2.6",
     "jamesmills/laravel-timezone": "^1.9",
