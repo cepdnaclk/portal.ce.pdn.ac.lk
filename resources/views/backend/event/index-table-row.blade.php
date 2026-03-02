@@ -26,7 +26,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    @include('components.backend.enabled_toggle')
+    @include('components.backend.enabled-toggle')
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

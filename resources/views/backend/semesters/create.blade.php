@@ -69,10 +69,10 @@
                     </div>
 
                     <div class="col-md-1">
-                        <x-backend.taxonomy_tooltip
+                        <x-backend.taxonomy-tooltip
                             edit-url="{{ route('dashboard.taxonomy.term.alias', ['code' => 'academic_program_undergraduate']) }}"
                             placement="auto">
-                        </x-backend.taxonomy_tooltip>
+                        </x-backend.taxonomy-tooltip>
                     </div>
                 </div>
 
