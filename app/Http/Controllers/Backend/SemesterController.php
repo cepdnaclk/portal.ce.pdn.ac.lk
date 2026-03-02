@@ -21,7 +21,7 @@ class SemesterController extends Controller
   {
     try {
       $semesters = Semester::all();
-      return view('backend.semesters.index', compact('semesters'));
+      return view('backend.academics.semesters.index', compact('semesters'));
     } catch (\Exception $e) {
       Log::error('Error fetching semesters: ' . $e->getMessage());
       return abort(500);
@@ -36,7 +36,7 @@ class SemesterController extends Controller
   public function create()
   {
     try {
-      return view('backend.semesters.create');
+      return view('backend.academics.semesters.create');
     } catch (\Exception $e) {
       Log::error('Error loading semester creation page: ' . $e->getMessage());
       return abort(500);
@@ -86,7 +86,7 @@ class SemesterController extends Controller
   public function edit(Semester $semester)
   {
     try {
-      return view('backend.semesters.edit', compact('semester'));
+      return view('backend.academics.semesters.edit', compact('semester'));
     } catch (\Exception $e) {
       Log::error('Error loading semester edit page: ' . $e->getMessage());
       return abort(500);
@@ -136,7 +136,7 @@ class SemesterController extends Controller
   public function delete(Semester $semester)
   {
     $courses = Course::where('semester_id', $semester->id)->get();
-    return view('backend.semesters.delete', compact('semester', 'courses'));
+    return view('backend.academics.semesters.delete', compact('semester', 'courses'));
   }
 
 
