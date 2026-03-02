@@ -2,8 +2,8 @@
 
 use Tabuna\Breadcrumbs\Trail;
 
-Route::get('/academic_program', function () {
-  return view('backend.academic-program');
+Route::get('/academic-program', function () {
+  return view('backend.academics.academic-program');
 })->name('academic_program.index')
   ->middleware(['auth', 'permission:user.access.academic'])
   ->breadcrumbs(function (Trail $trail) {
