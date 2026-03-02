@@ -68,6 +68,9 @@
             </li>
         @endif
 
+
+        <li class="c-sidebar-nav-title">@lang('Tools')</li>
+
         {{-- Content Management --}}
         @if (
             $logged_in_user->hasAnyPermission([
@@ -189,6 +192,42 @@
                     @endif
                 </ul>
             </li>
+        @endif
+
+        {{-- Services --}}
+        <li class="c-sidebar-nav-title">@lang('Services')</li>
+        @if (
+            $logged_in_user->hasAnyPermission(['user.access.services.apps', 'user.access.services.email']) ||
+                $logged_in_user->hasAllAccess())
+            {{-- Apps --}}
+            @if ($logged_in_user->hasAnyPermission(['user.access.services.apps']) || $logged_in_user->hasAllAccess())
+                <li
+                    class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.services.apps.*'), 'c-open c-show') }}">
+                    <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-rocket"
+                        class="c-sidebar-nav-dropdown-toggle" :text="__('Apps')"></x-utils.link>
+
+                    <ul class="c-sidebar-nav-dropdown-items">
+                        {{-- App Management  --}}
+                        <x-utils.link :href="route('dashboard.services.apps')" class="c-sidebar-nav-link" :text="__('App Management')"
+                            :active="activeClass(Route::is('dashboard.services.apps'), 'c-active')" />
+                    </ul>
+                </li>
+            @endif
+
+            {{-- Email Service --}}
+            @if ($logged_in_user->hasAnyPermission(['user.access.services.email']) || $logged_in_user->hasAllAccess())
+                <li
+                    class="c-sidebar-nav-dropdown {{ activeClass(Route::is('dashboard.services.email.*'), 'c-open c-show') }}">
+                    <x-utils.link href="#" icon="c-sidebar-nav-icon fa fa-envelope"
+                        class="c-sidebar-nav-dropdown-toggle" :text="__('Email Service')"></x-utils.link>
+
+                    <ul class="c-sidebar-nav-dropdown-items">
+                        {{-- Email History  --}}
+                        <x-utils.link :href="route('dashboard.services.email.history')" class="c-sidebar-nav-link" :text="__('Email History')"
+                            :active="activeClass(Route::is('dashboard.services.email.history'), 'c-active')" />
+                    </ul>
+                </li>
+            @endif
         @endif
     </ul>
 
