@@ -50,11 +50,11 @@ class PortalRestore extends Command
     $cleanupFiles = [];
 
     try {
-      $this->validateConfig($backupConfig, $driveConfig);
-
       if (empty($driveConfig['enabled'])) {
         throw new \RuntimeException('Google Drive integration is disabled.');
       }
+
+      $this->validateConfig($backupConfig, $driveConfig);
 
       $enabled = Arr::get($backupConfig, 'enabled', []);
       $paths = Arr::get($backupConfig, 'paths', []);
@@ -324,7 +324,7 @@ class PortalRestore extends Command
     $resolved = $finder->find($configured);
 
     if (!$resolved) {
-      throw new \RuntimeException('mysql binary not found. Set PORTAL_BACKUP_RESTORE_BINARY to the full path.');
+      throw new \RuntimeException('mysql binary not found.');
     }
 
     return $resolved;

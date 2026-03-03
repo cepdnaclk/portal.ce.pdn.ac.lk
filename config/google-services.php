@@ -3,14 +3,14 @@
 return [
   'backup' => [
     'enabled' => [
-      'database' => env('PORTAL_BACKUP_DB_ENABLED', true),
-      'storage' => env('PORTAL_BACKUP_STORAGE_ENABLED', true),
-      'views' => env('PORTAL_BACKUP_VIEWS_ENABLED', true),
+      'database' => env('PORTAL_BACKUP_DB_ENABLED', false),
+      'storage' => env('PORTAL_BACKUP_STORAGE_ENABLED', false),
+      'views' => env('PORTAL_BACKUP_VIEWS_ENABLED', false),
     ],
     'paths' => [
-      'database' => 'backups/database',
-      'storage' => 'backups/storage',
-      'views' => 'backups/views',
+      'database' => base_path('backups/database'),
+      'storage' =>  base_path('backups/storage'),
+      'views' => base_path('backups/views'),
     ],
     'sources' => [
       'storage' => env('PORTAL_BACKUP_STORAGE_SOURCE', base_path('storage/app/public')),
@@ -24,7 +24,7 @@ return [
     ],
   ],
   'drive' => [
-    'enabled' => env('GOOGLE_DRIVE_ENABLED', true),
+    'enabled' => env('GOOGLE_DRIVE_ENABLED', false),
     'scopes' => [
       'https://www.googleapis.com/auth/drive.file',
     ],
@@ -46,7 +46,7 @@ return [
     ],
     'upload_chunk_size' => env('GOOGLE_DRIVE_UPLOAD_CHUNK_SIZE', 1048576),
     'rate_limit_ms' => env('GOOGLE_DRIVE_RATE_LIMIT_MS', 250),
-    'overwrite' => env('PORTAL_BACKUP_OVERWRITE', true),
+    'overwrite' => env('PORTAL_BACKUP_OVERWRITE', false),
     'cleanup_on_failure' => env('PORTAL_BACKUP_CLEANUP_ON_FAILURE', false),
     'log_to_channel' => env('GOOGLE_DRIVE_AUDIT_LOG', false),
     'log_channel' => env('GOOGLE_DRIVE_LOG_CHANNEL', 'stack'),

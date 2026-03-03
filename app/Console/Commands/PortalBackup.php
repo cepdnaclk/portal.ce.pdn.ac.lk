@@ -204,9 +204,12 @@ class PortalBackup extends Command
     }
   }
 
-  private function guardOverwrite(string $path, array $driveConfig): void
+  private function guardOverwrite(string $path, array $options): void
   {
-    if (file_exists($path) && empty($driveConfig['overwrite'])) {
+    // Prefer an explicitly local overwrite flag, but fall back to the legacy 'overwrite' key
+    $allowLocalOverwrite = (bool) Arr::get($options, 'local_overwrite', Arr::get($options, 'overwrite', false));
+
+    if (file_exists($path) && !$allowLocalOverwrite) {
       throw new \RuntimeException("Backup file already exists: {$path}");
     }
   }
@@ -289,7 +292,7 @@ class PortalBackup extends Command
     $resolved = $finder->find($configured);
 
     if (!$resolved) {
-      throw new \RuntimeException('mysqldump binary not found. Set PORTAL_BACKUP_DUMP_BINARY to the full path.');
+      throw new \RuntimeException('mysqldump binary not found.');
     }
 
     return $resolved;
@@ -376,7 +379,7 @@ class PortalBackup extends Command
     $request = $service->files->create($fileMetadata, [
       'fields' => 'id, webViewLink',
       'mimeType' => $mimeType,
-      'uploadType' => 'multipart',
+      'uploadType' => 'resumable',
       'supportsAllDrives' => true
     ]);
     $media = new MediaFileUpload(

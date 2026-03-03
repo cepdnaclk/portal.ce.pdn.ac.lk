@@ -1,4 +1,5 @@
 #! /bin/bash
+set -e
 
 echo "Running: Down the site for maintenance"
 php artisan down --refresh=30 --render='errors::503'

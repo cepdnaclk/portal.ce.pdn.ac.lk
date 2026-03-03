@@ -19,12 +19,12 @@ php artisan portal:restore 2026-03-02
 ## Artifacts
 
 - Database export: `backups/database/portal-{env}-{yyyy-mm-dd}.sql`
-- Public storage: `backups/storage/portal-public-{env}-{yyyy-mm-dd}.zip`
+- Public storage: `backups/storage/portal-storage-{env}-{yyyy-mm-dd}.zip`
 - Images: `backups/views/portal-img-{env}-{yyyy-mm-dd}.zip`
 
 ## Prerequisites
 
-- `mysqldump` must be available on the host machine (or configure `PORTAL_BACKUP_DUMP_BINARY` with the full path).
+- `mysqldump` must be available on the host machine
 - The Google Drive folders must be shared with the Service Account email.
 
 ## Obtaining Google Service Account Credentials
