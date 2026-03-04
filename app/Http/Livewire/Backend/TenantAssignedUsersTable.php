@@ -2,82 +2,45 @@
 
 namespace App\Http\Livewire\Backend;
 
-use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
-use Illuminate\Database\Eloquent\Builder;
+use App\Domains\Tenant\Models\Tenant;
 use App\Http\Livewire\Components\PersistentStateDataTable;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
-/**
- * Class UsersTable.
- */
-class UsersTable extends PersistentStateDataTable
+class TenantAssignedUsersTable extends PersistentStateDataTable
 {
   public array $perPageAccepted = [10, 25, 50, 100];
   public int $perPage = 25;
   public bool $perPageAll = true;
-
-  /**
-   * @var
-   */
-  public $status;
-
-  /**
-   * @var array|string[]
-   */
-  public array $sortNames = [
-    'email_verified_at' => 'Verified',
-    'two_factor_auth_count' => '2FA',
-  ];
+  public int $tenantId;
 
   /**
    * @var array|string[]
    */
   public array $filterNames = [
     'type' => 'User Type',
-    'role' => 'Role',
     'verified' => 'E-mail Verified',
   ];
 
-  /**
-   * @param  string  $status
-   */
-  public function mount($status = 'active'): void
+  public function mount(Tenant $tenant): void
   {
-    $this->status = $status;
+    $this->tenantId = $tenant->getKey();
   }
 
-  /**
-   * @return Builder
-   */
   public function query(): Builder
   {
-    $query = User::with('roles', 'twoFactorAuth')->withCount('twoFactorAuth');
-
-    if ($this->status === 'deleted') {
-      $query = $query->onlyTrashed();
-    } elseif ($this->status === 'deactivated') {
-      $query = $query->onlyDeactivated();
-    } else {
-      $query = $query->onlyActive();
-    }
-
-    return $query
+    return User::with('roles', 'twoFactorAuth')->withCount('twoFactorAuth')
+      ->whereHas('tenants', fn($query) => $query->whereKey($this->tenantId))
       ->when($this->getFilter('search'), fn($query, $term) => $query->search($term))
       ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type))
-      ->when($this->getFilter('role'), fn($query, $role) => $query->whereHas('roles', fn($roleQuery) => $roleQuery->whereKey($role)))
       ->when($this->getFilter('active'), fn($query, $active) => $query->where('active', $active === 'yes'))
       ->when($this->getFilter('verified'), fn($query, $verified) => $verified === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at'));
   }
 
-  /**
-   * @return array
-   */
   public function filters(): array
   {
-    $roles = Role::query()->orderBy('name')->pluck('name', 'id')->toArray();
-
     return [
       'type' => Filter::make('User Type')
         ->select([
@@ -85,8 +48,6 @@ class UsersTable extends PersistentStateDataTable
           User::TYPE_ADMIN => 'Administrators',
           User::TYPE_USER => 'Users',
         ]),
-      'role' => Filter::make('Role')
-        ->select(['' => 'Any'] + $roles),
       'active' => Filter::make('Active')
         ->select([
           '' => 'Any',
@@ -102,9 +63,6 @@ class UsersTable extends PersistentStateDataTable
     ];
   }
 
-  /**
-   * @return array
-   */
   public function columns(): array
   {
     return [
@@ -118,11 +76,13 @@ class UsersTable extends PersistentStateDataTable
     ];
   }
 
-  /**
-   * @return string
-   */
   public function rowView(): string
   {
     return 'backend.auth.user.includes.row';
+  }
+
+  protected function getCookieContextKey(): string
+  {
+    return 'tenant_' . $this->tenantId;
   }
 }

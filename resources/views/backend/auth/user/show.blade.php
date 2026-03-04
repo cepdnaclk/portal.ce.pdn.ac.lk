@@ -84,22 +84,26 @@
 
                 <tr>
                     <th>@lang('Roles')</th>
-                    <td>{!! $user->roles_label !!}</td>
+                    <td>
+                        @include('backend.auth.role.includes.badges', ['roles' => $user->roles])
+                    </td>
                 </tr>
 
                 <tr>
                     <th>@lang('Additional Permissions')</th>
-                    <td>{!! $user->permissions_label !!}</td>
+                    <td>
+                        @if ($user->permissions->count())
+                            {!! $user->permissions->map(fn($permission) => '<span class="badge bg-info me-1">' . e($permission->name) . '</span>')->implode(' ') !!}
+                        @else
+                            @lang('None')
+                        @endif
+                    </td>
                 </tr>
 
                 <tr>
                     <th>@lang('Tenants')</th>
                     <td>
-                        @if ($user->tenants->count())
-                            {{ $user->tenants->pluck('name')->implode(', ') }}
-                        @else
-                            @lang('None')
-                        @endif
+                        @include('backend.tenant.includes.badges', ['tenants' => $user->tenants])
                     </td>
                 </tr>
             </table>

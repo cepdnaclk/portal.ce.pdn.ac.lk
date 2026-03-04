@@ -54,6 +54,15 @@ class RoleController
   }
 
   /**
+   * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+   */
+  public function users(Role $role)
+  {
+    return view('backend.auth.role.users')
+      ->withRole($role);
+  }
+
+  /**
    * @return mixed
    */
   public function create()
