@@ -13,10 +13,10 @@ class PortalAppManagementTest extends TestCase
 {
   use RefreshDatabase;
 
-  protected function loginAsEmailServiceManager(): User
+  protected function loginAsPortalAppManager(): User
   {
-    $role = Role::where('name', 'Email Service Manager')->firstOrFail();
-    $user = User::factory()->admin()->create(['name' => 'Email Service Manager']);
+    $role = Role::where('name', 'Apps Manager')->firstOrFail();
+    $user = User::factory()->admin()->create(['name' => 'Apps Manager']);
     $user->assignRole($role->name);
     $this->actingAs($user);
 
@@ -35,9 +35,9 @@ class PortalAppManagementTest extends TestCase
   }
 
   /** @test */
-  public function email_service_manager_can_view_portal_apps()
+  public function app_manager_manager_can_view_portal_apps()
   {
-    $this->loginAsEmailServiceManager();
+    $this->loginAsPortalAppManager();
 
     $response = $this->get(route('dashboard.services.apps'));
 
@@ -46,16 +46,16 @@ class PortalAppManagementTest extends TestCase
   }
 
   /** @test */
-  public function email_service_manager_can_create_portal_app()
+  public function app_manager_manager_can_create_portal_app()
   {
-    $this->loginAsEmailServiceManager();
+    $this->loginAsPortalAppManager();
 
     $response = $this->post(route('dashboard.services.apps.store'), [
       'name' => 'New Portal App',
     ]);
 
     $response->assertRedirect(route('dashboard.services.apps'));
-    $response->assertSessionHas('Success', 'Portal app created.');
+    $response->assertSessionHas('flash_success', __('Portal app created.'));
 
     $this->assertDatabaseHas('portal_apps', [
       'name' => 'New Portal App',
@@ -64,9 +64,9 @@ class PortalAppManagementTest extends TestCase
   }
 
   /** @test */
-  public function email_service_manager_can_generate_api_key()
+  public function app_manager_manager_can_generate_api_key()
   {
-    $this->loginAsEmailServiceManager();
+    $this->loginAsPortalAppManager();
 
     $portalApp = PortalApp::create([
       'name' => 'System A',
@@ -86,9 +86,9 @@ class PortalAppManagementTest extends TestCase
   }
 
   /** @test */
-  public function email_service_manager_can_revoke_api_key()
+  public function app_manager_manager_can_revoke_api_key()
   {
-    $this->loginAsEmailServiceManager();
+    $this->loginAsPortalAppManager();
 
     $portalApp = PortalApp::create([
       'name' => 'System A',
@@ -100,15 +100,15 @@ class PortalAppManagementTest extends TestCase
     $response = $this->post(route('dashboard.services.apps.keys.revoke', $apiKey));
 
     $response->assertRedirect(route('dashboard.services.apps.keys', $portalApp));
-    $response->assertSessionHas('Success', 'API key revoked.');
+    $response->assertSessionHas('flash_success', __('API key revoked.'));
 
     $this->assertNotNull($apiKey->fresh()->revoked_at);
   }
 
   /** @test */
-  public function email_service_manager_can_delete_portal_app()
+  public function app_manager_can_delete_portal_app()
   {
-    $this->loginAsEmailServiceManager();
+    $this->loginAsPortalAppManager();
 
     $portalApp = PortalApp::create([
       'name' => 'System A',
@@ -118,7 +118,7 @@ class PortalAppManagementTest extends TestCase
     $response = $this->delete(route('dashboard.services.apps.destroy', $portalApp));
 
     $response->assertRedirect(route('dashboard.services.apps'));
-    $response->assertSessionHas('Success', 'Portal app deleted.');
+    $response->assertSessionHas('flash_success', __('Portal app deleted.'));
 
     $this->assertDatabaseMissing('portal_apps', ['id' => $portalApp->id]);
   }
