@@ -7,8 +7,10 @@
                     email, or if you feel you are not the correct person, please contact us through
                     <a
                         href="mailto:{{ config('email-service.support_email') }}">{{ config('email-service.support_email') }}</a>.
-                    <hr />
-                    {{ Illuminate\Mail\Markdown::parse($slot) }}
+
+                    <div style="padding-top: 1rem">
+                        {{ Illuminate\Mail\Markdown::parse($slot) }}
+                    </div>
                 </td>
             </tr>
         </table>

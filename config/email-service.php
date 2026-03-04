@@ -17,5 +17,8 @@ return [
   'default_template' => env('EMAIL_SERVICE_TEMPLATE', 'backend.portal-apps.email-service.templates.default'),
 
   // Support email contact for system notifications
-  'support_email' => env('EMAIL_SERVICE_SUPPORT_EMAIL', 'webmaster.github.ce@eng.pdn.ac.lk')
+  'support_email' => env('EMAIL_SERVICE_SUPPORT_EMAIL', 'webmaster.github.ce@eng.pdn.ac.lk'),
+
+  // Whether to include a copyright notice in the email footer
+  'show_copyright' => false,
 ];
