@@ -48,6 +48,8 @@ class EmailDeliveryLogsTable extends PersistentStateDataTable
       ->when($this->getFilter('status'), function ($query, $status) {
         $query->where('status', $status);
       })
+
+      // TODO Fix the date filter, it doesn't work
       // ->when($this->getFilter('from_date') !== null, function ($query, $fromDate) {
       //   dd($fromDate);
       //   $query->whereDate('created_at', '>=', $fromDate);
@@ -72,9 +74,9 @@ class EmailDeliveryLogsTable extends PersistentStateDataTable
           EmailDeliveryLog::STATUS_SENT => __('Sent'),
           EmailDeliveryLog::STATUS_FAILED => __('Failed'),
         ]),
-      // 'from_date' => Filter::make(__('From Date'))
+      // 'from_date' => Filter::make(__('From Date'), [])
       //   ->date(),
-      // 'to_date' => Filter::make(__('To Date'))
+      // 'to_date' => Filter::make(__('To Date'), [])
       //   ->date(),
     ];
   }
