@@ -6,6 +6,7 @@ use App\Http\Controllers\API\NewsApiController;
 use App\Http\Controllers\API\EventApiController;
 use App\Http\Controllers\API\V2\EventApiController as EventApiV2Controller;
 use App\Http\Controllers\API\CourseApiController;
+use App\Http\Controllers\API\EmailApiController;
 use App\Http\Controllers\API\SemesterApiController;
 use App\Http\Controllers\API\TaxonomyApiController;
 use App\Http\Controllers\API\V2\AnnouncementApiController as AnnouncementApiV2Controller;
@@ -13,18 +14,24 @@ use App\Http\Controllers\API\V2\ArticleApiController as ArticleApiV2Controller;
 use App\Http\Controllers\API\V2\NewsApiController as NewsApiV2Controller;
 use App\Http\Controllers\API\V2\TaxonomyApiController as TaxonomyApiV2Controller;
 
+// --------------------------------------------------------------
 // V1 API Routes
+// --------------------------------------------------------------
+
+// News (Public)
 Route::group(['prefix' => 'news/v1', 'as' => 'api.news.'], function () {
   Route::get('/', [NewsApiController::class, 'index']);
   Route::get('/{id}', [NewsApiController::class, 'show']);
 });
 
+// Articles (Public)
 Route::group(['prefix' => 'articles/v1', 'as' => 'api.articles.'], function () {
   Route::get('/', [ArticleApiController::class, 'index']);
   Route::get('/{id}', [ArticleApiController::class, 'show']);
   Route::get('/category/{category}', [ArticleApiController::class, 'category']);
 });
 
+// Events (Public)
 Route::group(['prefix' => 'events/v1', 'as' => 'api.events.'], function () {
   Route::get('', [EventApiController::class, 'index']);
   Route::get('/upcoming', [EventApiController::class, 'upcoming']);
@@ -32,13 +39,13 @@ Route::group(['prefix' => 'events/v1', 'as' => 'api.events.'], function () {
   Route::get('/{id}', [EventApiController::class, 'show']);
 });
 
-
+// Academics (Public)
 Route::group(['prefix' => 'academic/v1/undergraduate', 'as' => 'api.academic.undergraduate.'], function () {
   Route::get('/courses', [CourseApiController::class, 'index']);
   Route::get('/semesters', [SemesterApiController::class, 'index']);
 });
 
-// TODO: Implement postgraduate courses API
+// Taxonomy (Public)
 Route::group(['prefix' => 'taxonomy/v1/', 'as' => 'api.taxonomy.'], function () {
   Route::get('/', [TaxonomyApiController::class, 'index'])->name('index');
   Route::get('/{taxonomy_code}', [TaxonomyApiController::class, 'get_taxonomy'])->name('get');
@@ -49,7 +56,19 @@ Route::group(['prefix' => 'taxonomy/v1/', 'as' => 'api.taxonomy.'], function () 
 });
 
 
+// Email Service (Protected by API Key and Rate Limiting)
+Route::group(['prefix' => 'email/v1', 'as' => 'api.email.', 'middleware' => ['api.key', 'throttle:email-service']], function () {
+  Route::post('/send', [EmailApiController::class, 'send'])->name('send');
+  Route::get('/history', [EmailApiController::class, 'history'])->name('history');
+});
+
+
+
+
+// --------------------------------------------------------------
 // V2 API Routes
+// --------------------------------------------------------------
+
 Route::group(['as' => 'api.v2.'], function () {
   // Tenants Endpoints ------------------------------------
   Route::get('/tenants/v2', function () {
@@ -109,6 +128,7 @@ Route::group(['as' => 'api.v2.'], function () {
 
   // Taxonomy Endpoints ----------------------------------
   Route::get('/taxonomy/v2', function () {
+    // Redirect to default tenant taxonomy endpoint
     $defaultTenant = Tenant::default()->slug ?? 'default';
     return redirect()->to("/api/taxonomy/v2/{$defaultTenant}");
   });
