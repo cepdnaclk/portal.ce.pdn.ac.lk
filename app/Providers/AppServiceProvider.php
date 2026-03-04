@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
     AliasLoader::getInstance()->alias('Socialite', Socialite::class);
 
     // Email view namespace setup to support custom mail templates in resources/views/vendor/mail
-    View::addNamespace('mail', [resource_path('views/vendor/mail/html'), resource_path('views/vendor/mail/text')]);
+    View::prependNamespace('mail', [resource_path('views/vendor/mail/html'), resource_path('views/vendor/mail/text')]);
 
     // Support enum column migration for Event::event_type
     if (Schema::getConnection()->getDriverName() !== 'sqlite') {

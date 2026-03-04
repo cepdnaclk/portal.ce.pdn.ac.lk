@@ -36,7 +36,7 @@ class PortalAppsController extends Controller
     PortalApp::create($data);
 
     return redirect()->route('dashboard.services.apps')
-      ->with('Success', 'Portal app created.');
+      ->withFlashSuccess('Portal app created.');
   }
 
   public function generateKey(Request $request, PortalApp $portalApp)
@@ -64,7 +64,7 @@ class PortalAppsController extends Controller
     $apiKey->forceFill(['revoked_at' => now()])->save();
 
     return redirect()->route('dashboard.services.apps.keys', $portalApp)
-      ->with('Success', 'API key revoked.');
+      ->withFlashSuccess('API key revoked.');
   }
 
   public function destroy(PortalApp $portalApp)
@@ -72,6 +72,6 @@ class PortalAppsController extends Controller
     $portalApp->delete();
 
     return redirect()->route('dashboard.services.apps')
-      ->with('Success', 'Portal app deleted.');
+      ->withFlashSuccess('Portal app deleted.');
   }
 }

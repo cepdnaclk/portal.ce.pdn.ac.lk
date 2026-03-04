@@ -32,7 +32,6 @@ class EmailApiController extends Controller
       'bcc' => $request->input('bcc', []),
       'reply_to' => $request->input('reply_to'),
       'subject' => $request->input('subject'),
-      'template_data' => $request->input('template_data', []),
       'body' => $request->input('body'),
       'metadata' => $request->input('metadata', []),
       'from' => config('email-service.default_from') ?: 'no-reply@portal.ce.pdn.ac.lk',

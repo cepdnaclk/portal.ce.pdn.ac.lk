@@ -61,10 +61,14 @@ class ServicesRoleSeeder extends Seeder
       'user.access.services',
     ]);
 
+    // 'Apps Manager' will get permissions related to managing portal apps
+    $appsServiceRole->givePermissionTo([
+      'user.access.services.apps',
+    ]);
+
     // 'Email Service Manager' will get all permissions related to email service
     $emailServiceRole->givePermissionTo([
       'user.access.services.email',
-      'user.access.services.apps',
     ]);
 
     $this->enableForeignKeys();

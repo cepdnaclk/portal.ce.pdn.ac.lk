@@ -23,7 +23,6 @@ class SendEmailRequest extends FormRequest
       'bcc.*' => ['email'],
       'reply_to' => ['nullable', 'email'],
       'subject' => ['required', 'string', 'max:255'],
-      'template_data' => ['nullable', 'array'],
       'body' => ['required', 'string'],
       'metadata' => ['nullable', 'array'],
     ];
