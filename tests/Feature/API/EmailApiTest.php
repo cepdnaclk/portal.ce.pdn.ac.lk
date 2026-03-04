@@ -38,12 +38,17 @@ class EmailApiTest extends TestCase
 
     [, $plainKey] = ApiKey::issue($portalApp);
 
-    $response = $this->postJson('/api/email/v1/send', [
+    $payload = [
       'to' => ['user@example.test'],
+      'cc' => ['cc@example.test'],
+      'bcc' => ['bcc@example.test'],
+      'reply_to' => 'reply@example.test',
       'subject' => 'Test',
       'body' => 'Hello',
       'metadata' => ['reference_id' => 'ABC-123'],
-    ], [
+    ];
+
+    $response = $this->postJson('/api/email/v1/send', $payload, [
       'X-API-KEY' => $plainKey,
     ]);
 
@@ -53,8 +58,65 @@ class EmailApiTest extends TestCase
     Queue::assertPushed(SendEmailJob::class);
 
     $log = EmailDeliveryLog::first();
-    $this->assertSame('queued', $log->status);
+    $this->assertSame(EmailDeliveryLog::STATUS_QUEUED, $log->status);
     $this->assertSame(config('email-service.default_from') ?: 'no-reply@portal.ce.pdn.ac.lk', $log->from);
+    $this->assertSame($portalApp->id, $log->portal_app_id);
+    $this->assertSame($payload['to'], $log->to);
+    $this->assertSame($payload['cc'], $log->cc);
+    $this->assertSame($payload['bcc'], $log->bcc);
+    $this->assertSame($payload['subject'], $log->subject);
+    $this->assertSame($payload['metadata'], $log->metadata);
+
+    $response->assertJsonPath('message_id', $log->id);
+    $response->assertJsonPath('status', EmailDeliveryLog::STATUS_QUEUED);
+  }
+
+  /** @test */
+  public function send_rejects_revoked_api_key()
+  {
+    $portalApp = PortalApp::create([
+      'name' => 'System A',
+      'status' => PortalApp::STATUS_ACTIVE,
+    ]);
+
+    [$apiKey, $plainKey] = ApiKey::issue($portalApp);
+    $apiKey->forceFill(['revoked_at' => now()])->save();
+
+    $response = $this->postJson('/api/email/v1/send', [
+      'to' => ['user@example.test'],
+      'subject' => 'Test',
+      'body' => 'Hello',
+    ], [
+      'X-API-KEY' => $plainKey,
+    ]);
+
+    $response->assertStatus(401);
+    $response->assertJsonPath('message', 'Unauthorized. API key was expired or revoked.');
+  }
+
+  /** @test */
+  public function send_rejects_over_recipient_limit()
+  {
+    config(['email-service.max_recipients' => 2]);
+
+    $portalApp = PortalApp::create([
+      'name' => 'System A',
+      'status' => PortalApp::STATUS_ACTIVE,
+    ]);
+
+    [, $plainKey] = ApiKey::issue($portalApp);
+
+    $response = $this->postJson('/api/email/v1/send', [
+      'to' => ['user-a@example.test', 'user-b@example.test'],
+      'cc' => ['user-c@example.test'],
+      'subject' => 'Test',
+      'body' => 'Hello',
+    ], [
+      'X-API-KEY' => $plainKey,
+    ]);
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors('to');
   }
 
   /** @test */
@@ -100,6 +162,7 @@ class EmailApiTest extends TestCase
     $response->assertOk();
     $response->assertJsonCount(1, 'data');
     $response->assertJsonPath('data.0.subject', 'A');
+    $response->assertJsonPath('pagination.total', 1);
 
     $responseB = $this->getJson('/api/email/v1/history', [
       'X-API-KEY' => $keyB,
@@ -108,5 +171,57 @@ class EmailApiTest extends TestCase
     $responseB->assertOk();
     $responseB->assertJsonCount(1, 'data');
     $responseB->assertJsonPath('data.0.subject', 'B');
+    $responseB->assertJsonPath('pagination.total', 1);
+  }
+
+  /** @test */
+  public function history_can_filter_by_status_and_limit()
+  {
+    $portalApp = PortalApp::create([
+      'name' => 'System A',
+      'status' => PortalApp::STATUS_ACTIVE,
+    ]);
+
+    [, $plainKey] = ApiKey::issue($portalApp);
+    $apiKeyId = ApiKey::where('portal_app_id', $portalApp->id)->first()->id;
+
+    EmailDeliveryLog::create([
+      'portal_app_id' => $portalApp->id,
+      'api_key_id' => $apiKeyId,
+      'from' => config('email-service.default_from') ?: 'no-reply@portal.ce.pdn.ac.lk',
+      'to' => ['user-a@example.test'],
+      'subject' => 'Sent A',
+      'status' => EmailDeliveryLog::STATUS_SENT,
+      'sent_at' => now(),
+    ]);
+
+    EmailDeliveryLog::create([
+      'portal_app_id' => $portalApp->id,
+      'api_key_id' => $apiKeyId,
+      'from' => config('email-service.default_from') ?: 'no-reply@portal.ce.pdn.ac.lk',
+      'to' => ['user-b@example.test'],
+      'subject' => 'Sent B',
+      'status' => EmailDeliveryLog::STATUS_SENT,
+      'sent_at' => now(),
+    ]);
+
+    EmailDeliveryLog::create([
+      'portal_app_id' => $portalApp->id,
+      'api_key_id' => $apiKeyId,
+      'from' => config('email-service.default_from') ?: 'no-reply@portal.ce.pdn.ac.lk',
+      'to' => ['user-c@example.test'],
+      'subject' => 'Failed',
+      'status' => EmailDeliveryLog::STATUS_FAILED,
+    ]);
+
+    $response = $this->getJson('/api/email/v1/history?status=sent&limit=1', [
+      'X-API-KEY' => $plainKey,
+    ]);
+
+    $response->assertOk();
+    $response->assertJsonCount(1, 'data');
+    $response->assertJsonPath('data.0.status', EmailDeliveryLog::STATUS_SENT);
+    $response->assertJsonPath('pagination.total', 2);
+    $response->assertJsonPath('pagination.limit', 1);
   }
 }
