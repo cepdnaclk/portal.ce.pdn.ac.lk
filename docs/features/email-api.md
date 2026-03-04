@@ -39,7 +39,6 @@ Optional payload fields:
 - `cc` (array of email addresses)
 - `bcc` (array of email addresses)
 - `reply_to` (email address)
-- `template_data` (array)
 - `metadata` (object for structured tracking data)
 
 Notes:
