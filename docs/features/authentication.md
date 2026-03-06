@@ -43,6 +43,25 @@ Admin-only routes in `routes/backend/auth.php` cover:
 
 Authorization is enforced by middleware in `App\Domains\Auth\Http\Middleware` (admin checks, user type checks, and session validation).
 
+## Permission management guidelines
+
+Use roles as the primary mechanism for access control and keep user-specific permissions to exceptions.
+
+How to assign permissions:
+
+- Role permissions: Navigate to `Role Management`, create or edit a role, then choose permissions from the categorized list before saving.
+- User role assignment: In `User Management`, edit a user and attach one or more roles under the roles section.
+- User-specific permissions: In the same user edit screen, use additional permissions only when a user needs a temporary or exceptional capability.
+- Tenant scoping: When creating or editing a role, assign allowed tenants to limit where the role applies.
+
+Best practices:
+
+- Apply least privilege: start with the minimum set of permissions and expand only when needed.
+- Prefer role updates over direct user permissions to keep access consistent and auditable.
+- Review assigned users per role/tenant regularly using the dedicated assignment views.
+- Align permission names with feature areas and routes to keep the permission matrix easy to reason about.
+- Remove unused roles and permissions after decommissioning features.
+
 ## Domain events and observers
 
 User and role lifecycle events are emitted under `App\Domains\Auth\Events` and handled by listeners in `App\Domains\Auth\Listeners`. User changes are also observed by `App\Domains\Auth\Observers\UserObserver`, allowing audit logging and downstream behavior.

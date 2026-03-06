@@ -15,7 +15,7 @@
 </x-livewire-tables::bs4.table.cell>
 
 <x-livewire-tables::bs4.table.cell>
-    {!! $row->roles_label !!}
+    @include('backend.auth.role.includes.badges', ['roles' => $row->roles])
 </x-livewire-tables::bs4.table.cell>
 
 <x-livewire-tables::bs4.table.cell>

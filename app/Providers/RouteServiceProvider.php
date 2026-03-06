@@ -75,7 +75,14 @@ class RouteServiceProvider extends ServiceProvider
     });
 
     RateLimiter::for('gallery-uploads', function (Request $request) {
-      return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
+      return Limit::perMinute(12)->by($request->user()?->id ?: $request->ip());
+    });
+
+    RateLimiter::for('email-service', function (Request $request) {
+      $providedKey = $request->header('X-API-KEY');
+      $identifier = $providedKey ? hash_hmac('sha256', $providedKey, config('app.key')) : $request->ip();
+
+      return Limit::perMinute(config('email-service.rate_limit_per_minute', 60))->by($identifier);
     });
   }
 }

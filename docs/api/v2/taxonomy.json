@@ -1,0 +1,344 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Taxonomy API (V2)",
+    "version": "1.0.0",
+    "description": "Public taxonomy discovery for category structures and terms (v2)."
+  },
+  "servers": [
+    {
+      "url": "https://portal.ce.pdn.ac.lk/api",
+      "description": "API base"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Taxonomy"
+    }
+  ],
+  "paths": {
+    "/taxonomy/v2": {
+      "get": {
+        "summary": "Redirect to default tenant (v2)",
+        "description": "Redirects to /taxonomy/v2/{tenant_slug} using the default tenant slug.",
+        "tags": [
+          "Taxonomy"
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to tenant-scoped endpoint",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxonomy/v2/{tenant_slug}": {
+      "get": {
+        "summary": "List taxonomies (v2)",
+        "description": "Returns all visible taxonomies with basic metadata for the specified tenant.",
+        "tags": [
+          "Taxonomy"
+        ],
+        "parameters": [
+          {
+            "name": "tenant_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Visible taxonomies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TaxonomyListItem"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxonomy/v2/{tenant_slug}/{taxonomy_code}": {
+      "get": {
+        "summary": "Get a taxonomy (v2)",
+        "description": "Returns a single taxonomy if it is visible for the specified tenant.",
+        "tags": [
+          "Taxonomy"
+        ],
+        "parameters": [
+          {
+            "name": "tenant_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taxonomy_code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Taxonomy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Taxonomy"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant or taxonomy not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxonomy/v2/{tenant_slug}/term/{term_code}": {
+      "get": {
+        "summary": "Get a taxonomy term (v2)",
+        "description": "Returns a single term; response includes top-level taxonomy code and child terms if present for the specified tenant.",
+        "tags": [
+          "Taxonomy"
+        ],
+        "parameters": [
+          {
+            "name": "tenant_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "term_code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Taxonomy term",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/TaxonomyTerm"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "taxonomy": {
+                              "type": "string",
+                              "description": "Code of the taxonomy this term belongs to."
+                            }
+                          },
+                          "required": [
+                            "taxonomy"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant or term not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TaxonomyListItem": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "api": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "Taxonomy": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "terms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaxonomyTerm"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "description",
+          "properties",
+          "terms"
+        ]
+      },
+      "TaxonomyTerm": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "terms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaxonomyTerm"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

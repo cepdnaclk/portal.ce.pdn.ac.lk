@@ -108,7 +108,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" style="text-align: left; text-decoration: none;">Properties</h5>
-                        <x-backend.taxonomy_property_adder />
+                        <x-backend.taxonomy-property-adder />
                         {!! Form::hidden('properties', '', ['x-model' => 'JSON.stringify(properties)']) !!}
                     </div>
                 </div>

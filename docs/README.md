@@ -9,6 +9,16 @@ OpenAPI 3.0 JSON documents generated from the current Laravel routes.
 - [Events](./api/events.json)
 - [Academics](./api/academics.json)
 - [Taxonomy](./api/taxonomy.json)
+- [Emails](./api/email.json)
+
+OpenAPI 3.0 JSON documents for the tenant-scoped v2 endpoints.
+
+- [Tenants (v2)](./api/v2/tenants.json)
+- [News (v2)](./api/v2/news.json)
+- [Articles (v2)](./api/v2/articles.json)
+- [Events (v2)](./api/v2/events.json)
+- [Taxonomy (v2)](./api/v2/taxonomy.json)
+- [Announcements (v2)](./api/v2/announcements.json)
 
 ## Software Requirements Specifications (SRS) and related documentation
 
@@ -25,3 +35,5 @@ OpenAPI 3.0 JSON documents generated from the current Laravel routes.
 - [Taxonomy](./features/taxonomy.md) - Taxonomy data model and APIs.
 - [Gallery](./features/gallery.md) - Visual assets overview.
 - [Articles](./features/articles.md) - Tenant-scoped rich-text content items with image embedding support.
+- [Backups](./features/backups.md) - Backup and restore commands with Google Drive integration.
+- [Email API](./features/email-api.md) - Email sending API.

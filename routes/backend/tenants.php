@@ -27,6 +27,13 @@ Route::group([
   Route::post('/', [TenantController::class, 'store'])->name('store');
 
   Route::group(['prefix' => '{tenant}'], function () {
+    Route::get('users', [TenantController::class, 'users'])
+      ->name('users')
+      ->breadcrumbs(function (Trail $trail, Tenant $tenant) {
+        $trail->parent('dashboard.tenants.index')
+          ->push(__(':tenant Users', ['tenant' => $tenant->name]), route('dashboard.tenants.users', $tenant));
+      });
+
     Route::get('edit', [TenantController::class, 'edit'])
       ->name('edit')
       ->breadcrumbs(function (Trail $trail, Tenant $tenant) {

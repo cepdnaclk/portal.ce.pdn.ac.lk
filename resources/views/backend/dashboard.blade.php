@@ -124,6 +124,33 @@
         </x-backend.card>
     @endif
 
+    {{-- Services --}}
+    @if (
+        $logged_in_user->hasAnyPermission(['user.access.services.apps', 'user.access.services.email']) ||
+            $logged_in_user->hasAllAccess())
+        <x-backend.card>
+            <x-slot name="header">
+                @lang('Services')
+            </x-slot>
+
+            <x-slot name="body" style="min-height: 20vh;" class="container-fluid overflow-auto">
+                <div class="row g-3">
+                    {{-- App Management --}}
+                    @if ($logged_in_user->hasAnyPermission(['user.access.services.apps']) || $logged_in_user->hasAllAccess())
+                        <x-backend.shortcut-card route="{{ route('dashboard.services.apps') }}" label="App Management"
+                            icon="fa-rocket" color="secondary" />
+                    @endif
+
+                    {{-- Email History --}}
+                    @if ($logged_in_user->hasAnyPermission(['user.access.services.email']) || $logged_in_user->hasAllAccess())
+                        <x-backend.shortcut-card route="{{ route('dashboard.services.email.history') }}"
+                            label="Email History" icon="fa-envelope" color="info" />
+                    @endif
+                </div>
+            </x-slot>
+        </x-backend.card>
+    @endif
+
     {{-- Administration --}}
     @if ($logged_in_user->hasAllAccess())
         <x-backend.card>

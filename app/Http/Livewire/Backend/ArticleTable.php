@@ -40,7 +40,7 @@ class ArticleTable extends PersistentStateDataTable
       Column::make('Enabled', 'enabled')
         ->sortable()
         ->format(function (Article $article) {
-          return view('components.backend.enabled_toggle', ['row' => $article]);
+          return view('components.backend.enabled-toggle', ['row' => $article]);
         }),
       Column::make('Tenant', 'tenant.name'),
       Column::make('Author', 'author.name')

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Backend;
 
+use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Livewire\Components\PersistentStateDataTable;
@@ -35,6 +36,7 @@ class UsersTable extends PersistentStateDataTable
    */
   public array $filterNames = [
     'type' => 'User Type',
+    'role' => 'Role',
     'verified' => 'E-mail Verified',
   ];
 
@@ -64,6 +66,7 @@ class UsersTable extends PersistentStateDataTable
     return $query
       ->when($this->getFilter('search'), fn($query, $term) => $query->search($term))
       ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type))
+      ->when($this->getFilter('role'), fn($query, $role) => $query->whereHas('roles', fn($roleQuery) => $roleQuery->whereKey($role)))
       ->when($this->getFilter('active'), fn($query, $active) => $query->where('active', $active === 'yes'))
       ->when($this->getFilter('verified'), fn($query, $verified) => $verified === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at'));
   }
@@ -73,6 +76,8 @@ class UsersTable extends PersistentStateDataTable
    */
   public function filters(): array
   {
+    $roles = Role::query()->orderBy('name')->pluck('name', 'id')->toArray();
+
     return [
       'type' => Filter::make('User Type')
         ->select([
@@ -80,6 +85,8 @@ class UsersTable extends PersistentStateDataTable
           User::TYPE_ADMIN => 'Administrators',
           User::TYPE_USER => 'Users',
         ]),
+      'role' => Filter::make('Role')
+        ->select(['' => 'Any'] + $roles),
       'active' => Filter::make('Active')
         ->select([
           '' => 'Any',

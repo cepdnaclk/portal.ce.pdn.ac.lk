@@ -92,12 +92,12 @@
                 <div class="form-group row">
                     {!! Form::label('event_type', 'Event Type*', ['class' => 'col-md-2 col-form-label']) !!}
                     <div class="col-md-10">
-                        <x-backend.dropdown_checkbox :selected="$event->event_type ?? []" :options-map="\App\Domains\ContentManagement\Models\Event::eventTypeMap()">
-                            <x-backend.taxonomy_tooltip
+                        <x-backend.dropdown-checkbox :selected="$event->event_type ?? []" :options-map="\App\Domains\ContentManagement\Models\Event::eventTypeMap()">
+                            <x-backend.taxonomy-tooltip
                                 edit-url="{{ route('dashboard.taxonomy.term.alias', ['code' => 'events']) }}"
                                 placement="auto">
-                            </x-backend.taxonomy_tooltip>
-                        </x-backend.dropdown_checkbox>
+                            </x-backend.taxonomy-tooltip>
+                        </x-backend.dropdown-checkbox>
                     </div>
                 </div>
 

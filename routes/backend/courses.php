@@ -8,7 +8,7 @@ Route::group(['middleware' => ['permission:user.access.academic.course']], funct
 
   // Index
   Route::get('/courses', function () {
-    return view('backend.courses.index');
+    return view('backend.academics.courses.index');
   })->name('courses.index')
     ->breadcrumbs(function (Trail $trail) {
       $trail->push(__('Home'), route('dashboard.home'))
@@ -18,7 +18,7 @@ Route::group(['middleware' => ['permission:user.access.academic.course']], funct
 
   // Create
   Route::get('courses/create', function () {
-    return view('backend.courses.create');
+    return view('backend.academics.courses.create');
   })->name('courses.create')
     ->breadcrumbs(function (Trail $trail) {
       $trail->push(__('Home'), route('dashboard.home'))

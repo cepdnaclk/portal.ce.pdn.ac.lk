@@ -78,6 +78,17 @@ pnpm run watch
 
 - Define tenants in `config/tenants.php` with `slug`, `name`, `url`, `description`.
 - The `default` tenant slug controls the content returned by v1 APIs.
+
+#### Backups (DB + Assets + Google Drive)
+
+Use the `portal:backup` command to export the MySQL database, zip assets, and upload artifacts to Google Drive with a Service Account.
+
+```bash
+php artisan portal:backup
+```
+
+Configuration is documented in `docs/features/backups.md` and `config/google-services.php`.
+
 - Seed tenants from config with:
 
 ```bash
