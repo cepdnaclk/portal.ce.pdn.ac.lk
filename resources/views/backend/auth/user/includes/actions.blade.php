@@ -10,7 +10,7 @@
         @endif
     @else
         @if ($logged_in_user->hasAllAccess())
-            <x-utils.view-button :href="route('dashboard.auth.user.show', $user)" />
+            <x-utils.view-button :href="route('dashboard.auth.user.show', $user)" icon="fa fa-eye" />
             <x-utils.edit-button :href="route('dashboard.auth.user.edit', $user)" />
         @endif
 
