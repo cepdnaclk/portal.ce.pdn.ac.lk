@@ -22,6 +22,15 @@ class TenantController
   /**
    * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
    */
+  public function users(Tenant $tenant)
+  {
+    return view('backend.tenant.users')
+      ->withTenant($tenant);
+  }
+
+  /**
+   * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+   */
   public function create()
   {
     return view('backend.tenant.create');

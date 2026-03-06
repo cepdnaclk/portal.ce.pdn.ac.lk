@@ -132,6 +132,13 @@ Route::group([
     Route::post('/', [RoleController::class, 'store'])->name('store');
 
     Route::group(['prefix' => '{role}'], function () {
+      Route::get('users', [RoleController::class, 'users'])
+        ->name('users')
+        ->breadcrumbs(function (Trail $trail, Role $role) {
+          $trail->parent('dashboard.auth.role.index')
+            ->push(__(':role Users', ['role' => $role->name]), route('dashboard.auth.role.users', $role));
+        });
+
       Route::get('edit', [RoleController::class, 'edit'])
         ->name('edit')
         ->breadcrumbs(function (Trail $trail, Role $role) {
