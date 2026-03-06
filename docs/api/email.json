@@ -24,6 +24,11 @@
         "tags": [
           "Email"
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiKeyHeader"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -76,6 +81,9 @@
           "Email"
         ],
         "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiKeyHeader"
+          },
           {
             "name": "page",
             "in": "query",
@@ -152,6 +160,17 @@
     }
   },
   "components": {
+    "parameters": {
+      "ApiKeyHeader": {
+        "name": "X-API-KEY",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "API key issued for the Portal App."
+      }
+    },
     "securitySchemes": {
       "ApiKeyAuth": {
         "type": "apiKey",
