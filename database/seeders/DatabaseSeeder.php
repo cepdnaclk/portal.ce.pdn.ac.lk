@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Database\Seeders\Roles\AcademicRoleSeeder;
 use Database\Seeders\Roles\EditorRoleSeeder;
+use Database\Seeders\Roles\ProfileManagerRoleSeeder;
 use Database\Seeders\Roles\ServicesRoleSeeder;
 use Database\Seeders\Roles\TaxonomyRoleSeeder;
 use Database\Seeders\Roles\UserTypeRoleSeeder;
@@ -37,6 +38,7 @@ class DatabaseSeeder extends Seeder
     // Roles and permissions
     $this->call(EditorRoleSeeder::class);
     $this->call(AcademicRoleSeeder::class);
+    $this->call(ProfileManagerRoleSeeder::class);
     $this->call(TaxonomyRoleSeeder::class);
     $this->call(ServicesRoleSeeder::class);
     $this->call(UserTypeRoleSeeder::class);

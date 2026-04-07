@@ -2,6 +2,7 @@
 
 namespace App\Domains\Auth\Models\Traits\Method;
 
+use App\Domains\Profiles\Models\Profile;
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Support\Collection;
 
@@ -89,6 +90,18 @@ trait UserMethod
   public function getPermissionDescriptions(): Collection
   {
     return $this->permissions->pluck('description');
+  }
+
+  public function hasProfiles(): bool
+  {
+    return $this->profiles()->exists();
+  }
+
+  public function profileCompleteness(): array
+  {
+    return $this->profiles
+      ->mapWithKeys(fn(Profile $profile) => [$profile->id => $profile->calculateCompleteness()])
+      ->all();
   }
 
   public function hasTenantAccess($tenant): bool
