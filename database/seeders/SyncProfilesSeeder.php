@@ -144,6 +144,11 @@ class SyncProfilesSeeder extends Seeder
     return null;
   }
 
+  protected function resolveURL($url): ?string
+  {
+    return $url && Str::startsWith($url, ['http://', 'https://']) ? $url : null;
+  }
+
   protected function syncProfilePicture(?string $imageUrl): ?string
   {
     if (! $imageUrl) {
@@ -240,15 +245,15 @@ class SyncProfilesSeeder extends Seeder
       'previous_affiliations' => [],
       // Profile URLs
       'profile_api' => $profileAPI,
-      'profile_url' => Arr::get($record, 'profile_page'),
-      'profile_website' => Arr::get($urls, 'website'),
-      'profile_linkedin' => Arr::get($urls, 'linkedin'),
-      'profile_github' => Arr::get($urls, 'github'),
-      'profile_researchgate' => Arr::get($urls, 'researchgate'),
-      'profile_google_scholar' => Arr::get($urls, 'google_scholar'),
-      'profile_orcid' => Arr::get($urls, 'orcid'),
-      'profile_facebook' => Arr::get($urls, 'facebook'),
-      'profile_twitter' => Arr::get($urls, 'twitter'),
+      'profile_url' => $this->resolveURL(Arr::get($record, 'profile_page')),
+      'profile_website' => $this->resolveURL(Arr::get($urls, 'website')),
+      'profile_linkedin' => $this->resolveURL(Arr::get($urls, 'linkedin')),
+      'profile_github' => $this->resolveURL(Arr::get($urls, 'github')),
+      'profile_researchgate' => $this->resolveURL(Arr::get($urls, 'researchgate')),
+      'profile_google_scholar' => $this->resolveURL(Arr::get($urls, 'google_scholar')),
+      'profile_orcid' => $this->resolveURL(Arr::get($urls, 'orcid')),
+      'profile_facebook' => $this->resolveURL(Arr::get($urls, 'facebook')),
+      'profile_twitter' => $this->resolveURL(Arr::get($urls, 'twitter')),
       // Audit Fields
       'review_status' => Profile::REVIEW_STATUS_APPROVED,
     ];
