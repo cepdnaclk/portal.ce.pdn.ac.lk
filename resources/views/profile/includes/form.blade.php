@@ -165,7 +165,6 @@
         </div>
     @endif
 </div>
-<hr />
 
 <div class="form-group row">
     {{-- Profile CV --}}
@@ -176,6 +175,7 @@
         <small class="form-text text-muted">@lang('A URL link to your CV or resume, applicable only for Student ans Staff profiles')</small>
     </div>
 </div>
+<hr />
 
 {{-- Student Details --}}
 <h5 class="mt-4">@lang('Student Details') <small class="h6">(@lang('Applicable only for Undergraduate Student Profiles'))</small></h5>

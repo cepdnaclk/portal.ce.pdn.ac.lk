@@ -8,6 +8,9 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use App\Domains\Auth\Models\User;
 
 class SyncProfilesSeeder extends Seeder
 {
@@ -39,26 +42,26 @@ class SyncProfilesSeeder extends Seeder
         $response->throw();
         $records = $response->json();
       } catch (\Throwable $e) {
-        $this->command?->error("Profile sync failed for {$source['kind']}: {$e->getMessage()}");
+        $this->command?->error(">> Profile sync failed for {$source['kind']}: {$e->getMessage()}");
         $logger->error('Profile sync source failed.', ['kind' => $source['kind'], 'error' => $e->getMessage()]);
         continue;
       }
 
-      foreach ((array) $records as $record) {
+      foreach ((array) $records as $key => $record) {
         try {
           $payload = $this->mapPayload($record, $source['type']);
 
           if (! $payload['email'] || ! $payload['type']) {
             throw new \RuntimeException('Missing required email or type after payload mapping.');
           }
-
+          $this->command?->info(">> Syncing profile: {$payload['email']} ({$payload['type']})");
           Profile::updateOrCreate(
             ['email' => $payload['email'], 'type' => $payload['type']],
             $payload
           );
         } catch (\Throwable $e) {
-          $identifier = Arr::get($record, 'email', Arr::get($record, 'id', 'unknown'));
-          $this->command?->error("Profile sync failed for {$identifier}: {$e->getMessage()}");
+          $identifier = Arr::get($record, 'email') ?? Arr::get($record, 'eNumber');
+          $this->command?->error(">> Profile sync failed for {$identifier}: {$e->getMessage()}");
           $logger->error('Profile sync record failed.', [
             'kind' => $source['kind'],
             'identifier' => $identifier,
@@ -70,93 +73,184 @@ class SyncProfilesSeeder extends Seeder
     }
   }
 
+  protected function resolveHonorific(array $record): ?string
+  {
+    $display_name = Arr::get($record, 'name');
+
+    if (str_contains($display_name, 'Dr.')) {
+      return  'Dr.';
+    } elseif (str_contains($display_name, 'Prof.')) {
+      return  'Prof.';
+    }
+    return  null;
+  }
+
+  protected function resolveType(array $record, ?string $defaultType): ?string
+  {
+    // TODO Refactor the UNDERGRADUATE type to ALUMNI with a proper logic
+    if ($defaultType) {
+      return $defaultType;
+    }
+
+    $designation = Arr::get($record, 'designation');
+
+    switch ($designation) {
+      case 'Lecturers (Prob)':
+      case 'Lecturer':
+      case 'Lecturers': // TODO correct this later
+      case 'Senior Lecturer':
+      case 'Senior Lecturers': // TODO correct this laterå
+      case 'Professor':
+      case 'Staff Assistant':
+        return Profile::TYPE_ACADEMIC_STAFF;
+
+      case 'Temporary Instructor':
+      case 'Temporary Lecturer':
+        return Profile::TYPE_TEMPORARY_ACADEMIC_STAFF;
+
+      case 'Staff Assistant':
+      case 'Technical Officer':
+      case 'Computer Operator':
+        return Profile::TYPE_ACADEMIC_SUPPORT;
+
+      case 'Visiting Research Fellow':
+      default:
+        return Profile::TYPE_EXTERNAL;
+    }
+  }
+
+  protected function resolveEmail(array $record, string $type, ?string $emailType): ?string
+  {
+    switch ($type) {
+      case Profile::TYPE_UNDERGRADUATE_STUDENT:
+        // Note: Student Emails are stored in a nested structure, that need to be mapped properly.
+        // For now, personal emails will be considered, if official emails are not available, but this logic can be adjusted as needed.
+        $emailType = $emailType ? $emailType : 'faculty';
+        $emailObj = Arr::get($record, 'emails')[$emailType];
+        if ($emailObj['name'] && $emailObj['domain']) {
+          return mb_strtolower((string) $emailObj['name']) . '@' . mb_strtolower((string) $emailObj['domain']);
+        }
+        return null;
+
+      case Profile::TYPE_POSTGRADUATE_STUDENT:
+      case Profile::TYPE_ACADEMIC_STAFF:
+      case Profile::TYPE_TEMPORARY_ACADEMIC_STAFF:
+      case Profile::TYPE_ACADEMIC_SUPPORT:
+      case Profile::TYPE_EXTERNAL:
+        $email = Arr::get($record, 'email');
+        return $email ? mb_strtolower((string) $email) : null;
+    }
+
+    return null;
+  }
+
+  protected function syncProfilePicture(?string $imageUrl): ?string
+  {
+    if (! $imageUrl) {
+      return null;
+    }
+
+    $disk = Storage::disk(config('profiles.image.disk'));
+    $directory = trim((string) config('profiles.image.directory'), '/');
+    $extension = $this->resolveProfileImageExtension($imageUrl);
+    $path = $directory . '/' . sha1($imageUrl) . '.' . $extension;
+
+    if ($disk->exists($path)) {
+      return $path;
+    }
+
+    try {
+      $response = Http::timeout(config('profiles.sync.timeout'))->get($imageUrl);
+      $response->throw();
+    } catch (\Throwable $e) {
+      return null;
+    }
+
+    $disk->put($path, $response->body());
+
+    return $path;
+  }
+
+  protected function resolveProfileImageExtension(string $imageUrl): string
+  {
+    $path = parse_url($imageUrl, PHP_URL_PATH);
+    $extension = strtolower(pathinfo((string) $path, PATHINFO_EXTENSION));
+
+    return in_array($extension, config('profiles.image.extensions', []), true) ? $extension : 'jpg';
+  }
+
   protected function mapPayload(array $record, ?string $defaultType): array
   {
-    $email = mb_strtolower((string) (Arr::get($record, 'email')
-      ?: Arr::get($record, 'emails.0')
-      ?: Arr::get($record, 'official_email')
-      ?: Arr::get($record, 'personal_email')));
+    $type = $this->resolveType($record, $defaultType);
+
+    if ($type === Profile::TYPE_UNDERGRADUATE_STUDENT) {
+      // For student API records
+      $faculty_email = $this->resolveEmail($record, $type, 'faculty');
+      $personal_email = $this->resolveEmail($record, $type, 'personal');
+      $office_email = null; // Not applicable for students
+      $regNo = ($type === Profile::TYPE_UNDERGRADUATE_STUDENT) ? Arr::get($record, 'eNumber') : null;
+      $profileAPI = $regNo ?  "https://api.ce.pdn.ac.lk/people/v1/students/" . str_replace("E/", "E", $regNo) : null; // Refine later
+      $current_position = 'Undergraduate'; // Refine later
+      $current_affiliation = Arr::get($record, 'current_affiliation') ?? "";
+      $honorific = null;
+    } else {
+      // For staff API records
+      $faculty_email = $this->resolveEmail($record, $type, null);
+      $personal_email = null;
+      $office_email = null; // Refine later
+      $regNo = null; // Not applicable for staff
+      $profileAPI = null; // Refine later
+      $current_position = Arr::get($record, 'designation');
+      $current_affiliation = "Department of Computer Engineering, University of Peradeniya"; // Refine later (resignations)
+      $honorific = $this->resolveHonorific($record);
+    }
+
+    $department = Arr::get($record, 'department') ?? "Computer Engineering";
+    $urls = Arr::get($record, 'urls', []);
+    $userId = User::where('email', $faculty_email ?: $personal_email)->value('id') ?? null;
 
     return [
-      'email' => $email,
-      'type' => $defaultType ?: $this->resolveStaffType($record),
+      'user_id' => $userId,
+      'type' => $type,
+      // Personal Information
       'full_name' => Arr::get($record, 'full_name', Arr::get($record, 'name')),
       'name_with_initials' => Arr::get($record, 'name_with_initials'),
       'preferred_short_name' => Arr::get($record, 'preferred_short_name'),
       'preferred_long_name' => Arr::get($record, 'preferred_long_name'),
-      'honorific' => in_array(Arr::get($record, 'honorific', ''), Profile::HONORIFICS, true) ? Arr::get($record, 'honorific', '') : '',
-      'reg_no' => Arr::get($record, 'reg_no', Arr::get($record, 'registration_number')),
-      'profile_picture' => Arr::get($record, 'profile_picture'),
-      'current_position' => Arr::get($record, 'current_position', Arr::get($record, 'position')),
-      'department' => Arr::get($record, 'department'),
-      'phone_number' => Arr::get($record, 'phone_number', Arr::get($record, 'phone')),
-      'personal_email' => Arr::get($record, 'personal_email'),
-      'office_email' => Arr::get($record, 'office_email', Arr::get($record, 'email')),
-      'resident_address' => Arr::get($record, 'resident_address'),
-      'current_location' => Arr::get($record, 'current_location'),
-      'current_affiliation' => $this->mapCurrentAffiliation($record),
-      'previous_affiliations' => $this->mapPreviousAffiliations($record),
-      'biography' => Arr::get($record, 'biography', Arr::get($record, 'bio')),
-      'profile_url' => Arr::get($record, 'profile_url'),
-      'profile_api' => Arr::get($record, 'profile_api'),
-      'profile_website' => Arr::get($record, 'website'),
-      'profile_cv' => Arr::get($record, 'cv'),
-      'profile_linkedin' => Arr::get($record, 'linkedin'),
-      'profile_github' => Arr::get($record, 'github'),
-      'profile_researchgate' => Arr::get($record, 'researchgate'),
-      'profile_google_scholar' => Arr::get($record, 'google_scholar'),
-      'profile_orcid' => Arr::get($record, 'orcid'),
-      'profile_facebook' => Arr::get($record, 'facebook'),
-      'profile_twitter' => Arr::get($record, 'twitter'),
+      'gender' => null,
+      'civil_status' => null,
+      'honorific' => $honorific,
+      // Additional Personal Information
+      'biography' => "",
+      'profile_picture' => null, //$this->syncProfilePicture(Arr::get($record, 'profile_image')),
+      'profile_cv' => Arr::get($urls, 'cv'),
+      // Student Details
+      'reg_no' =>  $regNo,
+      'department' => $department,
+      // Contact Information
+      'email' => $faculty_email ?: $personal_email,
+      'personal_email' => $personal_email,
+      'office_email' => $office_email,
+      'phone_number' => null,
+      'resident_address' => null,
+      'current_location' => Arr::get($record, 'location'),
+      // Professional Information
+      'current_position' => $current_position,
+      'current_affiliation' => $current_affiliation,
+      'previous_affiliations' => [],
+      // Profile URLs
+      'profile_api' => $profileAPI,
+      'profile_url' => Arr::get($record, 'profile_page'),
+      'profile_website' => Arr::get($urls, 'website'),
+      'profile_linkedin' => Arr::get($urls, 'linkedin'),
+      'profile_github' => Arr::get($urls, 'github'),
+      'profile_researchgate' => Arr::get($urls, 'researchgate'),
+      'profile_google_scholar' => Arr::get($urls, 'google_scholar'),
+      'profile_orcid' => Arr::get($urls, 'orcid'),
+      'profile_facebook' => Arr::get($urls, 'facebook'),
+      'profile_twitter' => Arr::get($urls, 'twitter'),
+      // Audit Fields
       'review_status' => Profile::REVIEW_STATUS_APPROVED,
     ];
-  }
-
-  protected function resolveStaffType(array $record): string
-  {
-    $role = Arr::get($record, 'role', Arr::get($record, 'staff_type', ''));
-    $normalized = mb_strtolower((string) $role);
-
-    if (str_contains($normalized, 'temporary')) {
-      return Profile::TYPE_TEMPORARY_ACADEMIC_STAFF;
-    }
-
-    if (str_contains($normalized, 'support')) {
-      return Profile::TYPE_ACADEMIC_SUPPORT;
-    }
-
-    if (str_contains($normalized, 'external')) {
-      return Profile::TYPE_EXTERNAL;
-    }
-
-    return Profile::TYPE_ACADEMIC_STAFF;
-  }
-
-  protected function mapCurrentAffiliation(array $record): ?array
-  {
-    $affiliation = Arr::get($record, 'current_affiliation.affiliation', Arr::get($record, 'department'));
-    $startDate = Arr::get($record, 'current_affiliation.start_date', Arr::get($record, 'start_date'));
-
-    if (! $affiliation && ! $startDate) {
-      return null;
-    }
-
-    return [
-      'affiliation' => $affiliation,
-      'start_date' => $startDate,
-    ];
-  }
-
-  protected function mapPreviousAffiliations(array $record): array
-  {
-    return collect(Arr::get($record, 'previous_affiliations', []))
-      ->map(fn($item) => [
-        'affiliation' => Arr::get($item, 'affiliation'),
-        'start_date' => Arr::get($item, 'start_date'),
-        'end_date' => Arr::get($item, 'end_date'),
-      ])
-      ->filter(fn($item) => array_filter($item))
-      ->values()
-      ->all();
   }
 }
