@@ -18,6 +18,8 @@ class SyncProfilesSeeder extends Seeder
 
   public function run()
   {
+    set_time_limit(0);
+
     $logger = Log::build([
       'driver' => 'single',
       'path' => storage_path('logs/profile-sync.log'),
@@ -69,6 +71,7 @@ class SyncProfilesSeeder extends Seeder
             'record' => $record,
           ]);
         }
+        // break;
       }
     }
   }
@@ -99,7 +102,7 @@ class SyncProfilesSeeder extends Seeder
       case 'Lecturer':
       case 'Lecturers': // TODO correct this later
       case 'Senior Lecturer':
-      case 'Senior Lecturers': // TODO correct this laterå
+      case 'Senior Lecturers': // TODO correct this later
       case 'Professor':
       case 'Staff Assistant':
         return Profile::TYPE_ACADEMIC_STAFF;
@@ -156,9 +159,11 @@ class SyncProfilesSeeder extends Seeder
     }
 
     $disk = Storage::disk(config('profiles.image.disk'));
-    $directory = trim((string) config('profiles.image.directory'), '/');
-    $extension = $this->resolveProfileImageExtension($imageUrl);
-    $path = $directory . '/' . sha1($imageUrl) . '.' . $extension;
+    $path = $this->resolveProfileImagePath($imageUrl);
+
+    if (! $path) {
+      return null;
+    }
 
     if ($disk->exists($path)) {
       return $path;
@@ -174,6 +179,33 @@ class SyncProfilesSeeder extends Seeder
     $disk->put($path, $response->body());
 
     return $path;
+  }
+
+  protected function resolveProfileImagePath(string $imageUrl): ?string
+  {
+    $imageUrl = $this->resolveURL($imageUrl);
+
+    if (! $imageUrl) {
+      return null;
+    }
+
+    $directory = trim((string) config('profiles.image.directory'), '/');
+    $urlPath = (string) parse_url($imageUrl, PHP_URL_PATH);
+    $name = pathinfo($urlPath, PATHINFO_FILENAME);
+    $extension = $this->resolveProfileImageExtension($imageUrl);
+
+    if (! $name) {
+      $name = sha1($imageUrl);
+    }
+
+    $name = preg_replace('/[^A-Za-z0-9_-]/', '-', $name);
+    $name = trim((string) $name, '-_');
+
+    if (! $name) {
+      $name = sha1($imageUrl);
+    }
+
+    return $directory . '/' . $name . '.' . $extension;
   }
 
   protected function resolveProfileImageExtension(string $imageUrl): string
@@ -227,7 +259,7 @@ class SyncProfilesSeeder extends Seeder
       'honorific' => $honorific,
       // Additional Personal Information
       'biography' => "",
-      'profile_picture' => null, //$this->syncProfilePicture(Arr::get($record, 'profile_image')),
+      'profile_picture' => $this->syncProfilePicture(Arr::get($record, 'profile_image')),
       'profile_cv' => Arr::get($urls, 'cv'),
       // Student Details
       'reg_no' =>  $regNo,

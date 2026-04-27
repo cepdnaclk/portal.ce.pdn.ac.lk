@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Profile extends Model
@@ -192,7 +191,12 @@ class Profile extends Model
       return null;
     }
 
-    return Storage::disk(config('profiles.image.disk'))->url($this->profile_picture);
+    return route('download.profile', ['path' => basename($this->profile_picture)], true);
+  }
+
+  public function resolveProfilePictureUrl(): string
+  {
+    return $this->getProfilePictureUrlAttribute() ?? '/dummy/profile.png';
   }
 
   public function resolveTitle(): string

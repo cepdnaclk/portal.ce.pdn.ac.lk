@@ -137,7 +137,7 @@
     <label for="biography" class="col-md-2 col-form-label">@lang('Biography')</label>
     <div class="col-md-10">
         <textarea name="biography" id="biography" class="form-control" rows="6">{{ old('biography', $profile->biography) }}</textarea>
-        <small class="form-text text-muted">@lang('A brief biography or description about yourself, applicable only for Student ans Staff profiles')</small>
+        <small class="form-text text-muted">@lang('A brief biography or description about yourself, applicable only for Student and Staff profiles')</small>
     </div>
 </div>
 
@@ -156,14 +156,14 @@
             </div>
         @endif
     </div>
-    @if ($profile->profile_picture)
-        <div class="col-md-2">
-            <div class="mt-2">
-                <img src="{{ $profile->profile_picture_url }}" alt="@lang('Current profile picture')" class="img-thumbnail"
-                    style="max-width: 120px; max-height: 120px;">
-            </div>
+
+    {{-- Profile Picture - Preview --}}
+    <div class="col-md-2">
+        <div class="mt-2">
+            <img src="{{ $profile->resolveProfilePictureUrl() }}" alt="@lang('Current profile picture')" class="img-thumbnail"
+                style="max-width: 120px; max-height: 120px;">
         </div>
-    @endif
+    </div>
 </div>
 
 <div class="form-group row">
@@ -172,7 +172,7 @@
     <div class="col-md-10">
         <input type="url" name="profile_cv" id="profile_cv" class="form-control"
             value="{{ old('profile_cv', data_get($profile, 'profile_cv')) }}" maxlength="255">
-        <small class="form-text text-muted">@lang('A URL link to your CV or resume, applicable only for Student ans Staff profiles')</small>
+        <small class="form-text text-muted">@lang('A URL link to your CV or resume, applicable only for Student and Staff profiles')</small>
     </div>
 </div>
 <hr />

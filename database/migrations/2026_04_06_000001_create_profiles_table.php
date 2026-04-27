@@ -23,8 +23,8 @@ class CreateProfilesTable extends Migration
       $table->string('preferred_short_name')->nullable();
       $table->string('preferred_long_name')->nullable();
       $table->string('gender', 10)->nullable();
-      $table->string('civil_status', 20)->default('');
-      $table->string('honorific', 10)->default('');
+      $table->string('civil_status', 20)->nullable();
+      $table->string('honorific', 10)->nullable();
       $table->string('reg_no', 10)->nullable();
       $table->string('profile_picture')->nullable();
       $table->string('current_position')->nullable();
