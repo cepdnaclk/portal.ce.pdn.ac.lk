@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Domains\Auth\Models\Role;
 use App\Domains\Profiles\Models\Profile;
 use Database\Seeders\Traits\DisableForeignKeys;
 use Illuminate\Database\Seeder;
@@ -52,15 +53,32 @@ class SyncProfilesSeeder extends Seeder
       foreach ((array) $records as $key => $record) {
         try {
           $payload = $this->mapPayload($record, $source['type']);
+          $roles = Arr::pull($payload, 'roles', []);
 
           if (! $payload['email'] || ! $payload['type']) {
             throw new \RuntimeException('Missing required email or type after payload mapping.');
           }
-          $this->command?->info(">> Syncing profile: {$payload['email']} ({$payload['type']})");
+          $rolesLabel = implode(', ', $roles);
+          $this->command?->info(">> Syncing profile: {$payload['email']} (Type: {$payload['type']}, Roles: {$rolesLabel})");
+
+          // Update or Create the profile based on email and type
           Profile::updateOrCreate(
             ['email' => $payload['email'], 'type' => $payload['type']],
             $payload
           );
+
+          // Assign suitable role to users if exists, based on the Profile Type
+          if ($payload['user_id'] && ! empty($roles)) {
+            $user = User::find($payload['user_id']);
+            if ($user) {
+              foreach ($roles as $roleName) {
+                $role = Role::where('name', $roleName)->first();
+                if ($role && ! $user->hasRole($role)) {
+                  $user->assignRole($role);
+                }
+              }
+            }
+          }
         } catch (\Throwable $e) {
           $identifier = Arr::get($record, 'email') ?? Arr::get($record, 'eNumber');
           $this->command?->error(">> Profile sync failed for {$identifier}: {$e->getMessage()}");
@@ -104,7 +122,6 @@ class SyncProfilesSeeder extends Seeder
       case 'Senior Lecturer':
       case 'Senior Lecturers': // TODO correct this later
       case 'Professor':
-      case 'Staff Assistant':
         return Profile::TYPE_ACADEMIC_STAFF;
 
       case 'Temporary Instructor':
@@ -119,6 +136,32 @@ class SyncProfilesSeeder extends Seeder
       case 'Visiting Research Fellow':
       default:
         return Profile::TYPE_EXTERNAL;
+    }
+  }
+
+  protected function resolveRole($designation): ?string
+  {
+    switch ($designation) {
+      case 'Lecturers (Prob)':
+      case 'Lecturer':
+      case 'Lecturers': // TODO correct this later
+      case 'Senior Lecturer':
+      case 'Senior Lecturers': // TODO correct this later
+      case 'Professor':
+        return 'Lecturer';
+
+      case 'Temporary Instructor':
+      case 'Temporary Lecturer':
+        return 'Temporary Academic Staff';
+
+      case 'Staff Assistant':
+      case 'Technical Officer':
+      case 'Computer Operator':
+        return 'Academic Support Staff';
+
+      case 'Visiting Research Fellow':
+      default:
+        return 'Guest';
     }
   }
 
@@ -230,6 +273,7 @@ class SyncProfilesSeeder extends Seeder
       $current_position = 'Undergraduate'; // Refine later
       $current_affiliation = Arr::get($record, 'current_affiliation') ?? "";
       $honorific = null;
+      $roles = ['Student'];
     } else {
       // For staff API records
       $faculty_email = $this->resolveEmail($record, $type, null);
@@ -240,6 +284,7 @@ class SyncProfilesSeeder extends Seeder
       $current_position = Arr::get($record, 'designation');
       $current_affiliation = "Department of Computer Engineering, University of Peradeniya"; // Refine later (resignations)
       $honorific = $this->resolveHonorific($record);
+      $roles = [$this->resolveRole($current_position)];
     }
 
     $department = Arr::get($record, 'department') ?? "Computer Engineering";
@@ -288,6 +333,8 @@ class SyncProfilesSeeder extends Seeder
       'profile_twitter' => $this->resolveURL(Arr::get($urls, 'twitter')),
       // Audit Fields
       'review_status' => Profile::REVIEW_STATUS_APPROVED,
+      // Additional fields
+      'roles' => $roles
     ];
   }
 }
