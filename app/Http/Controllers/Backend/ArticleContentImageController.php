@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Domains\ContentManagement\Services\ArticleContentImageService;
+use App\Http\Controllers\Concerns\StreamsFiles;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Articles\UploadArticleContentImageRequest;
 use Illuminate\Support\Facades\Log;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 
 class ArticleContentImageController extends Controller
 {
+  use StreamsFiles;
+
   public function __construct(private ArticleContentImageService $contentImageService) {}
 
   public function upload(UploadArticleContentImageRequest $request)
@@ -49,16 +52,6 @@ class ArticleContentImageController extends Controller
     if (!$disk->exists($filePath)) {
       return abort(404, 'File not found.');
     }
-    return $this->streamFile($disk->path($filePath));
-  }
-
-  protected function streamFile(string $absolutePath): BinaryFileResponse
-  {
-    $mime = mime_content_type($absolutePath) ?: 'application/octet-stream';
-
-    return response()->file($absolutePath, [
-      'Content-Type' => $mime,
-      'Cache-Control' => 'public, max-age=' . config('gallery.cache_ttl', 31536000),
-    ]);
+    return $this->streamFile($disk->path($filePath), (int) config('gallery.cache_ttl', 31536000));
   }
 }

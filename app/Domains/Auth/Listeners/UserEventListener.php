@@ -9,9 +9,10 @@ use App\Domains\Auth\Events\User\UserLoggedIn;
 use App\Domains\Auth\Events\User\UserRestored;
 use App\Domains\Auth\Events\User\UserStatusChanged;
 use App\Domains\Auth\Events\User\UserUpdated;
-use App\Domains\Auth\Models\Role;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Services\DepartmentDataService;
+use Symfony\Component\HttpKernel\Log\Logger;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UserEventListener.
@@ -61,13 +62,18 @@ class UserEventListener
       ->log(':causer.name created user :subject.name with roles: :properties.roles and permissions: :properties.permissions');
 
     // Assign Roles by the Department Email
-    $user = $event->user;
-    $ds = new DepartmentDataService();
-    $roles = $ds->getRolesByDepartmentEmail($user->email);
-    if (!empty($roles)) {
-      foreach ($roles as $role) {
-        $user->assignRole($role);
+    try {
+      $user = $event->user;
+      $ds = new DepartmentDataService();
+      $roles = $ds->getRolesByDepartmentEmail($user->email);
+      if (!empty($roles)) {
+        foreach ($roles as $role) {
+          $user->assignRole($role);
+        }
+        Log::info('Assigned roles to user ' . $user->email . ': ' . implode(', ', $roles));
       }
+    } catch (\Exception $e) {
+      Log::error('Error assigning roles to user ' . $event->user->email . ': ' . $e->getMessage());
     }
   }
 
