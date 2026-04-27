@@ -1,16 +1,16 @@
-import Alpine from 'alpinejs'
-import AutoAnimate from '@marcreichel/alpine-auto-animate';
+import AutoAnimate from '@marcreichel/alpine-auto-animate'
+import '../../../vendor/rappasoft/laravel-livewire-tables/resources/laravel-livewire-tables.js'
 
-Alpine.plugin(AutoAnimate);
+// Register Alpine plugins against the Alpine instance that Livewire provides.
+document.addEventListener('alpine:init', () => {
+    window.Alpine.plugin(AutoAnimate)
+})
 
-window.Alpine = Alpine
-Alpine.start()
-
-window.$ = window.jQuery = require('jquery');
-window.Swal = require('sweetalert2');
+window.$ = window.jQuery = require('jquery')
+window.Swal = require('sweetalert2')
 
 // CoreUI
-require('@coreui/coreui');
+require('@coreui/coreui')
 
 // Boilerplate
-require('../plugins');
+require('../plugins')

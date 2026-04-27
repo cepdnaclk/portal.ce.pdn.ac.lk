@@ -3,6 +3,7 @@
 namespace App\Domains\AcademicProgram\Course\Models;
 
 use App\Domains\AcademicProgram\Course\Models\Traits\Scope\CourseScope;
+use App\Domains\Common\Traits\HasActivityLogOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -13,6 +14,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class CourseModule extends Model
 {
     use CourseScope,
+        HasActivityLogOptions,
         HasFactory,
         LogsActivity;
 

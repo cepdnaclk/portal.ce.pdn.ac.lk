@@ -3,6 +3,7 @@
 namespace App\Domains\Announcement\Models;
 
 use App\Domains\Announcement\Models\Traits\Scope\AnnouncementScope;
+use App\Domains\Common\Traits\HasActivityLogOptions;
 use Database\Factories\AnnouncementFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Announcement extends Model
 {
     use AnnouncementScope,
+        HasActivityLogOptions,
         HasFactory,
         LogsActivity;
 

@@ -30,7 +30,7 @@ class SearchableDropdown extends Component
     {
         $this->selected = $key === '' ? null : $key;
         $this->open = false;
-        $this->emit('searchable-dropdown-updated', [
+        $this->dispatch('searchable-dropdown-updated', [
             'name' => $this->name,
             'value' => $this->selected,
         ]);
@@ -39,7 +39,7 @@ class SearchableDropdown extends Component
     public function clear(): void
     {
         $this->selected = null;
-        $this->emit('searchable-dropdown-cleared', [
+        $this->dispatch('searchable-dropdown-cleared', [
             'name' => $this->name,
         ]);
     }

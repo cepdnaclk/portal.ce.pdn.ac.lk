@@ -4,6 +4,7 @@ namespace App\Domains\Taxonomy\Models;
 
 
 use App\Domains\Auth\Models\User;
+use App\Domains\Common\Traits\HasActivityLogOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -12,7 +13,7 @@ use Str;
 
 class TaxonomyFile extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasActivityLogOptions, HasFactory, LogsActivity;
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;

@@ -50,6 +50,7 @@
     <script src="{{ mix('js/frontend.js') }}"></script>
 
     <livewire:scripts />
+    @livewireScriptConfig
     @stack('after-scripts')
 </body>
 

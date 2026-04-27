@@ -32,6 +32,7 @@
     //
     // pnpm --------------------------------------------------------------------------------------
     "npm.packageManager": "pnpm",
-    "npm.scriptRunner": "pnpm"
+    "npm.scriptRunner": "pnpm",
+    "cSpell.words": ["datetimes", "Livewire", "Rappasoft"]
     //
 }

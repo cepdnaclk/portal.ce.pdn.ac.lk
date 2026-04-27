@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
+use App\Support\Html\FormBuilder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
@@ -18,7 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton('form', function () {
+            return new FormBuilder();
+        });
     }
 
     /**
@@ -38,5 +42,21 @@ class AppServiceProvider extends ServiceProvider
                 ->getDatabasePlatform()
                 ->registerDoctrineTypeMapping('enum', 'string');
         }
+
+        RedirectResponse::macro('withFlashSuccess', function ($message) {
+            return $this->with('flash_success', $message);
+        });
+
+        RedirectResponse::macro('withFlashDanger', function ($message) {
+            return $this->with('flash_danger', $message);
+        });
+
+        RedirectResponse::macro('withFlashWarning', function ($message) {
+            return $this->with('flash_warning', $message);
+        });
+
+        RedirectResponse::macro('withFlashInfo', function ($message) {
+            return $this->with('flash_info', $message);
+        });
     }
 }

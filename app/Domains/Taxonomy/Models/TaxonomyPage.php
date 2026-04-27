@@ -3,6 +3,7 @@
 namespace App\Domains\Taxonomy\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Domains\Common\Traits\HasActivityLogOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,7 @@ use Database\Factories\TaxonomyPageFactory;
  */
 class TaxonomyPage extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasActivityLogOptions, HasFactory, LogsActivity;
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;

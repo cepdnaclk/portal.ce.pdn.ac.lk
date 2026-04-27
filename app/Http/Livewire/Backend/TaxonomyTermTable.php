@@ -5,78 +5,118 @@ namespace App\Http\Livewire\Backend;
 use App\Domains\Taxonomy\Models\TaxonomyTerm;
 use App\Http\Livewire\Components\PersistentStateDataTable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class TaxonomyTermTable extends PersistentStateDataTable
 {
-    public array $perPageAccepted = [10, 25, 50, 100];
-    public int $perPage = 100;
-    public bool $perPageAll = true;
+  protected $model = TaxonomyTerm::class;
 
-    public string $defaultSortColumn = 'code';
-    public string $defaultSortDirection = 'asc';
+  public function configure(): void
+  {
+    parent::configure();
 
-    public $taxonomy;
+    $this->setDefaultSort('code', 'asc');
+    $this->setPerPage(100);
+    $this->setPerPageAccepted([10, 25, 50, 100, -1]);
+  }
 
-    public function mount($taxonomy)
-    {
-        $this->taxonomy = $taxonomy;
-    }
+  public $taxonomy;
 
-    protected function getCookieContextKey(): string
-    {
-        return (string) ($this->taxonomy->id ?? 'unknown');
-    }
+  public function mount($taxonomy)
+  {
+    $this->taxonomy = $taxonomy;
+  }
 
-    public function columns(): array
-    {
-        return [
-            Column::make("Name", "name")
-                ->searchable()->sortable(),
-            Column::make("Code", "code")
-                ->searchable()->sortable(),
-            Column::make("Taxonomy Parent", "parent_id"),
-            Column::make("Created by", "created_by")
-                ->sortable(),
-            Column::make("Updated by", "updated_by")
-                ->sortable(),
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),
-            Column::make("API"),
-            Column::make("Actions")
-        ];
-    }
+  protected function getCookieContextKey(): string
+  {
+    return (string) ($this->taxonomy->id ?? 'unknown');
+  }
 
-    public function query(): Builder
-    {
-        return TaxonomyTerm::query()
-            ->where('taxonomy_id', $this->taxonomy->id)
-            ->when($this->getFilter('taxonomy_term'), fn($query, $type) => $query->where('parent_id', $type)->orWhere('id', $type))
-            ->with('user')->orderBy('parent_id');
-    }
+  public function columns(): array
+  {
+    return [
+      Column::make("Name", "name")
+        ->searchable()->sortable(),
+      Column::make("Code", "code")
+        ->searchable()->sortable(),
+      Column::make("Taxonomy Parent", "parent_id")
+        ->format(function ($value, TaxonomyTerm $term) {
+          if ($term->parent_id !== null && $term->parent) {
+            return new HtmlString('<a href="?filters[taxonomy_term]=' . $term->parent->id . '" class="text-decoration-none">' . e($term->parent->name) . '</a>');
+          }
 
-    public function filters(): array
-    {
-        $terms = [];
-        foreach (
-            TaxonomyTerm::query()
-                ->where('taxonomy_id', $this->taxonomy->id)->get() as $key => $value
-        ) {
-            $terms[$value->id] = $value->name;
-        };
+          return 'N/A';
+        })
+        ->html(),
+      Column::make("Created by", "created_by")
+        ->format(fn($value, TaxonomyTerm $term) => $term->user_created->name ?? 'N/A')
+        ->sortable(),
+      Column::make("Updated by", "updated_by")
+        ->format(fn($value, TaxonomyTerm $term) => $term->user_updated->name ?? 'N/A')
+        ->sortable(),
+      Column::make("Created at", "created_at")
+        ->sortable(),
+      Column::make("Updated at", "updated_at")
+        ->sortable(),
+      Column::make("API", 'code')
+        ->excludeFromColumnSelect()
+        ->format(fn($value, TaxonomyTerm $term) => $term->taxonomy->visibility
+          ? new HtmlString('<a target="_blank" href="' . route('api.taxonomy.term.get', ['term_code' => $term->code]) . '">/' . $term->code . '</a>')
+          : '-')
+        ->html(),
+      Column::make("Actions")
+        ->excludeFromColumnSelect()
+        ->format(function ($value, TaxonomyTerm $term) {
+          $canEdit = auth()->user()?->hasPermissionTo('user.access.taxonomy.data.editor');
+          $buttons = '<div class="d-flex px-0 mt-0 mb-0 justify-content-end">';
+          $buttons .= '<div class="btn-group me-3" role="group" aria-label="View Buttons">';
 
-        return [
-            'taxonomy_term' => Filter::make('Taxonomy Term')
-                ->select($terms)
-        ];
-    }
+          if ($term->children()->count() > 0) {
+            $buttons .= '<a href="?filters[taxonomy_term]=' . $term->id . '" class="btn btn-sm btn-primary"><i class="fa fa-filter" title="Filter"></i></a>';
+          }
+
+          $buttons .= '<a href="' . route('dashboard.taxonomy.terms.history', ['taxonomy' => $term->taxonomy_id, 'term' => $term->id]) . '" class="btn btn-sm btn-info"><i class="fa fa-clock" title="History"></i></a>';
+          $buttons .= '</div>';
+
+          if ($canEdit) {
+            $buttons .= '<div class="btn-group" role="group" aria-label="Edit Buttons">';
+            $buttons .= '<a href="' . route('dashboard.taxonomy.terms.edit', ['taxonomy' => $term->taxonomy_id, 'term' => $term->id]) . '" class="btn btn-sm btn-warning"><i class="fa fa-pencil" title="Edit"></i></a>';
+            $buttons .= '<a href="' . route('dashboard.taxonomy.terms.delete', ['taxonomy' => $term->taxonomy_id, 'term' => $term->id]) . '" class="btn btn-sm btn-danger"><i class="fa fa-trash" title="Delete"></i></a>';
+            $buttons .= '</div>';
+          }
+
+          $buttons .= '</div>';
+
+          return new HtmlString($buttons);
+        })
+        ->html()
+    ];
+  }
+
+  public function builder(): Builder
+  {
+    return TaxonomyTerm::query()
+      ->where('taxonomy_id', $this->taxonomy->id)
+      ->when($this->getAppliedFilterWithValue('taxonomy_term'), fn($query, $type) => $query->where('parent_id', $type)->orWhere('id', $type))
+      ->with('user')->orderBy('parent_id');
+  }
+
+  public function filters(): array
+  {
+    $terms = [];
+    foreach (
+      TaxonomyTerm::query()
+        ->where('taxonomy_id', $this->taxonomy->id)->get() as $value
+    ) {
+      $terms[$value->id] = $value->name;
+    };
 
 
-    public function rowView(): string
-    {
-        return 'backend.taxonomy.terms.index-table-row';
-    }
+    return [
+      SelectFilter::make('Taxonomy Term', 'taxonomy_term')
+        ->options($terms)
+    ];
+  }
 }

@@ -3,6 +3,7 @@
 namespace App\Domains\Taxonomy\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Domains\Common\Traits\HasActivityLogOptions;
 use App\Http\Resources\TaxonomyTermResource;
 use Database\Factories\TaxonomyTermFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class TaxonomyTerm extends Model
 {
     use HasFactory,
+        HasActivityLogOptions,
         LogsActivity;
 
     protected static $logFillable = true;

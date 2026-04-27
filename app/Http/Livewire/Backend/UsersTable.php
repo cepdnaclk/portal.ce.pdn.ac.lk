@@ -5,17 +5,16 @@ namespace App\Http\Livewire\Backend;
 use App\Domains\Auth\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Livewire\Components\PersistentStateDataTable;
+use Illuminate\Support\HtmlString;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 /**
  * Class UsersTable.
  */
 class UsersTable extends PersistentStateDataTable
 {
-    public array $perPageAccepted = [10, 25, 50, 100];
-    public int $perPage = 25;
-    public bool $perPageAll = true;
+    protected $model = User::class;
 
     /**
      * @var
@@ -38,6 +37,14 @@ class UsersTable extends PersistentStateDataTable
         'verified' => 'E-mail Verified',
     ];
 
+    public function configure(): void
+    {
+        parent::configure();
+
+        $this->setPerPage(25);
+        $this->setPerPageAccepted([10, 25, 50, 100, -1]);
+    }
+
     /**
      * @param  string  $status
      */
@@ -49,7 +56,7 @@ class UsersTable extends PersistentStateDataTable
     /**
      * @return Builder
      */
-    public function query(): Builder
+    public function builder(): Builder
     {
         $query = User::with('roles', 'twoFactorAuth')->withCount('twoFactorAuth');
 
@@ -62,10 +69,10 @@ class UsersTable extends PersistentStateDataTable
         }
 
         return $query
-            ->when($this->getFilter('search'), fn($query, $term) => $query->search($term))
-            ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type))
-            ->when($this->getFilter('active'), fn($query, $active) => $query->where('active', $active === 'yes'))
-            ->when($this->getFilter('verified'), fn($query, $verified) => $verified === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at'));
+            ->when($this->getSearch(), fn($query, $term) => $query->search($term))
+            ->when($this->getAppliedFilterWithValue('type'), fn($query, $type) => $query->where('type', $type))
+            ->when($this->getAppliedFilterWithValue('active'), fn($query, $active) => $query->where('active', $active === 'yes'))
+            ->when($this->getAppliedFilterWithValue('verified'), fn($query, $verified) => $verified === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at'));
     }
 
     /**
@@ -74,20 +81,20 @@ class UsersTable extends PersistentStateDataTable
     public function filters(): array
     {
         return [
-            'type' => Filter::make('User Type')
-                ->select([
+            SelectFilter::make('User Type', 'type')
+                ->options([
                     '' => 'Any',
                     User::TYPE_ADMIN => 'Administrators',
                     User::TYPE_USER => 'Users',
                 ]),
-            'active' => Filter::make('Active')
-                ->select([
+            SelectFilter::make('Active', 'active')
+                ->options([
                     '' => 'Any',
                     'yes' => 'Yes',
                     'no' => 'No',
                 ]),
-            'verified' => Filter::make('E-mail Verified')
-                ->select([
+            SelectFilter::make('E-mail Verified', 'verified')
+                ->options([
                     '' => 'Any',
                     'yes' => 'Yes',
                     'no' => 'No',
@@ -101,21 +108,34 @@ class UsersTable extends PersistentStateDataTable
     public function columns(): array
     {
         return [
-            Column::make(__('Type'))->sortable(),
-            Column::make(__('Name'))->sortable(),
-            Column::make(__('E-mail'), 'email')->sortable(),
-            Column::make(__('Verified'), 'email_verified_at')->sortable(),
-            Column::make(__('Roles')),
-            Column::make(__('Additional Permissions')),
-            Column::make(__('Actions')),
+            Column::make(__('Type'), 'type')
+                ->sortable()
+                ->format(fn($value, User $user) => view('backend.auth.user.includes.type', ['user' => $user]))
+                ->html(),
+            Column::make(__('Name'), 'name')
+                ->sortable()
+                ->searchable(),
+            Column::make(__('E-mail'), 'email')
+                ->sortable()
+                ->searchable()
+                ->format(fn($value, User $user) => new HtmlString('<a href="mailto:' . e($user->email) . '">' . e($user->email) . '</a>'))
+                ->html(),
+            Column::make(__('Verified'), 'email_verified_at')
+                ->sortable()
+                ->format(fn($value, User $user) => view('backend.auth.user.includes.verified', ['user' => $user]))
+                ->html(),
+            Column::make(__('Roles'), 'id')
+                ->excludeFromColumnSelect()
+                ->format(fn($value, User $user) => new HtmlString($user->roles_label))
+                ->html(),
+            Column::make(__('Additional Permissions'), 'id')
+                ->excludeFromColumnSelect()
+                ->format(fn($value, User $user) => new HtmlString($user->permissions_label))
+                ->html(),
+            Column::make(__('Actions'), 'id')
+                ->excludeFromColumnSelect()
+                ->format(fn($value, User $user) => view('backend.auth.user.includes.actions', ['user' => $user]))
+                ->html(),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function rowView(): string
-    {
-        return 'backend.auth.user.includes.row';
     }
 }

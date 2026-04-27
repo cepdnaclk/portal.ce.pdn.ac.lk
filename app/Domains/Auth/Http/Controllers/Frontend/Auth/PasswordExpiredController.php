@@ -31,9 +31,11 @@ class PasswordExpiredController
     {
         abort_unless(config('boilerplate.access.user.password_expires_days'), 404);
 
-        $userService->updatePassword($request->user(), $request->only('old_password', 'password'), true);
+        $userService->updatePassword($request->user(), $request->only('current_password', 'password'), true);
 
-        return redirect()->route('intranet.user.account')
-            ->withFlashSuccess(__('Password successfully updated.'));
+        $redirect = redirect()->route('intranet.user.account')
+            ->with('flash_success', __('Password successfully updated.'));
+
+        return $redirect;
     }
 }

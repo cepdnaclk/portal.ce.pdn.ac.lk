@@ -30,7 +30,7 @@ class PrerequisiteSelector extends Component
         $course = Course::find($courseId);
         if ($course && !in_array($courseId, collect($this->selectedCourses)->pluck('id')->toArray())) {
             $this->selectedCourses[] = $course->toArray();
-            $this->emit('prerequisitesUpdated', $this->selectedCourses);
+            $this->dispatch('prerequisitesUpdated', $this->selectedCourses);
         }
     }
 
@@ -40,7 +40,7 @@ class PrerequisiteSelector extends Component
             return $course['id'] == $courseId;
         })->values()->toArray();
 
-        $this->emit('prerequisitesUpdated', $this->selectedCourses);
+        $this->dispatch('prerequisitesUpdated', $this->selectedCourses);
     }
 
     public function mount($courseId = null, $prerequisites = null)

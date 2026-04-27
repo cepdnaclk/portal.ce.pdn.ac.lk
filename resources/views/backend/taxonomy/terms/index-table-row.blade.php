@@ -1,14 +1,14 @@
 <?php use App\Domains\Auth\Models\User; ?>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->name }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->code }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     @if ($row->parent_id != null)
         <a href="?filters[taxonomy_term]={{ $row->parent->id }}" class="text-decoration-none">
             {{ $row->parent->name }}
@@ -16,25 +16,25 @@
     @else
         N/A
     @endif
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->user_created->name ?? 'N/A' }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->user_updated->name ?? 'N/A' }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->created_at }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->updated_at }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     @if ($row->taxonomy->visibility)
         <a target="_blank" href="{{ route('api.taxonomy.term.get', ['term_code' => $row->code]) }}">
             /{{ $row->code }}
@@ -42,9 +42,9 @@
     @else
         <span>-</span>
     @endif
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     <div class="d-flex px-0 mt-0 mb-0 justify-content-end">
         <div class="btn-group me-3" role="group" aria-label="View Buttons">
             <!-- Filter Button -->
@@ -78,4 +78,4 @@
         @endif
 
     </div>
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>

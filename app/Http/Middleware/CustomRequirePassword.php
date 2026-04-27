@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Auth\Middleware\RequirePassword;
+use Illuminate\Http\Request;
 
 class CustomRequirePassword extends RequirePassword
 {
@@ -17,7 +18,7 @@ class CustomRequirePassword extends RequirePassword
      * @param  string|null  $redirectToRoute
      * @return mixed
      */
-    public function handle($request, Closure $next, $redirectToRoute = null)
+    public function handle($request, Closure $next, $redirectToRoute = null, $passwordTimeoutSeconds = null)
     {
         // Skip password confirmation in the test environment
         if (app()->environment('testing')) {
@@ -27,7 +28,7 @@ class CustomRequirePassword extends RequirePassword
         // Should ask only if user has password = not signed in with providers 
         $hasPassword = $this->hasPassword($request);
         if ($hasPassword) {
-            return parent::handle($request, $next, $redirectToRoute);
+            return parent::handle($request, $next, $redirectToRoute, $passwordTimeoutSeconds);
         }
         return $next($request);
     }

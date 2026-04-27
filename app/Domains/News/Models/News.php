@@ -3,6 +3,7 @@
 namespace App\Domains\News\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Domains\Common\Traits\HasActivityLogOptions;
 use Database\Factories\NewsFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -15,52 +16,53 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class News extends Model
 {
-    use NewsScope,
-        HasFactory,
-        LogsActivity;
+  use NewsScope,
+    HasActivityLogOptions,
+    HasFactory,
+    LogsActivity;
 
 
-    protected static $logFillable = true;
-    protected static $logOnlyDirty = true;
+  protected static $logFillable = true;
+  protected static $logOnlyDirty = true;
 
-    /**
-     * @var string[]
-     */
-    protected $fillable = [
-        'title',
-        'url',
-        'description',
-        'image',
-        'link_url',
-        'link_caption',
-        'published_at',
-    ];
+  /**
+   * @var string[]
+   */
+  protected $fillable = [
+    'title',
+    'url',
+    'description',
+    'image',
+    'link_url',
+    'link_caption',
+    'published_at',
+  ];
 
-    /**
-     * @var string[]
-     */
-    protected $casts = [
-        'enabled' => 'boolean',
-    ];
+  /**
+   * @var string[]
+   */
+  protected $casts = [
+    'enabled' => 'boolean',
+  ];
 
-    public function thumbURL()
-    {
-        if ($this->image != null) return '/img/news/' . $this->image;
-        else return config('constants.frontend.dummy_thumb');
-    }
+  public function thumbURL()
+  {
+    if ($this->image != null) return '/img/news/' . $this->image;
+    else return config('constants.frontend.dummy_thumb');
+  }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
+  public function user()
+  {
+    return $this->belongsTo(User::class, 'created_by');
+  }
 
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    protected static function newFactory()
-    {
-        return NewsFactory::new();
-    }
+  /**
+   * Create a new factory instance for the model.
+   *
+   * @return \Illuminate\Database\Eloquent\Factories\Factory
+   */
+  protected static function newFactory()
+  {
+    return NewsFactory::new();
+  }
 }

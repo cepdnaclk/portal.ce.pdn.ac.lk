@@ -217,7 +217,7 @@ class UserService extends BaseService
      */
     public function updatePassword(User $user, $data, $expired = false): User
     {
-        if (isset($data['current_password'])) {
+        if (! $expired && isset($data['current_password'])) {
             throw_if(
                 ! Hash::check($data['current_password'], $user->password),
                 new GeneralException(__('That is not your old password.'))

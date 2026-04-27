@@ -3,6 +3,7 @@
 namespace App\Domains\Taxonomy\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Domains\Common\Traits\HasActivityLogOptions;
 use Database\Factories\TaxonomyFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -17,6 +18,7 @@ use App\Domains\Taxonomy\Models\Traits\Scope\TaxonomyScope;
 class Taxonomy extends Model
 {
     use HasFactory,
+        HasActivityLogOptions,
         LogsActivity;
 
 

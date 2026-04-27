@@ -6,6 +6,7 @@ use App\Domains\Auth\Models\User;
 use App\Domains\AcademicProgram\AcademicProgram;
 use App\Domains\AcademicProgram\Course\Models\Course;
 use App\Domains\AcademicProgram\Semester\Models\Traits\Scope\SemesterScope;
+use App\Domains\Common\Traits\HasActivityLogOptions;
 use Database\Factories\SemesterFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -13,6 +14,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Semester extends AcademicProgram
 {
     use SemesterScope,
+        HasActivityLogOptions,
         HasFactory,
         LogsActivity;
 

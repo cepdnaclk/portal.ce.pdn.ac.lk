@@ -1,30 +1,30 @@
 <?php use App\Domains\Auth\Models\User; ?>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->code }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->name }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->user_created->name ?? 'N/A' }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->user_updated->name ?? 'N/A' }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->created_at }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->updated_at }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     @if ($row->visibility)
         <a target="_blank" href="{{ route('api.taxonomy.get', ['taxonomy_code' => $row->code]) }}">
             /{{ $row->code }}
@@ -32,9 +32,9 @@
     @else
         <span>-</span>
     @endif
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     <div class="d-flex px-0 mt-0 mb-0">
         <div class="btn-group me-3" role="group" aria-label="View Buttons">
             <!-- Manage Button -->
@@ -71,4 +71,4 @@
 
         </div>
     </div>
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>

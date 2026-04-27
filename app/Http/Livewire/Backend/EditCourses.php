@@ -212,7 +212,7 @@ class EditCourses extends Component
             $this->ilos[$type] = $newItems;
         }
 
-        $this->emit('refreshItems' . ucfirst($type), $newItems);
+        $this->dispatch('refreshItems' . ucfirst($type), $newItems);
     }
 
 

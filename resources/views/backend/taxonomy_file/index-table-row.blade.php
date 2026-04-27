@@ -1,10 +1,10 @@
 <?php use App\Domains\Auth\Models\User; ?>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->file_name }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     @if ($row->taxonomy)
         <a href="{{ route('dashboard.taxonomy.terms.index', $row->taxonomy) }}">
             {{ $row->taxonomy->name }}
@@ -12,25 +12,25 @@
     @else
         —
     @endif
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->user_created->name ?? 'N/A' }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->user_updated->name ?? 'N/A' }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->created_at }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     {{ $row->updated_at }}
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.td>
     <div class="d-flex px-0 mt-0 mb-0">
         {{-- Download --}}
         <a href="{{ route('download.taxonomy-file', [
@@ -62,4 +62,4 @@
             @endif
         </div>
     </div>
-</x-livewire-tables::table.cell>
+</x-livewire-tables::table.td>

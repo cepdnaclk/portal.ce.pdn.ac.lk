@@ -4,7 +4,7 @@ namespace App\Domains\Auth\Http\Requests\Frontend\Auth;
 
 use App\Domains\Auth\Rules\UnusedPassword;
 use Illuminate\Foundation\Http\FormRequest;
-use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
+use Illuminate\Validation\Rules\Password;
 
 /**
  * Class UpdatePasswordRequest.
@@ -28,18 +28,20 @@ class UpdatePasswordRequest extends FormRequest
      */
     public function rules()
     {
+        $currentPasswordRule = $this->routeIs('frontend.auth.password.expired.update')
+            ? ['required', 'string', 'max:100']
+            : ['required', 'max:100', 'current_password:web'];
+
         return [
-            'current_password' => ['required', 'max:100'],
-            'password' => array_merge(
-                [
-                    'max:100',
-                    new UnusedPassword($this->user()),
-                ],
-                PasswordRules::changePassword(
-                    $this->email,
-                    config('boilerplate.access.user.password_history') ? 'current_password' : null
-                )
-            ),
+            'current_password' => $currentPasswordRule,
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                'max:100',
+                new UnusedPassword($this->user()),
+                Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised(),
+            ],
         ];
     }
 }
