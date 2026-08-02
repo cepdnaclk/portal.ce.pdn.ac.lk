@@ -194,6 +194,19 @@
             </li>
         @endif
 
+        {{-- Profiles --}}
+        @if (
+            $logged_in_user->hasAnyPermission([
+                'user.access.profiles',
+                'user.access.profiles.editor',
+                'user.access.profiles.viewer',
+            ]))
+            <li class="c-sidebar-nav-item">
+                <x-utils.link :href="route('dashboard.profiles.index')" class="c-sidebar-nav-link" :text="__('Profiles')"
+                    icon="c-sidebar-nav-icon fa fa-id-card-o" :active="activeClass(Route::is('dashboard.profiles.*'), 'c-active')" />
+            </li>
+        @endif
+
         {{-- Services --}}
         <li class="c-sidebar-nav-title">@lang('Services')</li>
         @if (

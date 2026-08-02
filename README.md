@@ -89,6 +89,17 @@ php artisan portal:backup
 
 Configuration is documented in `docs/features/backups.md` and `config/google-services.php`.
 
+#### User Profiles (People API sync)
+
+Use the `profiles:sync` command to import/refresh user profiles from the department People API. It is idempotent and safe on cron; `--dry-run` prints counts and rolls back.
+
+```bash
+php artisan profiles:sync --dry-run
+php artisan profiles:sync
+```
+
+The feature is documented in `docs/features/profiles.md`. Requires seeding once: `php artisan db:seed --class=Database\\Seeders\\Roles\\ProfileRoleSeeder`.
+
 - Seed tenants from config with:
 
 ```bash

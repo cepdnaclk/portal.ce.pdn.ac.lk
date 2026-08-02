@@ -45,6 +45,7 @@
             <main class="c-main">
                 <div class="container-fluid">
                     <div class="fade-in">
+                        @include('backend.includes.partials.profile-banner')
                         @include('includes.partials.messages')
                         @yield('content')
                     </div><!--fade-in-->
