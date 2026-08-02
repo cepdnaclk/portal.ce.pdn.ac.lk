@@ -92,6 +92,34 @@ class MyProfileTest extends TestCase
   }
 
   /** @test */
+  public function a_user_can_update_academic_staff_dates()
+  {
+    $user = User::factory()->user()->create();
+    $this->actingAs($user);
+
+    $profile = app(ProfileService::class)->findOrCreateForUser($user);
+    app(ProfileService::class)->addType($profile, UserProfileType::TYPE_ACADEMIC_STAFF, [
+      'designation' => 'Lecturer',
+    ]);
+    $profile->load('profileTypes');
+
+    $this->patch(route('intranet.user.profile.manage.update'), [
+      'types' => [
+        'ACADEMIC_STAFF' => [
+          'attributes' => [
+            'start_date' => '2020-01-01',
+            'end_date' => '2025-07-31',
+          ],
+        ],
+      ],
+    ])->assertRedirect(route('intranet.user.profile.manage'));
+
+    $attributes = $profile->refresh()->profileTypes->first()->getAttribute('attributes');
+    $this->assertEquals('2020-01-01', $attributes['start_date']);
+    $this->assertEquals('2025-07-31', $attributes['end_date']);
+  }
+
+  /** @test */
   public function a_user_cannot_touch_another_users_profile()
   {
     $other = UserProfile::factory()->create(['full_name' => 'Someone Else']);

@@ -196,6 +196,28 @@
                                                                 <strong class="text-danger">{{ $message }}</strong>
                                                             @enderror
                                                         </div>
+                                                        <div class="col-md-6 mt-3">
+                                                            <label class="form-label"
+                                                                for="academic_start_date">@lang('Start Date')</label>
+                                                            <input type="date"
+                                                                name="types[ACADEMIC_STAFF][attributes][start_date]"
+                                                                id="academic_start_date" class="form-control"
+                                                                value="{{ $typeAttr($profileType, 'start_date') }}" />
+                                                            @error('types.ACADEMIC_STAFF.attributes.start_date')
+                                                                <strong class="text-danger">{{ $message }}</strong>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="col-md-6 mt-3">
+                                                            <label class="form-label"
+                                                                for="academic_end_date">@lang('End Date')</label>
+                                                            <input type="date"
+                                                                name="types[ACADEMIC_STAFF][attributes][end_date]"
+                                                                id="academic_end_date" class="form-control"
+                                                                value="{{ $typeAttr($profileType, 'end_date') }}" />
+                                                            @error('types.ACADEMIC_STAFF.attributes.end_date')
+                                                                <strong class="text-danger">{{ $message }}</strong>
+                                                            @enderror
+                                                        </div>
                                                         <div class="col-md-12 mt-3">
                                                             <label class="form-label"
                                                                 for="academic_research_interests">@lang('Research Interests')</label>

@@ -212,6 +212,26 @@
                         <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                 </div>
+                <div class="col-md-6 mt-3 mb-0">
+                    {!! Form::label('academic_start_date', __('Start Date'), ['class' => 'form-label']) !!}
+                    {!! Form::date('types[ACADEMIC_STAFF][attributes][start_date]', $typeAttr('ACADEMIC_STAFF', 'start_date'), [
+                        'class' => 'form-control',
+                        'id' => 'academic_start_date',
+                    ]) !!}
+                    @error('types.ACADEMIC_STAFF.attributes.start_date')
+                        <strong class="text-danger">{{ $message }}</strong>
+                    @enderror
+                </div>
+                <div class="col-md-6 mt-3 mb-0">
+                    {!! Form::label('academic_end_date', __('End Date'), ['class' => 'form-label']) !!}
+                    {!! Form::date('types[ACADEMIC_STAFF][attributes][end_date]', $typeAttr('ACADEMIC_STAFF', 'end_date'), [
+                        'class' => 'form-control',
+                        'id' => 'academic_end_date',
+                    ]) !!}
+                    @error('types.ACADEMIC_STAFF.attributes.end_date')
+                        <strong class="text-danger">{{ $message }}</strong>
+                    @enderror
+                </div>
                 <div class="col-md-12 mt-3 mb-0">
                     {!! Form::label('academic_research_interests', __('Research Interests'), ['class' => 'form-label']) !!}
                     {!! Form::textarea(

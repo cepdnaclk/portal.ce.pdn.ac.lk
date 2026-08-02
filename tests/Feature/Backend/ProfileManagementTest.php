@@ -129,6 +129,44 @@ class ProfileManagementTest extends TestCase
   }
 
   /** @test */
+  public function academic_staff_dates_are_optional_and_must_be_in_order()
+  {
+    $this->loginWithPermission('user.access.profiles.editor');
+
+    $this->post(route('dashboard.profiles.store'), [
+      'email' => 'academic@example.com',
+      'types' => [
+        'ACADEMIC_STAFF' => [
+          'assigned' => '1',
+          'attributes' => [
+            'designation' => 'Lecturer',
+            'end_date' => '2025-07-31',
+          ],
+        ],
+      ],
+    ])->assertRedirect(route('dashboard.profiles.index'));
+
+    $profile = UserProfile::where('email', 'academic@example.com')->firstOrFail();
+    $attributes = $profile->profileTypes->first()->getAttribute('attributes');
+    $this->assertArrayNotHasKey('start_date', $attributes);
+    $this->assertEquals('2025-07-31', $attributes['end_date']);
+
+    $this->post(route('dashboard.profiles.store'), [
+      'email' => 'invalid-dates@example.com',
+      'types' => [
+        'ACADEMIC_STAFF' => [
+          'assigned' => '1',
+          'attributes' => [
+            'designation' => 'Professor',
+            'start_date' => '2025-01-01',
+            'end_date' => '2024-12-31',
+          ],
+        ],
+      ],
+    ])->assertSessionHasErrors('types.ACADEMIC_STAFF.attributes.end_date');
+  }
+
+  /** @test */
   public function invalid_profile_and_link_types_are_rejected()
   {
     $this->loginWithPermission('user.access.profiles.editor');

@@ -22,7 +22,6 @@ class UserProfileLink extends Model
     'researchgate',
     'facebook',
     'twitter',
-    'other',
   ];
 
   // Display labels, keyed by link type
@@ -35,7 +34,6 @@ class UserProfileLink extends Model
     'researchgate' => 'ResearchGate',
     'facebook' => 'Facebook',
     'twitter' => 'Twitter',
-    'other' => 'Other',
   ];
 
   protected $fillable = [
