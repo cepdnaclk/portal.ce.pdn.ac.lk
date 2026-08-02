@@ -62,6 +62,13 @@
                             @endif
 
                             <li>
+                                <a href="{{ route('dashboard.my-profiles.index') }}"
+                                    class="dropdown-item {{ activeClass(Route::is('dashboard.my-profiles.*')) }}">
+                                    @lang('My Profile')
+                                </a>
+                            </li>
+
+                            <li>
                                 <a href="{{ route('intranet.user.account') }}"
                                     class="dropdown-item {{ activeClass(Route::is('intranet.user.account')) }}">
                                     @lang('Profile')

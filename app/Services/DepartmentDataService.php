@@ -83,7 +83,9 @@ class DepartmentDataService
         'Technical Officer' => ['Academic Support Staff'],
         'Senior Technical Officer' => ['Academic Support Staff'],
       ];
-      return $staffMap[$staffMember['designation']] ?? null;
+      $staff_roles =  $staffMap[$staffMember['designation']] ?? null;
+    } else {
+      $staff_roles = [];
     }
 
     // Check students
@@ -110,10 +112,12 @@ class DepartmentDataService
     });
 
     if ($student) {
-      return ['Student'];
+      $student_roles =  ['Student'];
+    } else {
+      $student_roles =  [];
     }
 
-    return null;
+    return array_values(array_unique(array_merge($student_roles ?? [], $staff_roles ?? [])));
   }
 
   private function getData($endpoint)

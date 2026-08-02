@@ -1,13 +1,12 @@
 <?php
 
 use App\Http\Controllers\Backend\GalleryController;
-use App\Http\Controllers\Backend\GalleryEventController;
-use App\Http\Controllers\Backend\GalleryNewsController;
 use App\Http\Controllers\Backend\TaxonomyFileController;
 use App\Http\Controllers\Backend\TaxonomyPageController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\ArticleContentImageController;
+use App\Http\Controllers\ProfileController;
 
 /*
  * Global Routes
@@ -60,5 +59,9 @@ Route::group(
     Route::get('article/{path}', [ArticleContentImageController::class, 'download'])
       ->where('path', '.*')
       ->name('article');
+
+    Route::get('profile/{path}', [ProfileController::class, 'download'])
+      ->where('path', '.*')
+      ->name('profile');
   }
 );

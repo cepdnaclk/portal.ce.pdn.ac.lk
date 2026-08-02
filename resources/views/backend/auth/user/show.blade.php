@@ -9,6 +9,8 @@
         </x-slot>
 
         <x-slot name="headerActions">
+            <x-utils.link class="card-header-action" :href="route('dashboard.auth.user.edit', $user)" :text="__('Edit')"
+                permission="admin.access.user.edit" />
             <x-utils.link class="card-header-action" :href="route('dashboard.auth.user.index')" :text="__('Back')" />
         </x-slot>
 

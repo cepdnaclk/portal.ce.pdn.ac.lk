@@ -27,6 +27,10 @@ class UserTypeRoleSeeder extends Seeder
       'type' => User::TYPE_USER,
       'name' => 'Student',
     ]);
+    Role::firstOrCreate([
+      'type' => User::TYPE_USER,
+      'name' => 'Postgraduate Student',
+    ]);
 
     // Staff Level Roles
     Role::firstOrCreate([
@@ -40,6 +44,10 @@ class UserTypeRoleSeeder extends Seeder
     Role::firstOrCreate([
       'type' => User::TYPE_USER,
       'name' => 'Academic Support Staff',
+    ]);
+    Role::firstOrCreate([
+      'type' => User::TYPE_USER,
+      'name' => 'External Collaborator',
     ]);
 
     $this->enableForeignKeys();

@@ -3,6 +3,39 @@
 @section('title', __('Dashboard'))
 
 @section('content')
+    {{-- Profile Completeness Indicator  --}}
+    @if (session('profiles.count', $logged_in_user->profiles_count ?? 0) === 0)
+        <div class="alert alert-warning">
+            @lang('No linked profiles were found for your account. Create one from My Profile to complete your profile setup.')
+            <a href="{{ route('dashboard.my-profiles.index') }}" class="alert-link">@lang('Open My Profile')</a>
+        </div>
+    @elseif (session('profiles.has_incomplete'))
+        <div class="alert alert-info">
+            @lang('One or more linked profiles are incomplete. Review completeness scores from My Profile.')
+            <a href="{{ route('dashboard.my-profiles.index') }}" class="alert-link">@lang('Review My Profiles')</a>
+        </div>
+    @endif
+
+    {{-- Profile Management --}}
+    <x-backend.card>
+        <x-slot name="header">
+            @lang('Profiles')
+        </x-slot>
+
+        <x-slot name="body" style="min-height: 14vh;" class="container-fluid overflow-auto">
+            <div class="row g-3">
+                <x-backend.shortcut-card route="{{ route('dashboard.my-profiles.index') }}" label="My Profiles"
+                    icon="fa-id-card" color="primary" />
+                @if (
+                    $logged_in_user->hasAnyPermission(['user.access.profiles.view', 'user.access.profiles.edit']) ||
+                        $logged_in_user->hasAllAccess())
+                    <x-backend.shortcut-card route="{{ route('dashboard.profiles.index') }}" label="Profile Management"
+                        icon="fa-address-book" color="info" />
+                @endif
+            </div>
+        </x-slot>
+    </x-backend.card>
+
     {{-- Media Management --}}
     @if (
         $logged_in_user->hasAnyPermission([
