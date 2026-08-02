@@ -6,7 +6,7 @@
     <div>
         <x-backend.card>
             <x-slot name="header">
-                {{ __('Profile') }} : {{ __('Delete') }} | {{ $profile->preferred_long_name ?: $profile->email }}
+                {{ __('Profile') }} : {{ __('Delete') }} | {{ $profile->preferred_long_name ?: ($profile->full_name ?: $profile->email) }}
             </x-slot>
 
             <x-slot name="body">
@@ -14,8 +14,8 @@
                     @lang('Are you sure you want to delete')
 
                     <strong><i>
-                            @if ($profile->preferred_long_name)
-                                {{ $profile->preferred_long_name }} ({{ $profile->email }})
+                            @if ($profile->preferred_long_name || $profile->full_name)
+                                {{ $profile->preferred_long_name ?: $profile->full_name }} ({{ $profile->email }})
                             @else
                                 {{ $profile->email }}
                             @endif

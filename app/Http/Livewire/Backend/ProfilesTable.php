@@ -27,7 +27,9 @@ class ProfilesTable extends PersistentStateDataTable
     abort_unless(auth()->user()?->can('user.access.profiles.view') || auth()->user()?->hasAllAccess(), 403);
 
     return Profile::query()
-      ->with(['user'])
+      ->select('user_profiles.*')
+      ->join('profile_data', 'profile_data.id', '=', 'user_profiles.profile_data_id')
+      ->with(['user', 'profileData'])
       ->when($this->getFilter('search'), fn($query, $term) => $query->search($term))
       ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type))
       ->when($this->getFilter('linked'), function ($query, $linked) {
@@ -57,8 +59,8 @@ class ProfilesTable extends PersistentStateDataTable
   {
     return [
       Column::make('Type', 'type')->sortable(),
-      Column::make('Name', 'full_name')->sortable(),
-      Column::make('E-mail', 'email')->sortable(),
+      Column::make('Name', 'profile_data.full_name')->sortable(),
+      Column::make('E-mail', 'profile_data.email')->sortable(),
       Column::make('Linked User', 'user.name')->sortable(),
       Column::make('Completeness'),
       Column::make('Updated At', 'updated_at')->sortable(),

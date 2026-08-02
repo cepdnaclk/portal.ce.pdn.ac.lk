@@ -24,6 +24,9 @@ class MyProfilesTable extends PersistentStateDataTable
   public function query(): Builder
   {
     return Profile::query()
+      ->select('user_profiles.*')
+      ->join('profile_data', 'profile_data.id', '=', 'user_profiles.profile_data_id')
+      ->with('profileData')
       ->forUser(auth()->user())
       ->when($this->getFilter('search'), fn($query, $term) => $query->search($term))
       ->when($this->getFilter('type'), fn($query, $type) => $query->where('type', $type));
@@ -41,8 +44,8 @@ class MyProfilesTable extends PersistentStateDataTable
   {
     return [
       Column::make('Type', 'type')->sortable(),
-      Column::make('Name', 'preferred_long_name')->sortable(),
-      Column::make('E-mail', 'email')->sortable(),
+      Column::make('Name', 'profile_data.preferred_long_name')->sortable(),
+      Column::make('E-mail', 'profile_data.email')->sortable(),
       Column::make('Completeness'),
       Column::make('Updated At', 'updated_at')->sortable(),
       Column::make('Actions'),

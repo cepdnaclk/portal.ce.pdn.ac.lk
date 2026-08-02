@@ -45,15 +45,19 @@ class ProfileManagementTest extends TestCase
       ])
       ->assertRedirect(route('dashboard.my-profiles.index'));
 
-    $this->assertDatabaseHas('profiles', [
-      'email' => $user->email,
+    $this->assertDatabaseHas('user_profiles', [
       'user_id' => $user->id,
       'type' => Profile::TYPE_UNDERGRADUATE_STUDENT,
+      'reg_no' => 'E/24/001',
+      'review_status' => Profile::REVIEW_STATUS_APPROVED,
+    ]);
+
+    $this->assertDatabaseHas('profile_data', [
+      'email' => $user->email,
+      'user_id' => $user->id,
       'gender' => Profile::GENDER_FEMALE,
       'civil_status' => Profile::CIVIL_STATUS_SINGLE,
       'honorific' => 'Dr.',
-      'reg_no' => 'E/24/001',
-      'review_status' => Profile::REVIEW_STATUS_APPROVED,
     ]);
   }
 
@@ -137,8 +141,8 @@ class ProfileManagementTest extends TestCase
       ])
       ->assertRedirect(route('dashboard.my-profiles.index'));
 
-    $this->assertDatabaseHas('profiles', [
-      'id' => $second->id,
+    $this->assertDatabaseHas('profile_data', [
+      'id' => $second->profile_data_id,
       'full_name' => 'New Shared Name',
       'preferred_long_name' => 'New Portal Display Name',
       'gender' => Profile::GENDER_FEMALE,
@@ -230,7 +234,7 @@ class ProfileManagementTest extends TestCase
       ->delete(route('dashboard.profiles.destroy', $profile))
       ->assertRedirect(route('dashboard.profiles.index'));
 
-    $this->assertDatabaseMissing('profiles', [
+    $this->assertDatabaseMissing('user_profiles', [
       'id' => $profile->id,
     ]);
   }

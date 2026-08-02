@@ -72,7 +72,7 @@
                     @foreach ($profiles as $profile)
                         <tr>
                             <td>{{ $profile->type_label }}</td>
-                            <td>{{ $profile->preferred_long_name ?: 'N/A' }}</td>
+                            <td>{{ $profile->preferred_long_name ?: ($profile->full_name ?: 'N/A') }}</td>
                             <td>{{ $profile->email }}</td>
                             <td>{{ $profileCompleteness[$profile->id] ?? $profile->completeness }}%</td>
                             <td>

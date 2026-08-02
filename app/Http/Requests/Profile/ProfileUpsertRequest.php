@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Profile;
 
 use App\Domains\Profiles\Models\Profile;
+use App\Domains\Profiles\Models\ProfileData;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -15,10 +16,13 @@ class ProfileUpsertRequest extends FormRequest
 
   public function rules()
   {
-    $profileId = optional($this->route('profile'))->id;
     $maxSize = (int) config('profiles.image.max_size_kb');
     $requiredFields = collect(config('profiles.required_fields', []))->flip();
     $required = fn(string $field) => $requiredFields->has($field) ? ['required'] : ['nullable'];
+    $departmentOptions = array_unique(array_merge(
+      config('profiles.department', []),
+      ['Computer Engineering', 'Mechanical Engineering']
+    ));
 
     return [
       'user_id' => ['nullable', Rule::exists('users', 'id')],
@@ -27,7 +31,6 @@ class ProfileUpsertRequest extends FormRequest
         'email',
         'max:255',
         'regex:/^[^@\s]+@(eng\.pdn\.ac\.lk|ce\.pdn\.ac\.lk)$/i',
-        Rule::unique('profiles')->ignore($profileId)->where(fn($query) => $query->where('type', $this->input('type'))),
       ],
       'type' => ['required', Rule::in(Profile::TYPES)],
       'full_name' => array_merge($required('full_name'), ['string', 'max:255']),
@@ -41,7 +44,7 @@ class ProfileUpsertRequest extends FormRequest
       'profile_picture' => ['nullable', 'file', 'mimes:jpg,jpeg', "max:{$maxSize}"],
       'remove_profile_picture' => ['sometimes', 'boolean'],
       'current_position' => array_merge($required('current_position'), ['string', 'max:255']),
-      'department' => array_merge($required('department'), [Rule::in(config('profiles.department', []))]),
+      'department' => array_merge($required('department'), [Rule::in($departmentOptions)]),
       'phone_number' => array_merge($required('phone_number'), ['string', 'max:50']),
       'personal_email' => ['nullable', 'email', 'max:255'],
       'office_email' => ['nullable', 'email', 'max:255'],
@@ -101,6 +104,34 @@ class ProfileUpsertRequest extends FormRequest
       foreach ((array) $this->input('previous_affiliations', []) as $index => $item) {
         if (! empty($item['start_date']) && ! empty($item['end_date']) && $item['end_date'] < $item['start_date']) {
           $validator->errors()->add("previous_affiliations.{$index}.end_date", __('End date must be after or equal to the start date.'));
+        }
+      }
+
+      $profile = $this->route('profile');
+      $email = mb_strtolower((string) $this->input('email'));
+      $userId = $this->input('user_id');
+      $type = $this->input('type');
+
+      $profileDataQuery = ProfileData::query();
+      if ($userId) {
+        $profileDataQuery->where(function ($query) use ($userId, $email) {
+          $query->where('user_id', $userId)->orWhere('email', $email);
+        });
+      } else {
+        $profileDataQuery->where('email', $email);
+      }
+
+      $profileDataId = $profileDataQuery->value('id');
+
+      if ($profileDataId && $type) {
+        $duplicate = Profile::query()
+          ->where('profile_data_id', $profileDataId)
+          ->where('type', $type)
+          ->when($profile, fn($query) => $query->whereKeyNot($profile->id))
+          ->exists();
+
+        if ($duplicate) {
+          $validator->errors()->add('type', __('A profile with this email and type already exists.'));
         }
       }
     });

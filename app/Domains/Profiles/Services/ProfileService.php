@@ -4,6 +4,7 @@ namespace App\Domains\Profiles\Services;
 
 use App\Domains\Auth\Models\User;
 use App\Domains\Profiles\Models\Profile;
+use App\Domains\Profiles\Models\ProfileData;
 use App\Exceptions\GeneralException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -17,16 +18,21 @@ class ProfileService
   {
     return DB::transaction(function () use ($data, $actor) {
       $data = $this->prepareData($data, $actor);
-      $profile = new Profile($data);
+      $profileData = $this->resolveProfileData($data);
+      $profileData->fill($this->profileDataPayload($data));
+      $profileData->save();
+
+      $profile = new Profile($this->userProfilePayload($data));
+      $profile->profile_data_id = $profileData->id;
+      $profile->user_id = $profileData->user_id;
       $profile->review_status = Profile::REVIEW_STATUS_APPROVED;
       $profile->created_by = $actor?->id;
       $profile->updated_by = $actor?->id;
       $profile->save();
 
-      $this->syncSharedIdentityFields($profile, $data, $actor);
       $this->refreshUserName($profile);
 
-      return $profile->fresh(['user']);
+      return $profile->fresh(['user', 'profileData']);
     });
   }
 
@@ -34,15 +40,20 @@ class ProfileService
   {
     return DB::transaction(function () use ($profile, $data, $actor) {
       $data = $this->prepareData($data, $actor, $profile);
-      $profile->fill($data);
+      $profileData = $profile->profileData ?: $this->resolveProfileData($data);
+      $profileData->fill($this->profileDataPayload($data));
+      $profileData->save();
+
+      $profile->profile_data_id = $profileData->id;
+      $profile->user_id = $profileData->user_id;
+      $profile->fill($this->userProfilePayload($data));
       $profile->updated_by = $actor?->id;
       $profile->save();
 
-      $this->syncSharedIdentityFields($profile, $data, $actor);
       $this->refreshUserName($profile);
       $this->storeCompletenessInSession($profile);
 
-      return $profile->fresh(['user']);
+      return $profile->fresh(['user', 'profileData']);
     });
   }
 
@@ -53,19 +64,29 @@ class ProfileService
         throw new GeneralException(__('A linked user account must keep at least one profile.'));
       }
 
-      if ($profile->profile_picture) {
+      $profileData = $profile->profileData;
+      $hasSiblingProfiles = $profileData
+        ? Profile::where('profile_data_id', $profileData->id)->whereKeyNot($profile->id)->exists()
+        : false;
+
+      if (! $hasSiblingProfiles && $profile->profile_picture) {
         Storage::disk(config('profiles.image.disk'))->delete($profile->profile_picture);
       }
 
       $profile->delete();
+
+      if ($profileData && ! $hasSiblingProfiles) {
+        $profileData->delete();
+      }
     });
   }
 
   public function linkExistingProfiles(User $user): Collection
   {
     $profiles = Profile::query()
+      ->with('profileData')
       ->whereNull('user_id')
-      ->whereRaw('LOWER(email) = ?', [mb_strtolower($user->email)])
+      ->whereHas('profileData', fn($query) => $query->whereRaw('LOWER(email) = ?', [mb_strtolower($user->email)]))
       ->get();
 
     if ($profiles->isEmpty()) {
@@ -73,6 +94,11 @@ class ProfileService
     }
 
     foreach ($profiles as $profile) {
+      $profile->profileData?->forceFill([
+        'user_id' => $user->id,
+        'email' => mb_strtolower($user->email),
+      ])->save();
+
       $profile->forceFill([
         'user_id' => $user->id,
         'updated_by' => $user->id,
@@ -177,37 +203,35 @@ class ProfileService
     return $data;
   }
 
-  protected function syncSharedIdentityFields(Profile $profile, array $data, ?User $actor = null): void
+  protected function resolveProfileData(array $data): ProfileData
   {
-    if (! $profile->user_id) {
-      return;
+    if (! empty($data['user_id'])) {
+      return ProfileData::query()
+        ->where('user_id', $data['user_id'])
+        ->orWhere('email', $data['email'])
+        ->first() ?: new ProfileData(['user_id' => $data['user_id']]);
     }
 
-    $fields = array_intersect_key($data, array_flip(Profile::syncedIdentityFields()));
+    return ProfileData::firstOrNew(['email' => $data['email']]);
+  }
 
-    if ($fields === []) {
-      if (! $profile->wasRecentlyCreated) {
-        return;
-      }
+  protected function profileDataPayload(array $data): array
+  {
+    return Arr::only($data, ProfileData::fields());
+  }
 
-      $seedProfile = Profile::query()
-        ->where('user_id', $profile->user_id)
-        ->whereKeyNot($profile->id)
-        ->first();
-
-      if (! $seedProfile) {
-        return;
-      }
-
-      $fields = Arr::only($seedProfile->toArray(), Profile::syncedIdentityFields());
-      $profile->forceFill($fields)->save();
-      return;
-    }
-
-    Profile::query()
-      ->where('user_id', $profile->user_id)
-      ->whereKeyNot($profile->id)
-      ->update(array_merge($fields, ['updated_by' => $actor?->id]));
+  protected function userProfilePayload(array $data): array
+  {
+    return Arr::only($data, [
+      'user_id',
+      'type',
+      'reg_no',
+      'current_position',
+      'department',
+      'profile_url',
+      'profile_api',
+      'review_status',
+    ]);
   }
 
   protected function refreshUserName(Profile $profile): void

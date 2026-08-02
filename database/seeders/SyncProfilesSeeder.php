@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Domains\Auth\Models\Role;
 use App\Domains\Profiles\Models\Profile;
+use App\Domains\Profiles\Models\ProfileData;
 use Database\Seeders\Traits\DisableForeignKeys;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
@@ -61,10 +62,23 @@ class SyncProfilesSeeder extends Seeder
           $rolesLabel = implode(', ', $roles);
           $this->command?->info(">> Syncing profile: {$payload['email']} (Type: {$payload['type']}, Roles: {$rolesLabel})");
 
-          // Update or Create the profile based on email and type
+          $profileData = ProfileData::updateOrCreate(
+            ['email' => $payload['email']],
+            Arr::only($payload, ProfileData::fields())
+          );
+
           Profile::updateOrCreate(
-            ['email' => $payload['email'], 'type' => $payload['type']],
-            $payload
+            ['profile_data_id' => $profileData->id, 'type' => $payload['type']],
+            array_merge(Arr::only($payload, [
+              'user_id',
+              'type',
+              'reg_no',
+              'current_position',
+              'department',
+              'profile_url',
+              'profile_api',
+              'review_status',
+            ]), ['profile_data_id' => $profileData->id])
           );
 
           // Assign suitable role to users if exists, based on the Profile Type
