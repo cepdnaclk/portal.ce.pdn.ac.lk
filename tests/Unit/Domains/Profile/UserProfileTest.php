@@ -77,4 +77,20 @@ class UserProfileTest extends TestCase
     $this->assertTrue(UserProfile::forEmail('alternate@example.com')->first()->is($profile));
     $this->assertNull(UserProfile::forEmail('other@example.com')->first());
   }
+
+  /** @test */
+  public function it_resolves_uploaded_and_external_profile_image_urls()
+  {
+    $fileName = '00000000-0000-4000-8000-000000000000.jpg';
+    $profile = new UserProfile(['profile_image' => $fileName]);
+
+    $this->assertEquals(
+      route('download.profile-image', ['fileName' => $fileName]),
+      $profile->profileImageUrl()
+    );
+
+    $profile->profile_image = 'https://people.ce.pdn.ac.lk/images/person.jpg';
+
+    $this->assertEquals($profile->profile_image, $profile->profileImageUrl());
+  }
 }

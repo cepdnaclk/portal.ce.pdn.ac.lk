@@ -27,6 +27,10 @@ class MyProfileController extends Controller
 
     $this->profileService->update($profile, $request->profileData($profile));
 
+    if ($request->hasFile('profile_image')) {
+      $this->profileService->replaceProfileImage($profile, $request->file('profile_image'));
+    }
+
     return redirect()
       ->route('intranet.user.profile.manage')
       ->withFlashSuccess(__('Profile updated successfully.'));

@@ -26,7 +26,11 @@ class ProfileController extends Controller
 
   public function store(ProfileRequest $request)
   {
-    $this->profileService->store($request->profileData());
+    $profile = $this->profileService->store($request->profileData());
+
+    if ($request->hasFile('profile_image')) {
+      $this->profileService->replaceProfileImage($profile, $request->file('profile_image'));
+    }
 
     return redirect()
       ->route('dashboard.profiles.index')
@@ -50,6 +54,10 @@ class ProfileController extends Controller
   public function update(ProfileRequest $request, UserProfile $userProfile)
   {
     $this->profileService->update($userProfile, $request->profileData());
+
+    if ($request->hasFile('profile_image')) {
+      $this->profileService->replaceProfileImage($userProfile, $request->file('profile_image'));
+    }
 
     return redirect()
       ->route('dashboard.profiles.index')

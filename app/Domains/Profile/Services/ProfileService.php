@@ -7,6 +7,7 @@ use App\Domains\Profile\Models\UserProfile;
 use App\Domains\Profile\Models\UserProfileType;
 use App\Exceptions\GeneralException;
 use App\Services\BaseService;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +21,7 @@ class ProfileService extends BaseService
    *
    * @param  UserProfile  $profile
    */
-  public function __construct(UserProfile $profile)
+  public function __construct(UserProfile $profile, private ProfileImageService $profileImageService)
   {
     $this->model = $profile;
   }
@@ -85,7 +86,16 @@ class ProfileService extends BaseService
 
   public function delete(UserProfile $profile): void
   {
+    $this->profileImageService->delete($profile);
     $profile->delete();
+  }
+
+  /**
+   * Replace the profile picture and remove the previous uploaded file.
+   */
+  public function replaceProfileImage(UserProfile $profile, UploadedFile $file): UserProfile
+  {
+    return $this->profileImageService->replace($profile, $file);
   }
 
   /**

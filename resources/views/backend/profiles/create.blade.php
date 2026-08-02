@@ -7,6 +7,8 @@
         'url' => route('dashboard.profiles.store'),
         'method' => 'post',
         'class' => 'container',
+        'files' => true,
+        'enctype' => 'multipart/form-data',
     ]) !!}
 
     <x-backend.card>

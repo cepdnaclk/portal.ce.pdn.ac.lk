@@ -14,9 +14,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class UserProfile extends Model
 {
-  use HasFactory,
-    LogsActivity,
-    SoftDeletes;
+  use HasFactory;
+  use LogsActivity;
+  use SoftDeletes;
 
   public const HONORIFIC_OPTIONS = [
     'Mr' => 'Mr.',
@@ -106,6 +106,27 @@ class UserProfile extends Model
   public function isComplete(): bool
   {
     return $this->completeness >= 50;
+  }
+
+  public function profileImageUrl(): ?string
+  {
+    if (! $this->profile_image) {
+      return null;
+    }
+
+    $path = parse_url($this->profile_image, PHP_URL_PATH);
+    $fileName = basename($path ?: '');
+
+    if (preg_match('/^[0-9a-f-]{36}\.jpg$/i', $fileName)) {
+      $isStoredFileName = $this->profile_image === $fileName;
+      $isLegacyStorageUrl = strpos($path ?: '', '/' . config('profile.image.storage_path') . '/') !== false;
+
+      if ($isStoredFileName || $isLegacyStorageUrl) {
+        return route('download.profile-image', ['fileName' => $fileName]);
+      }
+    }
+
+    return $this->profile_image;
   }
 
   protected static function newFactory()

@@ -8,17 +8,21 @@ use App\Domains\Profile\Models\UserProfileLink;
 use App\Domains\Profile\Services\ProfileService;
 use Illuminate\Support\Arr;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ProfileWizard extends Component
 {
+  use WithFileUploads;
+
   public const STEP_FIELDS = [
     1 => ['honorific', 'full_name', 'name_with_initials', 'preferred_short_name', 'preferred_long_name'],
-    2 => ['location', 'current_affiliation', 'current_position', 'profile_image'],
+    2 => ['location', 'current_affiliation', 'current_position'],
   ];
 
   public int $step = 1;
   public array $fields = [];
   public array $links = [];
+  public $profileImage;
   public int $before = 0;
   public ?int $after = null;
 
@@ -40,12 +44,20 @@ class ProfileWizard extends Component
   {
     return collect(UpdateMyProfileRequest::profileRules())
       ->mapWithKeys(fn($rule, $field) => ["fields.$field" => $rule])
-      ->all() + ['links.*' => ['nullable', 'url', 'max:500']];
+      ->all() + [
+        'profileImage' => UpdateMyProfileRequest::profileImageRules(),
+        'links.*' => ['nullable', 'url', 'max:500'],
+      ];
   }
 
   public function next(): void
   {
     $stepFields = array_map(fn($field) => "fields.$field", self::STEP_FIELDS[$this->step]);
+
+    if ($this->step === 2) {
+      $stepFields[] = 'profileImage';
+    }
+
     $this->validate(Arr::only($this->rules(), $stepFields));
 
     $this->step = min(3, $this->step + 1);
@@ -70,6 +82,10 @@ class ProfileWizard extends Component
     $profile = $this->profile();
     app(ProfileService::class)->update($profile, $data);
 
+    if ($this->profileImage) {
+      app(ProfileService::class)->replaceProfileImage($profile, $this->profileImage);
+    }
+
     $this->after = $profile->refresh()->completeness;
     $this->step = 4; // done screen
   }
@@ -82,8 +98,11 @@ class ProfileWizard extends Component
 
   public function render()
   {
+    $profile = $this->profile();
+
     return view('livewire.backend.profile-wizard', [
-      'profileTypes' => auth()->user()->profile?->profileTypes ?? collect(),
+      'profile' => $profile,
+      'profileTypes' => $profile->profileTypes,
     ]);
   }
 }

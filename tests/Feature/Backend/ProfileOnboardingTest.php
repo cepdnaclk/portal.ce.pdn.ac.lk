@@ -6,6 +6,8 @@ use App\Domains\Auth\Models\User;
 use App\Domains\Profile\Models\UserProfile;
 use App\Http\Livewire\Backend\ProfileWizard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -93,5 +95,27 @@ class ProfileOnboardingTest extends TestCase
       ->set('links.github', 'not-a-url')
       ->call('finish')
       ->assertHasErrors('links.github');
+  }
+
+  /** @test */
+  public function the_wizard_uploads_a_profile_picture()
+  {
+    Storage::fake('public');
+    $user = User::factory()->user()->create();
+    $this->actingAs($user);
+
+    Livewire::test(ProfileWizard::class)
+      ->set('profileImage', UploadedFile::fake()->image('portrait.jpg', 400, 400))
+      ->call('finish')
+      ->assertHasNoErrors('profileImage');
+
+    $profile = $user->refresh()->profile;
+    $path = 'profile-images/' . $profile->profile_image;
+
+    $this->assertEquals(
+      route('download.profile-image', ['fileName' => $profile->profile_image]),
+      $profile->profileImageUrl()
+    );
+    Storage::disk('public')->assertExists($path);
   }
 }

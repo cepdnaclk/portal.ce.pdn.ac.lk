@@ -50,7 +50,13 @@ class ProfileRequest extends FormRequest
       'location' => ['nullable', 'string', 'max:255'],
       'current_affiliation' => ['nullable', 'string', 'max:255'],
       'current_position' => ['nullable', 'string', 'max:255'],
-      'profile_image' => ['nullable', 'url', 'max:255'],
+      'profile_image' => [
+        'nullable',
+        'file',
+        'mimes:jpeg,jpg',
+        'max:' . config('profile.image.max_file_size'),
+        'dimensions:min_width=' . config('profile.image.min_width') . ',min_height=' . config('profile.image.min_height'),
+      ],
       'links' => ['sometimes', 'array'],
       'links.*' => ['nullable', 'url', 'max:500'],
       'types' => ['sometimes', 'array'],
@@ -108,6 +114,7 @@ class ProfileRequest extends FormRequest
   public function profileData(): array
   {
     $data = $this->validated();
+    unset($data['profile_image']);
 
     $data['links'] = collect($data['links'] ?? [])
       ->filter()

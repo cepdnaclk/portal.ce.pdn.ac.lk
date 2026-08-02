@@ -6,6 +6,8 @@ use App\Domains\Auth\Models\User;
 use App\Domains\Profile\Models\UserProfile;
 use App\Domains\Profile\Models\UserProfileType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProfileManagementTest extends TestCase
@@ -148,5 +150,29 @@ class ProfileManagementTest extends TestCase
 
     $this->post(route('dashboard.profiles.store'), ['email' => 'taken@example.com'])
       ->assertSessionHasErrors(['email']);
+  }
+
+  /** @test */
+  public function an_editor_can_upload_a_profile_picture()
+  {
+    Storage::fake('public');
+    $this->loginWithPermission('user.access.profiles.editor');
+
+    $this->post(route('dashboard.profiles.store'), [
+      'email' => 'picture@example.com',
+      'profile_image' => UploadedFile::fake()->image('picture.jpg', 400, 400),
+    ])->assertRedirect(route('dashboard.profiles.index'));
+
+    $profile = UserProfile::where('email', 'picture@example.com')->firstOrFail();
+    $path = 'profile-images/' . $profile->profile_image;
+
+    $this->assertEquals(
+      route('download.profile-image', ['fileName' => $profile->profile_image]),
+      $profile->profileImageUrl()
+    );
+    Storage::disk('public')->assertExists($path);
+    $this->get($profile->profileImageUrl())
+      ->assertOk()
+      ->assertHeader('Content-Type', 'image/jpeg');
   }
 }

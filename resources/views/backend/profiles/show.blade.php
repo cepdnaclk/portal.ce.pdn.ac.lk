@@ -27,7 +27,18 @@
 
             <table class="table table-sm">
                 <tr>
-                    <th style="width: 220px;">{{ __('Email') }}</th>
+                    <th style="width: 220px;">{{ __('Profile Picture') }}</th>
+                    <td>
+                        @if ($profile->profileImageUrl())
+                            <img src="{{ $profile->profileImageUrl() }}" class="img-thumbnail" style="max-height: 150px;"
+                                alt="{{ __('Profile picture') }}" />
+                        @else
+                            —
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ __('Email') }}</th>
                     <td>{{ $profile->email }}</td>
                 </tr>
                 <tr>

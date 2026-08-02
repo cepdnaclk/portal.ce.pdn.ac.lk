@@ -63,7 +63,7 @@
                             </div>
                         </div>
 
-                        <x-forms.patch :action="route('intranet.user.profile.manage.update')">
+                        <x-forms.patch :action="route('intranet.user.profile.manage.update')" enctype="multipart/form-data">
                             <h5 class="border-bottom pb-2 mt-4 mb-3">{{ __('Names') }}</h5>
 
                             <div class="form-group row">
@@ -109,7 +109,6 @@
             'location' => __('Location'),
             'current_affiliation' => __('Current Affiliation'),
             'current_position' => __('Current Position'),
-            'profile_image' => __('Profile Image URL'),
         ] as $field => $label)
                                 <div class="form-group row">
                                     <label class="col-md-3 col-form-label text-md-right"
@@ -123,6 +122,32 @@
                                     </div>
                                 </div>
                             @endforeach
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label text-md-right" for="profile_image">
+                                    @lang('Profile Picture')
+                                </label>
+                                <div class="col-md-9">
+                                    @if ($profile->profileImageUrl())
+                                        <div class="mb-2">
+                                            <img src="{{ $profile->profileImageUrl() }}" class="img-thumbnail"
+                                                style="max-height: 150px;" alt="{{ __('Current profile picture') }}" />
+                                        </div>
+                                    @endif
+                                    <input type="file" name="profile_image" id="profile_image" class="form-control"
+                                        accept="image/jpeg" />
+                                    <small class="form-text text-muted">
+                                        {{ __('JPEG only. Maximum size: :size MB. Minimum dimensions: :width×:height pixels.', [
+                                            'size' => config('profile.image.max_file_size') / 1024,
+                                            'width' => config('profile.image.min_width'),
+                                            'height' => config('profile.image.min_height'),
+                                        ]) }}
+                                    </small>
+                                    @error('profile_image')
+                                        <strong class="text-danger d-block">{{ $message }}</strong>
+                                    @enderror
+                                </div>
+                            </div>
 
                             @if ($profile->profileTypes->isNotEmpty())
                                 <h5 class="border-bottom pb-2 mt-4 mb-3">{{ __('Profile Details') }}</h5>
@@ -150,20 +175,17 @@
                                                             <input type="text" id="student_batch" class="form-control"
                                                                 value="{{ $typeAttr($profileType, 'batch') }}" disabled />
                                                         </div>
-                                                        <div class="col-md-12">
+                                                        <div class="col-md-12 mt-3">
                                                             <label class="form-label"
                                                                 for="student_interests">@lang('Interests')</label>
-                                                            <input type="text"
-                                                                name="types[STUDENT][attributes][interests]"
-                                                                id="student_interests" class="form-control"
-                                                                placeholder="{{ __('Comma-separated values') }}"
-                                                                value="{{ $typeAttr($profileType, 'interests') }}" />
+                                                            <textarea name="types[STUDENT][attributes][interests]" id="student_interests" class="form-control" rows="3"
+                                                                placeholder="{{ __('Comma-separated values') }}">{{ $typeAttr($profileType, 'interests') }}</textarea>
                                                             @error('types.STUDENT.attributes.interests')
                                                                 <strong class="text-danger">{{ $message }}</strong>
                                                             @enderror
                                                         </div>
                                                     @elseif ($profileType->type === UserProfileType::TYPE_ACADEMIC_STAFF)
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12">
                                                             <label class="form-label"
                                                                 for="academic_designation">@lang('Designation')</label>
                                                             <input type="text"
@@ -174,38 +196,39 @@
                                                                 <strong class="text-danger">{{ $message }}</strong>
                                                             @enderror
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12 mt-3">
                                                             <label class="form-label"
                                                                 for="academic_research_interests">@lang('Research Interests')</label>
-                                                            <input type="text"
-                                                                name="types[ACADEMIC_STAFF][attributes][research_interests]"
-                                                                id="academic_research_interests" class="form-control"
-                                                                placeholder="{{ __('Comma-separated values') }}"
-                                                                value="{{ $typeAttr($profileType, 'research_interests') }}" />
+                                                            <textarea name="types[ACADEMIC_STAFF][attributes][research_interests]" id="academic_research_interests"
+                                                                class="form-control" rows="3" placeholder="{{ __('Comma-separated values') }}">{{ $typeAttr($profileType, 'research_interests') }}</textarea>
                                                             @error('types.ACADEMIC_STAFF.attributes.research_interests')
                                                                 <strong class="text-danger">{{ $message }}</strong>
                                                             @enderror
                                                         </div>
                                                     @else
-                                                        @foreach ([
-            'affiliation' => __('Affiliation'),
-            'position' => __('Position'),
-            'interests' => __('Interests'),
-        ] as $field => $label)
-                                                            <div class="col-md-4">
+                                                        @foreach (['affiliation' => __('Affiliation'), 'position' => __('Position')] as $field => $label)
+                                                            <div class="col-md-6">
                                                                 <label class="form-label"
                                                                     for="external_{{ $field }}">{{ $label }}</label>
                                                                 <input type="text"
                                                                     name="types[EXTERNAL][attributes][{{ $field }}]"
                                                                     id="external_{{ $field }}"
                                                                     class="form-control"
-                                                                    @if ($field === 'interests') placeholder="{{ __('Comma-separated values') }}" @endif
                                                                     value="{{ $typeAttr($profileType, $field) }}" />
                                                                 @error("types.EXTERNAL.attributes.$field")
                                                                     <strong class="text-danger">{{ $message }}</strong>
                                                                 @enderror
                                                             </div>
                                                         @endforeach
+                                                        <div class="col-md-12 mt-3">
+                                                            <label class="form-label"
+                                                                for="external_interests">@lang('Interests')</label>
+                                                            <textarea name="types[EXTERNAL][attributes][interests]" id="external_interests" class="form-control" rows="3"
+                                                                placeholder="{{ __('Comma-separated values') }}">{{ $typeAttr($profileType, 'interests') }}</textarea>
+                                                            @error('types.EXTERNAL.attributes.interests')
+                                                                <strong class="text-danger">{{ $message }}</strong>
+                                                            @enderror
+                                                        </div>
                                                     @endif
                                                 </div>
                                             </div>

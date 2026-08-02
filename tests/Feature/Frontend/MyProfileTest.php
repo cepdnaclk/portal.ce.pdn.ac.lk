@@ -7,6 +7,8 @@ use App\Domains\Profile\Models\UserProfile;
 use App\Domains\Profile\Models\UserProfileType;
 use App\Domains\Profile\Services\ProfileService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class MyProfileTest extends TestCase
@@ -103,5 +105,35 @@ class MyProfileTest extends TestCase
 
     $this->assertEquals('Someone Else', $other->refresh()->full_name);
     $this->assertEquals('Mine', $user->refresh()->profile->full_name);
+  }
+
+  /** @test */
+  public function a_user_can_upload_a_profile_picture()
+  {
+    Storage::fake('public');
+    $user = User::factory()->user()->create();
+    $this->actingAs($user);
+
+    $this->patch(route('intranet.user.profile.manage.update'), [
+      'profile_image' => UploadedFile::fake()->image('portrait.jpg', 400, 400),
+    ])->assertRedirect(route('intranet.user.profile.manage'));
+
+    $profile = $user->refresh()->profile;
+    $oldPath = 'profile-images/' . $profile->profile_image;
+
+    $this->assertEquals(
+      route('download.profile-image', ['fileName' => $profile->profile_image]),
+      $profile->profileImageUrl()
+    );
+    Storage::disk('public')->assertExists($oldPath);
+
+    $this->patch(route('intranet.user.profile.manage.update'), [
+      'profile_image' => UploadedFile::fake()->image('replacement.jpg', 500, 500),
+    ])->assertRedirect(route('intranet.user.profile.manage'));
+
+    $newPath = 'profile-images/' . $profile->refresh()->profile_image;
+
+    Storage::disk('public')->assertMissing($oldPath);
+    Storage::disk('public')->assertExists($newPath);
   }
 }

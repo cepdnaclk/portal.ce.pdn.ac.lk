@@ -7,6 +7,8 @@
         'url' => route('dashboard.profiles.update', $profile),
         'method' => 'put',
         'class' => 'container',
+        'files' => true,
+        'enctype' => 'multipart/form-data',
     ]) !!}
 
     <x-backend.card>

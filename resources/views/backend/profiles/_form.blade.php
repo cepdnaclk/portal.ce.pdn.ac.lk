@@ -83,7 +83,6 @@
         'location' => __('Location'),
         'current_affiliation' => __('Current Affiliation'),
         'current_position' => __('Current Position'),
-        'profile_image' => __('Profile Image URL'),
     ] as $field => $label)
     <div class="form-group row">
         {!! Form::label($field, $label, ['class' => 'col-md-2 col-form-label']) !!}
@@ -95,6 +94,29 @@
         </div>
     </div>
 @endforeach
+
+<div class="form-group row">
+    {!! Form::label('profile_image', __('Profile Picture'), ['class' => 'col-md-2 col-form-label']) !!}
+    <div class="col-md-10">
+        @if (isset($profile) && $profile->profileImageUrl())
+            <div class="mb-2">
+                <img src="{{ $profile->profileImageUrl() }}" class="img-thumbnail" style="max-height: 150px;"
+                    alt="{{ __('Current profile picture') }}" />
+            </div>
+        @endif
+        {!! Form::file('profile_image', ['class' => 'form-control', 'accept' => 'image/jpeg']) !!}
+        <small class="form-text text-muted">
+            {{ __('JPEG only. Maximum size: :size MB. Minimum dimensions: :width×:height pixels.', [
+                'size' => config('profile.image.max_file_size') / 1024,
+                'width' => config('profile.image.min_width'),
+                'height' => config('profile.image.min_height'),
+            ]) }}
+        </small>
+        @error('profile_image')
+            <strong class="text-danger d-block">{{ $message }}</strong>
+        @enderror
+    </div>
+</div>
 
 <h5 class="border-bottom pb-2 mt-4 mb-3">{{ __('Profile Types') }}</h5>
 
@@ -137,7 +159,7 @@
                         <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                 </div>
-                <div class="col-md-6 mb-0">
+                <div class="col-md-12 mb-0">
                     {!! Form::label('student_department', __('Department'), ['class' => 'form-label']) !!}
                     {!! Form::text('types[STUDENT][attributes][department]', $typeAttr('STUDENT', 'department'), [
                         'class' => 'form-control',
@@ -147,12 +169,13 @@
                         <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                 </div>
-                <div class="col-md-6 mb-0">
+                <div class="col-md-12 mt-3 mb-0">
                     {!! Form::label('student_interests', __('Interests'), ['class' => 'form-label']) !!}
-                    {!! Form::text('types[STUDENT][attributes][interests]', $typeAttr('STUDENT', 'interests'), [
+                    {!! Form::textarea('types[STUDENT][attributes][interests]', $typeAttr('STUDENT', 'interests'), [
                         'class' => 'form-control',
                         'id' => 'student_interests',
                         'placeholder' => __('Comma-separated values'),
+                        'rows' => 3,
                     ]) !!}
                     @error('types.STUDENT.attributes.interests')
                         <strong class="text-danger">{{ $message }}</strong>
@@ -179,7 +202,7 @@
                 ]) !!}
             </div>
             <div class="row">
-                <div class="col-md-6 mb-0">
+                <div class="col-md-12 mb-0">
                     {!! Form::label('academic_designation', __('Designation'), ['class' => 'form-label']) !!}
                     {!! Form::text('types[ACADEMIC_STAFF][attributes][designation]', $typeAttr('ACADEMIC_STAFF', 'designation'), [
                         'class' => 'form-control',
@@ -189,15 +212,16 @@
                         <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                 </div>
-                <div class="col-md-6 mb-0">
+                <div class="col-md-12 mt-3 mb-0">
                     {!! Form::label('academic_research_interests', __('Research Interests'), ['class' => 'form-label']) !!}
-                    {!! Form::text(
+                    {!! Form::textarea(
                         'types[ACADEMIC_STAFF][attributes][research_interests]',
                         $typeAttr('ACADEMIC_STAFF', 'research_interests'),
                         [
                             'class' => 'form-control',
                             'id' => 'academic_research_interests',
                             'placeholder' => __('Comma-separated values'),
+                            'rows' => 3,
                         ],
                     ) !!}
                     @error('types.ACADEMIC_STAFF.attributes.research_interests')
@@ -223,23 +247,30 @@
                 {!! Form::label('type_external', __('Assign external profile'), ['class' => 'ms-4 form-check-label']) !!}
             </div>
             <div class="row">
-                @foreach ([
-        'affiliation' => __('Affiliation'),
-        'position' => __('Position'),
-        'interests' => __('Interests'),
-    ] as $field => $label)
-                    <div class="col-md-4 mb-0">
+                @foreach (['affiliation' => __('Affiliation'), 'position' => __('Position')] as $field => $label)
+                    <div class="col-md-6 mb-0">
                         {!! Form::label("external_$field", $label, ['class' => 'form-label']) !!}
                         {!! Form::text("types[EXTERNAL][attributes][$field]", $typeAttr('EXTERNAL', $field), [
                             'class' => 'form-control',
                             'id' => "external_$field",
-                            'placeholder' => $field === 'interests' ? __('Comma-separated values') : null,
                         ]) !!}
                         @error("types.EXTERNAL.attributes.$field")
                             <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                 @endforeach
+                <div class="col-md-12 mt-3 mb-0">
+                    {!! Form::label('external_interests', __('Interests'), ['class' => 'form-label']) !!}
+                    {!! Form::textarea('types[EXTERNAL][attributes][interests]', $typeAttr('EXTERNAL', 'interests'), [
+                        'class' => 'form-control',
+                        'id' => 'external_interests',
+                        'placeholder' => __('Comma-separated values'),
+                        'rows' => 3,
+                    ]) !!}
+                    @error('types.EXTERNAL.attributes.interests')
+                        <strong class="text-danger">{{ $message }}</strong>
+                    @enderror
+                </div>
             </div>
         </div>
     </div>

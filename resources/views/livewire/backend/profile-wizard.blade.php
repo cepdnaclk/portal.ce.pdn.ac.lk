@@ -84,7 +84,6 @@
         'location' => __('Location'),
         'current_affiliation' => __('Current Affiliation'),
         'current_position' => __('Current Position'),
-        'profile_image' => __('Profile Image URL'),
     ] as $field => $label)
             <div class="form-group row">
                 <label class="col-md-2 col-form-label" for="wizard_{{ $field }}">{{ $label }}</label>
@@ -97,6 +96,36 @@
                 </div>
             </div>
         @endforeach
+
+        <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="wizard_profile_image">@lang('Profile Picture')</label>
+            <div class="col-md-10">
+                @if ($profileImage)
+                    <div class="mb-2">
+                        <img src="{{ $profileImage->temporaryUrl() }}" class="img-thumbnail" style="max-height: 150px;"
+                            alt="{{ __('Selected profile picture') }}" />
+                    </div>
+                @elseif ($profile->profileImageUrl())
+                    <div class="mb-2">
+                        <img src="{{ $profile->profileImageUrl() }}" class="img-thumbnail" style="max-height: 150px;"
+                            alt="{{ __('Current profile picture') }}" />
+                    </div>
+                @endif
+                <input type="file" id="wizard_profile_image" class="form-control" accept="image/jpeg"
+                    wire:model="profileImage" />
+                <small class="form-text text-muted">
+                    {{ __('JPEG only. Maximum size: :size MB. Minimum dimensions: :width×:height pixels.', [
+                        'size' => config('profile.image.max_file_size') / 1024,
+                        'width' => config('profile.image.min_width'),
+                        'height' => config('profile.image.min_height'),
+                    ]) }}
+                </small>
+                <div class="text-muted" wire:loading wire:target="profileImage">{{ __('Uploading…') }}</div>
+                @error('profileImage')
+                    <strong class="text-danger d-block">{{ $message }}</strong>
+                @enderror
+            </div>
+        </div>
     @elseif ($step === 3)
         <h5 class="border-bottom pb-2 mb-3">{{ __('Links') }}</h5>
 
@@ -133,8 +162,8 @@
 
     @if ($step < 4)
         <div class="border-top pt-3 mt-4 d-flex justify-content-between">
-            <button type="button" class="btn btn-sm btn-light btn-w-150" wire:click="back" wire:loading.attr="disabled"
-                @if ($step === 1) disabled @endif>
+            <button type="button" class="btn btn-sm btn-light btn-w-150" wire:click="back"
+                wire:loading.attr="disabled" @if ($step === 1) disabled @endif>
                 {{ __('Back') }}
             </button>
 
