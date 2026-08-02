@@ -18,6 +18,16 @@ class UserProfile extends Model
     LogsActivity,
     SoftDeletes;
 
+  public const HONORIFIC_OPTIONS = [
+    'Mr' => 'Mr.',
+    'Mrs' => 'Mrs.',
+    'Miss' => 'Miss',
+    'Ms' => 'Ms.',
+    'Dr' => 'Dr.',
+    'Prof' => 'Prof.',
+    'Rev' => 'Rev.',
+  ];
+
   protected static $logFillable = true;
   protected static $logOnlyDirty = true;
 

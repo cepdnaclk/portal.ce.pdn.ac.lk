@@ -5,15 +5,17 @@
 @section('content')
     {!! Form::open([
         'url' => route('dashboard.profiles.store'),
-        'method' => 'POST',
+        'method' => 'post',
         'class' => 'container',
     ]) !!}
 
-    @csrf
-
     <x-backend.card>
         <x-slot name="header">
-            Profile : Create
+            {{ __('Profile : Create') }}
+        </x-slot>
+
+        <x-slot name="headerActions">
+            <x-utils.link class="card-header-action" :href="route('dashboard.profiles.index')" :text="__('Cancel')" />
         </x-slot>
 
         <x-slot name="body">
@@ -21,7 +23,7 @@
         </x-slot>
 
         <x-slot name="footer">
-            {!! Form::submit(__('Create'), ['class' => 'btn btn-primary btn-w-150 float-end']) !!}
+            {!! Form::submit(__('Create'), ['class' => 'btn btn-primary btn-w-150 float-end', 'id' => 'submit-button']) !!}
         </x-slot>
     </x-backend.card>
 

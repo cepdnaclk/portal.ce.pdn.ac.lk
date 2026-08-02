@@ -1,142 +1,153 @@
 <div>
     @if ($step < 4)
-        {{-- Step indicator --}}
-        <div class="mb-4">
-            <span class="badge {{ $step === 1 ? 'bg-primary' : 'bg-secondary' }}">1. {{ __('Names') }}</span>
-            <span class="badge {{ $step === 2 ? 'bg-primary' : 'bg-secondary' }}">2.
-                {{ __('Location & Affiliation') }}</span>
-            <span class="badge {{ $step === 3 ? 'bg-primary' : 'bg-secondary' }}">3. {{ __('Links') }}</span>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-2">
+                <strong>{{ __('Progress') }}</strong>
+            </div>
+            <div class="col-md-10">
+                <div class="progress" aria-label="{{ __('Profile completeness') }}">
+                    <div class="progress-bar {{ $before >= 50 ? 'bg-success' : 'bg-warning' }}" role="progressbar"
+                        style="width: {{ $before }}%" aria-valuenow="{{ $before }}" aria-valuemin="0"
+                        aria-valuemax="100">
+                        {{ $before }}%
+                    </div>
+                </div>
+                <small class="form-text text-muted">{{ __('Current profile completeness') }}</small>
+            </div>
         </div>
 
-        <div class="mb-4">
-            <div class="progress" style="max-width: 300px;">
-                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $before }}%">
-                    {{ $before }}%</div>
-            </div>
-            <small class="text-muted">{{ __('Current profile completeness') }}</small>
-        </div>
+        <ul class="nav nav-tabs mb-4" aria-label="{{ __('Profile setup steps') }}">
+            @foreach ([1 => __('Names'), 2 => __('Location & Affiliation'), 3 => __('Links')] as $number => $label)
+                <li class="nav-item">
+                    <span
+                        class="nav-link {{ $step === $number ? 'active' : '' }} {{ $step < $number ? 'disabled' : '' }}">
+                        {{ $number }}. {{ $label }}
+                    </span>
+                </li>
+            @endforeach
+        </ul>
 
         @if ($profileTypes->isNotEmpty())
-            <div class="mb-4">
-                <strong>{{ __('Profile Types') }}:</strong>
-                @foreach ($profileTypes as $profileType)
-                    <span class="badge bg-info">{{ $profileType->type }}</span>
-                @endforeach
-                <br>
-                <small
-                    class="text-muted">{{ __('Profile types are assigned by administrators or data sync.') }}</small>
+            <div class="form-group row">
+                <div class="col-md-2 col-form-label">{{ __('Profile Types') }}</div>
+                <div class="col-md-10">
+                    @foreach ($profileTypes as $profileType)
+                        <span class="badge bg-info">{{ str_replace('_', ' ', $profileType->type) }}</span>
+                    @endforeach
+                    <small class="form-text text-muted d-block">
+                        {{ __('Profile types are assigned by administrators or data sync.') }}
+                    </small>
+                </div>
             </div>
         @endif
     @endif
 
     @if ($step === 1)
-        <div class="row">
-            <div class="col-md-2 mb-3">
-                <label class="form-label">@lang('Honorific')</label>
-                <input type="text" class="form-control" maxlength="20" wire:model.defer="fields.honorific" />
+        <h5 class="border-bottom pb-2 mb-3">{{ __('Names') }}</h5>
+
+        <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="wizard_honorific">@lang('Honorific')</label>
+            <div class="col-md-3">
+                <select id="wizard_honorific" class="form-select" wire:model.defer="fields.honorific">
+                    <option value="">{{ __('Select an honorific') }}</option>
+                    @foreach (\App\Domains\Profile\Models\UserProfile::HONORIFIC_OPTIONS as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
                 @error('fields.honorific')
                     <strong class="text-danger">{{ $message }}</strong>
                 @enderror
             </div>
-            <div class="col-md-5 mb-3">
-                <label class="form-label">@lang('Full Name')</label>
-                <input type="text" class="form-control" wire:model.defer="fields.full_name" />
-                @error('fields.full_name')
-                    <strong class="text-danger">{{ $message }}</strong>
-                @enderror
-            </div>
-            <div class="col-md-5 mb-3">
-                <label class="form-label">@lang('Name with Initials')</label>
-                <input type="text" class="form-control" wire:model.defer="fields.name_with_initials" />
-                @error('fields.name_with_initials')
-                    <strong class="text-danger">{{ $message }}</strong>
-                @enderror
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">@lang('Preferred Short Name')</label>
-                <input type="text" class="form-control" wire:model.defer="fields.preferred_short_name" />
-                @error('fields.preferred_short_name')
-                    <strong class="text-danger">{{ $message }}</strong>
-                @enderror
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">@lang('Preferred Long Name')</label>
-                <input type="text" class="form-control" wire:model.defer="fields.preferred_long_name" />
-                @error('fields.preferred_long_name')
-                    <strong class="text-danger">{{ $message }}</strong>
-                @enderror
-            </div>
         </div>
+
+        @foreach ([
+        'full_name' => __('Full Name'),
+        'name_with_initials' => __('Name with Initials'),
+        'preferred_short_name' => __('Preferred Short Name'),
+        'preferred_long_name' => __('Preferred Long Name'),
+    ] as $field => $label)
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="wizard_{{ $field }}">{{ $label }}</label>
+                <div class="col-md-10">
+                    <input type="text" id="wizard_{{ $field }}" class="form-control"
+                        wire:model.defer="fields.{{ $field }}" />
+                    @error("fields.$field")
+                        <strong class="text-danger">{{ $message }}</strong>
+                    @enderror
+                </div>
+            </div>
+        @endforeach
     @elseif ($step === 2)
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label">@lang('Location')</label>
-                <input type="text" class="form-control" wire:model.defer="fields.location" />
-                @error('fields.location')
-                    <strong class="text-danger">{{ $message }}</strong>
-                @enderror
+        <h5 class="border-bottom pb-2 mb-3">{{ __('Location & Affiliation') }}</h5>
+
+        @foreach ([
+        'location' => __('Location'),
+        'current_affiliation' => __('Current Affiliation'),
+        'current_position' => __('Current Position'),
+        'profile_image' => __('Profile Image URL'),
+    ] as $field => $label)
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="wizard_{{ $field }}">{{ $label }}</label>
+                <div class="col-md-10">
+                    <input type="text" id="wizard_{{ $field }}" class="form-control"
+                        wire:model.defer="fields.{{ $field }}" />
+                    @error("fields.$field")
+                        <strong class="text-danger">{{ $message }}</strong>
+                    @enderror
+                </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">@lang('Current Affiliation')</label>
-                <input type="text" class="form-control" wire:model.defer="fields.current_affiliation" />
-                @error('fields.current_affiliation')
-                    <strong class="text-danger">{{ $message }}</strong>
-                @enderror
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">@lang('Current Position')</label>
-                <input type="text" class="form-control" wire:model.defer="fields.current_position" />
-                @error('fields.current_position')
-                    <strong class="text-danger">{{ $message }}</strong>
-                @enderror
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">@lang('Profile Image URL')</label>
-                <input type="text" class="form-control" wire:model.defer="fields.profile_image" />
-                @error('fields.profile_image')
-                    <strong class="text-danger">{{ $message }}</strong>
-                @enderror
-            </div>
-        </div>
+        @endforeach
     @elseif ($step === 3)
-        <div class="row">
-            @foreach (\App\Domains\Profile\Models\UserProfileLink::LINK_TYPE_LABELS as $linkType => $linkLabel)
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">{{ $linkLabel }}</label>
-                    <input type="text" class="form-control" placeholder="https://…"
-                        wire:model.defer="links.{{ $linkType }}" />
+        <h5 class="border-bottom pb-2 mb-3">{{ __('Links') }}</h5>
+
+        @foreach (\App\Domains\Profile\Models\UserProfileLink::LINK_TYPE_LABELS as $linkType => $linkLabel)
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label"
+                    for="wizard_link_{{ $linkType }}">{{ $linkLabel }}</label>
+                <div class="col-md-10">
+                    <input type="url" id="wizard_link_{{ $linkType }}" class="form-control"
+                        placeholder="https://example.com" wire:model.defer="links.{{ $linkType }}" />
                     @error("links.$linkType")
                         <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
     @else
-        {{-- Done --}}
         <div class="text-center py-4">
-            <h4 class="mb-3">{{ __('Profile updated!') }}</h4>
-            <p>
+            <i class="fa fa-check-circle text-success mb-3" style="font-size: 3rem;"></i>
+            <h4>{{ __('Profile updated') }}</h4>
+            <p class="text-muted">
                 {{ __('Completeness went from :before% to :after%.', ['before' => $before, 'after' => $after]) }}
             </p>
-            <div class="progress mx-auto" style="max-width: 300px;">
+            <div class="progress mx-auto" style="max-width: 400px;" aria-label="{{ __('Profile completeness') }}">
                 <div class="progress-bar {{ $after >= 50 ? 'bg-success' : 'bg-warning' }}" role="progressbar"
-                    style="width: {{ $after }}%">{{ $after }}%</div>
+                    style="width: {{ $after }}%" aria-valuenow="{{ $after }}" aria-valuemin="0"
+                    aria-valuemax="100">
+                    {{ $after }}%
+                </div>
             </div>
             <a href="{{ route('dashboard.home') }}" class="btn btn-primary mt-4">{{ __('Back to Dashboard') }}</a>
         </div>
     @endif
 
     @if ($step < 4)
-        <div class="d-flex justify-content-between mt-3">
-            <button type="button" class="btn btn-light" wire:click="back"
+        <div class="border-top pt-3 mt-4 d-flex justify-content-between">
+            <button type="button" class="btn btn-sm btn-light btn-w-150" wire:click="back" wire:loading.attr="disabled"
                 @if ($step === 1) disabled @endif>
                 {{ __('Back') }}
             </button>
 
             @if ($step < 3)
-                <button type="button" class="btn btn-primary" wire:click="next">{{ __('Next') }}</button>
+                <button type="button" class="btn btn-sm btn-primary btn-w-150" wire:click="next"
+                    wire:loading.attr="disabled">
+                    {{ __('Next') }}
+                </button>
             @else
-                <button type="button" class="btn btn-success" wire:click="finish">{{ __('Finish') }}</button>
+                <button type="button" class="btn btn-sm btn-success btn-w-150" wire:click="finish"
+                    wire:loading.attr="disabled">
+                    {{ __('Finish') }}
+                </button>
             @endif
         </div>
     @endif

@@ -21,7 +21,6 @@ class ProfilesTable extends PersistentStateDataTable
   {
     return [
       Column::make('Email', 'email')->searchable()->sortable(),
-      Column::make('Full Name', 'full_name')->searchable()->sortable(),
       Column::make('Name with Initials', 'name_with_initials')->searchable()->sortable(),
       Column::make('Types'),
       Column::make('Account'),
