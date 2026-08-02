@@ -11,6 +11,7 @@
 
             <x-slot name="headerActions">
                 @if ($logged_in_user->hasPermissionTo('user.access.profiles.editor'))
+                    <x-utils.link icon="fa fa-compress" class="card-header-action" :href="route('dashboard.profiles.merge.select')" :text="__('Merge Profiles')" />
                     <x-utils.link icon="c-icon cil-plus" class="card-header-action" :href="route('dashboard.profiles.create')" :text="__('Create a Profile')" />
                 @endif
             </x-slot>

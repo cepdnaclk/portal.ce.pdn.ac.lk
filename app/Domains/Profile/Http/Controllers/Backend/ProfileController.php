@@ -3,6 +3,7 @@
 namespace App\Domains\Profile\Http\Controllers\Backend;
 
 use App\Domains\Profile\Http\Requests\Backend\ProfileRequest;
+use App\Domains\Profile\Http\Requests\Backend\ProfileMergeRequest;
 use App\Domains\Profile\Models\UserProfile;
 use App\Domains\Profile\Services\ProfileService;
 use App\Http\Controllers\Controller;
@@ -35,6 +36,53 @@ class ProfileController extends Controller
     return redirect()
       ->route('dashboard.profiles.index')
       ->with('Success', __('Profile created successfully.'));
+  }
+
+  public function mergeSelect()
+  {
+    return view('backend.profiles.merge-select', [
+      'profileOptions' => UserProfile::query()
+        ->orderBy('email')
+        ->get()
+        ->mapWithKeys(function ($profile) {
+          $name = $profile->name_with_initials ?: $profile->full_name;
+
+          return [$profile->id => $name ? "{$profile->email} — {$name}" : $profile->email];
+        })
+        ->all(),
+    ]);
+  }
+
+  public function mergeReview(ProfileMergeRequest $request)
+  {
+    $profiles = UserProfile::query()
+      ->with('profileTypes', 'links', 'user')
+      ->whereIn('id', $request->validated()['profile_ids'])
+      ->get()
+      ->sortBy(function ($profile) use ($request) {
+        return array_search($profile->id, array_map('intval', $request->input('profile_ids')), true);
+      })
+      ->values();
+
+    return view('backend.profiles.merge-review', [
+      'profiles' => $profiles,
+      'hasAccountConflict' => $profiles->pluck('user_id')->filter()->unique()->count() > 1,
+    ]);
+  }
+
+  public function mergeStore(ProfileMergeRequest $request)
+  {
+    $data = $request->validated();
+    $primary = UserProfile::findOrFail($data['primary_profile_id']);
+    $secondaryId = collect($data['profile_ids'])
+      ->map(fn($id) => (int) $id)
+      ->first(fn($id) => $id !== $primary->id);
+
+    $profile = $this->profileService->merge($primary, UserProfile::findOrFail($secondaryId));
+
+    return redirect()
+      ->route('dashboard.profiles.show', $profile)
+      ->with('Success', __('Profiles merged successfully.'));
   }
 
   public function show(UserProfile $userProfile)

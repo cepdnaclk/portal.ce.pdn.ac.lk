@@ -91,6 +91,103 @@ class ProfileService extends BaseService
   }
 
   /**
+   * Merge a secondary profile into the selected primary profile.
+   * Populated primary values win; missing values are filled from secondary.
+   *
+   * @throws GeneralException
+   */
+  public function merge(UserProfile $primary, UserProfile $secondary): UserProfile
+  {
+    if ($primary->is($secondary)) {
+      throw new GeneralException(__('Select two different profiles to merge.'));
+    }
+
+    [$profile, $discardedImage] = DB::transaction(function () use ($primary, $secondary) {
+      $profiles = $this->model::query()
+        ->whereIn('id', [$primary->id, $secondary->id])
+        ->lockForUpdate()
+        ->get()
+        ->keyBy('id');
+      $primary = $profiles->get($primary->id);
+      $secondary = $profiles->get($secondary->id);
+
+      if (! $primary || ! $secondary) {
+        throw new GeneralException(__('One of the selected profiles is no longer available.'));
+      }
+
+      if ($primary->user_id && $secondary->user_id && $primary->user_id !== $secondary->user_id) {
+        throw new GeneralException(__('Profiles linked to different portal accounts cannot be merged.'));
+      }
+
+      $secondaryImage = $secondary->profile_image;
+      $values = [];
+
+      foreach (
+        [
+          'full_name',
+          'name_with_initials',
+          'preferred_short_name',
+          'preferred_long_name',
+          'honorific',
+          'location',
+          'current_affiliation',
+          'current_position',
+          'profile_image',
+          'user_id',
+        ] as $field
+      ) {
+        $values[$field] = filled($primary->{$field}) ? $primary->{$field} : $secondary->{$field};
+      }
+
+      $values['alternate_email'] = $this->mergedAlternateEmail($primary, $secondary);
+      $primary->update($values);
+
+      foreach ($secondary->profileTypes()->get() as $secondaryType) {
+        $primaryType = $primary->profileTypes()->where('type', $secondaryType->type)->first();
+
+        if (! $primaryType) {
+          $secondaryType->update(['user_profile_id' => $primary->id]);
+          continue;
+        }
+
+        $attributes = $this->mergeFilledValues(
+          $primaryType->getAttribute('attributes') ?? [],
+          $secondaryType->getAttribute('attributes') ?? []
+        );
+        $sourceKey = filled($primaryType->source_key) ? $primaryType->source_key : $secondaryType->source_key;
+
+        // Release the secondary unique (type, source_key) before updating primary.
+        $secondaryType->delete();
+        $primaryType->update(['attributes' => $attributes, 'source_key' => $sourceKey]);
+      }
+
+      foreach ($secondary->links()->get() as $secondaryLink) {
+        $primaryLink = $primary->links()->where('type', $secondaryLink->type)->first();
+
+        if ($primaryLink) {
+          $secondaryLink->delete();
+        } else {
+          $secondaryLink->update(['user_profile_id' => $primary->id]);
+        }
+      }
+
+      $secondary->delete();
+      $discardedImage = filled($secondaryImage) && $secondaryImage !== $primary->profile_image
+        ? $secondaryImage
+        : null;
+
+      return [$primary->refresh(), $discardedImage];
+    });
+
+    if ($discardedImage) {
+      $discardedProfile = new UserProfile(['profile_image' => $discardedImage]);
+      $this->profileImageService->delete($discardedProfile);
+    }
+
+    return $profile->load('profileTypes', 'links', 'user');
+  }
+
+  /**
    * Replace the profile picture and remove the previous uploaded file.
    */
   public function replaceProfileImage(UserProfile $profile, UploadedFile $file): UserProfile
@@ -118,6 +215,32 @@ class ProfileService extends BaseService
   public function removeType(UserProfile $profile, string $type): void
   {
     $profile->profileTypes()->where('type', $type)->delete();
+  }
+
+  private function mergedAlternateEmail(UserProfile $primary, UserProfile $secondary): ?string
+  {
+    if (filled($primary->alternate_email)) {
+      return $primary->alternate_email;
+    }
+
+    foreach ([$secondary->email, $secondary->alternate_email] as $email) {
+      if (filled($email) && strcasecmp($email, $primary->email) !== 0) {
+        return $email;
+      }
+    }
+
+    return null;
+  }
+
+  private function mergeFilledValues(array $primary, array $secondary): array
+  {
+    foreach ($primary as $key => $value) {
+      if (filled($value) || ! array_key_exists($key, $secondary)) {
+        $secondary[$key] = $value;
+      }
+    }
+
+    return $secondary;
   }
 
   /**

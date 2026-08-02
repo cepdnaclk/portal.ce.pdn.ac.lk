@@ -15,6 +15,10 @@
         </x-slot>
 
         <x-slot name="body">
+            @if (session('Success'))
+                <x-utils.alert type="success" dismissable="true">{{ session('Success') }}</x-utils.alert>
+            @endif
+
             <div class="mb-4">
                 <div class="progress" style="max-width: 300px;">
                     <div class="progress-bar {{ $profile->isComplete() ? 'bg-success' : 'bg-warning' }}" role="progressbar"

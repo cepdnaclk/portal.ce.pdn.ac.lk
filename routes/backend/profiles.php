@@ -48,6 +48,21 @@ Route::group(['middleware' => ['permission:user.access.profiles.editor|user.acce
     Route::post('profiles', [ProfileController::class, 'store'])
       ->name('profiles.store');
 
+    // Merge two profiles
+    Route::get('profiles/merge', [ProfileController::class, 'mergeSelect'])
+      ->name('profiles.merge.select')
+      ->breadcrumbs(function (Trail $trail) {
+        $trail->push(__('Home'), route('dashboard.home'))
+          ->push(__('Profiles'), route('dashboard.profiles.index'))
+          ->push(__('Merge Profiles'));
+      });
+
+    Route::post('profiles/merge/review', [ProfileController::class, 'mergeReview'])
+      ->name('profiles.merge.review');
+
+    Route::post('profiles/merge', [ProfileController::class, 'mergeStore'])
+      ->name('profiles.merge.store');
+
     // Edit
     Route::get('profiles/edit/{userProfile}', [ProfileController::class, 'edit'])
       ->name('profiles.edit')

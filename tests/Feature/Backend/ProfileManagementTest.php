@@ -4,6 +4,7 @@ namespace Tests\Feature\Backend;
 
 use App\Domains\Auth\Models\User;
 use App\Domains\Profile\Models\UserProfile;
+use App\Domains\Profile\Models\UserProfileLink;
 use App\Domains\Profile\Models\UserProfileType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -107,6 +108,120 @@ class ProfileManagementTest extends TestCase
       ->assertRedirect(route('dashboard.profiles.index'));
 
     $this->assertSoftDeleted('user_profiles', ['id' => $profile->id]);
+  }
+
+  /** @test */
+  public function an_editor_can_review_and_merge_two_profiles()
+  {
+    $this->loginWithPermission('user.access.profiles.editor');
+    $linkedUser = User::factory()->user()->create();
+    $primary = UserProfile::factory()->create([
+      'email' => 'primary@example.com',
+      'full_name' => 'Primary Name',
+      'location' => null,
+    ]);
+    $secondary = UserProfile::factory()->create([
+      'email' => 'secondary@example.com',
+      'full_name' => 'Secondary Name',
+      'location' => 'Kandy',
+      'user_id' => $linkedUser->id,
+    ]);
+
+    UserProfileType::factory()->create([
+      'user_profile_id' => $primary->id,
+      'type' => UserProfileType::TYPE_ACADEMIC_STAFF,
+      'source_key' => 'primary-staff',
+      'attributes' => ['designation' => 'Senior Lecturer'],
+    ]);
+    UserProfileType::factory()->create([
+      'user_profile_id' => $secondary->id,
+      'type' => UserProfileType::TYPE_ACADEMIC_STAFF,
+      'source_key' => 'secondary-staff',
+      'attributes' => ['designation' => 'Lecturer', 'start_date' => '2020-01-01'],
+    ]);
+    UserProfileType::factory()->create([
+      'user_profile_id' => $secondary->id,
+      'type' => UserProfileType::TYPE_STUDENT,
+      'source_key' => 'E/20/100',
+    ]);
+    UserProfileLink::factory()->create([
+      'user_profile_id' => $primary->id,
+      'type' => 'github',
+      'url' => 'https://github.com/primary',
+    ]);
+    UserProfileLink::factory()->create([
+      'user_profile_id' => $secondary->id,
+      'type' => 'github',
+      'url' => 'https://github.com/secondary',
+    ]);
+    UserProfileLink::factory()->create([
+      'user_profile_id' => $secondary->id,
+      'type' => 'linkedin',
+      'url' => 'https://linkedin.com/in/secondary',
+    ]);
+
+    $this->get(route('dashboard.profiles.merge.select'))
+      ->assertOk()
+      ->assertSee('primary@example.com')
+      ->assertSee('secondary@example.com');
+
+    $this->post(route('dashboard.profiles.merge.review'), [
+      'profile_ids' => [$primary->id, $secondary->id],
+    ])->assertOk()
+      ->assertSee('primary@example.com')
+      ->assertSee('secondary@example.com');
+
+    $this->post(route('dashboard.profiles.merge.store'), [
+      'profile_ids' => [$primary->id, $secondary->id],
+      'primary_profile_id' => $primary->id,
+    ])->assertRedirect(route('dashboard.profiles.show', $primary));
+
+    $primary->refresh()->load('profileTypes', 'links');
+    $this->assertEquals('Primary Name', $primary->full_name);
+    $this->assertEquals('Kandy', $primary->location);
+    $this->assertEquals('secondary@example.com', $primary->alternate_email);
+    $this->assertEquals($linkedUser->id, $primary->user_id);
+    $this->assertSoftDeleted('user_profiles', ['id' => $secondary->id]);
+    $this->assertEqualsCanonicalizing(
+      [UserProfileType::TYPE_ACADEMIC_STAFF, UserProfileType::TYPE_STUDENT],
+      $primary->profileTypes->pluck('type')->all()
+    );
+
+    $academic = $primary->profileTypes->firstWhere('type', UserProfileType::TYPE_ACADEMIC_STAFF);
+    $this->assertEquals('primary-staff', $academic->source_key);
+    $this->assertEquals('Senior Lecturer', $academic->getAttribute('attributes')['designation']);
+    $this->assertEquals('2020-01-01', $academic->getAttribute('attributes')['start_date']);
+    $this->assertEquals('https://github.com/primary', $primary->links->firstWhere('type', 'github')->url);
+    $this->assertEquals('https://linkedin.com/in/secondary', $primary->links->firstWhere('type', 'linkedin')->url);
+  }
+
+  /** @test */
+  public function profiles_linked_to_different_accounts_cannot_be_merged()
+  {
+    $this->loginWithPermission('user.access.profiles.editor');
+    $primary = UserProfile::factory()->create(['user_id' => User::factory()->user()->create()->id]);
+    $secondary = UserProfile::factory()->create(['user_id' => User::factory()->user()->create()->id]);
+
+    $this->post(route('dashboard.profiles.merge.store'), [
+      'profile_ids' => [$primary->id, $secondary->id],
+      'primary_profile_id' => $primary->id,
+    ])->assertSessionHas('flash_danger');
+
+    $this->assertNull($secondary->refresh()->deleted_at);
+  }
+
+  /** @test */
+  public function viewers_cannot_access_profile_merging()
+  {
+    $this->loginWithPermission('user.access.profiles.viewer');
+    $first = UserProfile::factory()->create();
+    $second = UserProfile::factory()->create();
+
+    $this->assertDenied($this->get(route('dashboard.profiles.merge.select')));
+    $this->assertDenied($this->post(route('dashboard.profiles.merge.store'), [
+      'profile_ids' => [$first->id, $second->id],
+      'primary_profile_id' => $first->id,
+    ]));
   }
 
   /** @test */
