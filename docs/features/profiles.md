@@ -49,7 +49,7 @@ Backend pages show a warning banner ("Your profile is X% complete") while comple
 
 `UserEventListener` calls `ProfileService::findOrCreateForUser` on `UserCreated` and on first login: an existing unlinked profile matching the user's email (or alternate email) is linked, otherwise a minimal profile is created. Failures are logged and never break user creation or login.
 
-## Syncing from the People API
+## Syncing from the People and Taxonomy APIs
 
 ```bash
 # Preview: full pass in a transaction, prints counts, rolls back
@@ -57,8 +57,11 @@ php artisan profiles:sync --dry-run
 
 # Import/refresh both feeds (or limit with --students / --staff)
 php artisan profiles:sync
+
+# Use only the internal taxonomy as the staff source
+php artisan profiles:sync --staff --staff-source=taxonomy
 ```
 
-The sync is idempotent and safe on cron. Identity is resolved by `(type, source_key)` first, then by email (adopting profiles created by auto-linking), then a new profile is created. Non-empty API values overwrite profile fields; empty values never clobber existing data; links are upserted but never deleted; student records with no constructible email are skipped and counted (`skipped_no_email`). A person in both feeds resolves to one profile with two types.
+The sync is idempotent and safe on cron. Staff can come from `people`, `taxonomy`, or `both` (the default) using `--staff-source`. Staff details from the internal `/api/taxonomy/v2/cepdnaclk/staff` endpoint are merged into the People API staff feed by email when both are selected, including joined/leave dates and profile links. Identity is resolved by `(type, source_key)` first, then by email (adopting profiles created by auto-linking), then a new profile is created. Non-empty API values overwrite profile fields; empty values never clobber existing data; links are upserted but never deleted; student records with no constructible email are skipped and counted (`skipped_no_email`). A person in both feeds resolves to one profile with two types.
 
 Once student self-service replaces the API as the source of truth, switch students to seed-only (see the note in `profiles:sync --help`).

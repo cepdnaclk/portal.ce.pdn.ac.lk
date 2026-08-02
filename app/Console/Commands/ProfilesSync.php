@@ -18,6 +18,7 @@ class ProfilesSync extends Command
   protected $signature = 'profiles:sync
     {--students : Sync only the students feed}
     {--staff : Sync only the staff feed}
+    {--staff-source=both : Staff source: people, taxonomy, or both}
     {--dry-run : Run the full pass in a transaction, print counts, and roll back}';
 
   /**
@@ -25,7 +26,7 @@ class ProfilesSync extends Command
    *
    * @var string
    */
-  protected $description = 'Sync user profiles from the department People API (idempotent, safe on cron). '
+  protected $description = 'Sync user profiles from the department People and internal Taxonomy APIs (idempotent, safe on cron). '
     . 'Overwrites synced fields with non-empty API values. '
     . 'NOTE: once student self-service replaces the API as source of truth, switch students to seed-only.';
 
@@ -38,16 +39,33 @@ class ProfilesSync extends Command
   {
     $students = $this->option('students') || ! $this->option('staff');
     $staff = $this->option('staff') || ! $this->option('students');
+    $staffSource = (string) $this->option('staff-source');
 
-    $run = function () use ($sync, $students, $staff) {
+    if (! in_array($staffSource, ['people', 'taxonomy', 'both'], true)) {
+      $this->error('The --staff-source option must be people, taxonomy, or both.');
+
+      return self::FAILURE;
+    }
+
+    $run = function () use ($sync, $students, $staff, $staffSource) {
       $results = [];
 
       if ($students) {
-        $results['students'] = $sync->syncStudents($this->fetch('/people/v1/students/all/'));
+        $results['students'] = $sync->syncStudents($this->fetch(
+          config('constants.department_data.base_url'),
+          '/people/v1/students/all/'
+        ));
       }
 
       if ($staff) {
-        $results['staff'] = $sync->syncStaff($this->fetch('/people/v1/staff/all/'));
+        $peopleStaff = in_array($staffSource, ['people', 'both'], true)
+          ? $this->fetch(config('constants.department_data.base_url'), '/people/v1/staff/all/')
+          : [];
+        $taxonomyStaff = in_array($staffSource, ['taxonomy', 'both'], true)
+          ? $this->taxonomyStaffRecords($this->fetch(config('app.url'), '/api/taxonomy/v2/cepdnaclk/staff'))
+          : [];
+
+        $results['staff'] = $sync->syncStaff($this->mergeStaffRecords($peopleStaff, $taxonomyStaff));
       }
 
       return $results;
@@ -83,9 +101,9 @@ class ProfilesSync extends Command
   /**
    * Fresh fetch — deliberately bypasses the DepartmentDataService cache.
    */
-  private function fetch(string $endpoint): array
+  private function fetch(string $baseUrl, string $endpoint): array
   {
-    $url = config('constants.department_data.base_url') . $endpoint;
+    $url = rtrim($baseUrl, '/') . $endpoint;
     $response = Http::get($url);
 
     if (! $response->successful()) {
@@ -93,5 +111,64 @@ class ProfilesSync extends Command
     }
 
     return $response->json() ?? [];
+  }
+
+  /**
+   * Convert nested staff taxonomy terms to the shape consumed by ProfileSyncService.
+   */
+  private function taxonomyStaffRecords(array $response): array
+  {
+    $records = [];
+    $walk = function (array $terms) use (&$walk, &$records) {
+      foreach ($terms as $term) {
+        $metadata = $term['metadata'] ?? [];
+
+        // Also tolerate the raw [{code, value}] metadata shape.
+        if (isset($metadata[0]) && is_array($metadata[0])) {
+          $metadata = collect($metadata)->pluck('value', 'code')->all();
+        }
+
+        if (filled($metadata['email'] ?? null)) {
+          $code = (string) ($term['code'] ?? $metadata['email']);
+          $records[$code] = [
+            'name' => $term['name'] ?? null,
+            'email' => $metadata['email'],
+            'designation' => $metadata['designation'] ?? null,
+            'profile_image' => $metadata['profile_image'] ?? null,
+            'start_date' => $metadata['joined_date'] ?? null,
+            'end_date' => $metadata['leave_date'] ?? null,
+            'urls' => array_filter([
+              'linkedin' => $metadata['url_linkedin'] ?? null,
+              'website' => $metadata['url_profile'] ?? null,
+            ]),
+          ];
+        }
+
+        $walk((array) ($term['terms'] ?? []));
+      }
+    };
+
+    $walk((array) data_get($response, 'data.terms', []));
+
+    return $records;
+  }
+
+  /**
+   * Merge taxonomy details into People API records, matching the same person by email.
+   */
+  private function mergeStaffRecords(array $peopleStaff, array $taxonomyStaff): array
+  {
+    foreach ($taxonomyStaff as $taxonomyKey => $taxonomyRecord) {
+      $email = strtolower($taxonomyRecord['email']);
+      $peopleKey = collect($peopleStaff)->search(function ($record) use ($email) {
+        return strtolower((string) ($record['email'] ?? '')) === $email;
+      });
+      $key = $peopleKey === false ? $taxonomyKey : $peopleKey;
+      $record = array_filter($taxonomyRecord, fn($value) => filled($value));
+
+      $peopleStaff[$key] = array_replace_recursive($peopleStaff[$key] ?? [], $record);
+    }
+
+    return $peopleStaff;
   }
 }

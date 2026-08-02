@@ -88,6 +88,8 @@ class ProfileSyncService
       ], [
         'designation' => $record['designation'] ?? null,
         'research_interests' => $record['research_interests'] ?? [],
+        'start_date' => $record['start_date'] ?? null,
+        'end_date' => $record['end_date'] ?? null,
       ], $record['urls'] ?? []);
     }
 

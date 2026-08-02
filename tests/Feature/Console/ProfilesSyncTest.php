@@ -12,11 +12,15 @@ class ProfilesSyncTest extends TestCase
 {
   use RefreshDatabase;
 
-  protected function fakeApi(array $students = [], array $staff = []): void
+  protected function fakeApi(array $students = [], array $staff = [], array $taxonomyStaff = []): void
   {
     Http::fake([
       config('constants.department_data.base_url') . '/people/v1/students/all/' => Http::response($students),
       config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response($staff),
+      rtrim(config('app.url'), '/') . '/api/taxonomy/v2/cepdnaclk/staff' => Http::response([
+        'status' => 'success',
+        'data' => ['terms' => $taxonomyStaff],
+      ]),
     ]);
   }
 
@@ -135,6 +139,48 @@ class ProfilesSyncTest extends TestCase
       [UserProfileType::TYPE_STUDENT, UserProfileType::TYPE_ACADEMIC_STAFF],
       $profile->profileTypes->pluck('type')->all()
     );
+  }
+
+  /** @test */
+  public function it_syncs_nested_staff_from_the_internal_taxonomy_api()
+  {
+    $this->fakeApi([], [], [
+      [
+        'code' => 'academic-staff',
+        'name' => 'Academic Staff',
+        'terms' => [
+          [
+            'code' => 'jane-smith',
+            'name' => 'Dr. Jane Smith',
+            'metadata' => [
+              'email' => 'jane@eng.pdn.ac.lk',
+              'designation' => 'Senior Lecturer',
+              'joined_date' => '2020-01-01',
+              'leave_date' => '2025-07-31',
+              'url_linkedin' => 'https://linkedin.com/in/jane',
+            ],
+          ],
+        ],
+      ],
+    ]);
+
+    $this->artisan('profiles:sync --staff --staff-source=taxonomy')
+      ->expectsOutput('Staff: created=1, updated=0, linked=0, skipped_no_email=0, failed=0')
+      ->assertExitCode(0);
+
+    $profile = UserProfile::where('email', 'jane@eng.pdn.ac.lk')->firstOrFail();
+    $attributes = $profile->profileTypes->first()->getAttribute('attributes');
+
+    $this->assertEquals('Dr. Jane Smith', $profile->full_name);
+    $this->assertEquals('Senior Lecturer', $profile->current_position);
+    $this->assertEquals('jane-smith', $profile->profileTypes->first()->source_key);
+    $this->assertEquals('2020-01-01', $attributes['start_date']);
+    $this->assertEquals('2025-07-31', $attributes['end_date']);
+    $this->assertEquals('https://linkedin.com/in/jane', $profile->links->firstWhere('type', 'linkedin')->url);
+
+    Http::assertNotSent(function ($request) {
+      return $request->url() === config('constants.department_data.base_url') . '/people/v1/staff/all/';
+    });
   }
 
   /** @test */
