@@ -38,17 +38,17 @@ class MyProfileTest extends TestCase
     app(ProfileService::class)->addType($profile, UserProfileType::TYPE_STUDENT, [
       'reg_number' => 'E/20/100',
       'batch' => '2020',
-      'interests' => ['old'],
     ]);
+    $profile->update(['interests' => ['old']]);
 
     $response = $this->patch(route('intranet.user.profile.manage.update'), [
       'full_name' => 'Updated Name',
       'location' => 'Kandy',
+      'interests' => 'ml, robotics',
       'links' => ['github' => 'https://github.com/me'],
       'types' => [
         'STUDENT' => [
           'attributes' => [
-            'interests' => 'ml, robotics',
             'reg_number' => 'E/99/999', // must be ignored
           ],
         ],
@@ -60,10 +60,10 @@ class MyProfileTest extends TestCase
     $profile->refresh();
     $this->assertEquals('Updated Name', $profile->full_name);
     $this->assertEquals('Kandy', $profile->location);
+    $this->assertEquals(['ml', 'robotics'], $profile->interests);
     $this->assertEquals('https://github.com/me', $profile->links->firstWhere('type', 'github')->url);
 
     $attributes = $profile->profileTypes->first()->getAttribute('attributes');
-    $this->assertEquals(['ml', 'robotics'], $attributes['interests']);
     $this->assertEquals('E/20/100', $attributes['reg_number']);
     $this->assertEquals('2020', $attributes['batch']);
   }

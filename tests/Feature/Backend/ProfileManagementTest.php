@@ -47,10 +47,10 @@ class ProfileManagementTest extends TestCase
   public function a_viewer_can_see_the_index_but_cannot_edit()
   {
     $this->loginWithPermission('user.access.profiles.viewer');
-    $profile = UserProfile::factory()->create();
+    $profile = UserProfile::factory()->create(['interests' => ['Robotics', 'AI']]);
 
     $this->get(route('dashboard.profiles.index'))->assertOk();
-    $this->get(route('dashboard.profiles.show', $profile))->assertOk();
+    $this->get(route('dashboard.profiles.show', $profile))->assertOk()->assertSee('Robotics, AI');
 
     $this->assertDenied($this->get(route('dashboard.profiles.create')));
     $this->assertDenied($this->post(route('dashboard.profiles.store'), ['email' => 'x@example.com']));
@@ -72,10 +72,11 @@ class ProfileManagementTest extends TestCase
     $response = $this->post(route('dashboard.profiles.store'), [
       'email' => 'new@example.com',
       'full_name' => 'New Person',
+      'interests' => 'ml, systems',
       'types' => [
         'STUDENT' => [
           'assigned' => '1',
-          'attributes' => ['reg_number' => 'E/20/123', 'batch' => '2020', 'interests' => 'ml, systems'],
+          'attributes' => ['reg_number' => 'E/20/123', 'batch' => '2020'],
         ],
       ],
       'links' => ['github' => 'https://github.com/new'],
@@ -85,7 +86,7 @@ class ProfileManagementTest extends TestCase
 
     $profile = UserProfile::where('email', 'new@example.com')->firstOrFail();
     $this->assertEquals(['STUDENT'], $profile->profileTypes->pluck('type')->all());
-    $this->assertEquals(['ml', 'systems'], $profile->profileTypes->first()->attributes['interests']);
+    $this->assertEquals(['ml', 'systems'], $profile->interests);
     $this->assertEquals('https://github.com/new', $profile->links->firstWhere('type', 'github')->url);
   }
 
@@ -124,6 +125,7 @@ class ProfileManagementTest extends TestCase
       'email' => 'secondary@example.com',
       'full_name' => 'Secondary Name',
       'location' => 'Kandy',
+      'interests' => ['Compilers'],
       'user_id' => $linkedUser->id,
     ]);
 
@@ -181,6 +183,7 @@ class ProfileManagementTest extends TestCase
     $this->assertEquals('Kandy', $primary->location);
     $this->assertEquals('secondary@example.com', $primary->alternate_email);
     $this->assertEquals($linkedUser->id, $primary->user_id);
+    $this->assertEquals(['Compilers'], $primary->interests);
     $this->assertSoftDeleted('user_profiles', ['id' => $secondary->id]);
     $this->assertEqualsCanonicalizing(
       [UserProfileType::TYPE_ACADEMIC_STAFF, UserProfileType::TYPE_STUDENT],

@@ -7,7 +7,11 @@
     $assignedTypes = isset($profile) ? $profile->profileTypes->keyBy('type') : collect();
     $profileLinks = isset($profile) ? $profile->links->pluck('url', 'type') : collect();
 
-    $fieldValue = fn($field) => old($field, $profile->{$field} ?? '');
+    $fieldValue = function ($field) use ($profile) {
+        $value = old($field, $profile->{$field} ?? '');
+
+        return is_array($value) ? implode(', ', $value) : $value;
+    };
     $typeAttr = function ($type, $key) use ($assignedTypes) {
         $value = old(
             "types.$type.attributes.$key",
@@ -96,6 +100,20 @@
 @endforeach
 
 <div class="form-group row">
+    {!! Form::label('interests', __('Interests'), ['class' => 'col-md-2 col-form-label']) !!}
+    <div class="col-md-10">
+        {!! Form::textarea('interests', $fieldValue('interests'), [
+            'class' => 'form-control',
+            'placeholder' => __('Comma-separated values'),
+            'rows' => 3,
+        ]) !!}
+        @error('interests')
+            <strong class="text-danger">{{ $message }}</strong>
+        @enderror
+    </div>
+</div>
+
+<div class="form-group row">
     {!! Form::label('profile_image', __('Profile Picture'), ['class' => 'col-md-2 col-form-label']) !!}
     <div class="col-md-10">
         @if (isset($profile) && $profile->profileImageUrl())
@@ -175,18 +193,6 @@
                         <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                 </div>
-                <div class="col-md-12 mt-3 mb-0">
-                    {!! Form::label('student_interests', __('Interests'), ['class' => 'form-label']) !!}
-                    {!! Form::textarea('types[STUDENT][attributes][interests]', $typeAttr('STUDENT', 'interests'), [
-                        'class' => 'form-control',
-                        'id' => 'student_interests',
-                        'placeholder' => __('Comma-separated values'),
-                        'rows' => 3,
-                    ]) !!}
-                    @error('types.STUDENT.attributes.interests')
-                        <strong class="text-danger">{{ $message }}</strong>
-                    @enderror
-                </div>
             </div>
         </div>
     </div>
@@ -238,22 +244,6 @@
                         <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                 </div>
-                <div class="col-md-12 mt-3 mb-0">
-                    {!! Form::label('academic_research_interests', __('Interests'), ['class' => 'form-label']) !!}
-                    {!! Form::textarea(
-                        'types[ACADEMIC_STAFF][attributes][research_interests]',
-                        $typeAttr('ACADEMIC_STAFF', 'research_interests'),
-                        [
-                            'class' => 'form-control',
-                            'id' => 'academic_research_interests',
-                            'placeholder' => __('Comma-separated values'),
-                            'rows' => 3,
-                        ],
-                    ) !!}
-                    @error('types.ACADEMIC_STAFF.attributes.research_interests')
-                        <strong class="text-danger">{{ $message }}</strong>
-                    @enderror
-                </div>
             </div>
         </div>
     </div>
@@ -285,18 +275,6 @@
                         @enderror
                     </div>
                 @endforeach
-                <div class="col-md-12 mt-3 mb-0">
-                    {!! Form::label('external_interests', __('Interests'), ['class' => 'form-label']) !!}
-                    {!! Form::textarea('types[EXTERNAL][attributes][interests]', $typeAttr('EXTERNAL', 'interests'), [
-                        'class' => 'form-control',
-                        'id' => 'external_interests',
-                        'placeholder' => __('Comma-separated values'),
-                        'rows' => 3,
-                    ]) !!}
-                    @error('types.EXTERNAL.attributes.interests')
-                        <strong class="text-danger">{{ $message }}</strong>
-                    @enderror
-                </div>
             </div>
         </div>
     </div>

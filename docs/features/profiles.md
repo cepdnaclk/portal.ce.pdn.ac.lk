@@ -11,12 +11,13 @@ User Profiles store person data (students, academic staff, external people) inde
 - `email` (unique, primary identity) and `alternate_email` (students often have faculty + personal email)
 - Name fields: `honorific`, `full_name`, `name_with_initials`, `preferred_short_name`, `preferred_long_name`
 - `location`, `current_affiliation`, `current_position`, `profile_image` (URL)
+- `interests` — a single JSON list of interests for the profile, regardless of assigned type (students' interests, staff research interests, and external interests all previously lived separately per type; they're now one field)
 - `user_id` — the linked Portal account, nullable, set null on user deletion
 - Soft deletes; changes are activity-logged
 
 Related models:
 
-- `UserProfileType` — one row per assigned type (`STUDENT`, `ACADEMIC_STAFF`, `EXTERNAL`), unique per profile. Type-specific data lives in the `attributes` JSON column (students: `reg_number`, `batch`, `department`, `interests`; staff: `designation`, `research_interests`; external: `affiliation`, `position`, `interests`). `source_key` holds the People API identity (eNumber / username) and makes syncs idempotent — unique per `(type, source_key)`.
+- `UserProfileType` — one row per assigned type (`STUDENT`, `ACADEMIC_STAFF`, `EXTERNAL`), unique per profile. Type-specific data lives in the `attributes` JSON column (students: `reg_number`, `batch`, `department`; staff: `designation`; external: `affiliation`, `position`). `source_key` holds the People API identity (eNumber / username) and makes syncs idempotent — unique per `(type, source_key)`.
 - `UserProfileLink` — one URL per link type (`linkedin`, `github`, `cv`, `website`, `google_scholar`, `researchgate`, `facebook`, `twitter`, `other`), unique per profile.
 
 ### Completeness

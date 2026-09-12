@@ -133,6 +133,7 @@ class ProfileService extends BaseService
           'current_affiliation',
           'current_position',
           'profile_image',
+          'interests',
           'user_id',
         ] as $field
       ) {

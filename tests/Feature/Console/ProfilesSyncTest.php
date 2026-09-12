@@ -86,7 +86,7 @@ class ProfilesSyncTest extends TestCase
     $studentType = $student->profileTypes->firstWhere('type', UserProfileType::TYPE_STUDENT);
     $this->assertEquals('E/20/100', $studentType->source_key);
     $this->assertEquals('E/20/100', $studentType->getAttribute('attributes')['reg_number']);
-    $this->assertEquals(['ML', 'Robotics'], $studentType->getAttribute('attributes')['interests']);
+    $this->assertEquals(['ML', 'Robotics'], $student->interests);
 
     // Non-empty urls only
     $this->assertEquals(['github'], $student->links->pluck('type')->all());

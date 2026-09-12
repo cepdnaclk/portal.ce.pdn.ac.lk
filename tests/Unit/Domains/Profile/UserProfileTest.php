@@ -106,31 +106,48 @@ class UserProfileTest extends TestCase
         'reg_number' => 'E/19/001',
         'batch' => '2019',
         'department' => 'Computer Engineering',
-        'interests' => ['Robotics'],
       ],
     ]);
     $this->assertEquals('Student', $profile->designation);
     $this->assertEquals('Computer Engineering', $profile->affiliation);
-    $this->assertEquals(['Robotics'], $profile->interests);
 
     UserProfileType::factory()->create([
       'user_profile_id' => $profile->id,
       'type' => UserProfileType::TYPE_EXTERNAL,
-      'attributes' => ['position' => 'Engineer', 'affiliation' => 'ACME', 'interests' => ['Networks']],
+      'attributes' => ['position' => 'Engineer', 'affiliation' => 'ACME'],
     ]);
     $profile->refresh();
     $this->assertEquals('Engineer, ACME', $profile->designation);
     $this->assertEquals('ACME', $profile->affiliation);
-    $this->assertEquals(['Networks'], $profile->interests);
 
     UserProfileType::factory()->create([
       'user_profile_id' => $profile->id,
       'type' => UserProfileType::TYPE_ACADEMIC_STAFF,
-      'attributes' => ['designation' => 'Senior Lecturer', 'research_interests' => ['Compilers']],
+      'attributes' => ['designation' => 'Senior Lecturer'],
     ]);
     $profile->refresh();
     $this->assertEquals('Senior Lecturer', $profile->designation);
     $this->assertEquals(config('profile.academic_affiliation'), $profile->affiliation);
-    $this->assertEquals(['Compilers'], $profile->interests);
+  }
+
+  /** @test */
+  public function interests_is_a_single_list_on_the_profile_regardless_of_assigned_types()
+  {
+    $profile = UserProfile::factory()->create();
+    $this->assertNull($profile->interests);
+
+    UserProfileType::factory()->create([
+      'user_profile_id' => $profile->id,
+      'type' => UserProfileType::TYPE_STUDENT,
+    ]);
+    UserProfileType::factory()->create([
+      'user_profile_id' => $profile->id,
+      'type' => UserProfileType::TYPE_ACADEMIC_STAFF,
+      'attributes' => ['designation' => 'Senior Lecturer'],
+    ]);
+
+    $profile->update(['interests' => ['Robotics', 'Compilers']]);
+
+    $this->assertEquals(['Robotics', 'Compilers'], $profile->refresh()->interests);
   }
 }

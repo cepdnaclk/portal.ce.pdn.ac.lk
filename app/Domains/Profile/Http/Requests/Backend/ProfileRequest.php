@@ -51,6 +51,7 @@ class ProfileRequest extends FormRequest
       'location' => ['nullable', 'string', 'max:255'],
       'current_affiliation' => ['nullable', 'string', 'max:255'],
       'current_position' => ['nullable', 'string', 'max:255'],
+      'interests' => ['nullable', 'string', 'max:1000'],
       'profile_image' => [
         'nullable',
         'file',
@@ -130,20 +131,14 @@ class ProfileRequest extends FormRequest
       ->values()
       ->all();
 
+    // Comma-separated interests become a single array on the profile itself
+    if (isset($data['interests']) && is_string($data['interests'])) {
+      $data['interests'] = array_values(array_filter(array_map('trim', explode(',', $data['interests']))));
+    }
+
     $data['types'] = collect($data['types'] ?? [])
       ->filter(fn($type) => ! empty($type['assigned']))
-      ->map(function ($type, $name) {
-        $attributes = $type['attributes'] ?? [];
-
-        // Comma-separated interests fields become arrays
-        foreach (['interests', 'research_interests'] as $key) {
-          if (isset($attributes[$key]) && is_string($attributes[$key])) {
-            $attributes[$key] = array_values(array_filter(array_map('trim', explode(',', $attributes[$key]))));
-          }
-        }
-
-        return ['type' => $name, 'attributes' => $attributes];
-      })
+      ->map(fn($type, $name) => ['type' => $name, 'attributes' => $type['attributes'] ?? []])
       ->values()
       ->all();
 

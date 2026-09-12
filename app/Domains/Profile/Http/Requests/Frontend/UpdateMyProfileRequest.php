@@ -42,6 +42,7 @@ class UpdateMyProfileRequest extends FormRequest
       'location' => ['nullable', 'string', 'max:255'],
       'current_affiliation' => ['nullable', 'string', 'max:255'],
       'current_position' => ['nullable', 'string', 'max:255'],
+      'interests' => ['nullable', 'string', 'max:1000'],
     ];
   }
 
@@ -115,6 +116,11 @@ class UpdateMyProfileRequest extends FormRequest
       ->values()
       ->all();
 
+    // Comma-separated interests become a single array on the profile itself
+    if (isset($data['interests']) && is_string($data['interests'])) {
+      $data['interests'] = array_values(array_filter(array_map('trim', explode(',', $data['interests']))));
+    }
+
     $submitted = $data['types'] ?? [];
 
     // Keep every assigned type; merge submitted attributes over existing ones.
@@ -122,14 +128,6 @@ class UpdateMyProfileRequest extends FormRequest
     $data['types'] = $profile->profileTypes->map(function ($profileType) use ($submitted) {
       $existing = $profileType->getAttribute('attributes') ?? [];
       $incoming = $submitted[$profileType->type]['attributes'] ?? [];
-
-      // Comma-separated interests fields become arrays
-      foreach (['interests', 'research_interests'] as $key) {
-        if (isset($incoming[$key]) && is_string($incoming[$key])) {
-          $incoming[$key] = array_values(array_filter(array_map('trim', explode(',', $incoming[$key]))));
-        }
-      }
-
       $attributes = array_merge($existing, $incoming);
 
       // Students cannot change their sync/admin-owned identifiers

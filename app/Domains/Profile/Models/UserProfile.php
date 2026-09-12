@@ -49,7 +49,12 @@ class UserProfile extends Model
     'current_affiliation',
     'current_position',
     'profile_image',
+    'interests',
     'user_id',
+  ];
+
+  protected $casts = [
+    'interests' => 'array',
   ];
 
   public function profileTypes()
@@ -149,19 +154,6 @@ class UserProfile extends Model
 
     return ($this->typeAttributes(UserProfileType::TYPE_EXTERNAL)['affiliation'] ?? null)
       ?: ($this->typeAttributes(UserProfileType::TYPE_STUDENT)['department'] ?? null);
-  }
-
-  /**
-   * Interests by the same priority: the academic staff research interests,
-   * then the external interests, then the student's.
-   */
-  public function getInterestsAttribute(): array
-  {
-    $interests = ($this->typeAttributes(UserProfileType::TYPE_ACADEMIC_STAFF)['research_interests'] ?? null)
-      ?: ($this->typeAttributes(UserProfileType::TYPE_EXTERNAL)['interests'] ?? null)
-      ?: ($this->typeAttributes(UserProfileType::TYPE_STUDENT)['interests'] ?? null);
-
-    return array_values(array_filter((array) $interests));
   }
 
   public function isComplete(): bool

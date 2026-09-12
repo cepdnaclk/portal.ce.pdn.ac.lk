@@ -124,6 +124,18 @@
                             @endforeach
 
                             <div class="form-group row">
+                                <label class="col-md-3 col-form-label text-md-right"
+                                    for="interests">@lang('Interests')</label>
+                                <div class="col-md-9">
+                                    <textarea name="interests" id="interests" class="form-control" rows="3"
+                                        placeholder="{{ __('Comma-separated values') }}">{{ old('interests', is_array($profile->interests) ? implode(', ', $profile->interests) : $profile->interests) }}</textarea>
+                                    @error('interests')
+                                        <strong class="text-danger">{{ $message }}</strong>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label class="col-md-3 col-form-label text-md-right" for="profile_image">
                                     @lang('Profile Picture')
                                 </label>
@@ -175,15 +187,6 @@
                                                             <input type="text" id="student_batch" class="form-control"
                                                                 value="{{ $typeAttr($profileType, 'batch') }}" disabled />
                                                         </div>
-                                                        <div class="col-md-12 mt-3">
-                                                            <label class="form-label"
-                                                                for="student_interests">@lang('Interests')</label>
-                                                            <textarea name="types[STUDENT][attributes][interests]" id="student_interests" class="form-control" rows="3"
-                                                                placeholder="{{ __('Comma-separated values') }}">{{ $typeAttr($profileType, 'interests') }}</textarea>
-                                                            @error('types.STUDENT.attributes.interests')
-                                                                <strong class="text-danger">{{ $message }}</strong>
-                                                            @enderror
-                                                        </div>
                                                     @elseif ($profileType->type === UserProfileType::TYPE_ACADEMIC_STAFF)
                                                         <div class="col-md-12">
                                                             <label class="form-label"
@@ -218,15 +221,6 @@
                                                                 <strong class="text-danger">{{ $message }}</strong>
                                                             @enderror
                                                         </div>
-                                                        <div class="col-md-12 mt-3">
-                                                            <label class="form-label"
-                                                                for="academic_research_interests">@lang('Interests')</label>
-                                                            <textarea name="types[ACADEMIC_STAFF][attributes][research_interests]" id="academic_research_interests"
-                                                                class="form-control" rows="3" placeholder="{{ __('Comma-separated values') }}">{{ $typeAttr($profileType, 'research_interests') }}</textarea>
-                                                            @error('types.ACADEMIC_STAFF.attributes.research_interests')
-                                                                <strong class="text-danger">{{ $message }}</strong>
-                                                            @enderror
-                                                        </div>
                                                     @else
                                                         @foreach (['affiliation' => __('Affiliation'), 'position' => __('Position')] as $field => $label)
                                                             <div class="col-md-6">
@@ -242,15 +236,6 @@
                                                                 @enderror
                                                             </div>
                                                         @endforeach
-                                                        <div class="col-md-12 mt-3">
-                                                            <label class="form-label"
-                                                                for="external_interests">@lang('Interests')</label>
-                                                            <textarea name="types[EXTERNAL][attributes][interests]" id="external_interests" class="form-control" rows="3"
-                                                                placeholder="{{ __('Comma-separated values') }}">{{ $typeAttr($profileType, 'interests') }}</textarea>
-                                                            @error('types.EXTERNAL.attributes.interests')
-                                                                <strong class="text-danger">{{ $message }}</strong>
-                                                            @enderror
-                                                        </div>
                                                     @endif
                                                 </div>
                                             </div>

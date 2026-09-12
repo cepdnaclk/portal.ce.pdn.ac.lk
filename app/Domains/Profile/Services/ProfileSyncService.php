@@ -62,11 +62,11 @@ class ProfileSyncService
         'location' => $record['location'] ?? null,
         'current_affiliation' => $record['current_affiliation'] ?? null,
         'profile_image' => $record['profile_image'] ?? null,
+        'interests' => $record['interests'] ?? [],
       ], [
         'reg_number' => $sourceKey,
         'batch' => $record['batch'] ?? null,
         'department' => $record['department'] ?? null,
-        'interests' => $record['interests'] ?? [],
       ], $record['urls'] ?? []);
     }
 
@@ -96,9 +96,9 @@ class ProfileSyncService
         'full_name' => $record['name'] ?? null,
         'current_position' => $record['designation'] ?? null,
         'profile_image' => $record['profile_image'] ?? null,
+        'interests' => $record['research_interests'] ?? [],
       ], [
         'designation' => $record['designation'] ?? null,
-        'research_interests' => $record['research_interests'] ?? [],
         'start_date' => $record['start_date'] ?? null,
         'end_date' => $record['end_date'] ?? null,
       ], $record['urls'] ?? []);

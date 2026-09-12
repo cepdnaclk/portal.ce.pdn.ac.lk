@@ -75,6 +75,10 @@
                     <td>{{ $profile->current_position ?? '—' }}</td>
                 </tr>
                 <tr>
+                    <th>{{ __('Interests') }}</th>
+                    <td>{{ $profile->interests ? implode(', ', $profile->interests) : '—' }}</td>
+                </tr>
+                <tr>
                     <th>{{ __('Linked Account') }}</th>
                     <td>
                         @if ($profile->user)
