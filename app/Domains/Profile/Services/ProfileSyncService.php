@@ -31,6 +31,9 @@ class ProfileSyncService
   /** Optional callback fired as each record is processed, for live console output. */
   public $onEvent = null;
 
+  /** Re-download profile images even when the profile already has one. */
+  public bool $overwriteImages = false;
+
   public function __construct(private ProfileImageService $profileImageService)
   {
   }
@@ -175,9 +178,9 @@ class ProfileSyncService
       $profile->fill(array_filter($values, fn($value) => filled($value)))->save();
 
       // A flaky/dead image URL shouldn't fail the whole record.
-      // ponytail: re-downloads every run even if unchanged; add last-synced-URL
-      // tracking to skip that only if bandwidth/CPU actually becomes a problem.
-      if (filled($imageUrl)) {
+      // ponytail: with --overwrite-images it re-downloads every run even if
+      // unchanged; add last-synced-URL tracking only if bandwidth/CPU bites.
+      if (filled($imageUrl) && ($this->overwriteImages || blank($profile->profile_image))) {
         try {
           $this->profileImageService->replaceFromUrl($profile, $imageUrl);
         } catch (\Throwable $e) {

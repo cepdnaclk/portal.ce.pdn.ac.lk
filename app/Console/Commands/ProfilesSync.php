@@ -19,6 +19,7 @@ class ProfilesSync extends Command
     {--students : Sync only the students feed}
     {--staff : Sync only the staff feed}
     {--staff-source=both : Staff source: people, taxonomy, or both}
+    {--overwrite-images : Re-download profile images even when the profile already has one}
     {--dry-run : Run the full pass in a transaction, print counts, and roll back}
     {--details : List every created/updated/linked/skipped record, not just the counts}';
 
@@ -47,6 +48,8 @@ class ProfilesSync extends Command
 
       return self::FAILURE;
     }
+
+    $sync->overwriteImages = (bool) $this->option('overwrite-images');
 
     if ($this->option('details')) {
       $sync->onEvent = fn(array $event) => $this->line(implode(' ', array_filter([

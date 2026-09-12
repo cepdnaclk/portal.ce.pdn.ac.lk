@@ -59,6 +59,26 @@ class ProfilesSyncTest extends TestCase
   }
 
   /** @test */
+  public function it_keeps_an_existing_profile_image_unless_overwrite_images_is_passed()
+  {
+    $this->fakeApi(['E/20/100' => $this->studentRecord()]);
+
+    $this->artisan('profiles:sync', ['--students' => true])->assertExitCode(0);
+    $first = UserProfile::where('email', 'e20100@eng.pdn.ac.lk')->firstOrFail()->profile_image;
+
+    // Default: existing image is kept
+    $this->artisan('profiles:sync', ['--students' => true])->assertExitCode(0);
+    $this->assertEquals($first, UserProfile::where('email', 'e20100@eng.pdn.ac.lk')->firstOrFail()->profile_image);
+
+    // With the flag: re-downloaded and replaced
+    $this->artisan('profiles:sync', ['--students' => true, '--overwrite-images' => true])->assertExitCode(0);
+    $second = UserProfile::where('email', 'e20100@eng.pdn.ac.lk')->firstOrFail()->profile_image;
+    $this->assertNotEquals($first, $second);
+    Storage::disk('public')->assertExists('profile-images/' . $second);
+    Storage::disk('public')->assertMissing('profile-images/' . $first);
+  }
+
+  /** @test */
   public function it_creates_profiles_from_both_feeds_and_skips_records_without_email()
   {
     $this->fakeApi(
