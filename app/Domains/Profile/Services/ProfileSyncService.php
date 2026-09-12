@@ -19,6 +19,15 @@ use Illuminate\Support\Facades\Log;
  */
 class ProfileSyncService
 {
+  /** Upstream placeholder rows that must never become real profiles. */
+  private const PLACEHOLDER_EMAILS = ['johndoe@eng.pdn.ac.lk'];
+
+  /**
+   * Per-record outcomes for the current run: type, source_key, email, status, error.
+   * Appended to by every syncRecord() call; read by profiles:sync for its report.
+   */
+  public array $events = [];
+
   /**
    * Sync the students feed (records keyed by eNumber).
    *
@@ -36,6 +45,7 @@ class ProfileSyncService
       if (! $email) {
         // A profile that can never be claimed is dead data — skip, re-runs converge
         $counts['skipped_no_email']++;
+        $this->record(UserProfileType::TYPE_STUDENT, (string) ($record['eNumber'] ?? $eNumber), null, 'skipped_no_email');
         continue;
       }
 
@@ -77,6 +87,7 @@ class ProfileSyncService
 
       if (blank($email)) {
         $counts['skipped_no_email']++;
+        $this->record(UserProfileType::TYPE_ACADEMIC_STAFF, (string) $username, null, 'skipped_no_email');
         continue;
       }
 
@@ -98,6 +109,13 @@ class ProfileSyncService
 
   private function syncRecord(array &$counts, string $type, string $sourceKey, string $email, array $values, array $attributes, array $urls): void
   {
+    if (in_array(strtolower($email), self::PLACEHOLDER_EMAILS, true)) {
+      $counts['skipped_no_email']++;
+      $this->record($type, $sourceKey, $email, 'skipped_placeholder');
+
+      return;
+    }
+
     try {
       // 1. Primary idempotency key — survives upstream email changes
       $profile = UserProfileType::where('type', $type)
@@ -131,15 +149,28 @@ class ProfileSyncService
       }
 
       $counts[$status]++;
+      $this->record($type, $sourceKey, $email, $status);
     } catch (\Throwable $e) {
       // One bad record must not abort a cron sync
       $counts['failed']++;
+      $this->record($type, $sourceKey, $email, 'failed', $e->getMessage());
       Log::warning('profiles:sync failed for record', [
         'type' => $type,
         'source_key' => $sourceKey,
         'error' => $e->getMessage(),
       ]);
     }
+  }
+
+  private function record(string $type, string $sourceKey, ?string $email, string $status, ?string $error = null): void
+  {
+    $this->events[] = [
+      'type' => $type,
+      'source_key' => $sourceKey,
+      'email' => $email,
+      'status' => $status,
+      'error' => $error,
+    ];
   }
 
   private function buildEmail(array $parts): ?string

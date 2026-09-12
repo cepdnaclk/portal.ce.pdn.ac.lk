@@ -60,8 +60,13 @@ php artisan profiles:sync
 
 # Use only the internal taxonomy as the staff source
 php artisan profiles:sync --staff --staff-source=taxonomy
+
+# Per-record breakdown instead of just the counts
+php artisan profiles:sync --details
 ```
 
 The sync is idempotent and safe on cron. Staff can come from `people`, `taxonomy`, or `both` (the default) using `--staff-source`. Staff details from the internal `/api/taxonomy/v2/cepdnaclk/staff` endpoint are merged into the People API staff feed by email when both are selected, including joined/leave dates and profile links. Identity is resolved by `(type, source_key)` first, then by email (adopting profiles created by auto-linking), then a new profile is created. Non-empty API values overwrite profile fields; empty values never clobber existing data; links are upserted but never deleted; student records with no constructible email are skipped and counted (`skipped_no_email`). A person in both feeds resolves to one profile with two types.
+
+Each run prints a counts line per feed (`created`, `updated`, `linked`, `skipped_no_email`, `failed`). Records that failed are always listed afterwards with their `source_key`, email, and error message — a failed record is logged as a warning and never aborts the run. `--details` replaces that list with a table of every record and its outcome, which is what you want alongside `--dry-run` when checking what a run would change.
 
 Once student self-service replaces the API as the source of truth, switch students to seed-only (see the note in `profiles:sync --help`).

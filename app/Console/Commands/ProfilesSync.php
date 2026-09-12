@@ -19,7 +19,8 @@ class ProfilesSync extends Command
     {--students : Sync only the students feed}
     {--staff : Sync only the staff feed}
     {--staff-source=both : Staff source: people, taxonomy, or both}
-    {--dry-run : Run the full pass in a transaction, print counts, and roll back}';
+    {--dry-run : Run the full pass in a transaction, print counts, and roll back}
+    {--details : List every created/updated/linked/skipped record, not just the counts}';
 
   /**
    * The console command description.
@@ -95,7 +96,33 @@ class ProfilesSync extends Command
       $this->info(ucfirst($source) . ': ' . collect($counts)->map(fn($count, $key) => "$key=$count")->implode(', '));
     }
 
+    $this->report($sync->events);
+
     return self::SUCCESS;
+  }
+
+  /**
+   * Failures always; the full per-record breakdown only with --details.
+   */
+  private function report(array $events): void
+  {
+    $failed = array_filter($events, fn($event) => $event['status'] === 'failed');
+
+    if ($this->option('details')) {
+      $this->newLine();
+      $this->table(
+        ['Type', 'Source key', 'Email', 'Status', 'Error'],
+        array_map(fn($event) => array_map(fn($value) => $value ?? '—', $event), $events)
+      );
+    }
+
+    if ($failed && ! $this->option('details')) {
+      $this->newLine();
+      $this->error(count($failed) . ' record(s) failed:');
+      foreach ($failed as $event) {
+        $this->line("  {$event['type']} {$event['source_key']} ({$event['email']}): {$event['error']}");
+      }
+    }
   }
 
   /**

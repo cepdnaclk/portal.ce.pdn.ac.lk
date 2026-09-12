@@ -232,6 +232,25 @@ class ProfilesSyncTest extends TestCase
   }
 
   /** @test */
+  public function the_sync_records_a_per_record_outcome_for_the_report()
+  {
+    $this->fakeApi([
+      'E/20/100' => $this->studentRecord(),
+      'E/20/101' => $this->studentRecord(['eNumber' => 'E/20/101', 'emails' => []]),
+    ]);
+
+    $sync = new \App\Domains\Profile\Services\ProfileSyncService();
+    $this->app->instance(\App\Domains\Profile\Services\ProfileSyncService::class, $sync);
+
+    $this->artisan('profiles:sync --students --details')->assertExitCode(0);
+
+    $events = collect($sync->events)->pluck('status', 'source_key');
+
+    $this->assertEquals('created', $events['E/20/100']);
+    $this->assertEquals('skipped_no_email', $events['E/20/101']);
+  }
+
+  /** @test */
   public function a_failed_fetch_aborts_with_an_error()
   {
     Http::fake([

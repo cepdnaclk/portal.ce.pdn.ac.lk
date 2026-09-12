@@ -91,11 +91,12 @@ Configuration is documented in `docs/features/backups.md` and `config/google-ser
 
 #### User Profiles (People API sync)
 
-Use the `profiles:sync` command to import/refresh user profiles from the department People API. It is idempotent and safe on cron; `--dry-run` prints counts and rolls back.
+Use the `profiles:sync` command to import/refresh user profiles from the department People API. It is idempotent and safe on cron; `--dry-run` prints counts and rolls back. Failed records are always listed with their error; `--details` prints the outcome of every record.
 
 ```bash
 php artisan profiles:sync --dry-run
 php artisan profiles:sync
+php artisan profiles:sync --dry-run --details
 ```
 
 The feature is documented in `docs/features/profiles.md`. Requires seeding once: `php artisan db:seed --class=Database\\Seeders\\Roles\\ProfileRoleSeeder`.
