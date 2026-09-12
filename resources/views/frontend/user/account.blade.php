@@ -33,8 +33,6 @@
                                 <x-utils.link :text="__('Roles & Permissions')" class="nav-link" id="roles-permissions-tab"
                                     data-bs-toggle="pill" href="#roles-permissions" role="tab"
                                     aria-controls="roles-permissions" aria-selected="false" />
-
-                                <x-utils.link :text="__('Manage Profile')" class="nav-link" :href="route('intranet.user.profile.manage')" />
                             </div>
                         </nav>
 

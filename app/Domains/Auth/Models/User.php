@@ -109,6 +109,7 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
   protected $with = [
     'permissions',
     'roles',
+    'profile',
   ];
 
   /**

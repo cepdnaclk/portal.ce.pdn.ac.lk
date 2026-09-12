@@ -3,6 +3,7 @@
 namespace App\Domains\Profile\Models;
 
 use App\Domains\Auth\Models\User;
+use App\Domains\Profile\Events\ProfileUpdated;
 use Database\Factories\UserProfileFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -79,6 +80,10 @@ class UserProfile extends Model
     'profile_image',
     'interests',
     'user_id',
+  ];
+
+  protected $dispatchesEvents = [
+    'updated' => ProfileUpdated::class,
   ];
 
   protected $casts = [
