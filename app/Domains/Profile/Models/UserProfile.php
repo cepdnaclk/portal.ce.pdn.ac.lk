@@ -19,15 +19,45 @@ class UserProfile extends Model
   use LogsActivity;
   use SoftDeletes;
 
+  // Key === label: the stored value is the displayed honorific, so a select
+  // built from this always matches what is in the column.
   public const HONORIFIC_OPTIONS = [
-    'Mr' => 'Mr.',
-    'Mrs' => 'Mrs.',
+    'Mr.' => 'Mr.',
+    'Mrs.' => 'Mrs.',
     'Miss' => 'Miss',
-    'Ms' => 'Ms.',
-    'Dr' => 'Dr.',
-    'Prof' => 'Prof.',
-    'Rev' => 'Rev.',
+    'Ms.' => 'Ms.',
+    'Dr.' => 'Dr.',
+    'Prof.' => 'Prof.',
+    'Rev.' => 'Rev.',
   ];
+
+  /**
+   * Normalise any spelling of an honorific ("mr", "Mr", "Miss.") to its
+   * HONORIFIC_OPTIONS key, so imported and hand-entered values converge.
+   */
+  public static function normalizeHonorific(?string $value): ?string
+  {
+    $value = trim((string) $value);
+
+    if ($value === '') {
+      return null;
+    }
+
+    $bare = strtolower(rtrim($value, '.'));
+
+    foreach (array_keys(self::HONORIFIC_OPTIONS) as $option) {
+      if (strtolower(rtrim($option, '.')) === $bare) {
+        return $option;
+      }
+    }
+
+    return $value;
+  }
+
+  public function setHonorificAttribute($value): void
+  {
+    $this->attributes['honorific'] = self::normalizeHonorific($value);
+  }
 
   // Valid values for the STUDENT type's 'department' attribute.
   public const DEPARTMENT_OPTIONS = [

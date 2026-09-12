@@ -73,7 +73,7 @@
                                     <select name="honorific" id="honorific" class="form-select">
                                         <option value="">{{ __('Select an honorific') }}</option>
                                         @foreach (UserProfile::HONORIFIC_OPTIONS as $value => $label)
-                                            <option value="{{ $value }}" @selected(old('honorific', $profile->honorific) === $value)>
+                                            <option value="{{ $value }}" {{ old('honorific', $profile->honorific) === $value ? 'selected' : '' }}>
                                                 {{ $label }}
                                             </option>
                                         @endforeach
