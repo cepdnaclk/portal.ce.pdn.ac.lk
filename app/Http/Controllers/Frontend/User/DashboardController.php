@@ -12,6 +12,8 @@ class DashboardController
    */
   public function index()
   {
-    return view('frontend.user.intranet');
+    return view('frontend.user.intranet', [
+      'profile' => auth()->user()->profile,
+    ]);
   }
 }

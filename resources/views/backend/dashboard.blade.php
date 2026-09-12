@@ -3,6 +3,32 @@
 @section('title', __('Dashboard'))
 
 @section('content')
+    {{-- My Account: self-service, no permission gate --}}
+    <x-backend.card>
+        <x-slot name="header">
+            @lang('My Account')
+        </x-slot>
+
+        <x-slot name="body" class="container-fluid overflow-auto">
+            @php($myProfile = $logged_in_user?->loadMissing('profile')->profile)
+
+            @if ($myProfile && $myProfile->completeness < 100)
+                <div class="progress mb-3" style="max-width: 400px;" aria-label="{{ __('Profile completeness') }}">
+                    <div class="progress-bar bg-warning" role="progressbar"
+                        style="width: {{ $myProfile->completeness }}%" aria-valuenow="{{ $myProfile->completeness }}"
+                        aria-valuemin="0" aria-valuemax="100">
+                        {{ $myProfile->completeness }}%
+                    </div>
+                </div>
+            @endif
+
+            <div class="row g-3">
+                <x-backend.shortcut-card route="{{ route('intranet.user.profile.manage') }}"
+                    label="Manage My Profile" icon="fa-id-badge" color="primary" />
+            </div>
+        </x-slot>
+    </x-backend.card>
+
     {{-- Media Management --}}
     @if (
         $logged_in_user->hasAnyPermission([
@@ -124,29 +150,6 @@
         </x-backend.card>
     @endif
 
-    {{-- Profiles --}}
-    @if ($profileCounts !== null)
-        <x-backend.card>
-            <x-slot name="header">
-                @lang('Profiles')
-            </x-slot>
-
-            <x-slot name="body" style="min-height: 20vh;" class="container-fluid overflow-auto">
-                <p class="mb-3">
-                    <span class="badge bg-primary me-2">{{ __('Total') }}: {{ $profileCounts['total'] }}</span>
-                    @foreach ($profileCounts['by_type'] as $type => $count)
-                        <span class="badge bg-info me-2">{{ $type }}: {{ $count }}</span>
-                    @endforeach
-                </p>
-
-                <div class="row g-3">
-                    <x-backend.shortcut-card route="{{ route('dashboard.profiles.index') }}" label="Manage Profiles"
-                        icon="fa-id-card-o" color="primary" />
-                </div>
-            </x-slot>
-        </x-backend.card>
-    @endif
-
     {{-- Services --}}
     @if (
         $logged_in_user->hasAnyPermission(['user.access.services.apps', 'user.access.services.email']) ||
@@ -175,22 +178,38 @@
     @endif
 
     {{-- Administration --}}
-    @if ($logged_in_user->hasAllAccess())
+    @if ($logged_in_user->hasAllAccess() || $profileCounts !== null)
         <x-backend.card>
             <x-slot name="header">
                 @lang('Administration')
             </x-slot>
 
             <x-slot name="body" style="min-height: 20vh;" class="container-fluid overflow-auto">
+                @if ($profileCounts !== null)
+                    <p class="mb-3">
+                        <span class="badge bg-primary me-2">{{ __('Total') }}: {{ $profileCounts['total'] }}</span>
+                        @foreach ($profileCounts['by_type'] as $type => $count)
+                            <span class="badge bg-info me-2">{{ $type }}: {{ $count }}</span>
+                        @endforeach
+                    </p>
+                @endif
+
                 <div class="row g-3">
-                    <x-backend.shortcut-card route="{{ route('dashboard.auth.user.index') }}" label="Users"
-                        icon="fa-users" color="primary" />
-                    <x-backend.shortcut-card route="{{ route('dashboard.auth.role.index') }}" label="Roles"
-                        icon="fa-address-card" color="info" />
-                    <x-backend.shortcut-card route="{{ route('dashboard.tenants.index') }}" label="Tenants"
-                        icon="fa-building" color="warning" />
-                    <x-backend.shortcut-card route="{{ route('log-viewer::logs.list') }}" label="Logs" icon="fa-list"
-                        color="secondary" />
+                    @if ($profileCounts !== null)
+                        <x-backend.shortcut-card route="{{ route('dashboard.profiles.index') }}" label="Manage Profiles"
+                            icon="fa-id-card-o" color="primary" />
+                    @endif
+
+                    @if ($logged_in_user->hasAllAccess())
+                        <x-backend.shortcut-card route="{{ route('dashboard.auth.user.index') }}" label="Users"
+                            icon="fa-users" color="primary" />
+                        <x-backend.shortcut-card route="{{ route('dashboard.auth.role.index') }}" label="Roles"
+                            icon="fa-address-card" color="info" />
+                        <x-backend.shortcut-card route="{{ route('dashboard.tenants.index') }}" label="Tenants"
+                            icon="fa-building" color="warning" />
+                        <x-backend.shortcut-card route="{{ route('log-viewer::logs.list') }}" label="Logs"
+                            icon="fa-list" color="secondary" />
+                    @endif
                 </div>
             </x-slot>
         </x-backend.card>

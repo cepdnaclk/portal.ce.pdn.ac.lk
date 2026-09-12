@@ -42,6 +42,9 @@ class UserProfileLink extends Model
     'url',
   ];
 
+  // Keeps the parent's updated_at (and its completeness cache key) current.
+  protected $touches = ['profile'];
+
   public function profile()
   {
     return $this->belongsTo(UserProfile::class, 'user_profile_id');

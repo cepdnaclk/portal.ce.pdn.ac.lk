@@ -8,6 +8,7 @@ use Database\Factories\UserProfileFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
@@ -120,6 +121,16 @@ class UserProfile extends Model
     'interests' => 'array',
   ];
 
+  /**
+   * Links and types $touches the profile, so every write that can move the
+   * completeness number ends in a profile save — one hook flushes them all.
+   */
+  protected static function booted(): void
+  {
+    static::saved(fn (self $profile) => Cache::forget("profile:{$profile->id}:completeness"));
+    static::deleted(fn (self $profile) => Cache::forget("profile:{$profile->id}:completeness"));
+  }
+
   public function profileTypes()
   {
     return $this->hasMany(UserProfileType::class);
@@ -151,6 +162,15 @@ class UserProfile extends Model
    * required attributes of each assigned profile type.
    */
   public function getCompletenessAttribute(): int
+  {
+    return Cache::remember(
+      "profile:{$this->id}:completeness",
+      now()->addDay(),
+      fn () => $this->calculateCompleteness()
+    );
+  }
+
+  protected function calculateCompleteness(): int
   {
     $checks = [
       $this->full_name,
