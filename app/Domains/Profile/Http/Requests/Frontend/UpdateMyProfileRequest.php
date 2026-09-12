@@ -72,6 +72,8 @@ class UpdateMyProfileRequest extends FormRequest
       'links' => ['sometimes', 'array'],
       'links.*' => ['nullable', 'url', 'max:500'],
       'types' => ['sometimes', 'array'],
+      'types.*' => ['array'],
+      'types.*.attributes' => ['sometimes', 'array'],
       'types.ACADEMIC_STAFF.attributes.start_date' => ['nullable', 'date'],
       'types.ACADEMIC_STAFF.attributes.end_date' => $this->filled('types.ACADEMIC_STAFF.attributes.start_date')
         ? ['nullable', 'date', 'after_or_equal:types.ACADEMIC_STAFF.attributes.start_date']

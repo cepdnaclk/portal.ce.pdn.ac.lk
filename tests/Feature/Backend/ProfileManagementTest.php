@@ -328,4 +328,21 @@ class ProfileManagementTest extends TestCase
       ->assertOk()
       ->assertHeader('Content-Type', 'image/jpeg');
   }
+  /** @test */
+  public function malformed_type_input_is_rejected_by_validation()
+  {
+    $this->loginWithPermission('user.access.profiles.editor');
+
+    $this->post(route('dashboard.profiles.store'), [
+      'email' => 'x@example.com',
+      'types' => ['EXTERNAL' => ['assigned' => 1, 'attributes' => 'foo']],
+    ])->assertSessionHasErrors('types.EXTERNAL.attributes');
+
+    $this->post(route('dashboard.profiles.store'), [
+      'email' => 'x@example.com',
+      'types' => ['STUDENT' => 'foo'],
+    ])->assertSessionHasErrors('types.STUDENT');
+
+    $this->assertEquals(0, UserProfile::count());
+  }
 }

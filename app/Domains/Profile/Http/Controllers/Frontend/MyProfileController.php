@@ -41,6 +41,6 @@ class MyProfileController extends Controller
    */
   private function resolveProfile(): UserProfile
   {
-    return auth()->user()->profile ?? $this->profileService->findOrCreateForUser(auth()->user());
+    return $this->profileService->findOrCreateForUser(auth()->user());
   }
 }

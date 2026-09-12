@@ -42,6 +42,7 @@ class ProfileController extends Controller
   {
     return view('backend.profiles.merge-select', [
       'profileOptions' => UserProfile::query()
+        ->select('id', 'email', 'name_with_initials', 'full_name')
         ->orderBy('email')
         ->get()
         ->mapWithKeys(function ($profile) {

@@ -118,4 +118,41 @@ class ProfileOnboardingTest extends TestCase
     );
     Storage::disk('public')->assertExists($path);
   }
+  /** @test */
+  public function the_wizard_ignores_injected_field_and_link_keys()
+  {
+    $victim = User::factory()->user()->create();
+    $victimProfile = UserProfile::factory()->create(['email' => $victim->email, 'user_id' => $victim->id]);
+
+    $attacker = User::factory()->user()->create();
+    $this->actingAs($attacker);
+
+    Livewire::test(ProfileWizard::class)
+      ->set('fields.full_name', 'Jane Doe')
+      ->set('fields.user_id', $victim->id)
+      ->set('fields.email', 'attacker@example.com')
+      ->set('fields.profile_image', 'https://evil.example/x.jpg')
+      ->set('links.evil', 'https://evil.example')
+      ->call('finish')
+      ->assertHasNoErrors();
+
+    $profile = $attacker->refresh()->profile;
+
+    $this->assertEquals($attacker->id, $profile->user_id);
+    $this->assertEquals($attacker->email, $profile->email);
+    $this->assertNull($profile->profile_image);
+    $this->assertEmpty($profile->links->where('type', 'evil'));
+    $this->assertEquals($victim->id, $victimProfile->refresh()->user_id);
+  }
+
+  /** @test */
+  public function the_wizard_survives_an_out_of_range_step()
+  {
+    $this->actingAs(User::factory()->user()->create());
+
+    Livewire::test(ProfileWizard::class)
+      ->set('step', 7)
+      ->call('next')
+      ->assertHasNoErrors();
+  }
 }

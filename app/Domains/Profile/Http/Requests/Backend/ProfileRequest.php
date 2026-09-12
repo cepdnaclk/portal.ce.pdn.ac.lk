@@ -60,6 +60,8 @@ class ProfileRequest extends FormRequest
       'links' => ['sometimes', 'array'],
       'links.*' => ['nullable', 'url', 'max:500'],
       'types' => ['sometimes', 'array'],
+      'types.*' => ['array'],
+      'types.*.attributes' => ['sometimes', 'array'],
       'types.ACADEMIC_STAFF.attributes.start_date' => ['nullable', 'date'],
       'types.ACADEMIC_STAFF.attributes.end_date' => $this->filled('types.ACADEMIC_STAFF.attributes.start_date')
         ? ['nullable', 'date', 'after_or_equal:types.ACADEMIC_STAFF.attributes.start_date']
@@ -82,6 +84,7 @@ class ProfileRequest extends FormRequest
       }
 
       foreach ((array) $this->input('types', []) as $type => $data) {
+        $data = (array) $data;
         if (! in_array($type, UserProfileType::TYPES, true)) {
           $validator->errors()->add('types', __('Invalid profile type: :type', ['type' => $type]));
           continue;
@@ -91,20 +94,19 @@ class ProfileRequest extends FormRequest
           continue;
         }
 
-        $attributes = $data['attributes'] ?? [];
+        $attributes = (array) ($data['attributes'] ?? []);
 
-        if ($type === UserProfileType::TYPE_STUDENT) {
-          if (! preg_match('#^E/\d{2}/\d{3}$#', $attributes['reg_number'] ?? '')) {
-            $validator->errors()->add('types.STUDENT.attributes.reg_number', __('The registration number must match the E/nn/nnn format.'));
-          }
-
-          if (empty($attributes['batch'])) {
-            $validator->errors()->add('types.STUDENT.attributes.batch', __('The batch is required for the student type.'));
+        foreach (UserProfileType::REQUIRED_ATTRIBUTES[$type] as $attribute) {
+          if (empty($attributes[$attribute])) {
+            $validator->errors()->add("types.$type.attributes.$attribute", __('The :attribute is required for the :type type.', [
+              'attribute' => str_replace('_', ' ', $attribute),
+              'type' => str_replace('_', ' ', strtolower($type)),
+            ]));
           }
         }
 
-        if ($type === UserProfileType::TYPE_ACADEMIC_STAFF && empty($attributes['designation'])) {
-          $validator->errors()->add('types.ACADEMIC_STAFF.attributes.designation', __('The designation is required for the academic staff type.'));
+        if ($type === UserProfileType::TYPE_STUDENT && ! preg_match('#^E/\d{2}/\d{3}$#', is_string($attributes['reg_number'] ?? null) ? $attributes['reg_number'] : '')) {
+          $validator->errors()->add('types.STUDENT.attributes.reg_number', __('The registration number must match the E/nn/nnn format.'));
         }
       }
     });

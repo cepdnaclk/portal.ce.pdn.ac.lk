@@ -247,14 +247,14 @@ class ProfileService extends BaseService
    * Find the profile for a user's email and link it, or create a minimal one.
    * Idempotent: a user with a linked profile gets it back unchanged.
    */
-  public function findOrCreateForUser(User $user): ?UserProfile
+  public function findOrCreateForUser(User $user): UserProfile
   {
     if ($user->profile) {
       return $user->profile;
     }
 
     if (! $user->email) {
-      return null;
+      throw new GeneralException(__('A profile cannot be created for an account without an email address.'));
     }
 
     return DB::transaction(function () use ($user) {

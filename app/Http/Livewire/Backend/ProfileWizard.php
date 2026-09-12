@@ -52,6 +52,10 @@ class ProfileWizard extends Component
 
   public function next(): void
   {
+    if (! isset(self::STEP_FIELDS[$this->step])) {
+      $this->step = 1;
+    }
+
     $stepFields = array_map(fn($field) => "fields.$field", self::STEP_FIELDS[$this->step]);
 
     if ($this->step === 2) {
@@ -72,8 +76,11 @@ class ProfileWizard extends Component
   {
     $this->validate();
 
-    $data = array_map(fn($value) => $value === '' ? null : $value, $this->fields);
-    $data['links'] = collect($this->links)
+    // $fields/$links are public Livewire props: only the known keys may reach the service
+    $fields = Arr::only($this->fields, array_merge(...array_values(self::STEP_FIELDS)));
+
+    $data = array_map(fn($value) => $value === '' ? null : $value, $fields);
+    $data['links'] = collect(Arr::only($this->links, UserProfileLink::LINK_TYPES))
       ->filter()
       ->map(fn($url, $type) => ['type' => $type, 'url' => $url])
       ->values()
@@ -93,7 +100,7 @@ class ProfileWizard extends Component
   private function profile(): UserProfile
   {
     // Always the logged-in user's own profile
-    return auth()->user()->profile ?? app(ProfileService::class)->findOrCreateForUser(auth()->user());
+    return app(ProfileService::class)->findOrCreateForUser(auth()->user());
   }
 
   public function render()
