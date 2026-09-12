@@ -21,7 +21,11 @@ class ProfilesTable extends PersistentStateDataTable
   {
     return [
       Column::make('Email', 'email')->searchable()->sortable(),
-      Column::make('Name with Initials', 'name_with_initials')->searchable()->sortable(),
+      Column::make('Name with Initials', 'name_with_initials')
+        ->searchable(fn(Builder $query, string $term) => $query
+          ->orWhere('name_with_initials', 'like', "%{$term}%")
+          ->orWhere('full_name', 'like', "%{$term}%"))
+        ->sortable(),
       Column::make('Types'),
       Column::make('Account'),
       Column::make('Completeness'),
