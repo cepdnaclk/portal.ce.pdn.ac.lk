@@ -22,3 +22,10 @@
 .project-card-title {
     font-size: 10pt;
 }
+
+.user-profile-image {
+    max-height: 160px;
+    max-width: 100%;
+    width: auto;
+    object-fit: cover;
+}
