@@ -4,8 +4,12 @@ namespace Tests\Feature\Console;
 
 use App\Domains\Profile\Models\UserProfile;
 use App\Domains\Profile\Models\UserProfileType;
+use App\Domains\Profile\Services\ProfileImageService;
+use App\Domains\Profile\Services\ProfileSyncService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProfilesSyncTest extends TestCase
@@ -14,6 +18,11 @@ class ProfilesSyncTest extends TestCase
 
   protected function fakeApi(array $students = [], array $staff = [], array $taxonomyStaff = []): void
   {
+    Storage::fake('public');
+
+    $source = UploadedFile::fake()->image('source.jpg', 200, 200);
+    $image = file_get_contents($source->getRealPath());
+
     Http::fake([
       config('constants.department_data.base_url') . '/people/v1/students/all/' => Http::response($students),
       config('constants.department_data.base_url') . '/people/v1/staff/all/' => Http::response($staff),
@@ -21,6 +30,7 @@ class ProfilesSyncTest extends TestCase
         'status' => 'success',
         'data' => ['terms' => $taxonomyStaff],
       ]),
+      'https://people.ce.pdn.ac.lk/img/*' => Http::response($image, 200, ['Content-Type' => 'image/jpeg']),
     ]);
   }
 
@@ -87,6 +97,10 @@ class ProfilesSyncTest extends TestCase
     $this->assertEquals('E/20/100', $studentType->source_key);
     $this->assertEquals('E/20/100', $studentType->getAttribute('attributes')['reg_number']);
     $this->assertEquals(['ML', 'Robotics'], $student->interests);
+
+    // The API photo is downloaded and stored locally, not kept as the raw URL
+    $this->assertMatchesRegularExpression('/^[0-9a-f-]{36}\.jpg$/i', $student->profile_image);
+    Storage::disk('public')->assertExists('profile-images/' . $student->profile_image);
 
     // Non-empty urls only
     $this->assertEquals(['github'], $student->links->pluck('type')->all());
@@ -239,8 +253,8 @@ class ProfilesSyncTest extends TestCase
       'E/20/101' => $this->studentRecord(['eNumber' => 'E/20/101', 'emails' => []]),
     ]);
 
-    $sync = new \App\Domains\Profile\Services\ProfileSyncService();
-    $this->app->instance(\App\Domains\Profile\Services\ProfileSyncService::class, $sync);
+    $sync = new ProfileSyncService(app(ProfileImageService::class));
+    $this->app->instance(ProfileSyncService::class, $sync);
 
     $this->artisan('profiles:sync --students --details')->assertExitCode(0);
 
@@ -248,6 +262,26 @@ class ProfilesSyncTest extends TestCase
 
     $this->assertEquals('created', $events['E/20/100']);
     $this->assertEquals('skipped_no_email', $events['E/20/101']);
+  }
+
+  /** @test */
+  public function a_broken_image_url_does_not_fail_the_record()
+  {
+    // More specific fakes must be registered before fakeApi()'s wildcard
+    // image fake, or the wildcard (matched first) wins instead.
+    Http::fake([
+      'https://people.ce.pdn.ac.lk/img/missing.jpg' => Http::response(null, 404),
+    ]);
+    $this->fakeApi(['E/20/100' => $this->studentRecord([
+      'profile_image' => 'https://people.ce.pdn.ac.lk/img/missing.jpg',
+    ])]);
+
+    $this->artisan('profiles:sync')
+      ->expectsOutput('Students: created=1, updated=0, linked=0, skipped_no_email=0, failed=0')
+      ->assertExitCode(0);
+
+    $student = UserProfile::where('email', 'e20100@eng.pdn.ac.lk')->firstOrFail();
+    $this->assertNull($student->profile_image);
   }
 
   /** @test */
@@ -259,5 +293,32 @@ class ProfilesSyncTest extends TestCase
 
     $this->artisan('profiles:sync --students')->assertExitCode(1);
     $this->assertEquals(0, UserProfile::count());
+  }
+
+  /** @test */
+  public function the_upstream_short_department_name_is_mapped_to_the_definitions_option()
+  {
+    // The API sends the short form ("Computer Engineering"); UserProfile::DEPARTMENT_OPTIONS
+    // only recognises the full "Department of ..." form used by the admin dropdown and
+    // Rule::in validation.
+    $this->fakeApi(['E/20/100' => $this->studentRecord(['department' => 'Computer Engineering'])]);
+
+    $this->artisan('profiles:sync')->assertExitCode(0);
+
+    $student = UserProfile::where('email', 'e20100@eng.pdn.ac.lk')->firstOrFail();
+    $studentType = $student->profileTypes->firstWhere('type', UserProfileType::TYPE_STUDENT);
+    $this->assertEquals('Department of Computer Engineering', $studentType->getAttribute('attributes')['department']);
+  }
+
+  /** @test */
+  public function an_unrecognised_department_is_dropped_instead_of_stored_unmapped()
+  {
+    $this->fakeApi(['E/20/100' => $this->studentRecord(['department' => 'Some Unlisted Department'])]);
+
+    $this->artisan('profiles:sync')->assertExitCode(0);
+
+    $student = UserProfile::where('email', 'e20100@eng.pdn.ac.lk')->firstOrFail();
+    $studentType = $student->profileTypes->firstWhere('type', UserProfileType::TYPE_STUDENT);
+    $this->assertArrayNotHasKey('department', $studentType->getAttribute('attributes'));
   }
 }

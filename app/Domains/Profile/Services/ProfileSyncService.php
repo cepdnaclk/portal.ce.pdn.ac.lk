@@ -28,6 +28,13 @@ class ProfileSyncService
    */
   public array $events = [];
 
+  /** Optional callback fired as each record is processed, for live console output. */
+  public $onEvent = null;
+
+  public function __construct(private ProfileImageService $profileImageService)
+  {
+  }
+
   /**
    * Sync the students feed (records keyed by eNumber).
    *
@@ -66,7 +73,7 @@ class ProfileSyncService
       ], [
         'reg_number' => $sourceKey,
         'batch' => $record['batch'] ?? null,
-        'department' => $record['department'] ?? null,
+        'department' => $this->mapDepartment($record['department'] ?? null, $sourceKey),
       ], $record['urls'] ?? []);
     }
 
@@ -107,6 +114,33 @@ class ProfileSyncService
     return $counts;
   }
 
+  /**
+   * Map the API's raw department name to a UserProfile::DEPARTMENT_OPTIONS
+   * key (see UserProfile::mapDepartment()). An unrecognised value is
+   * dropped rather than stored: syncRecord() only overwrites with non-empty
+   * values, so this just leaves any existing department untouched instead
+   * of persisting a string that can never satisfy the Rule::in validation
+   * or be selected in the admin dropdown. Logged so a new or renamed
+   * upstream department is noticed rather than silently lost.
+   */
+  private function mapDepartment(?string $raw, string $sourceKey): ?string
+  {
+    if (blank($raw)) {
+      return null;
+    }
+
+    $mapped = UserProfile::mapDepartment($raw);
+
+    if ($mapped === null) {
+      Log::warning('profiles:sync could not map department to a known option', [
+        'source_key' => $sourceKey,
+        'department' => $raw,
+      ]);
+    }
+
+    return $mapped;
+  }
+
   private function syncRecord(array &$counts, string $type, string $sourceKey, string $email, array $values, array $attributes, array $urls): void
   {
     if (in_array(strtolower($email), self::PLACEHOLDER_EMAILS, true)) {
@@ -133,8 +167,27 @@ class ProfileSyncService
       // 3. No match — create
       $profile ??= new UserProfile();
 
+      // profile_image is a URL to download, not a column value — handled separately below
+      $imageUrl = $values['profile_image'] ?? null;
+      unset($values['profile_image']);
+
       // Overwrite with API values, but never a non-null field with an empty one
       $profile->fill(array_filter($values, fn($value) => filled($value)))->save();
+
+      // A flaky/dead image URL shouldn't fail the whole record.
+      // ponytail: re-downloads every run even if unchanged; add last-synced-URL
+      // tracking to skip that only if bandwidth/CPU actually becomes a problem.
+      if (filled($imageUrl)) {
+        try {
+          $this->profileImageService->replaceFromUrl($profile, $imageUrl);
+        } catch (\Throwable $e) {
+          Log::warning('profiles:sync failed to download profile image', [
+            'profile_id' => $profile->id,
+            'url' => $imageUrl,
+            'error' => $e->getMessage(),
+          ]);
+        }
+      }
 
       $profile->profileTypes()->updateOrCreate(
         ['type' => $type],
@@ -162,15 +215,22 @@ class ProfileSyncService
     }
   }
 
+
   private function record(string $type, string $sourceKey, ?string $email, string $status, ?string $error = null): void
   {
-    $this->events[] = [
+    $event = [
       'type' => $type,
       'source_key' => $sourceKey,
       'email' => $email,
       'status' => $status,
       'error' => $error,
     ];
+
+    $this->events[] = $event;
+
+    if ($this->onEvent) {
+      ($this->onEvent)($event);
+    }
   }
 
   private function buildEmail(array $parts): ?string

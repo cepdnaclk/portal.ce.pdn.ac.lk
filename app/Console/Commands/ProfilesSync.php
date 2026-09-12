@@ -48,6 +48,12 @@ class ProfilesSync extends Command
       return self::FAILURE;
     }
 
+    if ($this->option('details')) {
+      $sync->onEvent = fn(array $event) => $this->line(implode(' ', array_filter([
+        $event['status'], $event['type'], $event['source_key'], $event['email'], $event['error'],
+      ])));
+    }
+
     $run = function () use ($sync, $students, $staff, $staffSource) {
       $results = [];
 
@@ -102,19 +108,11 @@ class ProfilesSync extends Command
   }
 
   /**
-   * Failures always; the full per-record breakdown only with --details.
+   * Failures at the end; with --details every record was already printed live.
    */
   private function report(array $events): void
   {
     $failed = array_filter($events, fn($event) => $event['status'] === 'failed');
-
-    if ($this->option('details')) {
-      $this->newLine();
-      $this->table(
-        ['Type', 'Source key', 'Email', 'Status', 'Error'],
-        array_map(fn($event) => array_map(fn($value) => $value ?? '—', $event), $events)
-      );
-    }
 
     if ($failed && ! $this->option('details')) {
       $this->newLine();

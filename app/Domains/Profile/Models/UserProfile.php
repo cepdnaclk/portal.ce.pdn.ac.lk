@@ -34,6 +34,34 @@ class UserProfile extends Model
     'Department of Mechanical Engineering' => 'Department of Mechanical Engineering',
   ];
 
+  /**
+   * Map a raw department name from the People API (e.g. "Computer
+   * Engineering") to its DEPARTMENT_OPTIONS key (e.g. "Department of
+   * Computer Engineering"). Case-insensitive and tolerant of the API value
+   * already carrying the "Department of " prefix. Returns null for an
+   * unrecognised value so callers can skip it instead of persisting a
+   * department that fails Rule::in and can never be selected in the admin
+   * dropdown.
+   */
+  public static function mapDepartment(?string $raw): ?string
+  {
+    $raw = trim((string) $raw);
+
+    if ($raw === '') {
+      return null;
+    }
+
+    $normalized = preg_match('/^department of /i', $raw) ? $raw : "Department of $raw";
+
+    foreach (array_keys(self::DEPARTMENT_OPTIONS) as $option) {
+      if (strcasecmp($option, $normalized) === 0) {
+        return $option;
+      }
+    }
+
+    return null;
+  }
+
   protected static $logFillable = true;
   protected static $logOnlyDirty = true;
 

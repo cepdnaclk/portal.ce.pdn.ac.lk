@@ -4,6 +4,7 @@ namespace App\Domains\Profile\Services;
 
 use App\Domains\Profile\Models\UserProfile;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -12,11 +13,32 @@ class ProfileImageService
 {
   public function replace(UserProfile $profile, UploadedFile $file): UserProfile
   {
+    return $this->store($profile, Image::make($file->getRealPath()));
+  }
+
+  /**
+   * Download an externally-hosted profile picture (e.g. from profiles:sync)
+   * and store it the same way a manual upload is stored.
+   *
+   * @throws \RuntimeException if the download fails
+   */
+  public function replaceFromUrl(UserProfile $profile, string $url): UserProfile
+  {
+    $response = Http::timeout(15)->get($url);
+
+    if (! $response->successful()) {
+      throw new \RuntimeException("Failed to download profile image from $url (HTTP {$response->status()}).");
+    }
+
+    return $this->store($profile, Image::make($response->body()));
+  }
+
+  private function store(UserProfile $profile, $image): UserProfile
+  {
     $disk = Storage::disk(config('profile.image.disk'));
     $path = config('profile.image.storage_path') . '/' . Str::uuid() . '.jpg';
     $oldPath = $this->uploadedPath($profile->profile_image);
 
-    $image = Image::make($file->getRealPath());
     $maxDimension = config('profile.image.max_dimension');
     $image->resize($maxDimension, $maxDimension, function ($constraint) {
       $constraint->aspectRatio();
