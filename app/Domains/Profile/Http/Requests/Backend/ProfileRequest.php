@@ -2,6 +2,7 @@
 
 namespace App\Domains\Profile\Http\Requests\Backend;
 
+use App\Domains\Profile\Models\UserProfile;
 use App\Domains\Profile\Models\UserProfileLink;
 use App\Domains\Profile\Models\UserProfileType;
 use Illuminate\Foundation\Http\FormRequest;
@@ -66,6 +67,7 @@ class ProfileRequest extends FormRequest
       'types.ACADEMIC_STAFF.attributes.end_date' => $this->filled('types.ACADEMIC_STAFF.attributes.start_date')
         ? ['nullable', 'date', 'after_or_equal:types.ACADEMIC_STAFF.attributes.start_date']
         : ['nullable', 'date'],
+      'types.STUDENT.attributes.department' => ['nullable', Rule::in(array_keys(UserProfile::DEPARTMENT_OPTIONS))],
     ];
   }
 

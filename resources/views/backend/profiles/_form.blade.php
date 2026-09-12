@@ -161,10 +161,16 @@
                 </div>
                 <div class="col-md-12 mb-0">
                     {!! Form::label('student_department', __('Department'), ['class' => 'form-label']) !!}
-                    {!! Form::text('types[STUDENT][attributes][department]', $typeAttr('STUDENT', 'department'), [
-                        'class' => 'form-control',
-                        'id' => 'student_department',
-                    ]) !!}
+                    {!! Form::select(
+                        'types[STUDENT][attributes][department]',
+                        UserProfile::DEPARTMENT_OPTIONS,
+                        $typeAttr('STUDENT', 'department'),
+                        [
+                            'class' => 'form-select',
+                            'id' => 'student_department',
+                            'placeholder' => __('Select a department'),
+                        ],
+                    ) !!}
                     @error('types.STUDENT.attributes.department')
                         <strong class="text-danger">{{ $message }}</strong>
                     @enderror
@@ -233,7 +239,7 @@
                     @enderror
                 </div>
                 <div class="col-md-12 mt-3 mb-0">
-                    {!! Form::label('academic_research_interests', __('Research Interests'), ['class' => 'form-label']) !!}
+                    {!! Form::label('academic_research_interests', __('Interests'), ['class' => 'form-label']) !!}
                     {!! Form::textarea(
                         'types[ACADEMIC_STAFF][attributes][research_interests]',
                         $typeAttr('ACADEMIC_STAFF', 'research_interests'),

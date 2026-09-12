@@ -220,7 +220,7 @@
                                                         </div>
                                                         <div class="col-md-12 mt-3">
                                                             <label class="form-label"
-                                                                for="academic_research_interests">@lang('Research Interests')</label>
+                                                                for="academic_research_interests">@lang('Interests')</label>
                                                             <textarea name="types[ACADEMIC_STAFF][attributes][research_interests]" id="academic_research_interests"
                                                                 class="form-control" rows="3" placeholder="{{ __('Comma-separated values') }}">{{ $typeAttr($profileType, 'research_interests') }}</textarea>
                                                             @error('types.ACADEMIC_STAFF.attributes.research_interests')

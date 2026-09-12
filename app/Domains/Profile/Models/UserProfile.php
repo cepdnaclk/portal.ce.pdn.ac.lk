@@ -28,6 +28,12 @@ class UserProfile extends Model
     'Rev' => 'Rev.',
   ];
 
+  // Valid values for the STUDENT type's 'department' attribute.
+  public const DEPARTMENT_OPTIONS = [
+    'Department of Computer Engineering' => 'Department of Computer Engineering',
+    'Department of Mechanical Engineering' => 'Department of Mechanical Engineering',
+  ];
+
   protected static $logFillable = true;
   protected static $logOnlyDirty = true;
 
@@ -101,6 +107,61 @@ class UserProfile extends Model
     }
 
     return (int) round(count(array_filter($checks)) / count($checks) * 100);
+  }
+
+  /**
+   * Attributes of an assigned profile type, or [] when the type is not assigned.
+   */
+  protected function typeAttributes(string $type): array
+  {
+    return $this->profileTypes->firstWhere('type', $type)?->getAttribute('attributes') ?? [];
+  }
+
+  /**
+   * Designation by profile type priority: academic staff, then external
+   * ("{position}, {affiliation}"), then student.
+   */
+  public function getDesignationAttribute(): ?string
+  {
+    $designation = $this->typeAttributes(UserProfileType::TYPE_ACADEMIC_STAFF)['designation'] ?? null;
+    if ($designation) {
+      return $designation;
+    }
+
+    $external = $this->typeAttributes(UserProfileType::TYPE_EXTERNAL);
+    $external = implode(', ', array_filter([$external['position'] ?? null, $external['affiliation'] ?? null]));
+    if ($external !== '') {
+      return $external;
+    }
+
+    return $this->profileTypes->contains('type', UserProfileType::TYPE_STUDENT) ? 'Student' : null;
+  }
+
+  /**
+   * Affiliation by the same priority: the department for academic staff,
+   * then the external affiliation, then the student's department.
+   */
+  public function getAffiliationAttribute(): ?string
+  {
+    if ($this->profileTypes->contains('type', UserProfileType::TYPE_ACADEMIC_STAFF)) {
+      return config('profile.academic_affiliation');
+    }
+
+    return ($this->typeAttributes(UserProfileType::TYPE_EXTERNAL)['affiliation'] ?? null)
+      ?: ($this->typeAttributes(UserProfileType::TYPE_STUDENT)['department'] ?? null);
+  }
+
+  /**
+   * Interests by the same priority: the academic staff research interests,
+   * then the external interests, then the student's.
+   */
+  public function getInterestsAttribute(): array
+  {
+    $interests = ($this->typeAttributes(UserProfileType::TYPE_ACADEMIC_STAFF)['research_interests'] ?? null)
+      ?: ($this->typeAttributes(UserProfileType::TYPE_EXTERNAL)['interests'] ?? null)
+      ?: ($this->typeAttributes(UserProfileType::TYPE_STUDENT)['interests'] ?? null);
+
+    return array_values(array_filter((array) $interests));
   }
 
   public function isComplete(): bool

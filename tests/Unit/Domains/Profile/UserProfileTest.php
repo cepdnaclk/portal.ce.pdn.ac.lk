@@ -93,4 +93,44 @@ class UserProfileTest extends TestCase
 
     $this->assertEquals($profile->profile_image, $profile->profileImageUrl());
   }
+
+  /** @test */
+  public function designation_and_affiliation_follow_the_profile_type_priority()
+  {
+    $profile = UserProfile::factory()->create();
+
+    UserProfileType::factory()->create([
+      'user_profile_id' => $profile->id,
+      'type' => UserProfileType::TYPE_STUDENT,
+      'attributes' => [
+        'reg_number' => 'E/19/001',
+        'batch' => '2019',
+        'department' => 'Computer Engineering',
+        'interests' => ['Robotics'],
+      ],
+    ]);
+    $this->assertEquals('Student', $profile->designation);
+    $this->assertEquals('Computer Engineering', $profile->affiliation);
+    $this->assertEquals(['Robotics'], $profile->interests);
+
+    UserProfileType::factory()->create([
+      'user_profile_id' => $profile->id,
+      'type' => UserProfileType::TYPE_EXTERNAL,
+      'attributes' => ['position' => 'Engineer', 'affiliation' => 'ACME', 'interests' => ['Networks']],
+    ]);
+    $profile->refresh();
+    $this->assertEquals('Engineer, ACME', $profile->designation);
+    $this->assertEquals('ACME', $profile->affiliation);
+    $this->assertEquals(['Networks'], $profile->interests);
+
+    UserProfileType::factory()->create([
+      'user_profile_id' => $profile->id,
+      'type' => UserProfileType::TYPE_ACADEMIC_STAFF,
+      'attributes' => ['designation' => 'Senior Lecturer', 'research_interests' => ['Compilers']],
+    ]);
+    $profile->refresh();
+    $this->assertEquals('Senior Lecturer', $profile->designation);
+    $this->assertEquals(config('profile.academic_affiliation'), $profile->affiliation);
+    $this->assertEquals(['Compilers'], $profile->interests);
+  }
 }

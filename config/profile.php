@@ -1,6 +1,9 @@
 <?php
 
 return [
+  // Affiliation reported for academic staff profiles
+  'academic_affiliation' => 'Department of Computer Engineering',
+
   'image' => [
     'disk' => env('PROFILE_IMAGE_DISK', 'public'),
     'storage_path' => 'profile-images',

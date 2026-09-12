@@ -244,6 +244,57 @@ class ProfileManagementTest extends TestCase
   }
 
   /** @test */
+  public function student_department_must_be_one_of_the_defined_options()
+  {
+    $this->loginWithPermission('user.access.profiles.editor');
+
+    $response = $this->post(route('dashboard.profiles.store'), [
+      'email' => 'student@example.com',
+      'types' => [
+        'STUDENT' => [
+          'assigned' => '1',
+          'attributes' => [
+            'reg_number' => 'E/20/123',
+            'batch' => '2020',
+            'department' => 'Department of Electrical Engineering',
+          ],
+        ],
+      ],
+    ]);
+
+    $response->assertSessionHasErrors(['types.STUDENT.attributes.department']);
+    $this->assertEquals(0, UserProfile::count());
+  }
+
+  /** @test */
+  public function student_department_accepts_a_defined_option()
+  {
+    $this->loginWithPermission('user.access.profiles.editor');
+
+    $response = $this->post(route('dashboard.profiles.store'), [
+      'email' => 'student2@example.com',
+      'types' => [
+        'STUDENT' => [
+          'assigned' => '1',
+          'attributes' => [
+            'reg_number' => 'E/20/123',
+            'batch' => '2020',
+            'department' => 'Department of Computer Engineering',
+          ],
+        ],
+      ],
+    ]);
+
+    $response->assertRedirect(route('dashboard.profiles.index'));
+
+    $profile = UserProfile::where('email', 'student2@example.com')->firstOrFail();
+    $this->assertEquals(
+      'Department of Computer Engineering',
+      $profile->profileTypes->firstWhere('type', 'STUDENT')->attributes['department']
+    );
+  }
+
+  /** @test */
   public function academic_staff_dates_are_optional_and_must_be_in_order()
   {
     $this->loginWithPermission('user.access.profiles.editor');

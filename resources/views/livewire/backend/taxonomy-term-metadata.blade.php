@@ -196,6 +196,15 @@
                 @endif
             @break
 
+            @case('profile')
+                @if (count($profiles) <= 1)
+                    <p><i>No profiles available for selection.</i></p>
+                @else
+                    <livewire:backend.searchable-dropdown :name="'metadata[' . $property['code'] . ']'" :options="collect($profiles)->sort()->toArray()" :selected="old('metadata.' . $property['code'], $value)"
+                        :placeholder="$profiles[''] ?? 'Select a profile'" :icon="'fa fa-user'" :inputId="$property['code']" />
+                @endif
+            @break
+
             @case('taxonomy_term')
                 @if (empty($taxonomy_terms))
                     <p><i>No taxonomy terms available for selection.</i></p>

@@ -46,7 +46,8 @@ class Taxonomy extends Model
     'page' => 'Page',
     'list' => 'List',
     'taxonomy_term' => 'Taxonomy Term',
-    'article' => 'Article'
+    'article' => 'Article',
+    'profile' => 'Profile',
   ];
 
   protected $casts = [
