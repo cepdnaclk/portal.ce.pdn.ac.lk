@@ -37,3 +37,4 @@ OpenAPI 3.0 JSON documents for the tenant-scoped v2 endpoints.
 - [Articles](./features/articles.md) - Tenant-scoped rich-text content items with image embedding support.
 - [Backups](./features/backups.md) - Backup and restore commands with Google Drive integration.
 - [Email API](./features/email-api.md) - Email sending API.
+- [User Profiles](./features/profiles.md) - Person profiles, account auto-linking, and the People API sync.

@@ -4,9 +4,11 @@ namespace App\Domains\Taxonomy\Models;
 
 use App\Domains\Auth\Models\User;
 use App\Domains\ContentManagement\Models\Article;
+use App\Domains\Profile\Models\UserProfile;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\TaxonomyListItemResource;
 use App\Http\Resources\TaxonomyTermResource;
+use App\Http\Resources\UserProfileResource;
 use Database\Factories\TaxonomyTermFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -108,6 +110,16 @@ class TaxonomyTerm extends Model
 
             if ($taxonomyArticleResource) {
               $response[$code] = $taxonomyArticleResource;
+            }
+          } elseif ($taxonomyCode == 'profile') {
+            $profileCacheKey = 'taxonomy_' . (int)$this->taxonomy_id . '_profile_' . (int)$metadataValue;
+            $profileResource = cache()->remember($profileCacheKey, 300, function () use ($metadataValue) {
+              $profile = UserProfile::with(['profileTypes', 'links'])->find($metadataValue);
+              return $profile ? UserProfileResource::make($profile) : null;
+            });
+
+            if ($profileResource) {
+              $response[$code] = $profileResource;
             }
           } elseif ($taxonomyCode == 'datetime') {
             $timestamp = false;

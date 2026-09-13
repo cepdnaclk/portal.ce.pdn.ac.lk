@@ -10,7 +10,9 @@ use App\Domains\Auth\Events\User\UserRestored;
 use App\Domains\Auth\Events\User\UserStatusChanged;
 use App\Domains\Auth\Events\User\UserUpdated;
 use App\Domains\Auth\Models\Role;
+use App\Domains\Profile\Services\ProfileService;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Log;
 use App\Services\DepartmentDataService;
 
 /**
@@ -28,6 +30,11 @@ class UserEventListener
       'last_login_at' => now(),
       'last_login_ip' => request()->getClientIp(),
     ]);
+
+    // Link or create the profile for pre-existing users on first login
+    if ($event->user->profile === null) {
+      $this->linkProfile($event->user);
+    }
   }
 
   /**
@@ -68,6 +75,26 @@ class UserEventListener
       foreach ($roles as $role) {
         $user->assignRole($role);
       }
+    }
+
+    // Link or create the user's profile
+    $this->linkProfile($user);
+  }
+
+  /**
+   * Profile linking must never break user creation or login.
+   *
+   * @param  \App\Domains\Auth\Models\User  $user
+   */
+  private function linkProfile($user): void
+  {
+    try {
+      app(ProfileService::class)->findOrCreateForUser($user);
+    } catch (\Throwable $e) {
+      Log::error('Failed to link profile for user', [
+        'user_id' => $user->id,
+        'error' => $e->getMessage(),
+      ]);
     }
   }
 

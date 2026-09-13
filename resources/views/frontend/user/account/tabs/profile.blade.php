@@ -43,3 +43,7 @@
         </tr>
     </table>
 </div><!--table-responsive-->
+
+<div class="mt-3">
+    <x-utils.link :text="__('Manage Profile')" class="btn btn-primary" :href="route('intranet.user.profile.manage')" />
+</div>

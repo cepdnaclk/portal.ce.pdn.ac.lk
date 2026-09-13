@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Backend;
 
 use App\Domains\ContentManagement\Models\Article;
+use App\Domains\Profile\Models\UserProfile;
 use App\Domains\Taxonomy\Models\Taxonomy;
 use App\Domains\Taxonomy\Models\TaxonomyList;
 use Livewire\Component;
@@ -18,6 +19,7 @@ class TaxonomyTermMetadata extends Component
   public $taxonomy_terms = [];
   public $taxonomy_lists = [];
   public $articles = [];
+  public $profiles = [];
 
   public function mount($property, $term = null, $taxonomy = null)
   {
@@ -47,6 +49,12 @@ class TaxonomyTermMetadata extends Component
       $this->articles = ['' => 'Select an Article'];
       foreach (Article::all()->pluck('title', 'id')->toArray() as $key => $article) {
         $this->articles[$key] = $article;
+      }
+
+      $this->profiles = ['' => 'Select a profile'];
+      foreach (UserProfile::orderBy('full_name')->get() as $profile) {
+        $name = $profile->preferred_long_name ?: ($profile->full_name ?: $profile->email);
+        $this->profiles[$profile->id] = $name . ' (' . $profile->email . ')';
       }
 
       // Load Non-related Taxonomy Lists

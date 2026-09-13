@@ -33,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
   {
     Paginator::useBootstrap();
     Schema::defaultStringLength(191);
-    ini_set('max_execution_time', 120);
     AliasLoader::getInstance()->alias('Socialite', Socialite::class);
 
     // Email view namespace setup to support custom mail templates in resources/views/vendor/mail

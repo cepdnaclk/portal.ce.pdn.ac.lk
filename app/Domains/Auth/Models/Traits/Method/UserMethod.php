@@ -126,6 +126,11 @@ trait UserMethod
    */
   public function getAvatar($size = null)
   {
+    // The linked profile's picture wins; gravatar is the fallback.
+    if ($profileImage = $this->profile?->profileImageUrl()) {
+      return $profileImage;
+    }
+
     return 'https://gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?s=' . config('boilerplate.avatar.size', $size) . '&d=mp';
   }
 }

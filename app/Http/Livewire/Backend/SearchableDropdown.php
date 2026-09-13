@@ -57,6 +57,8 @@ class SearchableDropdown extends Component
     return (string)($this->options[$this->selected] ?? $this->placeholder);
   }
 
+  public const MAX_RESULTS = 50;
+
   public function getFilteredOptionsProperty(): array
   {
     $needle = mb_strtolower(trim($this->search));
@@ -70,7 +72,7 @@ class SearchableDropdown extends Component
     }
 
     if ($needle === '') {
-      return $top + $items;
+      return $top + array_slice($items, 0, self::MAX_RESULTS, true);
     }
 
     $filtered = [];
@@ -79,7 +81,7 @@ class SearchableDropdown extends Component
         $filtered[$key] = $label;
       }
     }
-    return $top + $filtered;
+    return $top + array_slice($filtered, 0, self::MAX_RESULTS, true);
   }
 
   public function render()

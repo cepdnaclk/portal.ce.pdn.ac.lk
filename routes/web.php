@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\TaxonomyPageController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\ArticleContentImageController;
+use App\Domains\Profile\Http\Controllers\ProfileImageController;
 
 /*
  * Global Routes
@@ -60,5 +61,9 @@ Route::group(
     Route::get('article/{path}', [ArticleContentImageController::class, 'download'])
       ->where('path', '.*')
       ->name('article');
+
+    Route::get('profile-image/{fileName}', [ProfileImageController::class, 'download'])
+      ->where('fileName', '[0-9a-fA-F-]{36}\.jpg')
+      ->name('profile-image');
   }
 );

@@ -47,6 +47,8 @@ class TaxonomyTermMetadataValidator
         return 'nullable|integer|exists:taxonomy_lists,id';
       case 'taxonomy_term':
         return 'nullable|integer|exists:taxonomy_terms,id';
+      case 'profile':
+        return 'nullable|integer|exists:user_profiles,id';
       default:
         return 'nullable';
     }

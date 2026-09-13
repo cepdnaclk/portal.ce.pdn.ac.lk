@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Http\Livewire\Backend;
+
+use App\Domains\Profile\Http\Requests\Frontend\UpdateMyProfileRequest;
+use App\Domains\Profile\Models\UserProfile;
+use App\Domains\Profile\Models\UserProfileLink;
+use App\Domains\Profile\Services\ProfileService;
+use Illuminate\Support\Arr;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+
+class ProfileWizard extends Component
+{
+  use WithFileUploads;
+
+  public const STEP_FIELDS = [
+    1 => ['honorific', 'full_name', 'name_with_initials', 'preferred_short_name', 'preferred_long_name'],
+    2 => ['location', 'current_affiliation', 'current_position'],
+  ];
+
+  public int $step = 1;
+  public array $fields = [];
+  public array $links = [];
+  public $profileImage;
+  public int $before = 0;
+  public ?int $after = null;
+
+  public function mount(): void
+  {
+    $profile = $this->profile();
+    $this->before = $profile->completeness;
+
+    foreach (array_merge(...array_values(self::STEP_FIELDS)) as $field) {
+      $this->fields[$field] = $profile->{$field};
+    }
+
+    foreach (UserProfileLink::LINK_TYPES as $type) {
+      $this->links[$type] = $profile->links->firstWhere('type', $type)?->url;
+    }
+  }
+
+  protected function rules(): array
+  {
+    return collect(UpdateMyProfileRequest::profileRules())
+      ->mapWithKeys(fn($rule, $field) => ["fields.$field" => $rule])
+      ->all() + [
+        'profileImage' => UpdateMyProfileRequest::profileImageRules(),
+        'links.*' => ['nullable', 'url', 'max:500'],
+      ];
+  }
+
+  public function next(): void
+  {
+    if (! isset(self::STEP_FIELDS[$this->step])) {
+      $this->step = 1;
+    }
+
+    $stepFields = array_map(fn($field) => "fields.$field", self::STEP_FIELDS[$this->step]);
+
+    if ($this->step === 2) {
+      $stepFields[] = 'profileImage';
+    }
+
+    $this->validate(Arr::only($this->rules(), $stepFields));
+
+    $this->step = min(3, $this->step + 1);
+  }
+
+  public function back(): void
+  {
+    $this->step = max(1, $this->step - 1);
+  }
+
+  public function finish(): void
+  {
+    $this->validate();
+
+    // $fields/$links are public Livewire props: only the known keys may reach the service
+    $fields = Arr::only($this->fields, array_merge(...array_values(self::STEP_FIELDS)));
+
+    $data = array_map(fn($value) => $value === '' ? null : $value, $fields);
+    $data['links'] = collect(Arr::only($this->links, UserProfileLink::LINK_TYPES))
+      ->filter()
+      ->map(fn($url, $type) => ['type' => $type, 'url' => $url])
+      ->values()
+      ->all();
+
+    $profile = $this->profile();
+    app(ProfileService::class)->update($profile, $data);
+
+    if ($this->profileImage) {
+      app(ProfileService::class)->replaceProfileImage($profile, $this->profileImage);
+    }
+
+    $this->after = $profile->refresh()->completeness;
+    $this->step = 4; // done screen
+  }
+
+  private function profile(): UserProfile
+  {
+    // Always the logged-in user's own profile
+    return app(ProfileService::class)->findOrCreateForUser(auth()->user());
+  }
+
+  public function render()
+  {
+    $profile = $this->profile();
+
+    return view('livewire.backend.profile-wizard', [
+      'profile' => $profile,
+      'profileTypes' => $profile->profileTypes,
+    ]);
+  }
+}
