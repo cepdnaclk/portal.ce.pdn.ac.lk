@@ -4,8 +4,9 @@
     use App\Domains\Profile\Models\UserProfileType;
     use App\Domains\Profile\Models\UserProfile;
 
-    $assignedTypes = isset($profile) ? $profile->profileTypes->keyBy('type') : collect();
-    $profileLinks = isset($profile) ? $profile->links->pluck('url', 'type') : collect();
+    $profile = $profile ?? null;
+    $assignedTypes = $profile ? $profile->profileTypes->keyBy('type') : collect();
+    $profileLinks = $profile ? $profile->links->pluck('url', 'type') : collect();
 
     $fieldValue = function ($field) use ($profile) {
         $value = old($field, $profile->{$field} ?? '');
@@ -116,7 +117,7 @@
 <div class="form-group row">
     {!! Form::label('profile_image', __('Profile Picture'), ['class' => 'col-md-2 col-form-label']) !!}
     <div class="col-md-10">
-        @if (isset($profile) && $profile->profileImageUrl())
+        @if ($profile && $profile->profileImageUrl())
             <div class="mb-2">
                 <img src="{{ $profile->profileImageUrl() }}" class="img-thumbnail" style="max-height: 150px;"
                     alt="{{ __('Current profile picture') }}" />
